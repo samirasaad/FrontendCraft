@@ -2,18 +2,19 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Microscope } from "lucide-react";
+import { ChevronDown, Cog } from "lucide-react";
+import { InsightCode } from "@/components/lesson/InsightCode";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
-import type { LocalizedString } from "@/lib/types";
+import type { InsightSection } from "@/lib/types";
 
-export function DeepDive({ paragraphs }: { paragraphs: LocalizedString[] }) {
+export function UnderTheHood({ section }: { section: InsightSection }) {
   const { locale } = useLanguage();
   const { playClick } = useSound();
   const [open, setOpen] = useState(false);
 
-  if (paragraphs.length === 0) return null;
+  if (!section.paragraphs.length) return null;
 
   return (
     <section className="overflow-hidden rounded-3xl border border-violet-400/25 bg-violet-400/5">
@@ -28,14 +29,14 @@ export function DeepDive({ paragraphs }: { paragraphs: LocalizedString[] }) {
       >
         <span className="flex min-w-0 items-start gap-3">
           <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-400/15 text-violet-200">
-            <Microscope size={16} />
+            <Cog size={16} />
           </span>
           <span>
             <span className="block text-sm font-semibold text-violet-100">
-              {t("explainMore", locale)}
+              {t("underTheHood", locale)}
             </span>
             <span className="mt-0.5 block text-xs text-slate-400">
-              {t("explainMoreHint", locale)}
+              {t("underTheHoodHint", locale)}
             </span>
           </span>
         </span>
@@ -54,9 +55,25 @@ export function DeepDive({ paragraphs }: { paragraphs: LocalizedString[] }) {
             className="overflow-hidden"
           >
             <div className="space-y-3 border-t border-violet-400/20 px-5 py-4 text-[15px] leading-7 text-slate-300 sm:px-6">
-              {paragraphs.map((p, i) => (
+              {section.paragraphs.map((p, i) => (
                 <p key={i}>{loc(p, locale)}</p>
               ))}
+              {section.bullets?.length ? (
+                <ul className="space-y-2 pt-1">
+                  {section.bullets.map((b, i) => (
+                    <li
+                      key={i}
+                      className="flex gap-2 rounded-xl border border-violet-400/15 bg-slate-950/40 px-3 py-2 text-sm"
+                    >
+                      <span className="text-violet-300">▸</span>
+                      <span>{loc(b, locale)}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {section.code ? (
+                <InsightCode code={section.code} caption={section.codeCaption} />
+              ) : null}
             </div>
           </motion.div>
         )}

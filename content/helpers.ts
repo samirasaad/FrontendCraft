@@ -1,6 +1,7 @@
 import type {
   CheatCard,
   CodeExample,
+  InsightSection,
   LocalizedString,
   PitfallExample,
 } from "@/lib/types";
@@ -8,6 +9,22 @@ import type {
 /** Tiny bilingual helper to keep lesson files readable. */
 export function L(en: string, ar: string): LocalizedString {
   return { en, ar };
+}
+
+export function insight(
+  paragraphs: LocalizedString[],
+  options?: {
+    bullets?: LocalizedString[];
+    code?: string;
+    codeCaption?: LocalizedString;
+  },
+): InsightSection {
+  return {
+    paragraphs,
+    ...(options?.bullets ? { bullets: options.bullets } : {}),
+    ...(options?.code ? { code: options.code } : {}),
+    ...(options?.codeCaption ? { codeCaption: options.codeCaption } : {}),
+  };
 }
 
 export function simpleExample(

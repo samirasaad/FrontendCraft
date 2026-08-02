@@ -4,10 +4,10 @@ import {
   realWorldExample,
   simpleExample,
 } from "@/content/helpers";
+import type { LessonDraft } from "@/content/tracks/_insights";
 import { collectedHtmlPitfalls } from "@/content/tracks/html/collected-pitfalls";
-import type { Lesson } from "@/lib/types";
 
-export const extraLessons: Lesson[] = [
+export const extraLessons: LessonDraft[] = [
   {
     id: "html-pro-1",
     order: 11,
@@ -77,16 +77,6 @@ export const extraLessons: Lesson[] = [
         "Media mounts without shoving the page around.",
         "الميديا بتظهر من غير ما تزق الصفحة.",
       ),
-      deepDive: [
-        L(
-          "CLS happens when late-loaded media discovers its size after first paint. Intrinsic size attributes let the browser reserve the box early.",
-          "CLS بيحصل لما الميديا تكتشف حجمها بعد أول paint. مقاسات width/height بتخلّي المتصفح يحجز الصندوق بدري.",
-        ),
-        L(
-          "For SPAs, also watch client-side route transitions inserting images without dimensions.",
-          "في الـ SPAs، راقب كمان انتقالات الـ route وهي بتدخل صور من غير مقاسات.",
-        ),
-      ],
     },
   },
   {
@@ -156,12 +146,6 @@ export const extraLessons: Lesson[] = [
         "Blocks lock into a clear page architecture.",
         "البلوكات بتتركب في معمارية صفحة واضحة.",
       ),
-      deepDive: [
-        L(
-          "Document outline algorithms and AT landmark navigation both reward predictable structure. Random heading ranks break that contract.",
-          "خوارزميات الـ outline وتنقّل الـ landmarks بيكافئوا هيكل متوقع. مراتب headings عشوائية بتكسر العقد ده.",
-        ),
-      ],
     },
   },
   {
@@ -217,16 +201,6 @@ export const extraLessons: Lesson[] = [
         "The tree stays honest when nesting follows the rules.",
         "الشجرة بتفضل صادقة لما الـ nesting يمشي على القواعد.",
       ),
-      deepDive: [
-        L(
-          "Browsers auto-repair invalid HTML by moving nodes. That silent fix is why CSS/JS sometimes “miss” the structure you thought you wrote.",
-          "المتصفح بيصلّح HTML الباطل بنقل nodes. التصليح الصامت ده سبب إن CSS/JS أحيانًا “ميشوفوش” الهيكل اللي كنت فاكره.",
-        ),
-        L(
-          "Every wrong/right card below was pulled from across the HTML track — drill them here, then go deepen the matching lesson.",
-          "كل كروت الغلط/الصح تحت متجمّعة من كل دروس HTML — اتدرّب هنا، وبعدين عمّق الدرس المناسب.",
-        ),
-      ],
       pitfalls: collectedHtmlPitfalls,
     },
   },
@@ -286,12 +260,6 @@ export const extraLessons: Lesson[] = [
         "Cards assemble into a tiny document tree.",
         "الكروت بتتركب كـ document tree صغير.",
       ),
-      deepDive: [
-        L(
-          "A cheatsheet is a map, not the territory — when a snippet surprises you, open the matching Beginner/Pro lesson.",
-          "الـ CheatSheet خريطة مش الأرض — لو snippet فاجأك، افتح الدرس المناسب في Beginner/Pro.",
-        ),
-      ],
       cheatCards: [
         cheatCard(
           L("Document shell", "Document shell"),

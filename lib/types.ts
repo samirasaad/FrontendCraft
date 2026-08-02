@@ -51,6 +51,15 @@ export interface CheatCard {
   note: LocalizedString;
 }
 
+/** Structured bilingual insight block used by Under the Hood / a11y / SEO. */
+export interface InsightSection {
+  paragraphs: LocalizedString[];
+  bullets?: LocalizedString[];
+  /** Optional illustrative snippet with copy support in the UI. */
+  code?: string;
+  codeCaption?: LocalizedString;
+}
+
 export interface LessonContent {
   title: LocalizedString;
   summary: LocalizedString;
@@ -59,8 +68,12 @@ export interface LessonContent {
   /** Simple + Real-World playground examples. */
   examples: CodeExample[];
   visualHint: LocalizedString;
-  /** Deep technical context for the accordion. */
-  deepDive: LocalizedString[];
+  /** ⚙️ Engine / browser mechanics (accordion). */
+  underTheHood: InsightSection;
+  /** ♿ Screen readers, ARIA, keyboard & focus. */
+  accessibility: InsightSection;
+  /** 🔍 Crawling, indexing, Core Web Vitals. */
+  seo: InsightSection;
   /**
    * Wrong vs right alert(s). Optional — e.g. HTML keeps these only on
    * Pitfalls-tier lessons instead of every lesson.

@@ -10,10 +10,12 @@ import {
   Lightbulb,
   Sparkles,
 } from "lucide-react";
+import { AccessibilityCard } from "@/components/lesson/AccessibilityCard";
 import { CheatSheetCards } from "@/components/lesson/CheatSheetCards";
 import { CodeRunner } from "@/components/lesson/CodeRunner";
-import { DeepDive } from "@/components/lesson/DeepDive";
 import { PitfallsBox } from "@/components/lesson/PitfallsBox";
+import { SeoCallout } from "@/components/lesson/SeoCallout";
+import { UnderTheHood } from "@/components/lesson/UnderTheHood";
 import { Visualizer } from "@/components/lesson/Visualizer";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
@@ -133,7 +135,9 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         </section>
       </div>
 
-      <DeepDive paragraphs={lesson.content.deepDive} />
+      <UnderTheHood section={lesson.content.underTheHood} />
+      <AccessibilityCard section={lesson.content.accessibility} />
+      <SeoCallout section={lesson.content.seo} />
 
       {lesson.content.pitfalls ? (
         <PitfallsBox pitfalls={lesson.content.pitfalls} />

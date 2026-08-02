@@ -5,6 +5,8 @@ import {
   simpleExample,
 } from "@/content/helpers";
 import type { LegacyLesson } from "@/content/tracks/_legacy";
+import { defaultInsights } from "@/content/tracks/_insights";
+import { javascriptInsights } from "@/content/tracks/javascript/insights";
 import type {
   CodeExample,
   Lesson,
@@ -497,6 +499,9 @@ if (value) {
 
 export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson {
   const overlay = overlays[lesson.slug] ?? fallbackOverlay(lesson);
+  const pack =
+    javascriptInsights[lesson.slug] ??
+    defaultInsights(lesson.content.title.en, lesson.content.title.ar);
   return {
     id: lesson.id,
     order,
@@ -519,7 +524,9 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
         overlay.realWorld,
       ],
       visualHint: lesson.content.visualHint,
-      deepDive: overlay.deepDive,
+      underTheHood: pack.underTheHood,
+      accessibility: pack.accessibility,
+      seo: pack.seo,
       pitfalls: overlay.pitfalls,
     },
   };

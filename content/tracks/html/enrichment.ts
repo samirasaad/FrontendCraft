@@ -5,6 +5,8 @@ import {
   simpleExample,
 } from "@/content/helpers";
 import type { LegacyLesson } from "@/content/tracks/_legacy";
+import { defaultInsights } from "@/content/tracks/_insights";
+import { htmlInsights } from "@/content/tracks/html/insights";
 import type {
   CodeExample,
   Lesson,
@@ -401,6 +403,10 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
     pitfalls: patch.pitfalls ?? base.pitfalls,
   };
 
+  const pack =
+    htmlInsights[lesson.slug] ??
+    defaultInsights(lesson.content.title.en, lesson.content.title.ar);
+
   return {
     id: lesson.id,
     order,
@@ -423,7 +429,9 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
         overlay.realWorld,
       ],
       visualHint: lesson.content.visualHint,
-      deepDive: overlay.deepDive,
+      underTheHood: pack.underTheHood,
+      accessibility: pack.accessibility,
+      seo: pack.seo,
       // Pitfalls are collected into the Pitfalls-tier lessons only.
     },
   };

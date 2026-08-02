@@ -5,9 +5,9 @@ import {
   realWorldExample,
   simpleExample,
 } from "@/content/helpers";
-import type { Lesson } from "@/lib/types";
+import type { LessonDraft } from "@/content/tracks/_insights";
 
-export const extraLessons: Lesson[] = [
+export const extraLessons: LessonDraft[] = [
   {
     id: "js-pro-1",
     order: 11,
@@ -87,16 +87,6 @@ console.log("done burst");`,
         "Watch tasks queue calmly instead of flooding the loop.",
         "راقب المهام وهي بتتخش بهدوء بدل ما تغرق الـ loop.",
       ),
-      deepDive: [
-        L(
-          "Each handler closure retains the timer id. Clearing it prevents piled-up macrotasks that would otherwise wake the page after navigation.",
-          "كل handler بيمسك timer id. مسحه بيمنع macrotasks متراكمة تفضل تشتغل بعد ما الصفحة تتغير.",
-        ),
-        L(
-          "For React, start with transition/`useDeferredValue` patterns before hand-rolling debounce — then add debounce at the network edge.",
-          "في React ابدأ بـ transition/`useDeferredValue` قبل debounce يدوي — وبعدين حط debounce عند حافة الشبكة.",
-        ),
-      ],
       pitfalls: pitfall(
         `window.addEventListener("scroll", () => heavyWork());`,
         L(
@@ -183,16 +173,6 @@ console.log("listeners", 0);`,
         "Locked boxes that nobody unlocks become leaks.",
         "الصناديق المقفولة اللي محدش بيفتحها بتتحوّل لـ leaks.",
       ),
-      deepDive: [
-        L(
-          "V8’s GC (Scavenge + Mark-Sweep/Compact) collects unreachable graphs. Closures, Maps, and DOM wrappers are common retainers in DevTools Heap snapshots.",
-          "GC بتاع V8 بيجمع الـ graphs مش القابلة للوصول. الـ closures و Maps و DOM wrappers من أشهر الـ retainers في Heap snapshots.",
-        ),
-        L(
-          "WeakMap/WeakRef help when you want metadata that should not keep objects alive — advanced, use carefully.",
-          "WeakMap/WeakRef مفيدين لما metadata مت upstreamش الـ object حي — متقدم، استخدمهم بحذر.",
-        ),
-      ],
       pitfalls: pitfall(
         `setInterval(() => sync(), 1000);
 // component gone, interval still fires`,
@@ -268,16 +248,6 @@ console.log(isPresent(null), isPresent(0));`,
         "The equality scale tips on historic quirks.",
         "ميزان المساواة بيتأثر بغرائب تاريخية.",
       ),
-      deepDive: [
-        L(
-          "JS numbers are IEEE-754 double precision. Integers are safe only within Number.MAX_SAFE_INTEGER; beyond that use BigInt.",
-          "أرقام JS هي double precision. الـ integers آمنة لحد MAX_SAFE_INTEGER؛ بعده استخدم BigInt.",
-        ),
-        L(
-          "`typeof` is a poor type system — for real apps prefer TypeScript or explicit validators at boundaries.",
-          "`typeof` مش type system حقيقي — في التطبيقات فضّل TypeScript أو validators على الحدود.",
-        ),
-      ],
       pitfalls: pitfall(
         `if (typeof value === "object") {
   // null sneaks in
@@ -373,16 +343,6 @@ search("new").then(console.log);`,
         "Packets race — only the newest should paint.",
         "الـ packets بتتسابق — الأحدث بس هو اللي يرسم.",
       ),
-      deepDive: [
-        L(
-          "AbortController cancels the fetch at the network layer when supported, freeing bandwidth and avoiding late handlers.",
-          "AbortController يلغي الـ fetch على طبقة الشبكة لما يكون مدعوم، وبيوفّر bandwidth ويمنع handlers متأخرة.",
-        ),
-        L(
-          "In React 18+, transitions help urgent vs non-urgent updates, but they do not replace aborting stale fetches.",
-          "في React 18+ الـ transitions بتفصل التحديث العاجل عن غيره، لكنها مش بديل لإلغاء الـ fetches القديمة.",
-        ),
-      ],
       pitfalls: pitfall(
         `let results;
 fetch(url1).then((r) => (results = r));
@@ -456,12 +416,6 @@ console.log(next.cart.join("-"));`,
         "Cards mirror the mental model of stack vs queue.",
         "الكروت بتعكس نموذج Call Stack مقابل Queue.",
       ),
-      deepDive: [
-        L(
-          "Cheat sheets compress recognition, not mastery. Dive back into Beginner→Pro lessons when a card feels fuzzy.",
-          "الـ CheatSheet بيضغط التعرف مش الإتقان. ارجع للدروس من Beginner لـ Pro لو كارت مش واضح.",
-        ),
-      ],
       pitfalls: pitfall(
         `// memorizing without running code`,
         L(

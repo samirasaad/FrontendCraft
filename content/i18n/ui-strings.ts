@@ -97,9 +97,34 @@ export const ui = {
     en: "Deep dive — engine, memory, and call-stack context",
     ar: "تعمّق — الـ engine والذاكرة وسياق الـ call stack",
   },
-  commonPitfalls: { en: "Common pitfalls", ar: "أخطاء شائعة" },
-  wrongWay: { en: "Wrong way", ar: "الطريقة الغلط" },
-  rightWay: { en: "Right way", ar: "الطريقة الصح" },
+  underTheHood: {
+    en: "⚙️ Under the Hood (Engine Mechanics)",
+    ar: "⚙️ Under the Hood (ميكانيكا الـ Engine)",
+  },
+  underTheHoodHint: {
+    en: "How V8 / Blink / Gecko process this concept — memory, queues, and the render pipeline",
+    ar: "إزاي V8 / Blink / Gecko بيعالجوا المفهوم ده — ذاكرة و queues ومسار الـ render",
+  },
+  accessibilityTitle: {
+    en: "♿ Accessibility (a11y) Best Practices",
+    ar: "♿ Accessibility (a11y) Best Practices",
+  },
+  accessibilityHint: {
+    en: "How NVDA / VoiceOver hear this pattern — ARIA, keyboard, and focus",
+    ar: "إزاي NVDA / VoiceOver بيسمعوا الـ pattern ده — ARIA والكيبورد والـ focus",
+  },
+  seoTitle: {
+    en: "🔍 SEO & Performance Insights",
+    ar: "🔍 SEO & Performance Insights",
+  },
+  seoHint: {
+    en: "Googlebot, indexing, CLS, and Core Web Vitals impact",
+    ar: "Googlebot والفهرسة و CLS وتأثير Core Web Vitals",
+  },
+  insightCodeLabel: { en: "Reference snippet", ar: "Snippet مرجعي" },
+  commonPitfalls: { en: "⚠️ Common Pitfalls & Anti-Patterns", ar: "⚠️ Common Pitfalls & Anti-Patterns" },
+  wrongWay: { en: "Anti-pattern (bad practice)", ar: "Anti-pattern (ممارسة غلط)" },
+  rightWay: { en: "Modern standard (best practice)", ar: "المعيار الحديث (أفضل ممارسة)" },
   exampleSimple: { en: "Simple", ar: "Simple" },
   exampleRealWorld: { en: "Real-World", ar: "Real-World" },
   cheatSheetTitle: { en: "Interactive CheatSheet", ar: "CheatSheet تفاعلي" },
