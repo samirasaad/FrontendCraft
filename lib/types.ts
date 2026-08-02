@@ -45,12 +45,15 @@ export interface PitfallExample {
   right: PitfallSide;
 }
 
-/** CheatSheet card categories (HTML interactive grid). */
+/**
+ * CheatSheet categories — Layout, Interactive/Dialogs, Forms, Media, Head & Meta.
+ */
 export type CheatCategory =
   | "structure"
+  | "interactive"
   | "forms"
   | "media"
-  | "interactive";
+  | "head";
 
 /** W3C Baseline availability signal. */
 export type BaselineStatus = "widely" | "newly" | "limited";
@@ -75,8 +78,10 @@ export interface CheatCard {
   note: LocalizedString;
   /** When set, enables category filters on the CheatSheet grid. */
   category?: CheatCategory;
-  /** Fuller paste-ready document fragment (Copy Boilerplate). */
+  /** Fuller paste-ready document fragment (Copy Boilerplate / clean HTML). */
   boilerplate?: string;
+  /** Optional Tailwind-flavored equivalent for one-click copy. */
+  tailwindSnippet?: string;
   /** Mini live preview HTML (injected into a sandboxed iframe). */
   previewHtml?: string;
   /** Per-card browser / Baseline matrix. */
@@ -92,13 +97,47 @@ export interface InsightSection {
   codeCaption?: LocalizedString;
 }
 
+/** ❌ vs ✅ teaching card for scannable practice. */
+export interface ComparePair {
+  title?: LocalizedString;
+  bad: {
+    label: LocalizedString;
+    code: string;
+    note: LocalizedString;
+  };
+  good: {
+    label: LocalizedString;
+    code: string;
+    note: LocalizedString;
+  };
+}
+
+/** One step in the browser rendering pipeline visualization. */
+export interface PipelineStep {
+  id: string;
+  title: LocalizedString;
+  detail: LocalizedString;
+}
+
+/** Single interactive check before advancing a lesson. */
+export interface LessonChallenge {
+  prompt: LocalizedString;
+  options: {
+    id: string;
+    label: LocalizedString;
+    code?: string;
+  }[];
+  correctId: string;
+  explanation: LocalizedString;
+}
+
 export interface LessonContent {
   title: LocalizedString;
   summary: LocalizedString;
   paragraphs: LocalizedString[];
   keyPoints: LocalizedString[];
-  /** Simple + Real-World playground examples. */
-  examples: CodeExample[];
+  /** Simple + Real-World playground examples. Omit to hide Code playground. */
+  examples?: CodeExample[];
   visualHint: LocalizedString;
   /** ⚙️ Engine / browser mechanics (accordion). */
   underTheHood: InsightSection;
@@ -108,7 +147,7 @@ export interface LessonContent {
   seo: InsightSection;
   /**
    * Wrong vs right alert(s). Optional — e.g. HTML keeps these only on
-   * Pitfalls-tier lessons instead of every lesson.
+   * Pro: Common Pitfalls instead of every lesson.
    */
   pitfalls?: PitfallExample | PitfallExample[];
   /** Present on CheatSheet-tier lessons. */
@@ -123,6 +162,12 @@ export interface LessonContent {
     label: LocalizedString;
     support: BrowserSupportInfo;
   }[];
+  /** Visual ❌/✅ comparison cards (HTML lab scannability). */
+  compareCards?: ComparePair[];
+  /** Browser pipeline steps for interactive walkthrough. */
+  pipelineSteps?: PipelineStep[];
+  /** One-question interactive challenge before advancing. */
+  challenge?: LessonChallenge;
 }
 
 export interface Lesson {

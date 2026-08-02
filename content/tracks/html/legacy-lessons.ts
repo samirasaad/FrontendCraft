@@ -62,8 +62,8 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "صفحة عنوانها Hello HTML وفيها heading Welcome",
       },
       visualHint: {
-        en: "Watch the document tree assemble from doctype to body.",
-        ar: "راقب الـ document tree وهو بيتركب من doctype لحد body.",
+        en: "Watch the DOM tree reveal Parent → Child → Text — use Play, Pause, Stop, or Step.",
+        ar: "اتفرّج على شجرة الـ DOM وهي بتظهر Parent → Child → Text — استخدم Play أو Pause أو Stop أو Step.",
       },
     },
   },
@@ -157,12 +157,12 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "استخدم `<h1>`–`<h6>` بالترتيب. متتخطاش levels عشان الشكل — الـ CSS هو اللي بيتحكم في الحجم.",
         },
         {
-          en: "`<p>` for paragraphs. Inline helpers: `<strong>`, `<em>`, `<code>`, `<mark>`, `<br>` sparingly.",
-          ar: "`<p>` للفقرات. مساعدات inline: `<strong>` و `<em>` و `<code>` و `<mark>`، و `<br>` بحذر.",
+          en: "`<p>` wraps paragraphs. Keep one idea per paragraph so the outline and reading flow stay clear.",
+          ar: "`<p>` للفقرات. فكرة واحدة لكل فقرة عشان الـ outline والقراءة يفضلوا واضحين.",
         },
         {
-          en: "`<blockquote>` and `<cite>` quote sources cleanly. Lists come next for structured items.",
-          ar: "`<blockquote>` و `<cite>` للاقتباس بشكل نظيف. الـ lists جاية بعدها للعناصر المرتبة.",
+          en: "Inline formatting tags (`<strong>`, `<em>`, `<code>`, …) get their own lesson next — this one stays on headings + paragraphs.",
+          ar: "tags التنسيق الـ inline (`<strong>` و `<em>` و `<code>` و…) ليها الدرس اللي بعده — الدرس ده مركز على headings + paragraphs.",
         },
       ],
       keyPoints: [
@@ -175,27 +175,112 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "الشكل بـ CSS، والبنية بـ HTML",
         },
         {
-          en: "Prefer semantic inline tags over bare spans",
-          ar: "فضّل inline tags ذات معنى بدل span فاضي",
+          en: "One idea per `<p>`",
+          ar: "فكرة واحدة لكل `<p>`",
         },
       ],
       code: `<h1>Site title</h1>
 <h2>Section</h2>
-<p>Learn <strong>HTML</strong> with <em>clarity</em>.</p>
-<p>Inline <code>&lt;code&gt;</code> looks like this.</p>`,
+<h3>Subsection</h3>
+<h4>Detail</h4>
+<h5>Minor note</h5>
+<h6>Finest label</h6>
+<p>Headings build the outline. Paragraphs carry the story.</p>`,
       expectedOutput: {
-        en: "Clear heading ladder + emphasized text",
-        ar: "سلم headings واضح + نص مؤكد",
+        en: "Full h1–h6 ladder + a clear paragraph",
+        ar: "سلم h1–h6 كامل + فقرة واضحة",
       },
       visualHint: {
-        en: "Steps climb from h1 down the heading ladder.",
-        ar: "الدرجات بتطلع من h1 على سلم الـ headings.",
+        en: "Steps climb the full ladder from h1 to h6.",
+        ar: "الدرجات بتطلع السلم كامل من h1 لـ h6.",
+      },
+    },
+  },
+  {
+    id: "html-3b",
+    order: 4,
+    slug: "text-formatting",
+    difficulty: "beginner",
+    readMinutes: 8,
+    icon: "Highlighter",
+    visualizer: "text-format",
+    content: {
+      title: {
+        en: "Text Formatting",
+        ar: "Text Formatting",
+      },
+      summary: {
+        en: "Common inline (and quote) tags that add meaning — not only bold or italic looks.",
+        ar: "أشهر tags الـ inline (والاقتباس) اللي بتضيف معنى — مش شكل bold أو italic بس.",
+      },
+      paragraphs: [
+        {
+          en: "Prefer semantic tags: `<strong>` for importance, `<em>` for stress. `<b>` and `<i>` are stylistic when there is no extra meaning.",
+          ar: "فضّل tags الـ semantic: `<strong>` للأهمية، `<em>` للتشديد. `<b>` و `<i>` للشكل لما مفيش معنى زيادة.",
+        },
+        {
+          en: "Edits and highlights: `<mark>` highlights relevance, `<del>` / `<ins>` show removals and additions, `<s>` marks outdated text, `<u>` is for unarticulated annotation (use carefully — don’t fake links).",
+          ar: "تعديلات وتمييز: `<mark>` للتمييز، `<del>` / `<ins>` للحذف والإضافة، `<s>` لنص قديم، `<u>` لتظليل غير ملفوظ (بحذر — متقلّدش links).",
+        },
+        {
+          en: "Tech & data: `<code>`, `<kbd>`, `<samp>`, `<var>`, `<abbr title>` , `<time datetime>`, plus `<sub>` / `<sup>` for indexes and formulas.",
+          ar: "تقني وبيانات: `<code>` و `<kbd>` و `<samp>` و `<var>` و `<abbr title>` و `<time datetime>`، وكمان `<sub>` / `<sup>` للفهارس والمعادلات.",
+        },
+        {
+          en: "Quotes: `<q>` for short inline quotes, `<cite>` for the title of a work, `<blockquote>` + optional `<cite>` for longer quotes. Use `<small>` for side comments / fine print.",
+          ar: "اقتباس: `<q>` لاقتباس قصير، `<cite>` لعنوان عمل، `<blockquote>` + `<cite>` اختياري للاقتباس الطويل. `<small>` للتعليقات الجانبية / fine print.",
+        },
+      ],
+      keyPoints: [
+        {
+          en: "Meaning first — CSS can restyle any tag",
+          ar: "المعنى أولًا — CSS يقدر يستايل أي tag",
+        },
+        {
+          en: "`<strong>` / `<em>` ≠ `<b>` / `<i>`",
+          ar: "`<strong>` / `<em>` ≠ `<b>` / `<i>`",
+        },
+        {
+          en: "Give `<abbr>` a `title`, `<time>` a `datetime`",
+          ar: "ادي `<abbr>` `title`، و `<time>` `datetime`",
+        },
+        {
+          en: "Don’t underline plain text to look like a link",
+          ar: "متظللش نص عادي عشان يبان link",
+        },
+      ],
+      code: `<p>
+  Learn <strong>HTML</strong> with <em>clarity</em>.
+  Press <kbd>Ctrl</kbd>+<kbd>S</kbd> to save.
+  Use <code>npm run dev</code> — output <samp>ready</samp>.
+</p>
+<p>
+  H<sub>2</sub>O · E=mc<sup>2</sup> ·
+  <abbr title="HyperText Markup Language">HTML</abbr> ·
+  <time datetime="2026-08-02">Aug 2, 2026</time>
+</p>
+<p>
+  <mark>Remember</mark>: <del>old copy</del> <ins>new copy</ins>.
+  <q>Short quote</q> — <cite>MDN</cite>
+</p>
+<blockquote>
+  <p>Longer quoted passage for articles and docs.</p>
+  <footer>— <cite>FrontendCraft</cite></footer>
+</blockquote>
+<p><small>Fine print and side notes.</small></p>`,
+      expectedOutput: {
+        en: "Semantic formatting: emphasis, code/kbd, sub/sup, mark/del/ins, quotes",
+        ar: "تنسيق semantic: emphasis و code/kbd و sub/sup و mark/del/ins والاقتباس",
+      },
+      visualHint: {
+        en: "Common formatting tags light up one by one — meaning, not only style.",
+        ar: "أشهر formatting tags بتولّع واحدة ورا التانية — المعنى، مش الشكل بس.",
       },
     },
   },
   {
     id: "html-4",
-    order: 4,
+    order: 5,
     slug: "links-images",
     difficulty: "beginner",
     readMinutes: 6,
@@ -255,7 +340,7 @@ export const legacyLessons: LegacyLesson[] = [
   },
   {
     id: "html-5",
-    order: 5,
+    order: 6,
     slug: "lists",
     difficulty: "beginner",
     readMinutes: 5,
@@ -322,7 +407,7 @@ export const legacyLessons: LegacyLesson[] = [
   },
   {
     id: "html-6",
-    order: 6,
+    order: 7,
     slug: "forms-inputs",
     difficulty: "intermediate",
     readMinutes: 9,
@@ -379,14 +464,14 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "form تسجيل accessible فيه email + password",
       },
       visualHint: {
-        en: "Fields fill, validate, then submit pulses down the wire.",
-        ar: "الحقول بتتملّى وتعمل validate، وبعدين الـ submit بيبعت الإشارة.",
+        en: "Watch focus move label → email → password → checkbox → submit.",
+        ar: "اتفرّج على الـ focus وهو بيمشي label → email → password → checkbox → submit.",
       },
     },
   },
   {
     id: "html-7",
-    order: 7,
+    order: 8,
     slug: "tables",
     difficulty: "intermediate",
     readMinutes: 7,
@@ -449,16 +534,16 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "جدول نتائج accessible بعمودين",
       },
       visualHint: {
-        en: "Cells assemble into a glowing data grid.",
-        ar: "الخلايا بتتجمّع في data grid مضيء.",
+        en: "Watch the table build layer by layer — caption, headers, then rows, then scope.",
+        ar: "اتفرّج على الجدول بيتبني طبقة طبقة — caption، بعدين headers، بعدين الصفوف، بعدين scope.",
       },
     },
   },
   {
     id: "html-8",
-    order: 8,
+    order: 15,
     slug: "accessibility-basics",
-    difficulty: "intermediate",
+    difficulty: "advanced",
     readMinutes: 12,
     icon: "Accessibility",
     visualizer: "a11y-check",
@@ -522,90 +607,130 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "Skip link و landmarks مسمّاة و control قابل للتوسيع و alt مفهوم",
       },
       visualHint: {
-        en: "Focus ring travels across controls as checks turn green.",
-        ar: "حلقة الـ focus بتتحرك على الـ controls والـ checks بتخضر.",
+        en: "Focus walks native controls — the panel shows what a screen reader announces (name · role · value).",
+        ar: "الـ focus بيمشي على native controls — اللوحة بتوريك إيه اللي الـ screen reader بتعلنه (name · role · value).",
       },
     },
   },
   {
     id: "html-9",
-    order: 9,
+    order: 16,
     slug: "meta-seo",
-    difficulty: "intermediate",
-    readMinutes: 12,
+    difficulty: "advanced",
+    readMinutes: 16,
     icon: "Search",
-    visualizer: "meta-card",
+    visualizer: "seo-crawl",
     content: {
       title: {
-        en: "SEO & Performance Insights",
-        ar: "SEO & Performance Insights",
+        en: "SEO Insights",
+        ar: "SEO Insights",
       },
       summary: {
-        en: "Dedicated SEO lesson — how Googlebot indexes HTML, SSR vs CSR, Core Web Vitals (LCP, INP, CLS), and a clean `<head>`.",
-        ar: "درس SEO مخصص — إزاي Googlebot بيفهرس HTML، و SSR مقابل CSR، و Core Web Vitals (LCP و INP و CLS)، و `<head>` نضيف.",
+        en: "Advanced SEO for HTML — how crawlers discover, render, and index pages; SSR vs CSR; titles, descriptions, canonicals, links, and structured data. Core Web Vitals live in Pro.",
+        ar: "SEO متقدم للـ HTML — إزاي الـ crawlers بتكتشف الصفحة وترندرها وتفهرسها؛ SSR مقابل CSR؛ titles و descriptions و canonicals واللينكات و structured data. Core Web Vitals في Pro.",
       },
       paragraphs: [
         {
-          en: "Googlebot and other crawlers prefer meaningful HTML in the first response. Semantic structure beats div soup; empty client-only shells delay discovery of titles, headings, and internal links.",
-          ar: "Googlebot والـ crawlers بيفضّلوا HTML معنوي في أول استجابة. الهيكل الـ semantic أحسن من div soup؛ الـ shells الفاضية على الـ client بتأخّر اكتشاف العناوين والـ headings واللينكات الداخلية.",
+          en: "Search engines do not “see” your CSS paint first — they fetch a URL, parse HTML, follow links, and build an index. Googlebot and others prefer meaningful markup in the first HTTP response: real headings, paragraphs, and `<a href>` links — not an empty `<div id=\"root\">` waiting for JavaScript.",
+          ar: "محركات البحث مش بتشوف رسم CSS الأول — بتجيب URL، بتحلل HTML، بتتبع اللينكات، وبتبني فهرس. Googlebot وغيره بيفضّلوا markup معنوي في أول استجابة HTTP: headings وفقرات و `<a href>` حقيقية — مش `<div id=\"root\">` فاضي مستني JavaScript.",
         },
         {
-          en: "SSR/SSG (or solid prerender) puts primary copy, `<title>`, meta description, and canonical in the initial HTML. CSR can enhance UI — it should not invent the whole document after hydration.",
-          ar: "SSR/SSG (أو prerender محترم) بيحط النص الأساسي و `<title>` و meta description و canonical في أول HTML. CSR يقدر يعزّز الـ UI — مش يخترع المستند كله بعد الـ hydration.",
+          en: "Crawl → render → index is the mental model. Discovery happens via sitemaps, internal links, and external links. Rendering may run your JS later, but primary copy that only appears after a slow client fetch is at risk — especially on mobile and slow networks. Treat SSR, SSG, or solid prerender as the default for marketing and docs pages.",
+          ar: "Crawl → render → index هو النموذج الذهني. الاكتشاف بيحصل عبر sitemaps ولينكات داخلية وخارجية. الرندر ممكن يشغّل JS بعدين، لكن النص الأساسي اللي بيظهر بعد fetch بطيء على الـ client في خطر — خصوصًا على الموبايل والشبكات البطيئة. اعتبر SSR أو SSG أو prerender محترم الافتراضي لصفحات التسويق والـ docs.",
         },
         {
-          en: "Core Web Vitals are product metrics: LCP (largest contentful paint), INP (interaction responsiveness), CLS (layout shift). Sized images, stable fonts, and avoiding late-injected banners protect CLS; light JS protects INP.",
-          ar: "Core Web Vitals مقاييس منتج: LCP و INP و CLS. صور بمقاس وخطوط ثابتة وتجنّب بنرات متأخرة بيحموا CLS؛ JS خفيف بيحمي INP.",
+          en: "CSR can still rank after the crawler renders the page, but empty shells delay discovery of titles, headings, and equity-passing links. Pattern: ship the document shell and primary content from the server; hydrate UI enhancements afterward. Do not invent the whole article in `useEffect`.",
+          ar: "CSR لسه ممكن يترتب بعد ما الـ crawler يرندر الصفحة، لكن الـ shells الفاضية بتأخّر اكتشاف العناوين والـ headings واللينكات اللي بتمرّر الـ equity. النمط: اطلع document shell والمحتوى الأساسي من السيرفر؛ وبعدين hydrate لتحسينات الـ UI. متخترعش المقال كله جوّه `useEffect`.",
         },
         {
-          en: "Every page needs a unique `<title>`, honest meta description, `charset`, `viewport`, and preferably `rel=\"canonical\"`. Deep social tags (Open Graph / Twitter) live in the Head & Social Meta lesson — fundamentals stay here.",
-          ar: "كل صفحة محتاجة `<title>` فريد و meta description صادق و `charset` و `viewport` ويفضّل `rel=\"canonical\"`. وسوم السوشيال العميقة في درس Head & Social Meta — الأساسيات هنا.",
+          en: "`<title>` is the strongest on-page SERP signal you control in HTML. Make it unique per indexable URL, human-readable, and aligned with the visible `<h1>`. Roughly 50–60 characters keeps it from truncating awkwardly. Avoid “Untitled”, duplicated site-wide titles, and keyword stuffing.",
+          ar: "`<title>` أقوى إشارة SERP على الصفحة بتتحكم فيها من HTML. خليه فريد لكل URL قابل للفهرسة، مقروء للبشر، ومتوافق مع `<h1>` الظاهر. حوالي 50–60 حرف بيمنع القص الغريب. تجنّب “Untitled” والعناوين المكررة على الموقع كله وحشو الكلمات.",
+        },
+        {
+          en: "Meta description does not directly rank pages, but it often becomes the SERP snippet and drives CTR. Write one honest sentence (about 150–160 characters) that matches the page. Duplicate or missing descriptions waste the richest preview text Google might otherwise invent from body copy.",
+          ar: "Meta description مش بترتب الصفحات مباشرة، لكنها غالبًا بتبقى snippet في النتائج وبتأثر على CTR. اكتب جملة صادقة (حوالي 150–160 حرف) تطابق الصفحة. الوصف المكرر أو الناقص بيضيّع أغنى نص معاينة ممكن Google يطلعه من الـ body.",
+        },
+        {
+          en: "`rel=\"canonical\"` tells search engines the preferred URL when the same content is reachable via parameters, trailing slashes, or mirrors. Use absolute HTTPS URLs. Pair with consistent internal linking — do not point nav links at three variants of the same lesson.",
+          ar: "`rel=\"canonical\"` بيقول لمحركات البحث الـ URL المفضّل لما نفس المحتوى يوصل عبر parameters أو trailing slashes أو مرايا. استخدم روابط HTTPS مطلقة. واربط ده بلينكات داخلية متسقة — متوجّهش لينكات الـ nav لثلاث نسخ من نفس الدرس.",
+        },
+        {
+          en: "Internal links with descriptive anchor text pass crawl paths and context (`Learn HTML forms` beats `click here`). One logical `<h1>`, honest heading ranks, and landmarks (`<main>`, `<nav>`, `<article>`) help both users and crawlers understand the outline. Soft 404s (HTTP 200 with “not found” copy) and `javascript:` / `#` stubs do not pass equity.",
+          ar: "اللينكات الداخلية بنص anchor وصفي بتمرّر مسارات الزحف والسياق (`Learn HTML forms` أحسن من `click here`). `<h1>` منطقي واحد ومراتب headings صادقة و landmarks (`<main>` و `<nav>` و `<article>`) بتساعد المستخدمين والـ crawlers يفهموا الـ outline. Soft 404s (HTTP 200 بنص “not found”) و stubs من نوع `javascript:` / `#` مش بتمرّر equity.",
+        },
+        {
+          en: "Structured data (JSON-LD) can clarify type — Article, Course, FAQ — but it must match visible content. Fake rich results get ignored or penalized. Social preview tags (Open Graph / Twitter) live in Head & Social Meta; page-experience metrics (LCP, INP, CLS) live in Pro: Core Web Vitals.",
+          ar: "Structured data (JSON-LD) بيوضّح النوع — Article أو Course أو FAQ — لكن لازم يطابق المحتوى الظاهر. النتائج الغنية المزيفة بتتتجاهل أو تتعاقب. وسوم معاينة السوشيال في درس Head & Social Meta؛ مقاييس تجربة الصفحة (LCP و INP و CLS) في درس Pro: Core Web Vitals.",
+        },
+        {
+          en: "Ops checklist after every deploy: unique titles/descriptions, working canonicals, crawlable nav, no accidental `noindex` on public lessons, and a sanity check in Search Console (coverage + URL inspection). Indexing is not instant — fix the HTML first, then wait for recrawl.",
+          ar: "Checklist تشغيل بعد كل deploy: titles/descriptions فريدة، canonicals شغالة، nav قابل للزحف، مفيش `noindex` بالغلط على دروس عامة، وفحص سريع في Search Console (coverage + URL inspection). الفهرسة مش فورية — صلّح HTML الأول، وبعدين استنى إعادة الزحف.",
         },
       ],
       keyPoints: [
         {
-          en: "Indexable HTML in the first response",
-          ar: "HTML قابل للفهرسة في أول استجابة",
+          en: "Indexable HTML in the first response — not an empty mount node",
+          ar: "HTML قابل للفهرسة في أول استجابة — مش mount node فاضي",
         },
         {
           en: "Unique title + description + canonical per URL",
           ar: "title + description + canonical فريدين لكل URL",
         },
         {
-          en: "Guard LCP, INP, and CLS like product bugs",
-          ar: "عامل LCP و INP و CLS زي bugs منتج",
+          en: "SSR/SSG for primary copy — CSR enhances after",
+          ar: "SSR/SSG للنص الأساسي — CSR يعزّز بعدين",
         },
         {
-          en: "Semantic landmarks and headings help crawlers and users",
-          ar: "Landmarks و headings الـ semantic بتساعد crawlers والمستخدمين",
+          en: "Descriptive internal links + honest heading outline",
+          ar: "لينكات داخلية وصفية + outline headings صادق",
+        },
+        {
+          en: "JSON-LD only when it matches visible content",
+          ar: "JSON-LD بس لما يطابق المحتوى الظاهر",
+        },
+        {
+          en: "Verify indexing in Search Console after deploys",
+          ar: "تحقق من الفهرسة في Search Console بعد كل deploy",
         },
       ],
-      code: `<head>
+      code: `<!DOCTYPE html>
+<html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FrontendCraft — HTML track</title>
   <meta name="description" content="Learn HTML with interactive labs and live sandboxes." />
   <link rel="canonical" href="https://example.com/html" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "HTML track",
+    "description": "Interactive HTML labs and live sandboxes."
+  }
+  </script>
 </head>
 <body>
   <main>
     <h1>HTML track</h1>
     <p>Primary copy ships in the first HTML response.</p>
+    <a href="/html/forms-inputs">Learn HTML forms</a>
   </main>
-</body>`,
+</body>
+</html>`,
       expectedOutput: {
-        en: "Crawlable head + visible main content (SSR-friendly)",
-        ar: "head قابل للزحف + محتوى main ظاهر (مناسب لـ SSR)",
+        en: "Crawlable document — head metadata, JSON-LD, main content, real link",
+        ar: "مستند قابل للزحف — metadata في head و JSON-LD ومحتوى main ولينك حقيقي",
       },
       visualHint: {
-        en: "A browser tab and share card populate from meta tags.",
-        ar: "تاب المتصفح وكارت المشاركة بيتملّوا من الـ meta tags.",
+        en: "Watch CSR thin HTML become SSR — title, description, canonical, then indexable body.",
+        ar: "اتفرّج على HTML الـ CSR الرفيع يتحول لـ SSR — title و description و canonical وبعدين body قابل للفهرسة.",
       },
     },
   },
   {
     id: "html-10",
-    order: 10,
+    order: 11,
     slug: "media-embed",
     difficulty: "advanced",
     readMinutes: 8,

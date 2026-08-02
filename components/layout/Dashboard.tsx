@@ -1,15 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { LessonContent } from "@/components/lesson/LessonContent";
 import { LanguageProvider } from "@/context/LanguageContext";
-import { ProgressProvider } from "@/context/ProgressContext";
+import { ProgressProvider, useProgress } from "@/context/ProgressContext";
 import { SoundProvider } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import type { TrackDefinition } from "@/lib/types";
+
+function LessonQuerySync() {
+  const searchParams = useSearchParams();
+  const { lessons, setActiveLessonId } = useProgress();
+
+  useEffect(() => {
+    const slug = searchParams.get("lesson");
+    if (!slug) return;
+    const match = lessons.find((l) => l.slug === slug || l.id === slug);
+    if (match) setActiveLessonId(match.id);
+  }, [searchParams, lessons, setActiveLessonId]);
+
+  return null;
+}
 
 function EmptyTrackState({ track }: { track: TrackDefinition }) {
   const { locale } = useLanguage();
@@ -28,6 +43,9 @@ function DashboardShell({ track }: { track: TrackDefinition }) {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
+      <Suspense fallback={null}>
+        <LessonQuerySync />
+      </Suspense>
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
         <div className="absolute -start-24 top-0 h-72 w-72 rounded-full bg-yellow-300/10 blur-3xl" />
         <div className="absolute -end-16 top-40 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />

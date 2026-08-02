@@ -197,11 +197,13 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   <h1>Product guide</h1>
   <section>
     <h2>Installation</h2>
-    <p>Step one…</p>
     <h3>Linux</h3>
+    <h4>Ubuntu</h4>
+    <h5>LTS notes</h5>
+    <h6>Checksum tip</h6>
   </section>
 </main>`,
-        codeCaption: L("Logical heading hierarchy", "Heading hierarchy منطقي"),
+        codeCaption: L("Logical h1–h6 hierarchy", "Hierarchy منطقي h1–h6"),
       },
     ),
     accessibility: insight(
@@ -244,6 +246,75 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("First paragraph after `<h1>` summarizes page intent", "أول paragraph بعد `<h1>` يلخص page intent"),
           L("Avoid empty headings injected by CMS templates", "تجنب headings فاضية من CMS templates"),
           L("Table of contents links use fragment ids on headings", "TOC links تستخدم fragment ids على headings"),
+        ],
+      },
+    ),
+  },
+
+  "text-formatting": {
+    underTheHood: insight(
+      [
+        L(
+          "Inline formatting tags wrap text nodes without breaking the paragraph’s block box. The browser still builds one flow of line boxes — tags only annotate spans inside that flow.",
+          "tags التنسيق الـ inline بتلف text nodes من غير ما تكسر block box الفقرة. المتصفح لسه بيبني flow واحد من line boxes — الـ tags بتعلّم spans جوّه الـ flow.",
+        ),
+        L(
+          "`<strong>` / `<em>` map to importance/emphasis in the accessibility tree. `<b>` / `<i>` are presentational by default unless you add meaning with CSS or ARIA carefully.",
+          "`<strong>` / `<em>` بيروحوا importance/emphasis في accessibility tree. `<b>` / `<i>` presentational افتراضيًا إلا لو ضفت معنى بحذر.",
+        ),
+        L(
+          "`<time datetime>` and `<abbr title>` store machine-readable values beside visible text — useful for parsers, browsers, and AT expansion.",
+          "`<time datetime>` و `<abbr title>` بيخزنوا قيم مقروءة للآلة جنب النص الظاهر — مفيدة للـ parsers والمتصفح و AT.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Semantic inline tags beat styled spans", "inline tags الـ semantic أحسن من spans مستايلة"),
+          L("`code` / `kbd` / `samp` / `var` for tech text", "`code` / `kbd` / `samp` / `var` للنص التقني"),
+          L("`mark` highlights relevance — not decoration only", "`mark` بيميّز صلة — مش ديكور بس"),
+          L("`del` / `ins` document edits over time", "`del` / `ins` بيوثّقوا التعديلات مع الوقت"),
+        ],
+        code: `<p>
+  <strong>Note:</strong> press <kbd>Ctrl</kbd>+<kbd>S</kbd>.
+  Use <code>npm run build</code>.
+</p>`,
+        codeCaption: L("Importance + keyboard + code", "Importance + keyboard + code"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Screen readers may announce “strong” / “emphasis” for `<strong>` / `<em>`. Overusing them makes pages noisy — reserve for real stress or importance.",
+          "الـ screen readers ممكن تعلن “strong” / “emphasis” لـ `<strong>` / `<em>`. الاستخدام الزيادة بيعمل ضوضاء — خلّيهم للتشديد أو الأهمية الحقيقية.",
+        ),
+        L(
+          "`<abbr title>` can expose the expansion. Don’t underline random text with `<u>` in a way that looks like a link.",
+          "`<abbr title>` يقدر يعرض التوسيع. متظللش نص عشوائي بـ `<u>` بشكل يبان link.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Prefer `<strong>` / `<em>` over bold/italic spans", "فضّل `<strong>` / `<em>` عن spans bold/italic"),
+          L("Provide `title` on abbreviations when helpful", "حط `title` على الاختصارات لما يفيد"),
+          L("Quotes: `q` inline, `blockquote` for blocks", "اقتباس: `q` inline، `blockquote` للبلوك"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Formatting tags rarely rank alone — but clear `<strong>` on key phrases and honest `<time datetime>` help humans and some extractors understand emphasis and freshness.",
+          "tags التنسيق نادرًا ما ترتّب لوحدها — لكن `<strong>` واضح على عبارات مهمة و `<time datetime>` صادق بيساعدوا الناس وبعض أدوات الاستخراج.",
+        ),
+        L(
+          "Avoid stuffing keywords inside every `<b>` / `<strong>`. Write for readers; let semantics stay honest.",
+          "متحشوّش keywords جوّه كل `<b>` / `<strong>`. اكتب للقارئ؛ سيّب الـ semantics صادقة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Meaningful emphasis > decorative bold", "تشديد له معنى > bold ديكور"),
+          L("`cite` / quotes support article clarity", "`cite` / quotes بيوضّحوا المقال"),
         ],
       },
     ),
@@ -660,6 +731,110 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     ),
   },
 
+  "sr-practice": {
+    underTheHood: insight(
+      [
+        L(
+          "Assistive tech reads the accessibility tree (name, role, value/state) — not your CSS paint. Bad markup can “look fine” while the tree is empty, wrong, or out of sync with the UI.",
+          "الـ assistive tech بتقرأ الـ accessibility tree (name و role و value/state) — مش رسم CSS. الـ markup الغلط ممكن “شكله حلو” والشجرة فاضية أو غلط أو مش متزامنة مع الـ UI.",
+        ),
+        L(
+          "Accessible name order is usually: associated `<label>`, then `aria-labelledby`, then `aria-label`, then text contents. Fake controls make you rebuild focus, keys, and naming — native elements already do that.",
+          "ترتيب الـ accessible name غالبًا: `<label>` مرتبط، بعدين `aria-labelledby`، بعدين `aria-label`، بعدين النص. الـ controls المزيفة بتخليك تعيد focus والمفاتيح والـ naming — الـ native elements بتعمل ده أصلًا.",
+        ),
+        L(
+          "`aria-hidden=\"true\"` hides a subtree from AT, but Tab can still land there unless you also hide/remove the controls. Positive `tabindex` almost always fights the DOM order people expect.",
+          "`aria-hidden=\"true\"` بيخفي subtree عن AT، بس Tab لسه ممكن يوقع هناك إلا لو خفيت/شلّت الـ controls كمان. `tabindex` الموجب غالبًا بيحارب ترتيب الـ DOM اللي الناس متوقعاه.",
+        ),
+      ],
+      {
+        bullets: [
+          L(
+            "Ship name + role + value that match the UI",
+            "طلّع name + role + value تطابق الـ UI",
+          ),
+          L(
+            "Native HTML first; ARIA only when needed",
+            "Native HTML أولًا؛ ARIA عند الحاجة بس",
+          ),
+          L(
+            "Never leave Tab stops inside aria-hidden",
+            "متسيبش Tab جوّه aria-hidden",
+          ),
+          L(
+            "Test keyboard-only + one screen reader",
+            "اختبر keyboard-only + screen reader واحد",
+          ),
+        ],
+        code: `<button type="button" aria-expanded="false" aria-controls="panel">
+  More info
+</button>
+<div id="panel" hidden>…</div>
+<p role="status" aria-live="polite"></p>`,
+        codeCaption: L(
+          "Named control + synced state + polite status",
+          "control ليه name + state متزامن + polite status",
+        ),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "This lesson is the practice set for the HTML track. Theory is in Accessibility (a11y). Here you compare bad vs ready until the good pattern feels automatic.",
+          "الدرس ده مجموعة الـ practice للـ HTML track. النظرية في درس Accessibility (a11y). هنا تقارن bad مقابل ready لحد ما النمط الصح يبقى تلقائي.",
+        ),
+        L(
+          "Quick WCAG checks while you scan: meaningful names (2.4.4 / 4.1.2), keyboard works (2.1.1), focus visible (2.4.7 / 2.4.11), skip blocks (2.4.1), status messages (4.1.3).",
+          "فحوصات WCAG سريعة وأنت بتتفرّج: names مفهومة (2.4.4 / 4.1.2)، الكيبورد يشتغل (2.1.1)، focus ظاهر (2.4.7 / 2.4.11)، تخطّي البلوكات (2.4.1)، status messages (4.1.3).",
+        ),
+        L(
+          "If stuck: open the matching topic lesson, rebuild the pattern there, Tab through it, then try NVDA or VoiceOver. If AT and the visual disagree, fix the markup before adding more ARIA.",
+          "لو تلخبطت: افتح درس الموضوع، ابنِ النمط هناك، لف بـ Tab، وبعدين جرّب NVDA أو VoiceOver. لو AT والشكل مختلفين، صلّح الـ markup قبل ما تزود ARIA.",
+        ),
+      ],
+      {
+        bullets: [
+          L(
+            "Bad → ready pattern → try it in the topic lesson",
+            "Bad → ready pattern → جرّبه في درس الموضوع",
+          ),
+          L(
+            "Prefer details / dialog / label over custom widgets",
+            "فضّل details / dialog / label عن custom widgets",
+          ),
+          L(
+            "Announce async UI with role=status / aria-live",
+            "أعلن async UI بـ role=status / aria-live",
+          ),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Semantic HTML helps people and crawlers: one `<main>`, honest headings, real links, and useful `alt` text help a11y and understanding.",
+          "الـ semantic HTML بيساعد الناس والـ crawlers: `<main>` واحد، headings صادقة، links حقيقية، و `alt` مفيد بيحسّنوا a11y والفهم.",
+        ),
+        L(
+          "Don’t cloak content. The same clear HTML should serve users, AT, and bots. Labels added only in the client often never help the first HTML response.",
+          "متعملش cloaking. نفس HTML الواضح يخدم المستخدمين و AT والـ bots. الـ labels اللي بتتضاف في الـ client بس غالبًا مش بتساعد أول استجابة HTML.",
+        ),
+      ],
+      {
+        bullets: [
+          L(
+            "Real links and headings help indexing and SR outlines",
+            "Links و headings حقيقية بتساعد indexing و SR outlines",
+          ),
+          L(
+            "alt and lang help understanding — not only SEO tricks",
+            "alt و lang بيساعدوا الفهم — مش حِيَل SEO بس",
+          ),
+        ],
+      },
+    ),
+  },
+
   "browser-compatibility": {
     underTheHood: insight(
       [
@@ -733,24 +908,29 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "This lesson is the SEO & performance source of truth for the HTML track. Crawlers parse the first HTML response — Blink/Gecko expose `<title>`, meta, and canonical early; body text in that payload is what gets indexed reliably.",
-          "الدرس ده مصدر SEO والأداء للـ HTML track. الـ crawlers بتحلل أول استجابة HTML — Blink/Gecko بتعرض `<title>` و meta و canonical بدري؛ نص الـ body في الحمولة دي هو اللي بيتفهرس بموثوقية.",
+          "This Advanced lesson is the SEO source of truth for the HTML track. Crawlers fetch a URL, tokenize HTML into a DOM, extract `<title>` / meta / canonical early, then schedule rendering. Body text present in that first payload is what indexes most reliably.",
+          "الدرس Advanced ده مصدر SEO للـ HTML track. الـ crawlers بتجيب URL، بتعمل tokenize لـ HTML لـ DOM، بتستخرج `<title>` / meta / canonical بدري، وبعدين بتحجز الرندر. نص الـ body الموجود في أول حمولة هو اللي بيتفهرس بأعلى موثوقية.",
         ),
         L(
-          "SSR/SSG vs CSR: a client-only `<div id=\"root\">` with no server HTML delays discovery. Hydrate enhancements — don’t invent primary copy after paint.",
-          "SSR/SSG مقابل CSR: `<div id=\"root\">` فاضي على الـ client من غير HTML سيرفر بيأخّر الاكتشاف. اعمل hydrate للتحسينات — متخترعش النص الأساسي بعد الـ paint.",
+          "Mental model: crawl → render → index. Discovery uses sitemaps, internal links, and backlinks. The renderer may execute JS later, but primary copy that only appears after a client-only fetch risks delayed or thin indexing — especially on mobile.",
+          "النموذج الذهني: crawl → render → index. الاكتشاف بيستخدم sitemaps ولينكات داخلية و backlinks. الـ renderer ممكن يشغّل JS بعدين، لكن النص الأساسي اللي بيظهر بعد fetch من الـ client بس بيخاطر بفهرسة متأخرة أو نحيفة — خصوصًا على الموبايل.",
         ),
         L(
-          "Layout and paint pipelines drive Core Web Vitals: late images without dimensions cause CLS; long tasks hurt INP; oversized heroes without preload hurt LCP.",
-          "مسارات الـ layout والـ paint بتحرّك Core Web Vitals: صور متأخرة من غير أبعاد بتعمل CLS؛ long tasks بتضر INP؛ heroes ضخمة من غير preload بتضر LCP.",
+          "SSR/SSG vs CSR: ship the document shell and primary content from the server; hydrate enhancements after. A client-only `<div id=\"root\">` delays discovery of titles, headings, and equity-passing links.",
+          "SSR/SSG مقابل CSR: اطلع document shell والمحتوى الأساسي من السيرفر؛ وبعدين hydrate للتحسينات. `<div id=\"root\">` فاضي على الـ client بيأخّر اكتشاف العناوين والـ headings واللينكات اللي بتمرّر equity.",
+        ),
+        L(
+          "`rel=\"canonical\"` consolidates duplicates (params, trailing slash, mirrors). JSON-LD clarifies entity type for rich results but must mirror visible content. Page experience (LCP, INP, CLS) lives in Pro: Core Web Vitals.",
+          "`rel=\"canonical\"` بيجمّع النسخ المكررة (params و trailing slash والمرايا). JSON-LD بيوضّح نوع الكيان للنتائج الغنية لكن لازم يطابق المحتوى الظاهر. تجربة الصفحة (LCP و INP و CLS) في درس Pro: Core Web Vitals.",
         ),
       ],
       {
         bullets: [
           L("Unique title + description per indexable URL", "Title + description فريدين لكل URL قابل للفهرسة"),
-          L("One canonical URL per content item", "Canonical URL واحد لكل content item"),
-          L("Semantic HTML > div soup for crawl clarity", "Semantic HTML أحسن من div soup لوضوح الزحف"),
-          L("Measure with Search Console + CrUX / Lighthouse", "قِس بـ Search Console + CrUX / Lighthouse"),
+          L("One absolute HTTPS canonical per content item", "Canonical HTTPS مطلق واحد لكل content item"),
+          L("Semantic outline + real <a href> links", "Outline semantic + لينكات <a href> حقيقية"),
+          L("JSON-LD only when it matches the page", "JSON-LD بس لما يطابق الصفحة"),
+          L("Monitor coverage in Search Console after deploys", "راقب coverage في Search Console بعد كل deploy"),
         ],
         code: `<head>
   <title>FrontendCraft — HTML Track</title>
@@ -764,20 +944,25 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "Document title changes on SPA navigation must update `<title>` — VoiceOver announces title changes; stale titles after client routing disorient users.",
-          "Document title changes في SPA navigation لازم تحدّث `<title>` — VoiceOver بتعلن title changes؛ titles قديمة بعد client routing بتلخبط users.",
+          "Document title changes on SPA navigation must update `<title>` — VoiceOver announces title changes; stale titles after client routing disorient users and also confuse search snippets.",
+          "تغيير عنوان المستند في SPA لازم يحدّث `<title>` — VoiceOver بتعلن التغيير؛ titles قديمة بعد client routing بتلخبط المستخدمين وكمان snippets البحث.",
+        ),
+        L(
+          "`lang` (and `hreflang` for locales) must match the real page language — wrong language hurts AT pronunciation and can confuse international targeting.",
+          "`lang` (و `hreflang` للغات) لازم يطابق لغة الصفحة الحقيقية — اللغة الغلط بتضر نطق AT وممكن تلخبط الاستهداف الدولي.",
         ),
         L(
           "`theme-color` and meta viewport affect readability — user zoom must remain enabled (`maximum-scale=1` disables pinch zoom and fails WCAG).",
-          "`theme-color` و meta viewport بيأثروا readability — user zoom لازم يفضل enabled (`maximum-scale=1` بيعطّل pinch zoom وبيفشل WCAG).",
+          "`theme-color` و meta viewport بيأثروا على القراءة — لازم يفضل zoom المستخدم شغال (`maximum-scale=1` بيعطّل pinch zoom وبيفشل WCAG).",
         ),
       ],
       {
         bullets: [
           L("Update title on route change for SPAs", "حدّث title على route change للـ SPAs"),
           L("Never disable zoom in viewport meta", "متعطّلش zoom في viewport meta"),
-          L("lang + hreflang match actual page language", "lang + hreflang يطابقوا page language الفعلي"),
-          L("Meta refresh redirects confuse users and AT — use HTTP 301", "Meta refresh redirects بتلخبط users و AT — استخدم HTTP 301"),
+          L("lang + hreflang match actual page language", "lang + hreflang يطابقوا لغة الصفحة الفعلية"),
+          L("Meta refresh redirects confuse users and AT — use HTTP 301", "Meta refresh بتلخبط users و AT — استخدم HTTP 301"),
+          L("Descriptive link text helps AT and SEO together", "نص اللينك الوصفي بيساعد AT و SEO مع بعض"),
         ],
         code: `<meta name="viewport" content="width=device-width, initial-scale=1" />`,
         codeCaption: L("Accessible viewport — zoom allowed", "Viewport accessible — zoom مسموح"),
@@ -786,32 +971,36 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     seo: insight(
       [
         L(
-          "Googlebot reads the initial HTML — `<title>`, canonical, meta description, and body copy in the first payload index reliably. Semantic landmarks and real `<a href>` links pass crawl equity; `javascript:` / `#` stubs do not.",
-          "Googlebot بيقرأ أول HTML — `<title>` و canonical و meta description ونص الـ body في أول حمولة بيتفهرسوا بموثوقية. Landmarks و `<a href>` حقيقية بتمرّر crawl equity؛ stubs من نوع `javascript:` / `#` لأ.",
+          "Googlebot reads the initial HTML — `<title>`, canonical, meta description, and body copy in the first payload index reliably. Semantic landmarks and real `<a href>` links pass crawl equity; `javascript:` / `#` stubs and soft 404s (200 + “not found”) do not.",
+          "Googlebot بيقرأ أول HTML — `<title>` و canonical و meta description ونص الـ body في أول حمولة بيتفهرسوا بموثوقية. Landmarks و `<a href>` حقيقية بتمرّر crawl equity؛ stubs من نوع `javascript:` / `#` و soft 404s (200 + “not found”) لأ.",
+        ),
+        L(
+          "Title crafts the SERP headline; meta description often becomes the snippet (CTR, not a direct ranking factor). Keep both unique, honest, and aligned with the visible `<h1>` and opening paragraph.",
+          "الـ title بيصنع عنوان النتائج؛ meta description غالبًا بيبقى الـ snippet (CTR، مش عامل ترتيب مباشر). خلّيهم فريدين وصادقين ومتوافقين مع `<h1>` الظاهر والفقرة الافتتاحية.",
         ),
         L(
           "SSR/SSG is the production default for marketing and docs. Client-rendered shells can still rank after render, but they risk thin first paints and delayed discovery — especially on slow networks.",
           "SSR/SSG هو الافتراضي للإنتاج للتسويق والـ docs. الـ shells المرسومة على الـ client ممكن تترتب بعد الرندر، بس بتخاطر بـ first paint نحيف واكتشاف متأخر — خصوصًا على شبكات بطيئة.",
         ),
         L(
-          "Core Web Vitals: reserve image space (CLS), keep interaction handlers light (INP), and optimize the LCP element (often a hero `<img>` — never lazy-load it). Meta tags do not fix a 4s LCP.",
-          "Core Web Vitals: احجز مساحة الصور (CLS)، خلّي handlers التفاعل خفيفة (INP)، وحسّن عنصر LCP (غالبًا `<img>` hero — متعملش عليه lazy). الـ meta tags مش هتصلح LCP بـ 4 ثواني.",
+          "Structured data is an enhancer, not a substitute for crawlable HTML. Social tags live in Head & Social Meta; LCP/INP/CLS live in Pro: Core Web Vitals.",
+          "Structured data محسّن، مش بديل لـ HTML قابل للزحف. وسوم السوشيال في Head & Social Meta؛ LCP/INP/CLS في Pro: Core Web Vitals.",
         ),
       ],
       {
         bullets: [
           L("Indexable HTML in the first response — not an empty mount node", "HTML قابل للفهرسة في أول استجابة — مش mount node فاضي"),
           L("Unique title, description, canonical per route", "title و description و canonical فريدين لكل route"),
-          L("Protect LCP, INP, CLS like product bugs", "احمِ LCP و INP و CLS زي bugs منتج"),
+          L("Descriptive anchors — never “click here” as the only text", "anchors وصفية — متخليش “click here” النص الوحيد"),
           L("JSON-LD must match visible content", "JSON-LD لازم يطابق المحتوى الظاهر"),
-          L("Monitor indexing in Search Console after deploys", "راقب الفهرسة في Search Console بعد كل deploy"),
+          L("URL Inspection + coverage after every deploy", "URL Inspection + coverage بعد كل deploy"),
         ],
         code: `<!-- Anti-pattern: empty CSR shell -->
 <div id="root"></div>
 <!-- Better: SSR body with real headings + links -->
 <main>
   <h1>HTML track</h1>
-  <a href="/html/forms-inputs">Forms lesson</a>
+  <a href="/html/forms-inputs">Learn HTML forms</a>
 </main>`,
         codeCaption: L("Crawlable content vs empty root", "محتوى قابل للزحف مقابل root فاضي"),
       },
@@ -899,12 +1088,86 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     ),
   },
 
+  "html-core-web-vitals": {
+    underTheHood: insight(
+      [
+        L(
+          "This lesson is the Core Web Vitals source of truth for the HTML track. LCP, INP, and CLS are field metrics from real users (CrUX) — lab tools help debug, but ranking and UX decisions should follow field data.",
+          "الدرس ده مصدر Core Web Vitals للـ HTML track. LCP و INP و CLS مقاييس ميدانية من مستخدمين حقيقيين (CrUX) — أدوات الـ lab بتساعد في الـ debug، لكن قرارات الترتيب والـ UX تمشي مع field data.",
+        ),
+        L(
+          "LCP marks when the largest contentful element paints. Heroes without dimensions, lazy-loaded above-the-fold images, and render-blocking resources push LCP past 2.5s.",
+          "LCP بيسجّل لما أكبر عنصر محتوى يpaint. الـ heroes من غير أبعاد والصور lazy فوق الشاشة والموارد اللي بـ block الرندر بيدفعوا LCP فوق 2.5s.",
+        ),
+        L(
+          "INP measures interaction latency across the page lifetime. Long tasks, heavy click handlers, and large JS bundles keep the main thread busy after a tap.",
+          "INP بيقيس تأخير التفاعل على عمر الصفحة. الـ long tasks و handlers التقيلة وحزم JS الكبيرة بتشغّل الـ main thread بعد الضغطة.",
+        ),
+        L(
+          "CLS accumulates unexpected layout shifts. Unsized media, late-injected banners, and font swaps that reflow text are the usual HTML-side causes.",
+          "CLS بيجمع layout shifts غير متوقعة. ميديا من غير مقاس وبنرات متأخرة و font swaps بتعمل reflow — الأسباب المعتادة من ناحية HTML.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Good: LCP < 2.5s · INP < 200ms · CLS < 0.1", "جيد: LCP < 2.5s · INP < 200ms · CLS < 0.1"),
+          L("Never lazy-load the LCP element", "متعَمِلش lazy على عنصر LCP"),
+          L("Reserve space before bytes arrive", "احجز المساحة قبل ما الـ bytes توصل"),
+          L("Keep interaction handlers short on the main thread", "خلّي handlers التفاعل قصيرة على الـ main thread"),
+        ],
+        code: `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
+<img src="/hero.webp" alt="…" width="1200" height="630" fetchpriority="high" />`,
+        codeCaption: L("LCP-friendly hero markup", "markup hero مناسب لـ LCP"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Performance and accessibility overlap — layout shifts disorient keyboard and screen-reader users mid-read. Stable focus order needs a stable layout.",
+          "الأداء والوصول متداخلين — الـ layout shifts بتلخبط مستخدمي الكيبورد و screen readers وسط القراءة. ترتيب focus ثابت محتاج layout ثابت.",
+        ),
+        L(
+          "Slow INP feels like a broken control. Users who rely on assistive tech already wait for announcements — do not add multi-hundred-ms input lag on top.",
+          "INP البطيء بيحسّس إن الـ control مكسور. مستخدمو التقنيات المساعدة أصلًا بيستنوا إعلانات — متزودش تأخير إدخال بمئات الميلي ثانية.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Stable layout protects reading and focus position", "Layout ثابت بيحمي القراءة وموضع الـ focus"),
+          L("Visible focus must not wait on heavy JS", "الـ focus الظاهر ممنوع يستنى JS تقيل"),
+          L("Honor prefers-reduced-motion for decorative motion", "احترم prefers-reduced-motion للحركة التزيينية"),
+          L("Announce async results without blocking the main thread", "أعلن نتائج async من غير ما توقف الـ main thread"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Core Web Vitals feed Google page experience. Meta tags and crawlable HTML (SEO Insights) still matter — but a 4s LCP is not fixed by a better description.",
+          "Core Web Vitals بتغذّي Google page experience. الـ meta tags و HTML القابل للزحف (SEO Insights) لسه مهمين — لكن LCP بـ 4 ثواني مش بيتصلح بـ description أحسن.",
+        ),
+        L(
+          "Prefer CrUX / Search Console field data over a one-off Lighthouse green score. Media-specific tactics continue in Pro: Media & Loading Performance.",
+          "فضّل CrUX / Search Console field data عن Lighthouse أخضر مرة واحدة. تكتيكات الميديا في درس Pro: Media & Loading Performance.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Ship CWV fixes like product bugs", "اصلح CWV زي bugs منتج"),
+          L("Watch Search Console Experience report", "راقب تقرير Experience في Search Console"),
+          L("Mobile field data first", "Field data الموبايل أولًا"),
+          L("Pair with SEO Insights for crawl + metadata", "اربط مع SEO Insights للزحف و metadata"),
+        ],
+      },
+    ),
+  },
+
   "html-perf-media": {
     underTheHood: insight(
       [
         L(
-          "Critical rendering path: HTML → DOM, CSS → CSSOM, combined render tree → layout → paint → composite. Blocking resources in `<head>` delay first paint — defer non-critical CSS/JS and inline only tiny critical CSS.",
-          "Critical rendering path: HTML → DOM, CSS → CSSOM, render tree → layout → paint → composite. Blocking resources في `<head>` بتأخر first paint — defer non-critical CSS/JS و inline critical CSS صغير بس.",
+          "Builds on Pro: Core Web Vitals. Critical rendering path: HTML → DOM, CSS → CSSOM, combined render tree → layout → paint → composite. Blocking resources in `<head>` delay first paint — defer non-critical CSS/JS and inline only tiny critical CSS.",
+          "بيكمل درس Pro: Core Web Vitals. Critical rendering path: HTML → DOM, CSS → CSSOM, render tree → layout → paint → composite. Blocking resources في `<head>` بتأخر first paint — defer non-critical CSS/JS و inline critical CSS صغير بس.",
         ),
         L(
           "Images without width/height cause layout recalculation when bytes arrive — CLS spikes. `aspect-ratio` in CSS plus explicit attributes reserve space in the layout tree before decode completes.",

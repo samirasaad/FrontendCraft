@@ -8,6 +8,7 @@ import {
   FileCode2,
   LayoutGrid,
   Sparkles,
+  Wind,
 } from "lucide-react";
 import { BrowserSupport } from "@/components/lesson/BrowserSupport";
 import { loc, t, type UiKey } from "@/content/i18n/ui-strings";
@@ -20,15 +21,21 @@ type FilterId = "all" | CheatCategory;
 const FILTERS: { id: FilterId; labelKey: UiKey }[] = [
   { id: "all", labelKey: "cheatFilterAll" },
   { id: "structure", labelKey: "cheatFilterStructure" },
+  { id: "interactive", labelKey: "cheatFilterInteractive" },
   { id: "forms", labelKey: "cheatFilterForms" },
   { id: "media", labelKey: "cheatFilterMedia" },
-  { id: "interactive", labelKey: "cheatFilterInteractive" },
+  { id: "head", labelKey: "cheatFilterHead" },
 ];
 
-type ToastState = {
-  message: string;
-  id: number;
+const categoryLabelKey: Record<CheatCategory, UiKey> = {
+  structure: "cheatFilterStructure",
+  interactive: "cheatFilterInteractive",
+  forms: "cheatFilterForms",
+  media: "cheatFilterMedia",
+  head: "cheatFilterHead",
 };
+
+type ToastState = { message: string; id: number };
 
 function previewDocument(html: string): string {
   return `<!DOCTYPE html>
@@ -40,43 +47,23 @@ function previewDocument(html: string): string {
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
   body {
-    margin: 0;
-    padding: 12px;
+    margin: 0; padding: 12px;
     font: 13px/1.45 system-ui, sans-serif;
     color: #0f172a;
-    background:
-      linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
   }
   button, summary, a { cursor: pointer; }
-  dialog {
-    border: 1px solid #cbd5e1;
-    border-radius: 12px;
-    padding: 12px 14px;
-    max-width: 90%;
-  }
+  dialog { border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px 14px; max-width: 90%; }
   dialog::backdrop { background: rgb(15 23 42 / 0.35); }
-  details {
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    padding: 8px 10px;
-    background: #fff;
-  }
+  details { border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 10px; background: #fff; }
   img, video { max-width: 100%; height: auto; border-radius: 8px; }
   label { display: grid; gap: 4px; font-size: 12px; }
   input, select, textarea {
-    border: 1px solid #94a3b8;
-    border-radius: 8px;
-    padding: 6px 8px;
-    font: inherit;
+    border: 1px solid #94a3b8; border-radius: 8px; padding: 6px 8px; font: inherit;
   }
   .chip {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 999px;
-    background: #dbeafe;
-    color: #1e3a8a;
-    font-size: 11px;
-    font-weight: 600;
+    display: inline-block; padding: 4px 8px; border-radius: 999px;
+    background: #dbeafe; color: #1e3a8a; font-size: 11px; font-weight: 600;
   }
 </style>
 </head>
@@ -161,16 +148,17 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
         </div>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {filtered.map((card, index) => {
           const cardKey = card.id ?? `${card.snippet.slice(0, 24)}-${index}`;
           const codeCopied = copiedKey === `${cardKey}-code`;
+          const twCopied = copiedKey === `${cardKey}-tw`;
           const boilCopied = copiedKey === `${cardKey}-boil`;
 
           return (
             <article
               key={cardKey}
-              className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-950/55 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-xl"
+              className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-950/55 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-xl transition hover:border-cyan-400/30"
             >
               {card.previewHtml ? (
                 <div className="border-b border-white/10 bg-slate-900/80 p-2">
@@ -181,7 +169,7 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                     title={loc(card.title, locale)}
                     sandbox=""
                     srcDoc={previewDocument(card.previewHtml)}
-                    className="h-36 w-full rounded-xl border border-white/10 bg-white"
+                    className="h-32 w-full rounded-xl border border-white/10 bg-white"
                   />
                 </div>
               ) : null}
@@ -193,22 +181,12 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                   </h3>
                   {card.category ? (
                     <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
-                      {t(
-                        (
-                          {
-                            structure: "cheatFilterStructure",
-                            forms: "cheatFilterForms",
-                            media: "cheatFilterMedia",
-                            interactive: "cheatFilterInteractive",
-                          } as const
-                        )[card.category],
-                        locale,
-                      )}
+                      {t(categoryLabelKey[card.category], locale)}
                     </span>
                   ) : null}
                 </div>
 
-                <pre className="max-h-36 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-slate-950/70 p-3 font-mono text-[11px] leading-5 text-yellow-100/90">
+                <pre className="max-h-28 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-slate-950/70 p-3 font-mono text-[11px] leading-5 text-yellow-100/90">
                   {card.snippet}
                 </pre>
 
@@ -231,6 +209,22 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                     {codeCopied ? <Check size={12} /> : <Copy size={12} />}
                     {codeCopied ? t("copied", locale) : t("copyCode", locale)}
                   </button>
+                  {card.tailwindSnippet ? (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        copyText(
+                          card.tailwindSnippet!,
+                          `${cardKey}-tw`,
+                          t("tailwindCopiedToast", locale),
+                        )
+                      }
+                      className="inline-flex items-center gap-1.5 rounded-full border border-sky-400/30 bg-sky-400/10 px-3 py-1.5 text-[11px] font-semibold text-sky-100 transition hover:bg-sky-400/20"
+                    >
+                      {twCopied ? <Check size={12} /> : <Wind size={12} />}
+                      {twCopied ? t("copied", locale) : t("copyTailwind", locale)}
+                    </button>
+                  ) : null}
                   {card.boilerplate ? (
                     <button
                       type="button"
@@ -243,11 +237,7 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                       }
                       className="inline-flex items-center gap-1.5 rounded-full border border-yellow-300/30 bg-yellow-300/10 px-3 py-1.5 text-[11px] font-semibold text-yellow-100 transition hover:bg-yellow-300/20"
                     >
-                      {boilCopied ? (
-                        <Check size={12} />
-                      ) : (
-                        <FileCode2 size={12} />
-                      )}
+                      {boilCopied ? <Check size={12} /> : <FileCode2 size={12} />}
                       {boilCopied
                         ? t("copied", locale)
                         : t("copyBoilerplate", locale)}
@@ -277,7 +267,7 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-300/40 bg-slate-950/95 px-4 py-2 text-sm font-semibold text-cyan-50 shadow-lg shadow-cyan-500/20 backdrop-blur-xl"
+            className="pointer-events-none fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded-full border border-cyan-300/40 bg-slate-950/95 px-4 py-2 text-sm font-semibold text-cyan-50 shadow-lg shadow-cyan-500/20 backdrop-blur-xl"
             role="status"
             aria-live="polite"
           >

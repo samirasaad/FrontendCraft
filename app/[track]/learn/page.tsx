@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
-import { CurriculumToc } from "@/components/layout/CurriculumToc";
+import { Dashboard } from "@/components/layout/Dashboard";
 import { getTrack, isTrackId, trackIds } from "@/content/tracks";
 
 export function generateStaticParams() {
   return trackIds.map((track) => ({ track }));
 }
 
-export default async function TrackCurriculumPage({
+export default async function TrackLearnPage({
   params,
 }: {
   params: Promise<{ track: string }>;
@@ -15,5 +15,5 @@ export default async function TrackCurriculumPage({
   if (!isTrackId(trackParam)) notFound();
 
   const track = getTrack(trackParam);
-  return <CurriculumToc track={track} />;
+  return <Dashboard track={track} />;
 }

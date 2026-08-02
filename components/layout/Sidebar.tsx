@@ -16,8 +16,10 @@ import {
   FileCode,
   Focus,
   FormInput,
+  Gauge,
   Gift,
   Globe2,
+  Highlighter,
   Images,
   Layers,
   LayoutTemplate,
@@ -71,6 +73,7 @@ const iconMap: Record<string, LucideIcon> = {
   FileCode,
   LayoutTemplate,
   Type,
+  Highlighter,
   Link2,
   List,
   FormInput,
@@ -78,6 +81,7 @@ const iconMap: Record<string, LucideIcon> = {
   Accessibility,
   Search,
   Clapperboard,
+  Gauge,
   Zap,
   Cpu,
   AlertTriangle,
@@ -177,7 +181,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     }
     return TIER_ORDER.map((tier) => ({
       tier,
-      lessons: map.get(tier) ?? [],
+      lessons: (map.get(tier) ?? []).slice().sort((a, b) => a.order - b.order),
     })).filter((group) => group.lessons.length > 0);
   }, [filtered]);
 

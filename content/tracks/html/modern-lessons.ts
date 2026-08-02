@@ -5,12 +5,13 @@ import {
   support,
 } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
+import { screenReaderPracticeCards } from "@/content/tracks/html/compare-cards";
 
-/** Modern high-value HTML lessons inserted before Pro / Pitfalls / CheatSheet. */
+/** Modern high-value HTML lessons — final order lives in HTML_CURRICULUM_ORDER. */
 export const modernLessons: LessonDraft[] = [
   {
     id: "html-11",
-    order: 11,
+    order: 9,
     slug: "form-ux-attributes",
     tier: "intermediate",
     readMinutes: 9,
@@ -85,8 +86,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Watch the form flow highlight keyboard-aware inputs.",
-        "اتفرّج على مسار الفورم وهو بيوضّح inputs واعية بالكيبورد.",
+        "Same form lab — focus, types, checkbox, then submit.",
+        "نفس معمل الفورم — focus وكتابة و checkbox وبعدين submit.",
       ),
     },
   },
@@ -97,7 +98,7 @@ export const modernLessons: LessonDraft[] = [
     tier: "advanced",
     readMinutes: 11,
     icon: "Globe2",
-    visualizer: "a11y-check",
+    visualizer: "baseline-compat",
     content: {
       title: L(
         "Browser Compatibility & Baseline",
@@ -163,8 +164,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Compatibility checks light up as you compare engine support.",
-        "فحوصات التوافق بتولع وانت بتقارن دعم الـ engines.",
+        "Baseline band + engine matrix — then feature-detect and a fallback when Newly or Limited.",
+        "شريط Baseline + مصفوفة الـ engines — وبعدين feature-detect و fallback لما تبقى Newly أو Limited.",
       ),
       browserSupport: support(
         "90+",
@@ -238,7 +239,7 @@ export const modernLessons: LessonDraft[] = [
     tier: "advanced",
     readMinutes: 10,
     icon: "AppWindow",
-    visualizer: "a11y-check",
+    visualizer: "native-dialog",
     content: {
       title: L("Native <dialog> Modals", "Native <dialog> Modals"),
       summary: L(
@@ -297,19 +298,19 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Accessibility checks light up when the dialog is named and focused.",
-        "فحوصات الوصول بتولع لما الـ dialog يبقى مسمّى وعليه focus.",
+        "Open with showModal() — backdrop, named title, then Escape restores focus to the invoker.",
+        "اتفتح بـ showModal() — backdrop وعنوان مسمّى، وبعدين Escape بيرجّع الـ focus للزر.",
       ),
     },
   },
   {
     id: "html-14",
-    order: 14,
+    order: 10,
     slug: "details-summary",
     tier: "intermediate",
     readMinutes: 8,
     icon: "ListTree",
-    visualizer: "semantic-blocks",
+    visualizer: "details-accordion",
     content: {
       title: L(
         "<details> & <summary> Accordions",
@@ -361,19 +362,19 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Blocks expand like native disclosure regions.",
-        "البلوكات بتتفتح زي مناطق disclosure أصلية.",
+        "Watch a FAQ open — then name=\"faq\" keeps only one panel open at a time.",
+        "اتفرّج على FAQ بيتفتح — وبعدين name=\"faq\" بيخلي لوحة واحدة مفتوحة في نفس الوقت.",
       ),
     },
   },
   {
     id: "html-15",
-    order: 15,
+    order: 14,
     slug: "picture-source",
     tier: "advanced",
     readMinutes: 10,
     icon: "Images",
-    visualizer: "media-stage",
+    visualizer: "picture-source",
     content: {
       title: L(
         "<picture> & <source> Responsive Images",
@@ -433,16 +434,16 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "The media stage swaps sources as the viewport changes.",
-        "مسرح الميديا بيبدّل المصادر مع تغيّر الشاشة.",
+        "Format waterfall (AVIF → WebP → JPEG), then art direction for mobile vs desktop — trailing img always stays.",
+        "تسلسل الصيغ (AVIF → WebP → JPEG)، وبعدين art direction للموبايل مقابل الديسكتوب — و img في الآخر دايمًا.",
       ),
     },
   },
   {
     id: "html-16",
-    order: 16,
+    order: 17,
     slug: "head-social-meta",
-    tier: "intermediate",
+    tier: "advanced",
     readMinutes: 9,
     icon: "Share2",
     visualizer: "meta-card",
@@ -452,13 +453,13 @@ export const modernLessons: LessonDraft[] = [
         "Head و Social Meta (OG و Twitter و Theme)",
       ),
       summary: L(
-        "Social share cards, theme-color, and favicon rules — builds on the SEO & Performance lesson.",
-        "كروت المشاركة و theme-color وقواعد الـ favicon — بيكمل درس SEO & Performance.",
+        "Social share cards, theme-color, and favicon rules — builds on Advanced SEO Insights.",
+        "كروت المشاركة و theme-color وقواعد الـ favicon — بيكمل درس SEO Insights المتقدم.",
       ),
       paragraphs: [
         L(
-          "Core crawling, SSR vs CSR, and Core Web Vitals live in SEO & Performance Insights. This lesson focuses on Open Graph, Twitter Cards, theme-color, and favicon strategy.",
-          "الزحف الأساسي و SSR مقابل CSR و Core Web Vitals في درس SEO & Performance. الدرس ده مركز على Open Graph و Twitter Cards و theme-color واستراتيجية الـ favicon.",
+          "Crawl → render → index, SSR vs CSR, titles, canonicals, and JSON-LD live in Advanced SEO Insights. Core Web Vitals live in Pro. This lesson focuses on Open Graph, Twitter Cards, theme-color, and favicon strategy.",
+          "مسار crawl → render → index و SSR مقابل CSR والعناوين والـ canonicals و JSON-LD في درس SEO Insights المتقدم. Core Web Vitals في Pro. الدرس ده مركز على Open Graph و Twitter Cards و theme-color واستراتيجية الـ favicon.",
         ),
         L(
           "Open Graph (`og:title`, `og:description`, `og:image`, `og:type`) and Twitter Card tags power previews on Slack, LinkedIn, X, and more. They must be present in the first HTML response — client-only injection is often ignored.",
@@ -506,9 +507,65 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "The meta card previews how a link unfurl might look.",
-        "كارت الـ meta بيعاين شكل اللينك لما يتفتح.",
+        "Share card builds layer by layer — og:title, description, then og:image.",
+        "كارت المشاركة بيتبني طبقة طبقة — og:title وبعدين description وبعدين og:image.",
       ),
+    },
+  },
+  {
+    id: "html-17",
+    order: 18,
+    slug: "sr-practice",
+    tier: "advanced",
+    readMinutes: 16,
+    icon: "Accessibility",
+    visualizer: "a11y-check",
+    content: {
+      title: L(
+        "Practice: Bad vs Screen-Reader Ready",
+        "Practice: Bad vs Screen-Reader Ready",
+      ),
+      summary: L(
+        "Advanced practice: bad vs screen-reader ready HTML — name, role, value, focus, and live updates.",
+        "تدريب Advanced: bad مقابل screen-reader ready HTML — name و role و value و focus و live updates.",
+      ),
+      paragraphs: [
+        L(
+          "Other lessons teach one topic. This Advanced lesson is the full practice set after semantics, forms, dialog, and a11y basics — buttons vs links, images, landmarks, tables, forms, focus, dialogs, and live regions.",
+          "الدروس التانية بتعلّم موضوع واحد. درس Advanced ده هو مجموعة التدريب الكاملة بعد semantics و forms و dialog وأساسيات a11y — buttons مقابل links، صور، landmarks، tables، forms، focus، dialogs، و live regions.",
+        ),
+        L(
+          "On each card, read the bad side first (what keyboard / NVDA / VoiceOver lose), then the ready side. Ask: does this control have a clear accessible name, the right role, and a value/state that matches the UI?",
+          "في كل card، اقرأ الجانب الغلط الأول (إيه اللي الكيبورد / NVDA / VoiceOver بيخسروه)، وبعدين الجانب الجاهز. اسأل: الـ control ده عنده accessible name واضح، و role صح، و value/state تطابق الـ UI؟",
+        ),
+        L(
+          "Ship checklist: prefer native HTML, use ARIA only when needed, keep focus order = DOM order, and never leave Tab stops inside `aria-hidden`. When a card is clear, open the matching topic lesson and try the pattern there — then test with keyboard only and one screen reader.",
+          "Checklist للشحن: فضّل native HTML، استخدم ARIA عند الحاجة بس، خلّي ترتيب الـ focus = ترتيب الـ DOM، ومتسيبش Tab جوّه `aria-hidden`. لما الـ card يبقى واضح، افتح درس الموضوع وجرّب النمط هناك — وبعدين اختبر بالكيبورد بس + screen reader واحد.",
+        ),
+      ],
+      keyPoints: [
+        L(
+          "Native HTML first — ARIA only when needed",
+          "Native HTML أولًا — ARIA عند الحاجة بس",
+        ),
+        L(
+          "Name, role, and value must match the UI",
+          "Name و role و value لازم يطابقوا الـ UI",
+        ),
+        L(
+          "Focus order follows the DOM — no positive tabindex",
+          "ترتيب الـ focus يتبع الـ DOM — من غير tabindex موجب",
+        ),
+        L(
+          "Test keyboard-only + NVDA or VoiceOver",
+          "اختبر keyboard-only + NVDA أو VoiceOver",
+        ),
+      ],
+      visualHint: L(
+        "Warm-up: watch name · role · value as focus moves — then practice on the Bad vs Ready cards below.",
+        "تسخين: اتفرّج على name · role · value مع حركة الـ focus — وبعدين تدرّب على كروت Bad مقابل Ready تحت.",
+      ),
+      compareCards: screenReaderPracticeCards,
     },
   },
 ];

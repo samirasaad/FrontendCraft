@@ -152,12 +152,14 @@ const specific: Record<string, Partial<Overlay>> = {
       `<article>
   <h1>Ship your first page</h1>
   <h2>Structure</h2>
-  <p>Use headings as an outline, not for font size.</p>
-  <h2>Next step</h2>
-  <p>Add navigation landmarks.</p>
+  <h3>Document outline</h3>
+  <h4>Ranks in order</h4>
+  <h5>Rare deep nesting</h5>
+  <h6>Finest label</h6>
+  <p>Use h1–h6 as an outline — CSS handles size.</p>
 </article>`,
-      "Outline: h1 → h2 → h2",
-      "Outline: h1 → h2 → h2",
+      "Full outline: h1 → h2 → h3 → h4 → h5 → h6",
+      "Outline كامل: h1 → h2 → h3 → h4 → h5 → h6",
     ),
     deepDive: [
       L(
@@ -175,6 +177,48 @@ const specific: Record<string, Partial<Overlay>> = {
       L(
         "Pick the correct rank; style with CSS.",
         "اختار المستوى الصح؛ والشكل من CSS.",
+      ),
+    ),
+  },
+  "text-formatting": {
+    realWorld: realWorldExample(
+      `<article>
+  <h1>Release notes</h1>
+  <p>
+    Fixed <code>focus</code> trap. Press <kbd>Esc</kbd> to close.
+    <mark>Breaking:</mark> <del>v1 API</del> <ins>v2 API</ins>.
+  </p>
+  <p>
+    Shipped <time datetime="2026-08-02">Aug 2, 2026</time>.
+    See <cite>HTML Living Standard</cite>.
+  </p>
+  <blockquote>
+    <p>Prefer native semantics over CSS-only emphasis.</p>
+  </blockquote>
+</article>`,
+      "Docs-style formatting: code, kbd, mark, del/ins, time, cite",
+      "تنسيق docs: code و kbd و mark و del/ins و time و cite",
+    ),
+    deepDive: [
+      L(
+        "`<strong>` and `<em>` change how AT announces text. `<b>` / `<i>` usually do not — use them only when the look is stylistic.",
+        "`<strong>` و `<em>` بيغيّروا إعلان AT. `<b>` / `<i>` غالبًا لأ؛ استخدمهم لما الشكل stylistic بس.",
+      ),
+      L(
+        "`<abbr title>` and `<time datetime>` add machine-readable meaning behind the visible text.",
+        "`<abbr title>` و `<time datetime>` بيضيفوا معنى مقروء للآلة ورا النص الظاهر.",
+      ),
+    ],
+    pitfalls: pitfall(
+      `<span style="font-weight:bold">Important</span>`,
+      L(
+        "CSS bold alone does not mark importance for AT.",
+        "الـ bold من CSS لوحده مش بيعلّم الأهمية لـ AT.",
+      ),
+      `<strong>Important</strong>`,
+      L(
+        "`<strong>` carries importance; style it with CSS if needed.",
+        "`<strong>` بيحمل الأهمية؛ استايله بـ CSS لو محتاج.",
       ),
     ),
   },
@@ -332,30 +376,51 @@ const specific: Record<string, Partial<Overlay>> = {
   "meta-seo": {
     realWorld: realWorldExample(
       `<head>
-  <title>FrontendCraft — Learn JS in the browser</title>
-  <meta name="description" content="Interactive JS & HTML tracks with live sandboxes." />
-  <meta property="og:title" content="FrontendCraft" />
-  <link rel="canonical" href="https://frontendcraft-app.vercel.app/" />
-</head>`,
-      "Title, description, OG, canonical",
-      "Title و description و OG و canonical",
+  <title>FrontendCraft — Learn HTML in the browser</title>
+  <meta name="description" content="Interactive HTML labs with live sandboxes and bilingual lessons." />
+  <link rel="canonical" href="https://example.com/html" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Course","name":"HTML track"}
+  </script>
+</head>
+<body>
+  <main>
+    <h1>HTML track</h1>
+    <a href="/html/forms-inputs">Learn HTML forms</a>
+  </main>
+</body>`,
+      "SSR-ready head + main + descriptive link",
+      "head جاهز لـ SSR + main + لينك وصفي",
     ),
     deepDive: [
       L(
-        "Titles/descriptions are ranking & CTR signals. Keep them unique per route; avoid keyword stuffing.",
-        "العناوين والوصف إشارات ترتيب ونقر. خليه فريد لكل صفحة؛ من غير حشو كلمات.",
+        "Titles drive the SERP headline; descriptions often become the snippet (CTR). Keep both unique per route and aligned with the visible `<h1>` — no keyword stuffing.",
+        "العناوين بتصنع عنوان النتائج؛ الوصف غالبًا بيبقى الـ snippet (CTR). خلّيهم فريدين لكل route ومتوافقين مع `<h1>` الظاهر — من غير حشو كلمات.",
+      ),
+      L(
+        "Canonical consolidates duplicates. Prefer one absolute HTTPS URL and link to that same URL in your nav — mixed variants fight each other.",
+        "الـ canonical بيجمّع النسخ المكررة. فضّل URL HTTPS مطلق واحد ولينكات الـ nav لنفس النسخة — النسخ المختلطة بتتصارع.",
+      ),
+      L(
+        "Empty CSR shells delay crawl discovery. Ship primary copy in the first HTML; hydrate UI after. Social OG tags are covered in Head & Social Meta.",
+        "CSR shells الفاضية بتأخّر اكتشاف الزحف. اطلع النص الأساسي في أول HTML؛ وبعدين hydrate للـ UI. وسوم OG في درس Head & Social Meta.",
       ),
     ],
     pitfalls: pitfall(
-      `<title>Untitled</title>`,
+      `<title>Untitled</title>
+<div id="root"></div>`,
       L(
-        "Default titles waste the richest SERP text.",
-        "عناوين افتراضية بتضيع أهم نص في نتائج البحث.",
+        "Default title + empty mount — thin SERP and delayed indexing.",
+        "عنوان افتراضي + mount فاضي — SERP ضعيف وفهرسة متأخرة.",
       ),
-      `<title>FrontendCraft — JavaScript track</title>`,
+      `<title>FrontendCraft — HTML track</title>
+<main>
+  <h1>HTML track</h1>
+  <a href="/html/forms-inputs">Learn HTML forms</a>
+</main>`,
       L(
-        "Specific, human titles win clicks.",
-        "عنوان واضح وبشري بيكسب نقرات.",
+        "Specific title + crawlable body + real links win discovery and clicks.",
+        "عنوان واضح + body قابل للزحف + لينكات حقيقية بيكسبوا الاكتشاف والنقرات.",
       ),
     ),
   },
@@ -432,7 +497,7 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
       underTheHood: pack.underTheHood,
       accessibility: pack.accessibility,
       seo: pack.seo,
-      // Pitfalls are collected into the Pitfalls-tier lessons only.
+      // Pitfalls cards are collected into Pro: Common Pitfalls only.
     },
   };
 }

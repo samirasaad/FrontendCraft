@@ -114,6 +114,7 @@ export function cheatCard(
     id?: string;
     category?: CheatCategory;
     boilerplate?: string;
+    tailwindSnippet?: string;
     previewHtml?: string;
     support?: BrowserSupportInfo;
   },
@@ -125,6 +126,9 @@ export function cheatCard(
     ...(options?.id ? { id: options.id } : {}),
     ...(options?.category ? { category: options.category } : {}),
     ...(options?.boilerplate ? { boilerplate: options.boilerplate } : {}),
+    ...(options?.tailwindSnippet
+      ? { tailwindSnippet: options.tailwindSnippet }
+      : {}),
     ...(options?.previewHtml ? { previewHtml: options.previewHtml } : {}),
     ...(options?.support ? { support: options.support } : {}),
   };

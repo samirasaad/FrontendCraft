@@ -27,13 +27,44 @@ export const ui = {
     ar: "قريبًا",
   },
   openTrack: {
-    en: "Start learning",
-    ar: "ابدأ التعلم",
+    en: "View curriculum",
+    ar: "شوف المنهج",
   },
   backToTracks: {
     en: "All tracks",
     ar: "كل الـ tracks",
   },
+  backToCurriculum: {
+    en: "Curriculum",
+    ar: "المنهج",
+  },
+  curriculumToc: {
+    en: "Table of contents",
+    ar: "جدول المحتويات",
+  },
+  levelsTree: {
+    en: "Levels",
+    ar: "المستويات",
+  },
+  expandAll: { en: "Expand all", ar: "افتح الكل" },
+  collapseAll: { en: "Collapse all", ar: "اقفل الكل" },
+  startCurriculum: {
+    en: "Start first lesson",
+    ar: "ابدأ أول درس",
+  },
+  continueLearning: {
+    en: "Continue learning",
+    ar: "كمّل التعلم",
+  },
+  curriculumLabPrimers: {
+    en: "Lab primers",
+    ar: "مقدمات المعمل",
+  },
+  curriculumLabPrimersHint: {
+    en: "Shared references for the whole track — not repeated inside every lesson",
+    ar: "مراجع مشتركة للـ track كله — مش متكررة جوّه كل درس",
+  },
+
   lessonsCount: {
     en: "lessons",
     ar: "دروس",
@@ -114,12 +145,12 @@ export const ui = {
     ar: "إزاي NVDA / VoiceOver بيسمعوا الـ pattern ده — ARIA والكيبورد والـ focus",
   },
   seoTitle: {
-    en: "🔍 SEO & Performance Insights",
-    ar: "🔍 SEO & Performance Insights",
+    en: "🔍 SEO Insights",
+    ar: "🔍 SEO Insights",
   },
   seoHint: {
-    en: "Googlebot, indexing, CLS, and Core Web Vitals impact",
-    ar: "Googlebot والفهرسة و CLS وتأثير Core Web Vitals",
+    en: "Crawl → render → index, SSR vs CSR, titles, canonicals, links, structured data",
+    ar: "Crawl → render → index و SSR مقابل CSR والعناوين والـ canonicals واللينكات و structured data",
   },
   insightCodeLabel: { en: "Reference snippet", ar: "Snippet مرجعي" },
   commonPitfalls: { en: "⚠️ Common Pitfalls & Anti-Patterns", ar: "⚠️ Common Pitfalls & Anti-Patterns" },
@@ -135,27 +166,74 @@ export const ui = {
   snippetCopied: { en: "Snippet copied", ar: "الـ snippet اتنسخ" },
   cheatFilterAll: { en: "All", ar: "الكل" },
   cheatFilterStructure: {
-    en: "Structure & Layout",
-    ar: "Structure & Layout",
+    en: "Layout & Structure",
+    ar: "Layout & Structure",
   },
-  cheatFilterForms: { en: "Forms & Inputs", ar: "Forms & Inputs" },
-  cheatFilterMedia: { en: "Media & Embeds", ar: "Media & Embeds" },
+  cheatFilterForms: { en: "Forms", ar: "Forms" },
+  cheatFilterMedia: { en: "Media", ar: "Media" },
   cheatFilterInteractive: {
-    en: "Interactive & Meta",
-    ar: "Interactive & Meta",
+    en: "Interactive & Dialogs",
+    ar: "Interactive & Dialogs",
   },
+  cheatFilterHead: { en: "Head & Meta", ar: "Head & Meta" },
   cheatFilterEmpty: {
     en: "No cards in this category yet.",
     ar: "مفيش كروت في الفئة دي لسه.",
   },
   livePreview: { en: "Live preview", ar: "معاينة مباشرة" },
   copyCode: { en: "Copy Code", ar: "انسخ الكود" },
+  copyTailwind: { en: "Copy Tailwind", ar: "انسخ Tailwind" },
   copyBoilerplate: { en: "Copy Boilerplate", ar: "انسخ Boilerplate" },
   codeCopiedToast: { en: "Code copied to clipboard", ar: "الكود اتنسخ" },
+  tailwindCopiedToast: {
+    en: "Tailwind snippet copied",
+    ar: "Snippet الـ Tailwind اتنسخ",
+  },
   boilerplateCopiedToast: {
     en: "Boilerplate copied to clipboard",
     ar: "الـ Boilerplate اتنسخ",
   },
+  domTreeTitle: {
+    en: "DOM Tree Graph Engine",
+    ar: "DOM Tree Graph Engine",
+  },
+  domTreeHint: {
+    en: "Watch Parent → Child → Text reveal. Use Play, Pause, Stop, or Step.",
+    ar: "اتفرّج على Parent → Child → Text. استخدم Play أو Pause أو Stop أو Step.",
+  },
+  simPlay: { en: "Play", ar: "Play" },
+  simPause: { en: "Pause", ar: "Pause" },
+  simStop: { en: "Stop", ar: "Stop" },
+  simStep: { en: "Step", ar: "Step" },
+  simReplay: { en: "Replay", ar: "Replay" },
+  simScreenReader: { en: "Screen Reader view", ar: "Screen Reader view" },
+  pipelineTitle: {
+    en: "Browser Rendering Pipeline",
+    ar: "Browser Rendering Pipeline",
+  },
+  pipelineHint: {
+    en: "Parse → DOM → CSSOM → Render → Layout → Paint — step through how engines build a frame",
+    ar: "Parse → DOM → CSSOM → Render → Layout → Paint — امشي خطوة بخطوة إزاي الـ engine بيرسم فريم",
+  },
+  compareTitle: {
+    en: "Practice: Bad vs Screen-Reader Ready",
+    ar: "Practice: Bad vs Screen-Reader Ready",
+  },
+  compareHint: {
+    en: "Scan bad barriers vs semantic patterns — then try the challenge below",
+    ar: "اتفرّج على bad barriers مقابل semantic patterns — وبعدين جرّب الـ challenge تحت",
+  },
+  challengeTitle: {
+    en: "Quick challenge",
+    ar: "تحدي سريع",
+  },
+  challengeCorrect: { en: "Correct!", ar: "صح!" },
+  challengeWrong: { en: "Not quite.", ar: "لسه." },
+  challengeHintBar: {
+    en: "Try the challenge below",
+    ar: "جرّب الـ challenge تحت",
+  },
+  nextLessonArrow: { en: "Next lesson ➔", ar: "الدرس اللي بعده ➔" },
   browserSupportTitle: {
     en: "Browser Compatibility",
     ar: "توافق المتصفحات",

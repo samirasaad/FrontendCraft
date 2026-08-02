@@ -66,6 +66,12 @@ export const htmlCheatCards: CheatCard[] = [
   <main id="main">…</main>
   <footer>…</footer>
 </body>`,
+      tailwindSnippet: `<body class="min-h-screen bg-slate-950 text-slate-100">
+  <a class="sr-only focus:not-sr-only" href="#main">Skip</a>
+  <header class="border-b border-white/10 px-4 py-3">…</header>
+  <main id="main" class="mx-auto max-w-3xl px-4 py-8">…</main>
+  <footer class="border-t border-white/10 px-4 py-6">…</footer>
+</body>`,
       support: support("5+", "4+", "5+", "12+", "widely"),
     },
   ),
@@ -104,6 +110,16 @@ export const htmlCheatCards: CheatCard[] = [
   </label>
   <button type="submit">Save</button>
 </form>`,
+      tailwindSnippet: `<label class="grid gap-1 text-sm font-medium text-slate-200">
+  Email
+  <input
+    class="rounded-xl border border-white/15 bg-slate-950/60 px-3 py-2"
+    type="email"
+    name="email"
+    required
+    autocomplete="email"
+  />
+</label>`,
       support: support("1+", "1+", "1+", "12+", "widely"),
     },
   ),
@@ -301,7 +317,7 @@ export const htmlCheatCards: CheatCard[] = [
     L("Social previews read these from the initial HTML `<head>`.", "معاينات السوشيال بتقرأ دول من `<head>` في أول HTML."),
     {
       id: "og",
-      category: "interactive",
+      category: "head",
       previewHtml: `<div style="background:#fff;border-radius:12px;padding:10px;border:1px solid #cbd5e1">
   <div style="height:72px;border-radius:8px;background:linear-gradient(135deg,#67e8f9,#fde047)"></div>
   <p style="margin:8px 0 2px;font-weight:700">FrontendCraft</p>
@@ -332,7 +348,7 @@ export const htmlCheatCards: CheatCard[] = [
     L("SVG favicon + ICO fallback covers desktop; apple-touch for iOS home screen.", "SVG + ICO للديسكتوب؛ apple-touch لشاشة iOS."),
     {
       id: "theme-favicon",
-      category: "interactive",
+      category: "head",
       previewHtml: `<p class="chip" style="background:#020617;color:#67e8f9">theme-color #020617</p>
 <p>favicon.ico · icon.svg · apple-touch-icon</p>`,
       support: support("73+", "36+", "15+", "79+", "widely"),
@@ -348,6 +364,10 @@ export const htmlCheatCards: CheatCard[] = [
       category: "structure",
       previewHtml: `<p><a href="#">Open JS track</a></p>
 <button type="button">Mark complete</button>`,
+      tailwindSnippet: `<a class="text-cyan-300 underline-offset-4 hover:underline" href="/javascript">Open JS track</a>
+<button type="button" class="rounded-full bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-950">
+  Mark complete
+</button>`,
       support: support("1+", "1+", "1+", "12+", "widely"),
     },
   ),
