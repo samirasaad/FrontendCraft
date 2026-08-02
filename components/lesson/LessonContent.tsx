@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { AccessibilityCard } from "@/components/lesson/AccessibilityCard";
+import { BrowserSupport } from "@/components/lesson/BrowserSupport";
 import { CheatSheetCards } from "@/components/lesson/CheatSheetCards";
 import { CodeRunner } from "@/components/lesson/CodeRunner";
 import { PitfallsBox } from "@/components/lesson/PitfallsBox";
@@ -136,8 +137,31 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
       </div>
 
       <UnderTheHood section={lesson.content.underTheHood} />
-      <AccessibilityCard section={lesson.content.accessibility} />
-      <SeoCallout section={lesson.content.seo} />
+
+      {/* Dedicated curriculum lessons — not repeated on every topic */}
+      {lesson.slug === "accessibility-basics" ? (
+        <AccessibilityCard section={lesson.content.accessibility} />
+      ) : null}
+
+      {lesson.slug === "meta-seo" ? (
+        <SeoCallout section={lesson.content.seo} />
+      ) : null}
+
+      {lesson.slug === "browser-compatibility" ? (
+        <div className="space-y-4">
+          {lesson.content.browserSupport ? (
+            <BrowserSupport support={lesson.content.browserSupport} />
+          ) : null}
+          {lesson.content.browserMatrices?.map((matrix, index) => (
+            <div key={`${matrix.label.en}-${index}`} className="space-y-2">
+              <p className="px-1 text-sm font-semibold text-emerald-100">
+                {loc(matrix.label, locale)}
+              </p>
+              <BrowserSupport support={matrix.support} />
+            </div>
+          ))}
+        </div>
+      ) : null}
 
       {lesson.content.pitfalls ? (
         <PitfallsBox pitfalls={lesson.content.pitfalls} />

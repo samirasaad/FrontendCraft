@@ -1,5 +1,7 @@
 import type {
+  BrowserSupportInfo,
   CheatCard,
+  CheatCategory,
   CodeExample,
   InsightSection,
   LocalizedString,
@@ -67,10 +69,63 @@ export function pitfall(
   };
 }
 
+export function support(
+  chrome: string,
+  firefox: string,
+  safari: string,
+  edge: string,
+  baseline: BrowserSupportInfo["baseline"],
+  extras?: {
+    notes?: LocalizedString;
+    fallback?: LocalizedString;
+  },
+): BrowserSupportInfo {
+  return {
+    chrome,
+    firefox,
+    safari,
+    edge,
+    baseline,
+    ...(extras?.notes ? { notes: extras.notes } : {}),
+    ...(extras?.fallback ? { fallback: extras.fallback } : {}),
+  };
+}
+
+/** Sensible default for evergreen HTML topics. */
+export const evergreenSupport = support(
+  "90+",
+  "90+",
+  "14+",
+  "90+",
+  "widely",
+  {
+    notes: L(
+      "Supported in current evergreen browsers. Verify only if you must support very old corporate engines.",
+      "مدعوم في المتصفحات الحديثة. تحقق بس لو محتاج engines قديمة جدًا.",
+    ),
+  },
+);
+
 export function cheatCard(
   title: LocalizedString,
   snippet: string,
   note: LocalizedString,
+  options?: {
+    id?: string;
+    category?: CheatCategory;
+    boilerplate?: string;
+    previewHtml?: string;
+    support?: BrowserSupportInfo;
+  },
 ): CheatCard {
-  return { title, snippet, note };
+  return {
+    title,
+    snippet,
+    note,
+    ...(options?.id ? { id: options.id } : {}),
+    ...(options?.category ? { category: options.category } : {}),
+    ...(options?.boilerplate ? { boilerplate: options.boilerplate } : {}),
+    ...(options?.previewHtml ? { previewHtml: options.previewHtml } : {}),
+    ...(options?.support ? { support: options.support } : {}),
+  };
 }

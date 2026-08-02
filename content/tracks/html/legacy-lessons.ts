@@ -459,53 +459,67 @@ export const legacyLessons: LegacyLesson[] = [
     order: 8,
     slug: "accessibility-basics",
     difficulty: "intermediate",
-    readMinutes: 8,
+    readMinutes: 12,
     icon: "Accessibility",
     visualizer: "a11y-check",
     content: {
       title: {
-        en: "Accessibility Basics",
-        ar: "Accessibility Basics",
+        en: "Accessibility (a11y) & Screen Readers",
+        ar: "Accessibility (a11y) & Screen Readers",
       },
       summary: {
-        en: "Accessible HTML works with keyboards, screen readers, and more users.",
-        ar: "الـ HTML الـ accessible بيشتغل مع الكيبورد وscreen readers ومستخدمين أكتر.",
+        en: "Dedicated a11y lesson — how NVDA/VoiceOver hear your HTML, plus ARIA, keyboard, and focus rules you can ship.",
+        ar: "درس a11y مخصص — إزاي NVDA/VoiceOver بيسمعوا HTML، وكمان قواعد ARIA والكيبورد والـ focus تقدر تنشرها.",
       },
       paragraphs: [
         {
-          en: "Start with native elements (`button`, `a`, `label`) — they ship keyboard and semantics for free.",
-          ar: "ابدأ بعناصر native (`button` و `a` و `label`) — بتديك keyboard و semantics من غير تعب.",
+          en: "Screen readers (NVDA, VoiceOver, JAWS) walk the accessibility tree built from your DOM — not from what CSS paints. Native elements (`button`, `a`, `label`, landmarks) expose name, role, and value automatically.",
+          ar: "قارئات الشاشة (NVDA و VoiceOver و JAWS) بتمشي على accessibility tree من الـ DOM — مش من شكل CSS. العناصر الأصلية (`button` و `a` و `label` والـ landmarks) بتعرض الاسم والدور والقيمة تلقائيًا.",
         },
         {
-          en: "Use landmarks, headings, and alt text. Add ARIA only when native HTML is not enough.",
-          ar: "استخدم landmarks و headings و alt text. زوّد ARIA بس لما الـ HTML الأصلي مش كفاية.",
+          en: "Keyboard path is non-negotiable: `Tab` / `Shift+Tab` for order, `Enter` / `Space` to activate controls, Escape to dismiss dialogs. Every mouse action needs a keyboard equivalent and a visible focus style.",
+          ar: "مسار الكيبورد أساسي: `Tab` / `Shift+Tab` للترتيب، `Enter` / `Space` للتفعيل، Escape لقفل الـ dialogs. كل فعل ماوس محتاج بديل كيبورد و focus ظاهر.",
         },
         {
-          en: "Ensure visible focus, sufficient contrast (with CSS), and logical tab order.",
-          ar: "اتأكد من focus ظاهر، وcontrast كفاية (مع CSS)، وtab order منطقي.",
+          en: "ARIA supplements native HTML — never replace it. Reach for `aria-expanded`, `aria-live`, `aria-labelledby`, and roles only when no native element fits. Prefer one `<main>`, skip links, and honest heading ranks.",
+          ar: "ARIA بتكمّل HTML الأصلي — مش بتستبدله. استخدم `aria-expanded` و `aria-live` و `aria-labelledby` والـ roles لما مفيش عنصر أصلي. فضّل `<main>` واحد و skip links ومراتب headings صادقة.",
+        },
+        {
+          en: "Manage focus after view changes (open dialog → focus inside; close → return to invoker). Announce async results with a polite `aria-live` region instead of silent UI swaps.",
+          ar: "أدِر الـ focus بعد تغيّر الشاشة (افتح dialog → focus جوّه؛ اقفل → ارجع للزر). أعلن نتائج async بـ `aria-live` مهذب بدل تغيير صامت.",
         },
       ],
       keyPoints: [
         {
-          en: "Prefer native controls first",
-          ar: "فضّل الـ native controls الأول",
+          en: "Native controls first — ARIA only when needed",
+          ar: "Native controls أولًا — ARIA عند الحاجة بس",
         },
         {
-          en: "ARIA is a supplement, not a default",
-          ar: "ARIA مكمل، مش default",
+          en: "Name, role, value must stay in sync with UI state",
+          ar: "الاسم والدور والقيمة لازم يطابقوا حالة الـ UI",
         },
         {
-          en: "Keyboard path must reach every action",
-          ar: "مسار الكيبورد لازم يوصل لكل action",
+          en: "Keyboard + visible focus for every action",
+          ar: "كيبورد + focus ظاهر لكل فعل",
+        },
+        {
+          en: "Test with NVDA or VoiceOver on real pages",
+          ar: "اختبر بـ NVDA أو VoiceOver على صفحات حقيقية",
         },
       ],
-      code: `<button type="button">Save</button>
-<a href="#content">Skip to content</a>
+      code: `<a href="#main">Skip to content</a>
+<main id="main">
+  <h1>Lesson title</h1>
+  <button type="button" aria-expanded="false" aria-controls="panel">
+    More info
+  </button>
+  <div id="panel" hidden>Details for screen readers and keyboard users.</div>
+</main>
 <img src="/chart.png" alt="Sales grew 20% in March" />
 <nav aria-label="Primary">…</nav>`,
       expectedOutput: {
-        en: "Keyboard-friendly controls + clear accessible names",
-        ar: "controls مناسبة للكيبورد + accessible names واضحة",
+        en: "Skip link, named landmarks, expandable control, meaningful alt",
+        ar: "Skip link و landmarks مسمّاة و control قابل للتوسيع و alt مفهوم",
       },
       visualHint: {
         en: "Focus ring travels across controls as checks turn green.",
@@ -518,56 +532,70 @@ export const legacyLessons: LegacyLesson[] = [
     order: 9,
     slug: "meta-seo",
     difficulty: "intermediate",
-    readMinutes: 7,
+    readMinutes: 12,
     icon: "Search",
     visualizer: "meta-card",
     content: {
       title: {
-        en: "Meta & SEO Essentials",
-        ar: "Meta & SEO Essentials",
+        en: "SEO & Performance Insights",
+        ar: "SEO & Performance Insights",
       },
       summary: {
-        en: "Metadata in `<head>` shapes tabs, shares, and search snippets.",
-        ar: "الـ Metadata في `<head>` بتأثر على التاب والمشاركات ونتائج البحث.",
+        en: "Dedicated SEO lesson — how Googlebot indexes HTML, SSR vs CSR, Core Web Vitals (LCP, INP, CLS), and a clean `<head>`.",
+        ar: "درس SEO مخصص — إزاي Googlebot بيفهرس HTML، و SSR مقابل CSR، و Core Web Vitals (LCP و INP و CLS)، و `<head>` نضيف.",
       },
       paragraphs: [
         {
-          en: "`<title>` and `<meta name=\"description\">` are your first SEO signals. Keep them unique per page.",
-          ar: "`<title>` و `<meta name=\"description\">` أول إشارات SEO. خلّيهم unique لكل صفحة.",
+          en: "Googlebot and other crawlers prefer meaningful HTML in the first response. Semantic structure beats div soup; empty client-only shells delay discovery of titles, headings, and internal links.",
+          ar: "Googlebot والـ crawlers بيفضّلوا HTML معنوي في أول استجابة. الهيكل الـ semantic أحسن من div soup؛ الـ shells الفاضية على الـ client بتأخّر اكتشاف العناوين والـ headings واللينكات الداخلية.",
         },
         {
-          en: "Open Graph / Twitter tags improve link previews. `canonical` avoids duplicate URL confusion.",
-          ar: "وسوم Open Graph / Twitter بتحسّن معاينة اللينك. `canonical` بيقلل لخبطة الـ duplicate URLs.",
+          en: "SSR/SSG (or solid prerender) puts primary copy, `<title>`, meta description, and canonical in the initial HTML. CSR can enhance UI — it should not invent the whole document after hydration.",
+          ar: "SSR/SSG (أو prerender محترم) بيحط النص الأساسي و `<title>` و meta description و canonical في أول HTML. CSR يقدر يعزّز الـ UI — مش يخترع المستند كله بعد الـ hydration.",
         },
         {
-          en: "`charset` and `viewport` belong in every modern document head.",
-          ar: "`charset` و `viewport` لازم يكونوا في كل `<head>` حديث.",
+          en: "Core Web Vitals are product metrics: LCP (largest contentful paint), INP (interaction responsiveness), CLS (layout shift). Sized images, stable fonts, and avoiding late-injected banners protect CLS; light JS protects INP.",
+          ar: "Core Web Vitals مقاييس منتج: LCP و INP و CLS. صور بمقاس وخطوط ثابتة وتجنّب بنرات متأخرة بيحموا CLS؛ JS خفيف بيحمي INP.",
+        },
+        {
+          en: "Every page needs a unique `<title>`, honest meta description, `charset`, `viewport`, and preferably `rel=\"canonical\"`. Deep social tags (Open Graph / Twitter) live in the Head & Social Meta lesson — fundamentals stay here.",
+          ar: "كل صفحة محتاجة `<title>` فريد و meta description صادق و `charset` و `viewport` ويفضّل `rel=\"canonical\"`. وسوم السوشيال العميقة في درس Head & Social Meta — الأساسيات هنا.",
         },
       ],
       keyPoints: [
         {
-          en: "Unique title + description per page",
-          ar: "title + description فريدين لكل صفحة",
+          en: "Indexable HTML in the first response",
+          ar: "HTML قابل للفهرسة في أول استجابة",
         },
         {
-          en: "Viewport meta enables responsive layout",
-          ar: "viewport meta بيفعّل responsive layout",
+          en: "Unique title + description + canonical per URL",
+          ar: "title + description + canonical فريدين لكل URL",
         },
         {
-          en: "Social meta controls share cards",
-          ar: "Social meta بتتحكم في كروت المشاركة",
+          en: "Guard LCP, INP, and CLS like product bugs",
+          ar: "عامل LCP و INP و CLS زي bugs منتج",
+        },
+        {
+          en: "Semantic landmarks and headings help crawlers and users",
+          ar: "Landmarks و headings الـ semantic بتساعد crawlers والمستخدمين",
         },
       ],
       code: `<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FrontendCraft — HTML</title>
-  <meta name="description" content="Learn HTML with interactive labs." />
+  <title>FrontendCraft — HTML track</title>
+  <meta name="description" content="Learn HTML with interactive labs and live sandboxes." />
   <link rel="canonical" href="https://example.com/html" />
-</head>`,
+</head>
+<body>
+  <main>
+    <h1>HTML track</h1>
+    <p>Primary copy ships in the first HTML response.</p>
+  </main>
+</body>`,
       expectedOutput: {
-        en: "Search-friendly head with viewport + description",
-        ar: "head مناسب للبحث فيه viewport + description",
+        en: "Crawlable head + visible main content (SSR-friendly)",
+        ar: "head قابل للزحف + محتوى main ظاهر (مناسب لـ SSR)",
       },
       visualHint: {
         en: "A browser tab and share card populate from meta tags.",

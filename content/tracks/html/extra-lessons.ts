@@ -1,16 +1,16 @@
 import {
   L,
-  cheatCard,
   realWorldExample,
   simpleExample,
 } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
+import { htmlCheatCards } from "@/content/tracks/html/cheatsheet-cards";
 import { collectedHtmlPitfalls } from "@/content/tracks/html/collected-pitfalls";
 
 export const extraLessons: LessonDraft[] = [
   {
     id: "html-pro-1",
-    order: 11,
+    order: 17,
     slug: "html-perf-media",
     tier: "pro",
     readMinutes: 9,
@@ -81,7 +81,7 @@ export const extraLessons: LessonDraft[] = [
   },
   {
     id: "html-pro-2",
-    order: 12,
+    order: 18,
     slug: "html-architecture-partials",
     tier: "pro",
     readMinutes: 10,
@@ -150,7 +150,7 @@ export const extraLessons: LessonDraft[] = [
   },
   {
     id: "html-pit-1",
-    order: 13,
+    order: 19,
     slug: "html-common-pitfalls",
     tier: "pitfalls",
     readMinutes: 12,
@@ -206,36 +206,36 @@ export const extraLessons: LessonDraft[] = [
   },
   {
     id: "html-sheet-1",
-    order: 14,
+    order: 20,
     slug: "html-cheatsheet",
     tier: "cheatsheet",
-    readMinutes: 5,
+    readMinutes: 8,
     icon: "BookCopy",
     visualizer: "document-tree",
     content: {
-      title: L("HTML Essentials CheatSheet", "HTML Essentials CheatSheet"),
+      title: L("HTML Interactive CheatSheet", "HTML Interactive CheatSheet"),
       summary: L(
-        "Copy-ready snippets for the skeleton, landmarks, forms, and media.",
-        "snippets جاهزة للنسخ: الهيكل، landmarks، الفورم، والميديا.",
+        "Filterable cards with live previews, copy actions, and browser compatibility — modern HTML at a glance.",
+        "كروت قابلة للفلترة مع معاينة مباشرة ونسخ وتوافق متصفحات — HTML الحديث بنظرة.",
       ),
       paragraphs: [
         L(
-          "Keep this open while you scaffold a new page — then jump back to deeper lessons for the why.",
-          "سيبه مفتوح وانت بتبني صفحة جديدة — وارجع للدروس الأعمق عشان الـ why.",
+          "Use the category chips to jump between Structure, Forms, Media, and Interactive & Meta patterns.",
+          "استخدم أزرار الفئات للتنقّل بين Structure و Forms و Media و Interactive & Meta.",
         ),
         L(
-          "Technical tag names stay in English in both locales on purpose.",
-          "أسماء الـ tags التقنية بتفضل إنجليزي في اللغتين عن قصد.",
+          "Each card shows a mini live preview, Copy Code, optional Copy Boilerplate, and a Baseline-aware compatibility bar.",
+          "كل كارت فيه معاينة مباشرة و Copy Code و Copy Boilerplate اختياري وشريط توافق واعي بـ Baseline.",
         ),
         L(
-          "One click copies a card. Paste into the playground and tweak attributes live.",
-          "ضغطة بتنسخ الكارت. حطه في الـ playground وعدّل الـ attributes مباشرة.",
+          "Technical tag names stay in English in both locales on purpose — paste into the playground and tweak live.",
+          "أسماء الـ tags التقنية بتفضل إنجليزي في اللغتين عن قصد — حطها في الـ playground وعدّل مباشرة.",
         ),
       ],
       keyPoints: [
-        L("Skeleton → landmarks → content", "هيكل → landmarks → محتوى"),
-        L("Label every control", "سمّي كل control"),
-        L("Media needs size + text alternative", "الميديا محتاجة مقاس وبديل نصي"),
+        L("Filter → preview → copy → paste in playground", "فلتر → معاينة → نسخ → لصق في الـ playground"),
+        L("Prefer boilerplate for full document fragments", "فضّل boilerplate لمقاطع المستند الكاملة"),
+        L("Check Baseline before shipping bleeding-edge tags", "راجع Baseline قبل ما تنشر tags جديدة"),
       ],
       examples: [
         simpleExample(
@@ -248,50 +248,19 @@ export const extraLessons: LessonDraft[] = [
           "مستند صالح مختصر",
         ),
         realWorldExample(
-          `<form>
-  <label>Name <input name="name" required /></label>
-  <button type="submit">Save</button>
-</form>`,
-          "Labeled form control",
-          "control فورم بـ label",
+          `<dialog id="hi" open>
+  <p>Native dialog preview</p>
+  <form method="dialog"><button>Close</button></form>
+</dialog>`,
+          "Dialog preview snippet",
+          "snippet معاينة dialog",
         ),
       ],
       visualHint: L(
         "Cards assemble into a tiny document tree.",
         "الكروت بتتركب كـ document tree صغير.",
       ),
-      cheatCards: [
-        cheatCard(
-          L("Document shell", "Document shell"),
-          `<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8" />\n    <meta name="viewport" content="width=device-width, initial-scale=1" />\n    <title>Title</title>\n  </head>\n  <body></body>\n</html>`,
-          L("Always start here.", "دايمًا ابدأ من هنا."),
-        ),
-        cheatCard(
-          L("Landmarks", "Landmarks"),
-          `<header></header>\n<nav aria-label="Primary"></nav>\n<main></main>\n<footer></footer>`,
-          L("One main. Name your navs.", "main واحد. سمّي الـ nav."),
-        ),
-        cheatCard(
-          L("Heading outline", "Heading outline"),
-          `<h1>Page</h1>\n<h2>Section</h2>\n<h3>Subsection</h3>`,
-          L("Don't skip levels for styling.", "متقفزش مستويات عشان الشكل."),
-        ),
-        cheatCard(
-          L("Label + input", "Label + input"),
-          `<label>\n  Email\n  <input type="email" name="email" required />\n</label>`,
-          L("Placeholder ≠ label.", "الـ placeholder ≠ label."),
-        ),
-        cheatCard(
-          L("Image", "Image"),
-          `<img src="/x.webp" alt="Description" width="640" height="360" loading="lazy" />`,
-          L("Alt + size + lazy when offscreen.", "alt + مقاس + lazy لو برا الشاشة."),
-        ),
-        cheatCard(
-          L("Button vs link", "Button vs link"),
-          `<a href="/path">Navigate</a>\n<button type="button">Act</button>`,
-          L("Pick the element that matches intent.", "اختار العنصر على حسب النية."),
-        ),
-      ],
+      cheatCards: htmlCheatCards,
     },
   },
 ];

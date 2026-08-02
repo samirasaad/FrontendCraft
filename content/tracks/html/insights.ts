@@ -610,12 +610,16 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "NVDA (Windows) and VoiceOver (macOS/iOS) are the most common pair to test — they read roles, states, and live regions differently; fixing for spec compliance helps both.",
-          "NVDA (Windows) و VoiceOver (macOS/iOS) أشهر pair للاختبار — بيقرأوا roles و states و live regions differently؛ fix للـ spec compliance بيساعد الاتنين.",
+          "This lesson is the a11y source of truth for the HTML track — other lessons link concepts here instead of repeating thin tips. NVDA (Windows) and VoiceOver (macOS/iOS) are the pair to practice with.",
+          "الدرس ده مصدر a11y للـ HTML track — الدروس التانية بترجع هنا بدل تكرار نصائح سطحية. NVDA (Windows) و VoiceOver (macOS/iOS) هما اللي تتدرب عليهم.",
         ),
         L(
           "Keyboard: Tab/Shift+Tab move focus; Enter activates links and buttons; Space toggles buttons and checkboxes; Escape closes dialogs. Never trap focus without a dismiss path.",
           "Keyboard: Tab/Shift+Tab ينقلوا focus؛ Enter يفعّل links و buttons؛ Space يtoggle buttons و checkboxes؛ Escape يقفل dialogs. متحبسش focus من غير dismiss path.",
+        ),
+        L(
+          "ARIA pattern checklist: `aria-expanded` + `aria-controls` for disclosures, `aria-live=\"polite\"` for status text, `aria-labelledby` for dialog titles. Prefer native elements before any role=.",
+          "Checklist لـ ARIA: `aria-expanded` + `aria-controls` للـ disclosures، `aria-live=\"polite\"` لنص الحالة، `aria-labelledby` لعناوين الـ dialog. فضّل العناصر الأصلية قبل أي role=.",
         ),
       ],
       {
@@ -624,12 +628,14 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("Color contrast ≥ 4.5:1 for body text (AA)", "Color contrast ≥ 4.5:1 لـ body text (AA)"),
           L("aria-live=\"polite|assertive\" for dynamic updates", "aria-live=\"polite|assertive\" للـ dynamic updates"),
           L("Manage focus on route change and modal open/close", "أدِر focus على route change و modal open/close"),
+          L("Skip link → #main before repeated chrome", "Skip link → #main قبل الـ chrome المتكرر"),
         ],
         code: `<button type="button" aria-expanded="false" aria-controls="menu">
   Menu
 </button>
-<ul id="menu" hidden>...</ul>`,
-        codeCaption: L("Expandable widget ARIA pattern", "Expandable widget ARIA pattern"),
+<ul id="menu" hidden>...</ul>
+<div aria-live="polite" id="status"></div>`,
+        codeCaption: L("Expandable widget + live status region", "Expandable widget + منطقة حالة live"),
       },
     ),
     seo: insight(
@@ -654,37 +660,105 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     ),
   },
 
+  "browser-compatibility": {
+    underTheHood: insight(
+      [
+        L(
+          "Browsers ship different engines (Blink, Gecko, WebKit). HTML/CSS/JS features land on different schedules — Baseline aggregates interoperability so you are not guessing from one caniuse cell.",
+          "المتصفحات بتستخدم engines مختلفة (Blink و Gecko و WebKit). ميزات HTML/CSS/JS بتنزل بمواعيد مختلفة — Baseline بيجمّع التوافق عشان متخمّنش من خلية caniuse واحدة.",
+        ),
+        L(
+          "Feature detection (`in` operator, `CSS.supports`, `@supports`) asks the engine at runtime. User-agent sniffing breaks as engines spoof and update — avoid it in production.",
+          "Feature detection (`in` و `CSS.supports` و `@supports`) بيسأل الـ engine وقت التشغيل. شمّ الـ user-agent بيتكسر لما الـ engines تقلّد وتتحدث — تجنّبه في الإنتاج.",
+        ),
+        L(
+          "Progressive enhancement keeps a usable HTML path first, then upgrades when APIs exist — the opposite of shipping a Newly Baseline-only control with no fallback.",
+          "Progressive enhancement بيخلي مسار HTML يشتغل أولًا، وبعدين يترقّى لما الـ APIs تبقى موجودة — عكس ما تنشر كنترول Newly Baseline من غير fallback.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Baseline Widely ≈ safe default for most products", "Baseline Widely ≈ افتراضي آمن لمعظم المنتجات"),
+          L("Newly → document Safari/WebKit floor + fallback", "Newly → وثّق حد Safari/WebKit + fallback"),
+          L("Detect features; never parse navigator.userAgent for UX", "افحص الميزات؛ متفكّش navigator.userAgent للـ UX"),
+          L("This lesson owns compatibility matrices for the track", "الدرس ده مالك مصفوفات التوافق للـ track"),
+        ],
+        code: `if ("showModal" in HTMLDialogElement.prototype) {
+  dialog.showModal();
+} else {
+  location.assign("/confirm");
+}`,
+        codeCaption: L("Runtime feature detection", "Feature detection وقت التشغيل"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Compatibility choices affect a11y — a custom dialog polyfill must preserve focus trap and Escape. A missing WebKit feature is not an excuse to ship an inaccessible mouse-only overlay.",
+          "اختيارات التوافق بتأثر على a11y — polyfill لـ dialog لازم يحافظ على focus trap و Escape. نقص ميزة في WebKit مش عذر تعمل overlay ماوس بس.",
+        ),
+        L(
+          "When you gate a control behind feature detection, keep the fallback keyboard-operable and announced — same WCAG bar as the modern path.",
+          "لما تقفل كنترول ورا feature detection، خلّي الـ fallback يشتغل بالكيبورد ويتعلن — نفس معيار WCAG كالمسار الحديث.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Fallbacks must remain keyboard accessible", "الـ fallbacks لازم تفضل accessible بالكيبورد"),
+          L("Don't remove focus styles to “match” old browsers", "متشيلش ستايلات الـ focus عشان “تشابه” متصفحات قديمة"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Crawlers use modern evergreens — Baseline Widely HTML is almost always indexable. Problems arise when critical content is only injected after unsupported client APIs fail silently.",
+          "الـ crawlers على evergreens حديثة — HTML من Baseline Widely غالبًا قابل للفهرسة. المشاكل لما المحتوى الحرج يتضخ بعد ما APIs على الـ client تفشل بصمت.",
+        ),
+        L(
+          "Prefer SSR for primary copy, layout-stable images, and real links — compatibility polyfills should not delay LCP with huge legacy bundles.",
+          "فضّل SSR للنص الأساسي وصور ثابتة layout ولينكات حقيقية — polyfills التوافق متأخرش LCP بحزم legacy ضخمة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Indexable HTML first — enhance after", "HTML قابل للفهرسة أولًا — بعدين enhancement"),
+          L("Avoid shipping multiple heavy polyfill packs by default", "متنشّرش حزم polyfill تقيلة افتراضيًا"),
+        ],
+      },
+    ),
+  },
+
   "meta-seo": {
     underTheHood: insight(
       [
         L(
-          "`<head>` metadata is parsed before body render — `<title>`, `<meta name=\"description\">`, `<link rel=\"canonical\">`, Open Graph, and Twitter cards live here. Blink builds document metadata used by UI and share sheets.",
-          "metadata في `<head>` بتتparse قبل body render — `<title>`, `<meta name=\"description\">`, `<link rel=\"canonical\">`, Open Graph, و Twitter cards هنا. Blink بيبني document metadata للـ UI و share sheets.",
+          "This lesson is the SEO & performance source of truth for the HTML track. Crawlers parse the first HTML response — Blink/Gecko expose `<title>`, meta, and canonical early; body text in that payload is what gets indexed reliably.",
+          "الدرس ده مصدر SEO والأداء للـ HTML track. الـ crawlers بتحلل أول استجابة HTML — Blink/Gecko بتعرض `<title>` و meta و canonical بدري؛ نص الـ body في الحمولة دي هو اللي بيتفهرس بموثوقية.",
         ),
         L(
-          "Robots directives (`noindex`, `nofollow`) and canonical URLs tell crawlers how to treat the URL — conflicting canonical vs sitemap entries confuse indexing.",
-          "Robots directives (`noindex`, `nofollow`) و canonical URLs بتقول للـ crawlers يتعاملوا إزاي مع URL — canonical متعارض مع sitemap بيلخبط indexing.",
+          "SSR/SSG vs CSR: a client-only `<div id=\"root\">` with no server HTML delays discovery. Hydrate enhancements — don’t invent primary copy after paint.",
+          "SSR/SSG مقابل CSR: `<div id=\"root\">` فاضي على الـ client من غير HTML سيرفر بيأخّر الاكتشاف. اعمل hydrate للتحسينات — متخترعش النص الأساسي بعد الـ paint.",
         ),
         L(
-          "Hreflang links signal language alternates — must be reciprocal and include self-reference. Charset and viewport remain prerequisites for correct mobile indexing.",
-          "Hreflang links بت signal language alternates — لازم reciprocal وتinclude self-reference. Charset و viewport prerequisites للـ mobile indexing الصح.",
+          "Layout and paint pipelines drive Core Web Vitals: late images without dimensions cause CLS; long tasks hurt INP; oversized heroes without preload hurt LCP.",
+          "مسارات الـ layout والـ paint بتحرّك Core Web Vitals: صور متأخرة من غير أبعاد بتعمل CLS؛ long tasks بتضر INP؛ heroes ضخمة من غير preload بتضر LCP.",
         ),
       ],
       {
         bullets: [
           L("Unique title + description per indexable URL", "Title + description فريدين لكل URL قابل للفهرسة"),
           L("One canonical URL per content item", "Canonical URL واحد لكل content item"),
-          L("og:image min 1200×630 for reliable previews", "og:image min 1200×630 لـ previews موثوقة"),
-          L("robots.txt vs meta robots — know which wins", "robots.txt vs meta robots — اعرف مين يكسب"),
+          L("Semantic HTML > div soup for crawl clarity", "Semantic HTML أحسن من div soup لوضوح الزحف"),
+          L("Measure with Search Console + CrUX / Lighthouse", "قِس بـ Search Console + CrUX / Lighthouse"),
         ],
         code: `<head>
-  <title>FrontendCraft — JavaScript Track</title>
-  <meta name="description" content="Learn JS from basics to production." />
-  <link rel="canonical" href="https://example.com/tracks/js" />
-  <meta property="og:title" content="JavaScript Track" />
-  <meta property="og:image" content="https://example.com/og/js.png" />
+  <title>FrontendCraft — HTML Track</title>
+  <meta name="description" content="Learn HTML with interactive labs." />
+  <link rel="canonical" href="https://example.com/html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>`,
-        codeCaption: L("Core SEO meta bundle", "Core SEO meta bundle"),
+        codeCaption: L("Core SEO head bundle", "حزمة head أساسية للـ SEO"),
       },
     ),
     accessibility: insight(
@@ -712,21 +786,34 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     seo: insight(
       [
         L(
-          "Googlebot renders `<head>` from initial HTML — client-only title updates may miss the crawl window. SSR/SSG meta is the production standard for indexable routes.",
-          "Googlebot بيrender `<head>` من initial HTML — title updates client-only ممكن تفوت crawl window. SSR/SSG meta هو production standard للـ indexable routes.",
+          "Googlebot reads the initial HTML — `<title>`, canonical, meta description, and body copy in the first payload index reliably. Semantic landmarks and real `<a href>` links pass crawl equity; `javascript:` / `#` stubs do not.",
+          "Googlebot بيقرأ أول HTML — `<title>` و canonical و meta description ونص الـ body في أول حمولة بيتفهرسوا بموثوقية. Landmarks و `<a href>` حقيقية بتمرّر crawl equity؛ stubs من نوع `javascript:` / `#` لأ.",
         ),
         L(
-          "Core Web Vitals influence ranking indirectly via page experience — meta tags do not fix slow LCP; pair SEO head work with performance budgets.",
-          "Core Web Vitals بتأثر ranking indirectly عبر page experience — meta tags مايصلحوش LCP بطيء؛ اربط SEO head work بـ performance budgets.",
+          "SSR/SSG is the production default for marketing and docs. Client-rendered shells can still rank after render, but they risk thin first paints and delayed discovery — especially on slow networks.",
+          "SSR/SSG هو الافتراضي للإنتاج للتسويق والـ docs. الـ shells المرسومة على الـ client ممكن تترتب بعد الرندر، بس بتخاطر بـ first paint نحيف واكتشاف متأخر — خصوصًا على شبكات بطيئة.",
+        ),
+        L(
+          "Core Web Vitals: reserve image space (CLS), keep interaction handlers light (INP), and optimize the LCP element (often a hero `<img>` — never lazy-load it). Meta tags do not fix a 4s LCP.",
+          "Core Web Vitals: احجز مساحة الصور (CLS)، خلّي handlers التفاعل خفيفة (INP)، وحسّن عنصر LCP (غالبًا `<img>` hero — متعملش عليه lazy). الـ meta tags مش هتصلح LCP بـ 4 ثواني.",
         ),
       ],
       {
         bullets: [
-          L("SSR title, description, canonical on every indexable page", "SSR title, description, canonical على كل indexable page"),
-          L("JSON-LD validates in Rich Results Test", "JSON-LD validate في Rich Results Test"),
-          L("Sitemap lists canonical URLs only", "Sitemap lists canonical URLs بس"),
-          L("Monitor indexing in Search Console after deploys", "راقب indexing في Search Console بعد deploys"),
+          L("Indexable HTML in the first response — not an empty mount node", "HTML قابل للفهرسة في أول استجابة — مش mount node فاضي"),
+          L("Unique title, description, canonical per route", "title و description و canonical فريدين لكل route"),
+          L("Protect LCP, INP, CLS like product bugs", "احمِ LCP و INP و CLS زي bugs منتج"),
+          L("JSON-LD must match visible content", "JSON-LD لازم يطابق المحتوى الظاهر"),
+          L("Monitor indexing in Search Console after deploys", "راقب الفهرسة في Search Console بعد كل deploy"),
         ],
+        code: `<!-- Anti-pattern: empty CSR shell -->
+<div id="root"></div>
+<!-- Better: SSR body with real headings + links -->
+<main>
+  <h1>HTML track</h1>
+  <a href="/html/forms-inputs">Forms lesson</a>
+</main>`,
+        codeCaption: L("Crawlable content vs empty root", "محتوى قابل للزحف مقابل root فاضي"),
       },
     ),
   },
@@ -1121,6 +1208,306 @@ main.querySelector("h1")?.focus();`,
           L("Sitemap + robots + canonical alignment", "Sitemap + robots + canonical alignment"),
           L("CWV: LCP, INP, CLS from real HTML choices", "CWV: LCP, INP, CLS من HTML choices حقيقية"),
           L("Rich results: valid structured data", "Rich results: structured data valid"),
+        ],
+      },
+    ),
+  },
+
+  "form-ux-attributes": {
+    underTheHood: insight(
+      [
+        L(
+          "Browsers map `type` and `inputmode` to platform input method editors. `inputmode` is a hint — the engine still stores a string value and runs constraint validation from `type`, `required`, `pattern`, and `min`/`max`.",
+          "المتصفحات بتربط `type` و `inputmode` بـ IME المنصة. `inputmode` تلميح — الـ engine لسه بيخزّن string وبيشغّل constraint validation من `type` و `required` و `pattern` و `min`/`max`.",
+        ),
+        L(
+          "`autocomplete` tokens feed into password managers and OS autofill heuristics. Wrong tokens can suppress suggestions entirely on mobile WebKit.",
+          "رموز `autocomplete` بتغذي password managers و heuristics الـ autofill. الرمز الغلط ممكن يمنع الاقتراحات تمامًا على WebKit الموبايل.",
+        ),
+      ],
+      {
+        bullets: [
+          L("`type` = semantics + fallback keyboard", "`type` = معنى + كيبورد fallback"),
+          L("`inputmode` never replaces validation", "`inputmode` مش بديل للتحقق"),
+          L("Use standard WHATWG autocomplete tokens", "استخدم رموز autocomplete القياسية من WHATWG"),
+        ],
+        code: `<input type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9+\\-\\s]{8,}" />`,
+        codeCaption: L("Tel stack for mobile UX", "حزمة tel لتجربة الموبايل"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Pattern failures must be announced — native tooltip from `title` is weak. Prefer `aria-describedby` error text and keep focus on the invalid field after submit.",
+          "فشل pattern لازم يتعلن — tooltip من `title` ضعيف. فضّل نص خطأ بـ `aria-describedby` وخلّي الـ focus على الحقل الغلط بعد الإرسال.",
+        ),
+        L(
+          "OTP fields with `autocomplete=\"one-time-code\"` help VoiceOver users paste SMS codes without hunting the keyboard.",
+          "حقول OTP بـ `autocomplete=\"one-time-code\"` بتساعد مستخدمي VoiceOver يلصقوا كود SMS من غير تعب.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Visible label always — not placeholder-only", "label ظاهر دايمًا — مش placeholder بس"),
+          L("Describe pattern rules in text", "اشرح قواعد pattern بالنص"),
+          L("Don't trap focus inside custom keyboards", "متحبسش الـ focus جوه كيبوردات مخصصة"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Form UX attributes rarely affect ranking directly, but conversion and INP do — heavy custom input masks that block the main thread hurt Core Web Vitals.",
+          "صفات Form UX نادرًا ما تأثر الترتيب مباشرة، لكن التحويل و INP بتتأثر — masks تقيلة بتعطل الـ main thread بتضر Core Web Vitals.",
+        ),
+        L(
+          "Keep login/checkout forms in the initial HTML when possible so password managers and crawlers that execute limited JS still see controls.",
+          "خلّي فورم الدخول/الدفع في HTML الأولي لما تقدر عشان مديري كلمات المرور والـ crawlers يشوفوا الـ controls.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Prefer native constraints over heavy mask libraries", "فضّل قيود أصلية عن مكتبات mask تقيلة"),
+          L("SSR critical checkout fields", "SSR لحقول الـ checkout الحرجة"),
+        ],
+      },
+    ),
+  },
+
+  "native-dialog": {
+    underTheHood: insight(
+      [
+        L(
+          "`showModal()` places the dialog in the top layer above the document, applies a UA `::backdrop`, and runs a focus trap. Closing restores focus to the previously focused element when possible.",
+          "`showModal()` بيحط الـ dialog في الـ top layer فوق المستند، وبيطبّق `::backdrop` من المتصفح، وبيشغّل focus trap. القفل بيرجّع الـ focus للعنصر السابق لما ينفع.",
+        ),
+        L(
+          "`form method=\"dialog\"` submits by closing the dialog and exposing `returnValue` — no navigation. This is cheaper than mounting a React portal modal tree for simple confirms.",
+          "`form method=\"dialog\"` بيقفل الـ dialog ويعرض `returnValue` — من غير تنقّل. أرخص من portal React لـ confirms بسيطة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Top layer + backdrop are engine features", "Top layer + backdrop ميزات من الـ engine"),
+          L("Escape closes modal dialogs by default", "Escape بيقفل modal افتراضيًا"),
+          L("Polyfill only for Safari < 15.4 if required", "Polyfill بس لـ Safari < 15.4 لو مطلوب"),
+        ],
+        code: `dialog.showModal();\ndialog.addEventListener("close", () => {\n  console.log(dialog.returnValue);\n});`,
+        codeCaption: L("Modal open + returnValue", "فتح modal و returnValue"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Name the dialog with `aria-labelledby` (heading) or `aria-label`. NVDA/VoiceOver announce the dialog role and move virtual cursor inside on open.",
+          "سمّي الـ dialog بـ `aria-labelledby` (عنوان) أو `aria-label`. NVDA/VoiceOver بيعلنوا role وينقلوا المؤشر لجواه عند الفتح.",
+        ),
+        L(
+          "Don't nest dialogs casually. Ensure the invoker remains in the tab order after close — broken focus is a WCAG failure.",
+          "متعشّش dialogs بخفة. تأكد إن الزر اللي فتح لسه في ترتيب Tab بعد القفل — focus مكسور فشل WCAG.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Prefer native dialog over role=dialog divs", "فضّل dialog أصلي عن div بـ role=dialog"),
+          L("Keep initial focus on the first meaningful control", "حط الـ focus الأول على أول control مهم"),
+          L("Announce async results after destructive confirms", "أعلن النتائج بعد تأكيدات حساسة"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Modal content that only exists after a click is often secondary for SEO — keep primary copy in the static document. Don't hide unique product facts exclusively inside dialogs.",
+          "محتوى الـ modal اللي بيظهر بعد ضغطة غالبًا ثانوي للـ SEO — سيّب النص الأساسي في المستند الثابت. متخفيش معلومات منتج فريدة جوّه dialogs بس.",
+        ),
+        L(
+          "Heavy portal modals that shift layout on open can worsen CLS — native dialog top-layer painting avoids most reflow of the page underneath.",
+          "portal modals تقيلة بتحرّك الـ layout ممكن تزوّد CLS — رسم top-layer الأصلي بيجنّب معظم reflow للصفحة تحت.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Indexable facts stay outside modals", "المعلومات القابلة للفهرسة برّه الـ modals"),
+          L("Native dialog reduces layout thrash vs overlays", "dialog أصلي بيقلل layout thrash مقابل overlays"),
+        ],
+      },
+    ),
+  },
+
+  "details-summary": {
+    underTheHood: insight(
+      [
+        L(
+          "`<details>` toggles an open flag in the DOM; the renderer shows or hides subsequent content without your JS. The accessibility tree exposes an expandable widget wired to `<summary>`.",
+          "`<details>` بيبدّل flag مفتوح في الـ DOM؛ الرندر بيظهر أو يخفي المحتوى من غير JS. شجرة الوصول بتعرض ودجت قابلة للتوسيع مربوطة بـ `<summary>`.",
+        ),
+        L(
+          "Exclusive `name` grouping closes sibling details in supporting engines — a tiny amount of UA state instead of accordion libraries.",
+          "تجميع `name` الحصري بيقفل details الإخوة في الـ engines الداعمة — حالة بسيطة من المتصفح بدل مكتبات accordion.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Summary is the activation control", "summary هو كنترول التفعيل"),
+          L("`open` attribute reflects state", "صفة `open` بتعكس الحالة"),
+          L("Listen to `toggle` for analytics if needed", "اسمع حدث `toggle` للتحليلات لو لزم"),
+        ],
+        code: `<details name="faq">\n  <summary>…</summary>\n  <p>…</p>\n</details>`,
+        codeCaption: L("Exclusive FAQ group", "مجموعة FAQ حصرية"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Keyboard users activate summary with Enter/Space. Don't put nested buttons/links that steal the first activation inside summary.",
+          "مستخدمي الكيبورد بيفعّلوا summary بـ Enter/Space. متتحطّش أزرار/لينكات جوه summary تسرق أول تفعيل.",
+        ),
+        L(
+          "Ensure expanded content is readable in order — avoid absolute-positioned panels that disappear from the accessibility tree incorrectly.",
+          "تأكد إن المحتوى المفتوح مقروء بالترتيب — تجنّب لوحات absolute بتختفي من شجرة الوصول بالغلط.",
+        ),
+      ],
+      {
+        bullets: [
+          L("One clear summary label", "تسمية summary واضحة"),
+          L("Don't fake details with display:none divs + no keyboard", "متزوّرش details بـ div و display:none من غير كيبورد"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Content inside closed `<details>` is generally still in the HTML source — Google can index it, but critical H1/product copy should not rely on being tucked only in collapsed FAQs.",
+          "المحتوى جوّه `<details>` المقفول عادة لسه في مصدر HTML — Google يقدر يفهرسه، لكن نص H1/المنتج الحرج متعتمدش إنه مختبي في FAQ مقفول بس.",
+        ),
+        L(
+          "FAQPage structured data should match visible Q&A text — including details/summary pairs.",
+          "structured data من نوع FAQPage لازم يطابق نص السؤال والجواب الظاهر — بما فيه أزواج details/summary.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Keep primary SEO copy outside collapsed-only sections", "سيّب نص SEO الأساسي برّه الأقسام المقفولة بس"),
+          L("Align FAQ schema with details content", "طابق FAQ schema مع محتوى details"),
+        ],
+      },
+    ),
+  },
+
+  "picture-source": {
+    underTheHood: insight(
+      [
+        L(
+          "The browser evaluates `<source>` in order: matching `type`/`media`/`srcset` wins, then `<img>` loads. This happens in the preload scanner and image loader — not in your JS.",
+          "المتصفح بيقيّم `<source>` بالترتيب: أول `type`/`media`/`srcset` مطابق بيفوز، وبعدين `<img>`. ده بيحصل في preload scanner و image loader — مش في JS.",
+        ),
+        L(
+          "Width/height (or CSS aspect-ratio) reserve layout space before the bytes arrive — critical for CLS when swapping art-directed crops.",
+          "width/height (أو aspect-ratio) بيحجزوا مساحة قبل ما البايتات توصل — مهم ضد CLS لما تبدّل قصّات موجّهة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Order sources most-preferred first", "رتّب المصادر من الأكثر تفضيلًا"),
+          L("Always terminate with `<img>`", "دايمًا اختم بـ `<img>`"),
+          L("AVIF/WebP reduce LCP bytes when supported", "AVIF/WebP بيقلّلوا بايتات LCP لما يتدعموا"),
+        ],
+        code: `<picture>\n  <source type="image/avif" srcset="/h.avif" />\n  <img src="/h.jpg" alt="…" width="1200" height="630" />\n</picture>`,
+        codeCaption: L("Format waterfall", "تسلسل الصيغ"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Alt text lives on `<img>`, not on `<source>`. Decorative art-direction still needs an empty `alt=\"\"` when appropriate — never omit the attribute.",
+          "نص alt على `<img>` مش على `<source>`. الصور التزيينية لسه محتاجة `alt=\"\"` لما يناسب — متشيلش الصفة.",
+        ),
+        L(
+          "If crops change meaning (product vs lifestyle), ensure alt still describes the chosen visual honestly.",
+          "لو القصّة بتغيّر المعنى (منتج مقابل lifestyle)، خلّي alt يوصف المشهد المختار بصدق.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Alt on the img fallback only", "alt على img الـ fallback بس"),
+          L("Don't convey unique info only in a crop that some viewports never see", "متوصلش معلومة فريدة في قصّة بعض الشاشات مش هتشوفها"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "LCP candidates often are hero `<img>` elements inside `<picture>`. Wrong dimensions or late discovery (lazy on LCP) destroys LCP scores.",
+          "مرشحو LCP غالبًا `<img>` جوّه `<picture>`. أبعاد غلط أو اكتشاف متأخر (lazy على LCP) بيهدّ درجات LCP.",
+        ),
+        L(
+          "Google image search indexes the final `<img>` URL; keep meaningful filenames and compressible modern formats with JPEG fallback.",
+          "بحث صور Google بيفهرس رابط `<img>` النهائي؛ خلّي أسماء الملفات معنوية وصيغ حديثة مع JPEG fallback.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Never lazy-load the LCP image", "متعملش lazy لصورة LCP"),
+          L("Reserve space to protect CLS", "احجز مساحة لحماية CLS"),
+          L("Prefer SSR heroes over client-only mounts", "فضّل heroes من السيرفر عن mounts على الـ client بس"),
+        ],
+      },
+    ),
+  },
+
+  "head-social-meta": {
+    underTheHood: insight(
+      [
+        L(
+          "The HTML parser builds the document head early; social crawlers (Slack, LinkedIn, X) typically fetch raw HTML and read `meta`/`link` without executing your SPA bundle.",
+          "محلل HTML بيبني الـ head بدري؛ زواحف السوشيال غالبًا بتجيب HTML خام وبتقرأ `meta`/`link` من غير ما تشغّل حزمة الـ SPA.",
+        ),
+        L(
+          "`theme-color` and favicon `link` rels influence browser chrome and bookmarks — they are presentation metadata, not ranking signals.",
+          "`theme-color` و روابط الـ favicon بتأثر على واجهة المتصفح والـ bookmarks — metadata للعرض مش إشارات ترتيب.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Emit OG/Twitter tags in the first response", "طلّع وسوم OG/Twitter في أول استجابة"),
+          L("Absolute HTTPS og:image URLs", "روابط og:image مطلقة بـ HTTPS"),
+          L("SVG + ICO favicon pair covers most clients", "زوج SVG + ICO بيغطي أغلب العملاء"),
+        ],
+        code: `<meta property="og:image" content="https://example.com/og.png" />\n<meta name="twitter:card" content="summary_large_image" />`,
+        codeCaption: L("Share preview essentials", "أساسيات معاينة المشاركة"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "`<title>` is the first thing many screen readers announce on navigation — keep it unique and human. Theme-color and favicons don't replace a clear heading structure in `<body>`.",
+          "`<title>` أول حاجة كتير من قارئات الشاشة بتعلنها — خلّيه فريد وبشري. theme-color والـ favicon مش بديل لهيكل عناوين واضح في `<body>`.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Unique descriptive titles per route", "عناوين وصفية فريدة لكل route"),
+          L("Don't stuff keywords into title at the cost of clarity", "متحشوّش keywords في العنوان على حساب الوضوح"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Open Graph doesn't replace classic SEO (`title`, meta description, canonical), but broken previews tank CTR from social. Match `og:title` to the visible H1 when possible.",
+          "Open Graph مش بديل لـ SEO الكلاسيكي، لكن معاينات مكسورة بتقتل CTR من السوشيال. طابق `og:title` مع H1 الظاهر لما تقدر.",
+        ),
+        L(
+          "Client-side-only meta managers that run after hydration often miss unfurl bots entirely — prefer SSR/SSG head APIs (Next.js Metadata, etc.).",
+          "مديرو meta على الـ client بعد الـ hydration غالبًا بيضيعوا بوتات الـ unfurl — فضّل APIs الـ head من SSR/SSG.",
+        ),
+      ],
+      {
+        bullets: [
+          L("SSR social tags", "وسوم سوشيال من السيرفر"),
+          L("Unique title + description + canonical", "title + description + canonical فريدين"),
+          L("Test with unfurl debuggers before launch", "اختبر بمعالجات unfurl قبل الإطلاق"),
         ],
       },
     ),

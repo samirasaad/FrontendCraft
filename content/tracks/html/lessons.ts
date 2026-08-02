@@ -3,15 +3,18 @@ import { enrichLegacyLesson } from "@/content/tracks/html/enrichment";
 import { extraLessons } from "@/content/tracks/html/extra-lessons";
 import { htmlInsights } from "@/content/tracks/html/insights";
 import { legacyLessons } from "@/content/tracks/html/legacy-lessons";
+import { modernLessons } from "@/content/tracks/html/modern-lessons";
 import type { Lesson } from "@/lib/types";
 
 const coreLessons: Lesson[] = legacyLessons.map((lesson, index) =>
   enrichLegacyLesson(lesson, index + 1),
 );
 
-export const lessons: Lesson[] = [...coreLessons, ...extraLessons].map(
-  (lesson) => withProductionInsights(lesson, htmlInsights),
-);
+export const lessons: Lesson[] = [
+  ...coreLessons,
+  ...modernLessons,
+  ...extraLessons,
+].map((lesson) => withProductionInsights(lesson, htmlInsights));
 
 export function getLessonById(id: string): Lesson | undefined {
   return lessons.find((lesson) => lesson.id === id);

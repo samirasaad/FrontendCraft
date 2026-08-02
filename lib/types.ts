@@ -45,10 +45,42 @@ export interface PitfallExample {
   right: PitfallSide;
 }
 
+/** CheatSheet card categories (HTML interactive grid). */
+export type CheatCategory =
+  | "structure"
+  | "forms"
+  | "media"
+  | "interactive";
+
+/** W3C Baseline availability signal. */
+export type BaselineStatus = "widely" | "newly" | "limited";
+
+/** Cross-browser support matrix shown in lessons & cheat cards. */
+export interface BrowserSupportInfo {
+  chrome: string;
+  firefox: string;
+  safari: string;
+  edge: string;
+  baseline: BaselineStatus;
+  notes?: LocalizedString;
+  /** Guidance when targeting older engines. */
+  fallback?: LocalizedString;
+}
+
 export interface CheatCard {
+  /** Stable id for copy toasts / keys. */
+  id?: string;
   title: LocalizedString;
   snippet: string;
   note: LocalizedString;
+  /** When set, enables category filters on the CheatSheet grid. */
+  category?: CheatCategory;
+  /** Fuller paste-ready document fragment (Copy Boilerplate). */
+  boilerplate?: string;
+  /** Mini live preview HTML (injected into a sandboxed iframe). */
+  previewHtml?: string;
+  /** Per-card browser / Baseline matrix. */
+  support?: BrowserSupportInfo;
 }
 
 /** Structured bilingual insight block used by Under the Hood / a11y / SEO. */
@@ -81,6 +113,16 @@ export interface LessonContent {
   pitfalls?: PitfallExample | PitfallExample[];
   /** Present on CheatSheet-tier lessons. */
   cheatCards?: CheatCard[];
+  /**
+   * Compatibility matrix — used on dedicated Browser Compatibility lessons
+   * (and optionally cheat cards), not on every topic lesson.
+   */
+  browserSupport?: BrowserSupportInfo;
+  /** Extra matrices for side-by-side feature comparison (browser lesson). */
+  browserMatrices?: {
+    label: LocalizedString;
+    support: BrowserSupportInfo;
+  }[];
 }
 
 export interface Lesson {
