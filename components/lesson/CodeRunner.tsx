@@ -15,11 +15,10 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
-import type { LocalizedString, TrackId } from "@/lib/types";
+import type { CodeExample, TrackId } from "@/lib/types";
 
 interface CodeRunnerProps {
-  code: string;
-  expectedOutput: LocalizedString;
+  examples: CodeExample[];
 }
 
 const sandpackTheme = {
@@ -253,17 +252,66 @@ function CodeRunnerInner({
   );
 }
 
-export function CodeRunner({ code, expectedOutput }: CodeRunnerProps) {
+export function CodeRunner({ examples }: CodeRunnerProps) {
   const { locale } = useLanguage();
   const { trackId } = useProgress();
-  const expectedHint = loc(expectedOutput, locale).replace(/\\n/g, "\n");
+  const { playClick } = useSound();
+  const safeExamples =
+    examples.length > 0
+      ? examples
+      : [
+          {
+            id: "simple" as const,
+            label: { en: "Simple", ar: "Simple" },
+            code: "// empty",
+            expectedOutput: { en: "", ar: "" },
+          },
+        ];
+  const [activeId, setActiveId] = useState(safeExamples[0].id);
+  const active =
+    safeExamples.find((ex) => ex.id === activeId) ?? safeExamples[0];
+  const expectedHint = loc(active.expectedOutput, locale).replace(/\\n/g, "\n");
 
   return (
-    <CodeRunnerInner
-      key={`${trackId}-${code}-${locale}`}
-      code={code}
-      expectedHint={expectedHint}
-      trackId={trackId}
-    />
+    <div className="space-y-3">
+      <div
+        className="flex flex-wrap gap-2"
+        role="tablist"
+        aria-label={t("playground", locale)}
+      >
+        {safeExamples.map((ex) => {
+          const selected = ex.id === active.id;
+          const label =
+            ex.id === "realWorld"
+              ? t("exampleRealWorld", locale)
+              : t("exampleSimple", locale);
+          return (
+            <button
+              key={ex.id}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              onClick={() => {
+                if (ex.id !== active.id) playClick();
+                setActiveId(ex.id);
+              }}
+              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                selected
+                  ? "bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950"
+                  : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+              }`}
+            >
+              {label}
+            </button>
+          );
+        })}
+      </div>
+      <CodeRunnerInner
+        key={`${trackId}-${active.id}-${active.code}-${locale}`}
+        code={active.code}
+        expectedHint={expectedHint}
+        trackId={trackId}
+      />
+    </div>
   );
 }

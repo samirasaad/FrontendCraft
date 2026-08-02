@@ -10,27 +10,17 @@ import {
   Lightbulb,
   Sparkles,
 } from "lucide-react";
+import { CheatSheetCards } from "@/components/lesson/CheatSheetCards";
 import { CodeRunner } from "@/components/lesson/CodeRunner";
+import { DeepDive } from "@/components/lesson/DeepDive";
+import { PitfallsBox } from "@/components/lesson/PitfallsBox";
 import { Visualizer } from "@/components/lesson/Visualizer";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
-import type { Difficulty, Lesson } from "@/lib/types";
-
-function difficultyLabel(difficulty: Difficulty, locale: "en" | "ar") {
-  if (difficulty === "beginner") return t("beginner", locale);
-  if (difficulty === "intermediate") return t("intermediate", locale);
-  return t("advanced", locale);
-}
-
-function difficultyClass(difficulty: Difficulty) {
-  if (difficulty === "beginner")
-    return "border-emerald-400/30 bg-emerald-400/10 text-emerald-200";
-  if (difficulty === "intermediate")
-    return "border-yellow-300/30 bg-yellow-300/10 text-yellow-100";
-  return "border-fuchsia-400/30 bg-fuchsia-400/10 text-fuchsia-100";
-}
+import { tierBadgeClass, tierEmoji, tierLabel } from "@/lib/tiers";
+import type { Lesson } from "@/lib/types";
 
 function LessonBody({ lesson }: { lesson: Lesson }) {
   const { locale, dir } = useLanguage();
@@ -48,6 +38,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const PrevIcon = dir === "rtl" ? ChevronRight : ChevronLeft;
   const NextIcon = dir === "rtl" ? ChevronLeft : ChevronRight;
+  const isCheatsheet = lesson.tier === "cheatsheet";
 
   return (
     <motion.article
@@ -61,9 +52,9 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
       <header className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           <span
-            className={`rounded-full border px-3 py-1 text-xs font-semibold ${difficultyClass(lesson.difficulty)}`}
+            className={`rounded-full border px-3 py-1 text-xs font-semibold ${tierBadgeClass(lesson.tier)}`}
           >
-            {difficultyLabel(lesson.difficulty, locale)}
+            {tierEmoji(lesson.tier)} {tierLabel(lesson.tier, locale)}
           </span>
           <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
             <Clock3 size={12} />
@@ -142,10 +133,14 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         </section>
       </div>
 
-      <CodeRunner
-        code={lesson.content.code}
-        expectedOutput={lesson.content.expectedOutput}
-      />
+      <DeepDive paragraphs={lesson.content.deepDive} />
+      <PitfallsBox pitfalls={lesson.content.pitfalls} />
+
+      {isCheatsheet && lesson.content.cheatCards ? (
+        <CheatSheetCards cards={lesson.content.cheatCards} />
+      ) : null}
+
+      <CodeRunner key={lesson.id} examples={lesson.content.examples} />
 
       <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         <button
