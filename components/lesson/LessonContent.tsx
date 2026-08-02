@@ -15,6 +15,7 @@ import { Visualizer } from "@/components/lesson/Visualizer";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
+import { useSound } from "@/context/SoundContext";
 import type { Difficulty, Lesson } from "@/lib/types";
 
 function difficultyLabel(difficulty: Difficulty, locale: "en" | "ar") {
@@ -40,6 +41,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
     toggleComplete,
     setActiveLessonId,
   } = useProgress();
+  const { playClick, playSuccess } = useSound();
   const done = isComplete(lesson.id);
   const index = lessons.findIndex((l) => l.id === lesson.id);
   const prev = index > 0 ? lessons[index - 1] : null;
@@ -80,7 +82,14 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         </p>
         <button
           type="button"
-          onClick={() => toggleComplete(lesson.id)}
+          onClick={() => {
+            if (done) {
+              playClick();
+            } else {
+              playSuccess();
+            }
+            toggleComplete(lesson.id);
+          }}
           className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
             done
               ? "bg-cyan-400/15 text-cyan-200 ring-1 ring-cyan-400/40"
@@ -142,7 +151,11 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         <button
           type="button"
           disabled={!prev}
-          onClick={() => prev && setActiveLessonId(prev.id)}
+          onClick={() => {
+            if (!prev) return;
+            playClick();
+            setActiveLessonId(prev.id);
+          }}
           className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition enabled:hover:bg-white/10 disabled:opacity-40"
         >
           <PrevIcon size={16} />
@@ -151,7 +164,11 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         <button
           type="button"
           disabled={!next}
-          onClick={() => next && setActiveLessonId(next.id)}
+          onClick={() => {
+            if (!next) return;
+            playClick();
+            setActiveLessonId(next.id);
+          }}
           className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-4 py-2 text-sm font-bold text-slate-950 transition enabled:hover:brightness-110 disabled:opacity-40"
         >
           {t("next", locale)}

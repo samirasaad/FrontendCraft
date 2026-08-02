@@ -14,7 +14,9 @@ import {
 } from "lucide-react";
 import { HeroMiniWidget } from "@/components/shared/HeroMiniWidget";
 import { LangToggle } from "@/components/shared/LangToggle";
+import { SfxToggle } from "@/components/shared/SfxToggle";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
+import { SoundProvider } from "@/context/SoundContext";
 import { tracks } from "@/content/tracks";
 import { loc, t } from "@/content/i18n/ui-strings";
 
@@ -56,7 +58,10 @@ function TrackHubInner() {
             <p className="text-xs text-slate-400">{t("hubTagline", locale)}</p>
           </div>
         </div>
-        <LangToggle />
+        <div className="flex items-center gap-2">
+          <SfxToggle />
+          <LangToggle />
+        </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
@@ -156,7 +161,9 @@ function TrackHubInner() {
 export function TrackHub() {
   return (
     <LanguageProvider>
-      <TrackHubInner />
+      <SoundProvider>
+        <TrackHubInner />
+      </SoundProvider>
     </LanguageProvider>
   );
 }

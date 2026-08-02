@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { ArrowLeft, Menu, Sparkles, X } from "lucide-react";
 import { LangToggle } from "@/components/shared/LangToggle";
+import { SfxToggle } from "@/components/shared/SfxToggle";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
+import { useSound } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import type { TrackDefinition } from "@/lib/types";
 
@@ -17,6 +19,7 @@ interface HeaderProps {
 export function Header({ track, menuOpen, onToggleMenu }: HeaderProps) {
   const { locale } = useLanguage();
   const { progressPercent, completedCount, totalCount } = useProgress();
+  const { playClick } = useSound();
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
@@ -24,7 +27,10 @@ export function Header({ track, menuOpen, onToggleMenu }: HeaderProps) {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={onToggleMenu}
+            onClick={() => {
+              playClick();
+              onToggleMenu();
+            }}
             className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-100 lg:hidden"
             aria-label={menuOpen ? t("closeMenu", locale) : t("openMenu", locale)}
           >
@@ -69,6 +75,7 @@ export function Header({ track, menuOpen, onToggleMenu }: HeaderProps) {
               />
             </div>
           </div>
+          <SfxToggle />
           <LangToggle />
         </div>
       </div>

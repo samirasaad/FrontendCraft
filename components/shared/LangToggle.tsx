@@ -2,10 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { useSound } from "@/context/SoundContext";
 import { t } from "@/content/i18n/ui-strings";
 
 export function LangToggle() {
   const { locale, setLocale } = useLanguage();
+  const { playClick } = useSound();
 
   return (
     <div
@@ -19,7 +21,10 @@ export function LangToggle() {
           <button
             key={code}
             type="button"
-            onClick={() => setLocale(code)}
+            onClick={() => {
+              if (code !== locale) playClick();
+              setLocale(code);
+            }}
             className={`relative min-w-[52px] rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
               active ? "text-slate-950" : "text-slate-300 hover:text-white"
             }`}

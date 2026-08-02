@@ -13,6 +13,7 @@ import {
 import { Check, Copy, Play, RotateCcw, Terminal } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
+import { useSound } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import type { LocalizedString, TrackId } from "@/lib/types";
 
@@ -94,11 +95,13 @@ function RunControls({
   expectedHint: string;
 }) {
   const { locale } = useLanguage();
+  const { playClick } = useSound();
   const { sandpack } = useSandpack();
   const [copied, setCopied] = useState(false);
   const [running, setRunning] = useState(false);
 
   async function handleCopy() {
+    playClick();
     try {
       await navigator.clipboard.writeText(sourceCode);
       setCopied(true);
@@ -109,12 +112,14 @@ function RunControls({
   }
 
   function handleRun() {
+    playClick();
     setRunning(true);
     sandpack.runSandpack();
     window.setTimeout(() => setRunning(false), 400);
   }
 
   function handleRestore() {
+    playClick();
     sandpack.resetAllFiles();
   }
 

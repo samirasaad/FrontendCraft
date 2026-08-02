@@ -69,6 +69,8 @@ export const ui = {
   copy: { en: "Copy", ar: "انسخ" },
   copied: { en: "Copied!", ar: "اتنسخ!" },
   restoreCode: { en: "Restore original", ar: "رجّع الأصلي" },
+  sfxOn: { en: "SFX on", ar: "الصوت شغال" },
+  sfxOff: { en: "SFX off", ar: "الصوت مقفول" },
   next: { en: "Next lesson", ar: "الدرس اللي بعده" },
   prev: { en: "Previous", ar: "السابق" },
   openMenu: { en: "Open lessons", ar: "افتح الدروس" },

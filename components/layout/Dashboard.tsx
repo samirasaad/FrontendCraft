@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { LessonContent } from "@/components/lesson/LessonContent";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ProgressProvider } from "@/context/ProgressContext";
+import { SoundProvider } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import type { TrackDefinition } from "@/lib/types";
@@ -63,9 +64,11 @@ function DashboardShell({ track }: { track: TrackDefinition }) {
 export function Dashboard({ track }: { track: TrackDefinition }) {
   return (
     <LanguageProvider>
-      <ProgressProvider trackId={track.id} lessons={track.lessons}>
-        <DashboardShell track={track} />
-      </ProgressProvider>
+      <SoundProvider>
+        <ProgressProvider trackId={track.id} lessons={track.lessons}>
+          <DashboardShell track={track} />
+        </ProgressProvider>
+      </SoundProvider>
     </LanguageProvider>
   );
 }

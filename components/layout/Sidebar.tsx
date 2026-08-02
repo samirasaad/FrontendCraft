@@ -30,6 +30,7 @@ import {
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
+import { useSound } from "@/context/SoundContext";
 
 const iconMap: Record<string, LucideIcon> = {
   Box,
@@ -70,6 +71,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
     completedCount,
     totalCount,
   } = useProgress();
+  const { playClick } = useSound();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -133,6 +135,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
               key={lesson.id}
               type="button"
               onClick={() => {
+                playClick();
                 setActiveLessonId(lesson.id);
                 onClose();
               }}
