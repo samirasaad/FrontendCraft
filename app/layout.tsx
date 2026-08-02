@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Web Mastery — Interactive Learning Lab",
+  title: "FrontendCraft — Interactive Learning Lab",
   description:
     "A bilingual interactive dashboard for learning JavaScript, HTML, CSS, and Tailwind with motion visuals and a code playground.",
 };

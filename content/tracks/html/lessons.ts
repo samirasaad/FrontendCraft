@@ -561,7 +561,7 @@ export const lessons: Lesson[] = [
       code: `<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Web Mastery — HTML</title>
+  <title>FrontendCraft — HTML</title>
   <meta name="description" content="Learn HTML with interactive labs." />
   <link rel="canonical" href="https://example.com/html" />
 </head>`,

@@ -1,7 +1,7 @@
 import type { Locale, LocalizedString } from "@/lib/types";
 
 export const ui = {
-  brand: { en: "Web Mastery", ar: "Web Mastery" },
+  brand: { en: "FrontendCraft", ar: "FrontendCraft" },
   hubTagline: {
     en: "Interactive learning lab for the modern web",
     ar: "معمل تعلّم تفاعلي للويب الحديث",

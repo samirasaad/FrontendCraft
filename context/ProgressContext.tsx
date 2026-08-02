@@ -39,8 +39,8 @@ function subscribe(listener: () => void) {
 
 function storageKeys(trackId: TrackId) {
   return {
-    progress: `web-mastery:${trackId}:progress`,
-    active: `web-mastery:${trackId}:active-lesson`,
+    progress: `frontendcraft:${trackId}:progress`,
+    active: `frontendcraft:${trackId}:active-lesson`,
   };
 }
 

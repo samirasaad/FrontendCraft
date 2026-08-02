@@ -19,7 +19,7 @@ interface LanguageContextValue {
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-const STORAGE_KEY = "js-mastery-locale";
+const STORAGE_KEY = "frontendcraft-locale";
 const LISTENERS = new Set<() => void>();
 
 function emit() {
