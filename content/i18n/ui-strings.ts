@@ -6,6 +6,18 @@ export const ui = {
     en: "Interactive learning lab for the modern web",
     ar: "معمل تعلّم تفاعلي للويب الحديث",
   },
+  heroWidgetEyebrow: {
+    en: "Live concept",
+    ar: "مفهوم مباشر",
+  },
+  heroWidgetTitle: {
+    en: "Event Loop",
+    ar: "Event Loop",
+  },
+  heroWidgetCaption: {
+    en: "Stack runs now — Queue waits — Loop connects them.",
+    ar: "الـ Call Stack بيشغّل دلوقتي — الـ Queue بيستنى — الـ Event Loop بيربطهم.",
+  },
   chooseTrack: {
     en: "Choose a track",
     ar: "اختار track",

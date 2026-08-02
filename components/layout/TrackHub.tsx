@@ -12,6 +12,7 @@ import {
   Wind,
   type LucideIcon,
 } from "lucide-react";
+import { HeroMiniWidget } from "@/components/shared/HeroMiniWidget";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { tracks } from "@/content/tracks";
@@ -59,21 +60,27 @@ function TrackHubInner() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-10 max-w-2xl"
-        >
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">
-            {t("chooseTrack", locale)}
-          </p>
-          <h1 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            {t("brand", locale)}
-          </h1>
-          <p className="mt-3 text-base leading-relaxed text-slate-400 sm:text-lg">
-            {t("hubTagline", locale)}
-          </p>
-        </motion.div>
+        <section className="mb-12 grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-10">
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-2xl"
+          >
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-cyan-300">
+              {t("chooseTrack", locale)}
+            </p>
+            <h1 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              {t("brand", locale)}
+            </h1>
+            <p className="mt-3 text-base leading-relaxed text-slate-400 sm:text-lg">
+              {t("hubTagline", locale)}
+            </p>
+          </motion.div>
+
+          <div className="flex justify-center lg:justify-end">
+            <HeroMiniWidget />
+          </div>
+        </section>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {tracks.map((track, index) => {
