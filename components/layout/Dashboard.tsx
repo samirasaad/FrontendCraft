@@ -24,7 +24,7 @@ function EmptyTrackState({ track }: { track: TrackDefinition }) {
 }
 
 function DashboardShell({ track }: { track: TrackDefinition }) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -42,14 +42,13 @@ function DashboardShell({ track }: { track: TrackDefinition }) {
         />
       </div>
 
-      <Header
-        track={track}
-        menuOpen={menuOpen}
-        onToggleMenu={() => setMenuOpen((v) => !v)}
-      />
-      <div className="mx-auto flex max-w-[1600px]">
-        <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
-        <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+      <Header track={track} />
+      <div className="flex w-full">
+        <Sidebar
+          open={menuOpen}
+          onToggle={() => setMenuOpen((v) => !v)}
+        />
+        <main className="min-w-0 flex-1 px-3 py-4 transition-[width] duration-300 sm:px-4 sm:py-5 lg:px-5 lg:py-6">
           {track.lessons.length === 0 ? (
             <EmptyTrackState track={track} />
           ) : (
