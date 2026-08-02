@@ -1,6 +1,16 @@
 export type Locale = "en" | "ar";
 
-export type Difficulty = "beginner" | "intermediate" | "advanced";
+/** Six-tier curriculum used across every track. */
+export type Tier =
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | "pro"
+  | "pitfalls"
+  | "cheatsheet";
+
+/** @deprecated Use Tier — kept as alias during migration reads. */
+export type Difficulty = Tier;
 
 export type TrackId = "javascript" | "html" | "css" | "tailwind";
 
@@ -11,24 +21,55 @@ export interface LocalizedString {
   ar: string;
 }
 
-/** Visualizer ids are namespaced as `track:kind` or plain string per track. */
+/** Visualizer ids are plain strings per track. */
 export type VisualizerId = string;
+
+export type ExampleKind = "simple" | "realWorld";
+
+export interface CodeExample {
+  id: ExampleKind;
+  label: LocalizedString;
+  code: string;
+  expectedOutput: LocalizedString;
+}
+
+export interface PitfallSide {
+  code: string;
+  note: LocalizedString;
+}
+
+export interface PitfallExample {
+  wrong: PitfallSide;
+  right: PitfallSide;
+}
+
+export interface CheatCard {
+  title: LocalizedString;
+  snippet: string;
+  note: LocalizedString;
+}
 
 export interface LessonContent {
   title: LocalizedString;
   summary: LocalizedString;
   paragraphs: LocalizedString[];
   keyPoints: LocalizedString[];
-  code: string;
-  expectedOutput: LocalizedString;
+  /** Simple + Real-World playground examples. */
+  examples: CodeExample[];
   visualHint: LocalizedString;
+  /** Deep technical context for the accordion. */
+  deepDive: LocalizedString[];
+  /** Wrong vs right alert box. */
+  pitfalls: PitfallExample;
+  /** Present on CheatSheet-tier lessons. */
+  cheatCards?: CheatCard[];
 }
 
 export interface Lesson {
   id: string;
   order: number;
   slug: string;
-  difficulty: Difficulty;
+  tier: Tier;
   readMinutes: number;
   icon: string;
   visualizer: VisualizerId;
