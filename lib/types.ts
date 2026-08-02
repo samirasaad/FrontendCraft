@@ -39,6 +39,8 @@ export interface PitfallSide {
 }
 
 export interface PitfallExample {
+  /** Optional label when stacking several pitfalls in one lesson. */
+  title?: LocalizedString;
   wrong: PitfallSide;
   right: PitfallSide;
 }
@@ -59,8 +61,11 @@ export interface LessonContent {
   visualHint: LocalizedString;
   /** Deep technical context for the accordion. */
   deepDive: LocalizedString[];
-  /** Wrong vs right alert box. */
-  pitfalls: PitfallExample;
+  /**
+   * Wrong vs right alert(s). Optional — e.g. HTML keeps these only on
+   * Pitfalls-tier lessons instead of every lesson.
+   */
+  pitfalls?: PitfallExample | PitfallExample[];
   /** Present on CheatSheet-tier lessons. */
   cheatCards?: CheatCard[];
 }

@@ -1,10 +1,10 @@
 import {
   L,
   cheatCard,
-  pitfall,
   realWorldExample,
   simpleExample,
 } from "@/content/helpers";
+import { collectedHtmlPitfalls } from "@/content/tracks/html/collected-pitfalls";
 import type { Lesson } from "@/lib/types";
 
 export const extraLessons: Lesson[] = [
@@ -87,18 +87,6 @@ export const extraLessons: Lesson[] = [
           "في الـ SPAs، راقب كمان انتقالات الـ route وهي بتدخل صور من غير مقاسات.",
         ),
       ],
-      pitfalls: pitfall(
-        `<img src="huge.png" alt="Hero" />`,
-        L(
-          "No dimensions + eager full-res download.",
-          "من غير مقاسات + تحميل كامل فورًا.",
-        ),
-        `<img src="hero.avif" alt="Hero" width="1200" height="630" />`,
-        L(
-          "Reserve space and ship an efficient format.",
-          "احجز مساحة وابعت فورمات أخف.",
-        ),
-      ),
     },
   },
   {
@@ -174,55 +162,40 @@ export const extraLessons: Lesson[] = [
           "خوارزميات الـ outline وتنقّل الـ landmarks بيكافئوا هيكل متوقع. مراتب headings عشوائية بتكسر العقد ده.",
         ),
       ],
-      pitfalls: pitfall(
-        `<div id="app"></div><!-- JS injects everything -->`,
-        L(
-          "Empty shells hurt SEO, a11y, and first paint meaning.",
-          "أصداف فاضية بتضر SEO والوصول ومعنى أول paint.",
-        ),
-        `<main id="app">
-  <h1>Tracks</h1>
-  <!-- progressive enhancement -->
-</main>`,
-        L(
-          "Ship meaningful HTML, enhance with JS.",
-          "ابعت HTML معنوي، وعزّزه بـ JS.",
-        ),
-      ),
     },
   },
   {
     id: "html-pit-1",
     order: 13,
-    slug: "html-pitfall-buttons-links",
+    slug: "html-common-pitfalls",
     tier: "pitfalls",
-    readMinutes: 7,
+    readMinutes: 12,
     icon: "AlertTriangle",
-    visualizer: "link-image",
+    visualizer: "document-tree",
     content: {
-      title: L("Pitfall: Buttons vs Links", "Pitfall: Buttons vs Links"),
+      title: L("HTML Common Pitfalls", "HTML Common Pitfalls"),
       summary: L(
-        "Links navigate. Buttons do actions. Mixing them breaks expectations.",
-        "اللينك للتنقّل. الزر للفعل. الخلط بيكسر التوقعات.",
+        "Every classic HTML trap in one lesson — wrong vs right, side by side.",
+        "كل فخاخ HTML الكلاسيكية في درس واحد — غلط مقابل صح جنب بعض.",
       ),
       paragraphs: [
         L(
-          "If it goes to a URL, use `<a href>`. If it triggers an in-page action, use `<button type=\"button\">`.",
-          "لو بيروح URL استخدم `<a href>`. لو فعل جوه الصفحة استخدم `<button type=\"button\">`.",
+          "Other HTML lessons stay focused on teaching. All the traps live in this single Pitfalls lesson.",
+          "دروس HTML التانية مركزة على الشرح. كل الفخاخ عايشة في درس Pitfalls واحد.",
         ),
         L(
-          "`<a href=\"#\" onclick>` and `<div onclick>` are the usual accessibility traps.",
-          "`<a href=\"#\" onclick>` و `<div onclick>` من أشهر فخاخ الوصول.",
+          "Scan each card: skeleton, semantics, headings, links, lists, forms, tables, a11y, SEO, media, buttons vs links, and nesting.",
+          "اتفرّج على كل كارت: الهيكل، الـ semantics، العناوين، اللينكات، القوائم، الفورم، الجداول، الوصول، الـ SEO، الميديا، الأزرار مقابل اللينكات، والـ nesting.",
         ),
         L(
-          "Submit buttons inside forms should be `type=\"submit\"` (the default) — explicit is better when you also have action buttons.",
-          "زر الإرسال في الفورم `type=\"submit\"` — والصراحة أحسن لو عندك أزرار أفعال تانية.",
+          "When a card clicks for you, jump back to the matching Beginner/Pro lesson and rebuild it in the playground.",
+          "لما كارت يوضّحلك، ارجع للدرس المناسب في Beginner/Pro وابنِه تاني في الـ playground.",
         ),
       ],
       keyPoints: [
-        L("a = navigation", "a = تنقّل"),
-        L("button = action", "button = فعل"),
-        L("Never div-as-button", "متعملش div كأنه زر"),
+        L("One Pitfalls lesson for the whole track", "درس Pitfalls واحد للـ track كله"),
+        L("Wrong vs right on every card", "غلط مقابل صح في كل كارت"),
+        L("Revisit the matching lesson after each card", "ارجع للدرس المناسب بعد كل كارت"),
       ],
       examples: [
         simpleExample(
@@ -232,114 +205,34 @@ export const extraLessons: Lesson[] = [
           "لينك للتنقّل وزر للفعل",
         ),
         realWorldExample(
-          `<form>
-  <button type="button" id="preview">Preview</button>
-  <button type="submit">Publish lesson</button>
-</form>`,
-          "Explicit button types in a form",
-          "أنواع أزرار صريحة جوه فورم",
-        ),
-      ],
-      visualHint: L(
-        "The link flies away; the button stays and acts.",
-        "اللينك بيطير لمكان؛ الزر بيفضل ويعمل فعل.",
-      ),
-      deepDive: [
-        L(
-          "Activation keys differ: links use Enter, buttons use Enter/Space. Faking either role without the keyboard map breaks AT users.",
-          "مفاتيح التفعيل تختلف: اللينك Enter، الزر Enter/Space. تزييف الدور من غير خريطة كيبورد بيكسر وصول المستخدم.",
-        ),
-      ],
-      pitfalls: pitfall(
-        `<a href="#" onclick="save()">Save</a>`,
-        L(
-          "Fake navigation for an action.",
-          "تنقّل مزيف لفعل.",
-        ),
-        `<button type="button" onclick="save()">Save</button>`,
-        L(
-          "Real button semantics + keyboard support.",
-          "زر حقيقي + دعم كيبورد.",
-        ),
-      ),
-    },
-  },
-  {
-    id: "html-pit-2",
-    order: 14,
-    slug: "html-pitfall-div-soup",
-    tier: "pitfalls",
-    readMinutes: 8,
-    icon: "AlertTriangle",
-    visualizer: "document-tree",
-    content: {
-      title: L("Pitfall: Div Soup & Invalid Nesting", "Pitfall: Div Soup & Invalid Nesting"),
-      summary: L(
-        "Browsers forgive bad nesting by silently moving nodes — your CSS/JS then chase ghosts.",
-        "المتصفح بيسامح nesting غلط بنقل nodes في صمت — وبعدين CSS/JS بيجروا ورا أشباح.",
-      ),
-      paragraphs: [
-        L(
-          "Invalid examples: `<p><div></div></p>`, interactive content nested illegally, headings jammed for style.",
-          "أمثلة باطلة: `<p><div></div></p>`، محتوى تفاعلي متداخل غلط، عناوين متزاحمة للشكل.",
-        ),
-        L(
-          "Prefer validators and the Elements panel to see the *post-repair* DOM, not only your source.",
-          "استخدم validators ولوحة Elements عشان تشوف الـ DOM بعد التصليح، مش السورس بس.",
-        ),
-        L(
-          "Replace anonymous wrappers with semantic sections when they represent real regions.",
-          "بدّل اللفّافات المجهولة بـ sections دلالية لما تمثّل مناطق حقيقية.",
-        ),
-      ],
-      keyPoints: [
-        L("Invalid HTML gets auto-fixed", "HTML الباطل بيتصلّح لوحده"),
-        L("Inspect the repaired DOM", "افحص الـ DOM بعد التصليح"),
-        L("Semantics over wrappers", "الدلالة قبل اللفّافات"),
-      ],
-      examples: [
-        simpleExample(
-          `<!-- browser may close the p before the div -->
-<p>Intro<div class="note">Note</div></p>`,
-          "Invalid nesting — DOM may split unexpectedly",
-          "تداخل باطل — الـ DOM ممكن يتقسم بشكل مفاجئ",
-        ),
-        realWorldExample(
           `<section class="note">
   <h2>Note</h2>
-  <p>Intro details for the lesson.</p>
+  <p>Valid nesting beats div soup.</p>
 </section>`,
           "Valid section with heading + paragraph",
           "section صحيحة بـ heading وفقرة",
         ),
       ],
       visualHint: L(
-        "The tree rewrites itself when nesting breaks rules.",
-        "الشجرة بتعيد كتابة نفسها لما الـ nesting يكسر القواعد.",
+        "The tree stays honest when nesting follows the rules.",
+        "الشجرة بتفضل صادقة لما الـ nesting يمشي على القواعد.",
       ),
       deepDive: [
         L(
-          "The HTML parser’s adoption agency / foster parenting rules relocate nodes. Debugging “why isn’t my CSS matching?” often starts there.",
-          "قواعد الـ parser بتنقل الـ nodes. كتير من أسئلة “ليه الـ CSS مش ماسك؟” بتبدأ من هنا.",
+          "Browsers auto-repair invalid HTML by moving nodes. That silent fix is why CSS/JS sometimes “miss” the structure you thought you wrote.",
+          "المتصفح بيصلّح HTML الباطل بنقل nodes. التصليح الصامت ده سبب إن CSS/JS أحيانًا “ميشوفوش” الهيكل اللي كنت فاكره.",
+        ),
+        L(
+          "Every wrong/right card below was pulled from across the HTML track — drill them here, then go deepen the matching lesson.",
+          "كل كروت الغلط/الصح تحت متجمّعة من كل دروس HTML — اتدرّب هنا، وبعدين عمّق الدرس المناسب.",
         ),
       ],
-      pitfalls: pitfall(
-        `<p><div>card</div></p>`,
-        L(
-          "Block inside `<p>` is invalid.",
-          "Block جوه `<p>` باطل.",
-        ),
-        `<div><p>card</p></div>`,
-        L(
-          "Or use `<section>` / `<article>` for the card.",
-          "أو استخدم `<section>` / `<article>` للكارت.",
-        ),
-      ),
+      pitfalls: collectedHtmlPitfalls,
     },
   },
   {
     id: "html-sheet-1",
-    order: 15,
+    order: 14,
     slug: "html-cheatsheet",
     tier: "cheatsheet",
     readMinutes: 5,
@@ -399,18 +292,6 @@ export const extraLessons: Lesson[] = [
           "الـ CheatSheet خريطة مش الأرض — لو snippet فاجأك، افتح الدرس المناسب في Beginner/Pro.",
         ),
       ],
-      pitfalls: pitfall(
-        `<!-- copying markup without checking nesting -->`,
-        L(
-          "Blind paste can invent invalid trees.",
-          "اللصق الأعمى ممكن يعمل trees باطلة.",
-        ),
-        `<!-- paste → validate → run in playground -->`,
-        L(
-          "Verify structure before you style or hydrate.",
-          "اتأكد من الهيكل قبل الـ style أو الـ hydrate.",
-        ),
-      ),
       cheatCards: [
         cheatCard(
           L("Document shell", "Document shell"),

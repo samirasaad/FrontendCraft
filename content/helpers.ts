@@ -41,8 +41,10 @@ export function pitfall(
   wrongNote: LocalizedString,
   rightCode: string,
   rightNote: LocalizedString,
+  title?: LocalizedString,
 ): PitfallExample {
   return {
+    ...(title ? { title } : {}),
     wrong: { code: wrongCode, note: wrongNote },
     right: { code: rightCode, note: rightNote },
   };

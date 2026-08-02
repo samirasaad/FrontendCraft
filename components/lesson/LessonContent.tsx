@@ -134,7 +134,10 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
       </div>
 
       <DeepDive paragraphs={lesson.content.deepDive} />
-      <PitfallsBox pitfalls={lesson.content.pitfalls} />
+
+      {lesson.content.pitfalls ? (
+        <PitfallsBox pitfalls={lesson.content.pitfalls} />
+      ) : null}
 
       {isCheatsheet && lesson.content.cheatCards ? (
         <CheatSheetCards cards={lesson.content.cheatCards} />

@@ -424,7 +424,7 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
       ],
       visualHint: lesson.content.visualHint,
       deepDive: overlay.deepDive,
-      pitfalls: overlay.pitfalls,
+      // Pitfalls are collected into the Pitfalls-tier lessons only.
     },
   };
 }
