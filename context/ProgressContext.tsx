@@ -66,8 +66,18 @@ function readSnapshot(trackId: TrackId, lessons: Lesson[]): ProgressSnapshot {
   return { completed, active };
 }
 
-function getServerSnapshot(lessons: Lesson[]): ProgressSnapshot {
-  return { completed: [], active: lessons[0]?.id ?? "" };
+const EMPTY_COMPLETED: string[] = [];
+const serverCache = new Map<string, ProgressSnapshot>();
+
+/** Must return a stable reference — React loops if this allocates every call. */
+function getServerSnapshot(trackId: TrackId, lessons: Lesson[]): ProgressSnapshot {
+  const active = lessons[0]?.id ?? "";
+  const key = `${trackId}:${active}`;
+  const cached = serverCache.get(key);
+  if (cached) return cached;
+  const snapshot: ProgressSnapshot = { completed: EMPTY_COMPLETED, active };
+  serverCache.set(key, snapshot);
+  return snapshot;
 }
 
 const cache = new Map<string, { json: string; snapshot: ProgressSnapshot }>();
@@ -93,7 +103,7 @@ export function ProgressProvider({
   const snapshot = useSyncExternalStore(
     subscribe,
     () => getSnapshot(trackId, lessons),
-    () => getServerSnapshot(lessons),
+    () => getServerSnapshot(trackId, lessons),
   );
 
   const completedIds = useMemo(
