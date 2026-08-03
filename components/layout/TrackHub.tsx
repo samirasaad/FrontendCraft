@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowRight, Pause, Play } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import { HubShell } from "@/components/layout/HubShell";
+import {
+  PlayPauseButton,
+  useAutoPlay,
+} from "@/components/shared/PlayPauseButton";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { SoundProvider, useSound } from "@/context/SoundContext";
 import { t } from "@/content/i18n/ui-strings";
@@ -49,14 +53,9 @@ const ROADMAP_LAYERS = [
 function StartRoadmap() {
   const { locale, dir } = useLanguage();
   const { playClick } = useSound();
-  const reduce = useReducedMotion();
+  const { playing, setPlaying, toggle, reduce } = useAutoPlay(true);
   const [focus, setFocus] = useState(0);
-  const [playing, setPlaying] = useState(!reduce);
   const Arrow = ArrowRight;
-
-  useEffect(() => {
-    if (reduce) setPlaying(false);
-  }, [reduce]);
 
   useEffect(() => {
     if (!playing || reduce) return;
@@ -77,11 +76,6 @@ function StartRoadmap() {
     playClick();
     setFocus(i);
     setPlaying(false);
-  }
-
-  function togglePlay() {
-    playClick();
-    setPlaying((p) => !p);
   }
 
   return (
@@ -212,18 +206,7 @@ function StartRoadmap() {
                     />
                   ))}
                 </div>
-                <button
-                  type="button"
-                  onClick={togglePlay}
-                  aria-pressed={playing}
-                  aria-label={
-                    playing ? t("simPause", locale) : t("simPlay", locale)
-                  }
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-slate-950/70 px-2.5 py-1 text-[11px] font-semibold text-slate-200 transition hover:border-white/25 hover:bg-slate-900"
-                >
-                  {playing ? <Pause size={12} /> : <Play size={12} />}
-                  {playing ? t("simPause", locale) : t("simPlay", locale)}
-                </button>
+                <PlayPauseButton playing={playing} onToggle={toggle} />
               </div>
             </div>
 

@@ -13,6 +13,10 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
+import {
+  TRACK_JOB_KEYS,
+  TrackJobVisual,
+} from "@/components/layout/TrackJobVisual";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
 import { loc, t } from "@/content/i18n/ui-strings";
@@ -184,16 +188,7 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
 
   const groups = useMemo(() => groupByTier(lessons), [lessons]);
 
-  const initialOpen = useMemo(() => {
-    for (const tier of TIER_ORDER) {
-      if (groups[tier].some((l) => !isComplete(l.id))) return new Set<Tier>([tier]);
-    }
-    return new Set<Tier>(
-      TIER_ORDER.filter((tier) => groups[tier].length > 0).slice(0, 1),
-    );
-  }, [groups, isComplete]);
-
-  const [openTiers, setOpenTiers] = useState<Set<Tier>>(initialOpen);
+  const [openTiers, setOpenTiers] = useState<Set<Tier>>(() => new Set());
 
   const continueLesson =
     lessons.find((l) => l.id === activeLessonId) ??
@@ -229,7 +224,7 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
         />
       </div>
 
-      <header className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
+      <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
         <Link
           href="/tracks"
           onClick={() => playClick()}
@@ -244,63 +239,80 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-3xl px-4 pb-20 sm:px-6">
+      <main className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] via-slate-950/40 to-cyan-400/5 p-5 backdrop-blur-xl sm:p-7"
         >
-          <div className="mb-4 flex items-start gap-3">
-            <span
-              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${track.accent} text-slate-950 shadow-lg shadow-cyan-400/15`}
-            >
-              <Sparkles size={20} />
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
-                {t("curriculumToc", locale)}
-              </p>
-              <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                {loc(track.title, locale)}
-              </h1>
-              <p className="mt-1 text-sm leading-relaxed text-slate-400">
-                {loc(track.description, locale)}
-              </p>
+          <div className="mb-6 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+            <div className="flex min-w-0 items-start gap-3">
+              <span
+                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${track.accent} text-slate-950 shadow-lg shadow-cyan-400/15`}
+              >
+                <Sparkles size={20} />
+              </span>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                  {t("curriculumToc", locale)}
+                </p>
+                <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  {loc(track.title, locale)}
+                </h1>
+                <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
+                  {loc(track.description, locale)}
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full shrink-0 sm:max-w-xs">
+              <div className="mb-1.5 flex justify-between text-[11px] text-slate-400">
+                <span className="inline-flex items-center gap-1">
+                  <Layers size={12} />
+                  {t("progress", locale)}
+                </span>
+                <span className="font-semibold text-cyan-300">
+                  {completedCount}/{totalCount} · {progressPercent}%
+                </span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-white/10">
+                <motion.div
+                  className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
+                  initial={false}
+                  animate={{ width: `${progressPercent}%` }}
+                  transition={{ type: "spring", stiffness: 120, damping: 22 }}
+                />
+              </div>
+              {continueLesson ? (
+                <Link
+                  href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
+                  onClick={() => playClick()}
+                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:brightness-110 sm:w-auto"
+                >
+                  {completedCount > 0
+                    ? t("continueLearning", locale)
+                    : t("startCurriculum", locale)}
+                  <ForwardArrow size={16} />
+                </Link>
+              ) : null}
             </div>
           </div>
 
-          <div className="mb-4">
-            <div className="mb-1.5 flex justify-between text-[11px] text-slate-400">
-              <span className="inline-flex items-center gap-1">
-                <Layers size={12} />
-                {t("progress", locale)}
-              </span>
-              <span className="font-semibold text-cyan-300">
-                {completedCount}/{totalCount} · {progressPercent}%
-              </span>
+          <aside className="rounded-2xl border border-white/10 bg-slate-950/50 p-4 sm:p-5">
+            <div className="mb-4 max-w-3xl">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-300/90">
+                {t("trackJobDemoLabel", locale)}
+                <span className="mx-1.5 text-slate-600">·</span>
+                <span className="tracking-normal text-slate-400">
+                  {t(TRACK_JOB_KEYS[track.id].job, locale)}
+                </span>
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-300 sm:text-[15px]">
+                {t(TRACK_JOB_KEYS[track.id].body, locale)}
+              </p>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
-                initial={false}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ type: "spring", stiffness: 120, damping: 22 }}
-              />
-            </div>
-          </div>
-
-          {continueLesson ? (
-            <Link
-              href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
-              onClick={() => playClick()}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:brightness-110"
-            >
-              {completedCount > 0
-                ? t("continueLearning", locale)
-                : t("startCurriculum", locale)}
-              <ForwardArrow size={16} />
-            </Link>
-          ) : null}
+            <TrackJobVisual trackId={track.id} variant="hero" />
+          </aside>
         </motion.section>
 
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

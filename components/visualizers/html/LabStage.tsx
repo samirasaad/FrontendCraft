@@ -2,21 +2,39 @@
 
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { PlayPauseButton } from "@/components/shared/PlayPauseButton";
 
 /** Shared stage chrome for HTML Motion labs — atmosphere + consistent framing. */
 export function LabStage({
   children,
   className = "",
+  /** When set with `onTogglePlay`, shows a Play/Pause control. */
+  playing,
+  onTogglePlay,
 }: {
   children: ReactNode;
   className?: string;
+  playing?: boolean;
+  onTogglePlay?: () => void;
 }) {
   const reduce = useReducedMotion();
+  const timed = typeof playing === "boolean" && typeof onTogglePlay === "function";
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-slate-950 via-slate-950/90 to-cyan-950/40 p-3 sm:p-4 ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-slate-950 via-slate-950/90 to-cyan-950/40 p-3 sm:p-4 ${
+        timed ? "pt-10 sm:pt-10" : ""
+      } ${className}`}
     >
+      {timed ? (
+        <div className="absolute end-2.5 top-2.5 z-20">
+          <PlayPauseButton
+            playing={playing}
+            onToggle={onTogglePlay}
+            compact
+          />
+        </div>
+      ) : null}
       {!reduce ? (
         <>
           <motion.div
@@ -29,7 +47,11 @@ export function LabStage({
             aria-hidden
             className="pointer-events-none absolute -end-10 bottom-0 h-32 w-32 rounded-full bg-amber-400/10 blur-2xl"
             animate={{ opacity: [0.25, 0.55, 0.25], x: [0, -8, 0] }}
-            transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{
+              duration: 5.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
           />
         </>
       ) : null}

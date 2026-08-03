@@ -23,8 +23,145 @@ export const ui = {
     ar: "اختار track",
   },
   chooseTrackHint: {
-    en: "Pick what you want to practice. New here? Start with HTML from the home roadmap.",
-    ar: "اختار اللي عايز تتدرّب عليه. جديد؟ ابدأ بـ HTML من خريطة الصفحة الرئيسية.",
+    en: "Learn in order: structure → look → behavior → components. Open any live track when you’re ready.",
+    ar: "اتعلّم بالترتيب: structure → look → behavior → components. افتح أي track متاح لما تكون جاهز.",
+  },
+  trackPathLabel: {
+    en: "The path",
+    ar: "الطريق",
+  },
+  trackStartHere: {
+    en: "Start here",
+    ar: "ابدأ من هنا",
+  },
+  trackLive: {
+    en: "Live",
+    ar: "متاح",
+  },
+  trackUtilityLabel: {
+    en: "Optional speed layer",
+    ar: "طبقة سرعة اختيارية",
+  },
+  trackUtilityHint: {
+    en: "Not a new language — Tailwind writes the same CSS faster after you know the basics.",
+    ar: "مش لغة جديدة — Tailwind بيكتب نفس الـ CSS أسرع بعد ما تعرف الأساسيات.",
+  },
+  trackJobHtml: { en: "Structure", ar: "Structure" },
+  trackJobCss: { en: "Styling", ar: "Styling" },
+  trackJobJs: { en: "Behavior", ar: "Behavior" },
+  trackJobReact: { en: "Components", ar: "Components" },
+  trackJobTw: { en: "Faster CSS", ar: "CSS أسرع" },
+  trackJobHtmlHint: {
+    en: "Tags give the page meaning — before any paint.",
+    ar: "الـ tags بتدي الصفحة معنى — قبل أي لون.",
+  },
+  trackJobCssHint: {
+    en: "One styling layer turns bones into a product look.",
+    ar: "طبقة styling واحدة بتحوّل العضم لشكل منتج.",
+  },
+  trackJobJsHint: {
+    en: "A click updates state — the UI finally reacts.",
+    ar: "ضغطة بتغيّر الـ state — الـ UI أخيرًا بيتفاعل.",
+  },
+  trackJobReactHint: {
+    en: "Build once as a component — reuse it anywhere.",
+    ar: "ابنِها مرة كـ component — واستخدمها في أي حتة.",
+  },
+  trackJobTwHint: {
+    en: "Still CSS — utilities just write it faster.",
+    ar: "لسه CSS — الـ utilities بتكتبها أسرع بس.",
+  },
+  trackJobHtmlBody: {
+    en: "HTML is the document. You place content in tags so the browser knows what is a heading, what is a paragraph, and what is a button — structure and meaning, with no styling yet.",
+    ar: "HTML هو الـ document. بتحط المحتوى في tags عشان المتصفح يعرف إيه عنوان وإيه فقرة وإيه زر — structure ومعنى، من غير styling لسه.",
+  },
+  trackJobCssBody: {
+    en: "CSS is the look layer. Same HTML stays in place; you add color, spacing, type, and radius until the bare document feels like a real product UI.",
+    ar: "CSS طبقة الشكل. نفس الـ HTML ثابت؛ بتضيف لون ومسافات وخطوط و radius لحد ما الـ document العريان يبقى UI منتج حقيقي.",
+  },
+  trackJobJsBody: {
+    en: "JavaScript is behavior. When the user clicks, an event runs, state changes, and the UI updates — the page stops being a static picture.",
+    ar: "JavaScript هو السلوك. لما المستخدم يضغط، event بيشتغل، الـ state بيتغيّر، والـ UI بيتحدّث — الصفحة مبتبقاش صورة ثابتة.",
+  },
+  trackJobReactBody: {
+    en: "React packages HTML, CSS, and JS into reusable components. You build SaveCard once, pass props, and drop it anywhere the app needs that same UI.",
+    ar: "React بيلف HTML و CSS و JS في components قابلة لإعادة الاستخدام. بتبني SaveCard مرة، تبعت props، وتحطها في أي حتة الـ app محتاج فيها نفس الـ UI.",
+  },
+  trackJobTwBody: {
+    en: "Tailwind is still CSS — just written as utilities in your markup (`flex`, `gap-2`, `rounded-xl`) so you ship the same look with less custom stylesheet work.",
+    ar: "Tailwind لسه CSS — مكتوب كـ utilities في الـ markup (`flex` و `gap-2` و `rounded-xl`) عشان تطلّع نفس الشكل بمجهود stylesheet أقل.",
+  },
+  trackCapHtml0: {
+    en: "Start from an empty document…",
+    ar: "ابدأ من document فاضي…",
+  },
+  trackCapHtml1: {
+    en: "Add a heading — meaning first.",
+    ar: "ضيف عنوان — المعنى الأول.",
+  },
+  trackCapHtml2: {
+    en: "Add supporting text under it.",
+    ar: "ضيف نص توضيحي تحته.",
+  },
+  trackCapHtml3: {
+    en: "Add a control the user can press.",
+    ar: "ضيف control المستخدم يقدر يضغطه.",
+  },
+  trackCapCss0: {
+    en: "Bones only — structure with no paint.",
+    ar: "عضم بس — structure من غير لون.",
+  },
+  trackCapCss1: {
+    en: "CSS paints color, space, and radius.",
+    ar: "CSS بيرسم اللون والمسافة والـ radius.",
+  },
+  trackCapCss2: {
+    en: "Same content — now it looks like a product.",
+    ar: "نفس المحتوى — دلوقتي شكله منتج.",
+  },
+  trackCapJs0: {
+    en: "Looks ready — still static.",
+    ar: "شكله جاهز — لسه ثابت.",
+  },
+  trackCapJs1: {
+    en: "A click fires an event…",
+    ar: "الضغطة بتشغّل event…",
+  },
+  trackCapJs2: {
+    en: "…JavaScript updates state.",
+    ar: "…JavaScript بيحدّث الـ state.",
+  },
+  trackCapJs3: {
+    en: "UI re-renders — the button says Saved.",
+    ar: "الـ UI بيعمل re-render — الزر بقى Saved.",
+  },
+  trackCapReact0: {
+    en: "Define SaveCard once…",
+    ar: "عرّف SaveCard مرة…",
+  },
+  trackCapReact1: {
+    en: "Reuse it anywhere in the tree.",
+    ar: "استخدمه في أي حتة في الـ tree.",
+  },
+  trackCapReact2: {
+    en: "Same props and behavior — two places.",
+    ar: "نفس الـ props والسلوك — في مكانين.",
+  },
+  trackCapTw0: {
+    en: "Write utilities instead of a long stylesheet…",
+    ar: "اكتب utilities بدل stylesheet طويل…",
+  },
+  trackCapTwApply: {
+    en: "Apply",
+    ar: "طبّق",
+  },
+  trackCapTwDone: {
+    en: "Same CSS result — quicker to ship.",
+    ar: "نفس نتيجة CSS — أسرع في الشغل.",
+  },
+  trackJobDemoLabel: {
+    en: "What this track teaches",
+    ar: "الـ track ده بيعلّمك إيه",
   },
   browseTracks: {
     en: "Browse all tracks →",

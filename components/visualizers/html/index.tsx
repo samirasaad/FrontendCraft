@@ -9,6 +9,7 @@ import {
   labEase,
   labSpring,
 } from "@/components/visualizers/html/LabStage";
+import { useAutoPlay } from "@/components/shared/PlayPauseButton";
 import { useSound } from "@/context/SoundContext";
 
 /** Interactive DOM Tree Graph Engine — live Parent → Child → Text simulation. */
@@ -105,6 +106,7 @@ export function SemanticBlocksVisualizer() {
 
 export function HeadingLadderVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const levels = [
     { tag: "h1", label: "Page title", size: "text-base" },
     { tag: "h2", label: "Section", size: "text-sm" },
@@ -116,16 +118,16 @@ export function HeadingLadderVisualizer() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setActive((i) => (i + 1) % levels.length),
       1200,
     );
     return () => window.clearInterval(id);
-  }, [reduce, levels.length]);
+  }, [reduce, playing, levels.length]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="relative space-y-1 overflow-hidden">
         {levels.map((level, i) => {
           const on = i <= active;
@@ -312,21 +314,22 @@ function FormatPreview({ item }: { item: FormatTag }) {
 
 export function TextFormatVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setActive((i) => (i + 1) % FORMAT_TAGS.length),
       1100,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   const current = FORMAT_TAGS[active];
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <p className="mb-2 min-h-[2.25rem] text-[11px] leading-relaxed text-slate-400">
         &lt;{current.tag}&gt; — {current.hint}
       </p>
@@ -367,16 +370,17 @@ export function TextFormatVisualizer() {
 
 export function LinkImageVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(() => setPhase((p) => (p + 1) % 3), 1600);
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="flex flex-col items-center gap-3">
         <motion.div
           animate={
@@ -457,6 +461,7 @@ export function LinkImageVisualizer() {
 
 export function ListStackVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const kinds = [
     { label: "ul", items: ["• HTML", "• CSS"], tint: "border-cyan-300/35 bg-cyan-400/10" },
     { label: "ol", items: ["1. One", "2. Two"], tint: "border-orange-300/35 bg-orange-400/10" },
@@ -465,16 +470,16 @@ export function ListStackVisualizer() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setActive((i) => (i + 1) % kinds.length),
       1800,
     );
     return () => window.clearInterval(id);
-  }, [reduce, kinds.length]);
+  }, [reduce, playing, kinds.length]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="grid grid-cols-3 gap-2">
         {kinds.map((kind, i) => {
           const on = i === active;
@@ -576,6 +581,7 @@ const DETAILS_STEPS = [
 
 export function DetailsAccordionVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = DETAILS_STEPS[step];
 
@@ -584,16 +590,16 @@ export function DetailsAccordionVisualizer() {
       setStep(DETAILS_STEPS.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % DETAILS_STEPS.length),
       2800,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-amber-300/35 bg-amber-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-100">
           {current.showName ? 'name="faq"' : "<details>"}
@@ -746,6 +752,7 @@ const FORM_STEPS = [
 
 export function FormFlowVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const [typed, setTyped] = useState(0);
 
@@ -756,16 +763,16 @@ export function FormFlowVisualizer() {
   const submitting = step === 3;
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % FORM_STEPS.length),
       1600,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   useEffect(() => {
-    if (reduce || current.type === "checkbox" || current.type === "submit") {
+    if (reduce || !playing || current.type === "checkbox" || current.type === "submit") {
       setTyped(current.value.length);
       return;
     }
@@ -777,7 +784,7 @@ export function FormFlowVisualizer() {
       if (n >= current.value.length) window.clearInterval(id);
     }, 70);
     return () => window.clearInterval(id);
-  }, [step, reduce, current.type, current.value]);
+  }, [step, reduce, playing, current.type, current.value]);
 
   function fieldValue(id: "email" | "password") {
     if (id === "email") {
@@ -789,7 +796,7 @@ export function FormFlowVisualizer() {
   }
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <p className="mb-2 min-h-[2.25rem] text-[11px] leading-relaxed text-slate-400">
         {current.status}
       </p>
@@ -1046,6 +1053,7 @@ const TABLE_ROWS = [
 
 export function TableGridVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = TABLE_BUILD[step];
 
@@ -1054,16 +1062,16 @@ export function TableGridVisualizer() {
       setStep(TABLE_BUILD.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % TABLE_BUILD.length),
       2800,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="mb-3 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-orange-300/35 bg-orange-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-orange-100">
           {current.tag}
@@ -1204,6 +1212,7 @@ const A11Y_STEPS = [
 
 export function A11yCheckVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = A11Y_STEPS[step];
 
@@ -1212,13 +1221,13 @@ export function A11yCheckVisualizer() {
       setStep(A11Y_STEPS.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % A11Y_STEPS.length),
       2800,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   function ring(id: (typeof A11Y_STEPS)[number]["focus"]) {
     return current.focus === id
@@ -1231,7 +1240,7 @@ export function A11yCheckVisualizer() {
   }
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
         {current.tip}
       </p>
@@ -1427,6 +1436,7 @@ const SEO_STEPS = [
 
 export function SeoCrawlVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = SEO_STEPS[step];
 
@@ -1435,16 +1445,16 @@ export function SeoCrawlVisualizer() {
       setStep(SEO_STEPS.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % SEO_STEPS.length),
       2800,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span
           className={`shrink-0 rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold ${
@@ -1610,6 +1620,7 @@ const CWV_STEPS = [
 
 export function CwvLabVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = CWV_STEPS[step];
 
@@ -1618,13 +1629,13 @@ export function CwvLabVisualizer() {
       setStep(CWV_STEPS.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % CWV_STEPS.length),
       2600,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   const metrics = [
     {
@@ -1648,7 +1659,7 @@ export function CwvLabVisualizer() {
   ];
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
         {current.tip}
       </p>
@@ -1840,6 +1851,7 @@ const OG_STEPS = [
 /** Open Graph unfurl — head tags → share preview (Head & Social Meta lesson). */
 export function MetaCardVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = OG_STEPS[step];
 
@@ -1848,16 +1860,16 @@ export function MetaCardVisualizer() {
       setStep(OG_STEPS.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % OG_STEPS.length),
       2600,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <p className="mb-2 min-h-8 text-[11px] leading-relaxed text-slate-400">
         {current.tip}
       </p>
@@ -1958,6 +1970,7 @@ const DIALOG_STEPS = [
 
 export function NativeDialogVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = DIALOG_STEPS[step];
 
@@ -1966,13 +1979,13 @@ export function NativeDialogVisualizer() {
       setStep(1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % DIALOG_STEPS.length),
       2600,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   function ring(target: (typeof DIALOG_STEPS)[number]["focus"]) {
     return current.focus === target
@@ -1981,7 +1994,7 @@ export function NativeDialogVisualizer() {
   }
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-orange-300/35 bg-orange-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-orange-100">
           {current.call}
@@ -2224,6 +2237,7 @@ function engineStyle(state: "ok" | "lag" | "no") {
 
 export function BaselineCompatVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = BASELINE_FEATURES[step];
 
@@ -2232,16 +2246,16 @@ export function BaselineCompatVisualizer() {
       setStep(BASELINE_FEATURES.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % BASELINE_FEATURES.length),
       2800,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
         {current.tip}
       </p>
@@ -2420,6 +2434,7 @@ const ART_SOURCES = [
 
 export function PictureSourceVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = PICTURE_STEPS[step];
   const rows = current.mode === "format" ? FORMAT_SOURCES : ART_SOURCES;
@@ -2430,16 +2445,16 @@ export function PictureSourceVisualizer() {
       setStep(PICTURE_STEPS.length - 1);
       return;
     }
-    setStep(0);
+    if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % PICTURE_STEPS.length),
       2600,
     );
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-cyan-300/35 bg-cyan-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-cyan-100">
           {current.mode === "format" ? "type=" : "media="}
@@ -2543,27 +2558,21 @@ export function PictureSourceVisualizer() {
 
 export function MediaStageVisualizer() {
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
   const sources = ["AVIF", "WebP", "JPG"];
   const [source, setSource] = useState(0);
-  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setSource((s) => (s + 1) % sources.length),
       1600,
     );
     return () => window.clearInterval(id);
-  }, [reduce, sources.length]);
-
-  useEffect(() => {
-    if (reduce) return;
-    const id = window.setInterval(() => setPlaying((p) => !p), 2400);
-    return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, playing, sources.length]);
 
   return (
-    <LabStage>
+    <LabStage playing={playing} onTogglePlay={toggle}>
       <div className="relative mx-auto w-full max-w-xs overflow-hidden rounded-2xl border border-orange-300/35 bg-gradient-to-br from-orange-400/25 via-slate-900 to-slate-950">
         <motion.div
           aria-hidden
