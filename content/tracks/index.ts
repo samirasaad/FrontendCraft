@@ -7,12 +7,15 @@ import { cssMeta } from "@/content/tracks/css/meta";
 import { lessons as cssLessons } from "@/content/tracks/css/lessons";
 import { tailwindMeta } from "@/content/tracks/tailwind/meta";
 import { lessons as tailwindLessons } from "@/content/tracks/tailwind/lessons";
+import { reactMeta } from "@/content/tracks/react/meta";
+import { lessons as reactLessons } from "@/content/tracks/react/lessons";
 
 export const tracks: TrackDefinition[] = [
   { ...javascriptMeta, lessons: javascriptLessons },
   { ...htmlMeta, lessons: htmlLessons },
   { ...cssMeta, lessons: cssLessons },
   { ...tailwindMeta, lessons: tailwindLessons },
+  { ...reactMeta, lessons: reactLessons },
 ].sort((a, b) => a.order - b.order);
 
 export const trackIds = tracks.map((track) => track.id);

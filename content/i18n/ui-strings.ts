@@ -3,8 +3,8 @@ import type { Locale, LocalizedString } from "@/lib/types";
 export const ui = {
   brand: { en: "FrontendCraft", ar: "FrontendCraft" },
   hubTagline: {
-    en: "Interactive learning lab for the modern web",
-    ar: "معمل تعلّم تفاعلي للويب الحديث",
+    en: "See it. Build it. Own it.",
+    ar: "شوفه. ابنِه. امتلكه.",
   },
   heroWidgetEyebrow: {
     en: "Live concept",
@@ -21,6 +21,124 @@ export const ui = {
   chooseTrack: {
     en: "Choose a track",
     ar: "اختار track",
+  },
+  chooseTrackHint: {
+    en: "Pick what you want to practice. New here? Start with HTML from the home roadmap.",
+    ar: "اختار اللي عايز تتدرّب عليه. جديد؟ ابدأ بـ HTML من خريطة الصفحة الرئيسية.",
+  },
+  browseTracks: {
+    en: "Browse all tracks →",
+    ar: "شوف كل الـ tracks ←",
+  },
+  backHome: {
+    en: "Home",
+    ar: "الرئيسية",
+  },
+  roadmapTitle: {
+    en: "How a real UI is built",
+    ar: "إزاي UI حقيقي بيتبني",
+  },
+  roadmapHint: {
+    en: "Structure → styling → behavior, then React components. Same UI grows in order.",
+    ar: "Structure → styling → behavior، بعدين React components. نفس الـ UI بيكبر بالترتيب.",
+  },
+  roadmapHtmlTitle: {
+    en: "HTML — what’s on the page",
+    ar: "HTML — إيه اللي على الصفحة",
+  },
+  roadmapHtmlBody: {
+    en: "Start here. You write the content and meaning: heading, text, button. No colors yet — just a clear document the browser understands.",
+    ar: "ابدأ من هنا. بتكتب المحتوى والمعنى: عنوان ونص وزر. من غير ألوان لسه — document واضح المتصفح بيفهمه.",
+  },
+  roadmapCssTitle: {
+    en: "CSS — how it looks",
+    ar: "CSS — شكله عامل إزاي",
+  },
+  roadmapCssBody: {
+    en: "One styling layer: spacing, color, type, layout. This is where the document becomes a product look — still no real clicks yet.",
+    ar: "طبقة styling واحدة: مسافات ولون وخطوط و layout. هنا الـ document يبقى شكله منتج — لسه مفيش ضغطات حقيقية.",
+  },
+  roadmapJsTitle: {
+    en: "JavaScript — how it behaves",
+    ar: "JavaScript — بيتصرّف إزاي",
+  },
+  roadmapJsBody: {
+    en: "Then you add behavior: listen for a click, update state, change the UI. The page stops being a picture and becomes an app.",
+    ar: "بعدين بتضيف سلوك: تسمع ضغطة، تغيّر state، تحدّث الـ UI. الصفحة مبتبقاش صورة وبقت app.",
+  },
+  roadmapReactTitle: {
+    en: "React — components & app UI",
+    ar: "React — components و UI للتطبيق",
+  },
+  roadmapReactBody: {
+    en: "Still HTML, CSS, and JS — organized into reusable components with props and state, so the same Save card can live anywhere in an app.",
+    ar: "لسه HTML و CSS و JS — متظبطين في components قابلة لإعادة الاستخدام مع props و state، عشان نفس الـ Save card تعيش في أي حتة في الـ app.",
+  },
+  roadmapPreviewHtml: {
+    en: "Job now: structure. We place a title, a line of text, and a button — the browser knows what each piece means.",
+    ar: "الوظيفة دلوقتي: structure. بنحط عنوان وسطر نص وزر — المتصفح عارف كل جزء معناه إيه.",
+  },
+  roadmapPreviewCss: {
+    en: "Job now: styling (CSS). Spacing, color, and radius turn bare tags into a readable card — one look layer.",
+    ar: "الوظيفة دلوقتي: styling (CSS). المسافات واللون والـ radius بيحوّلوا الـ tags لـ card مقروءة — طبقة شكل واحدة.",
+  },
+  roadmapPreviewJs: {
+    en: "Job now: behavior. A click runs JS, state flips to “Saved”, and the button label updates on screen.",
+    ar: "الوظيفة دلوقتي: behavior. ضغطة تشغّل JS، الـ state يبقى Saved، ونص الزر بيتحدّث على الشاشة.",
+  },
+  roadmapPreviewReact: {
+    en: "Job now: components. Same card and same behavior — wrapped as <SaveCard /> with props and state you can reuse.",
+    ar: "الوظيفة دلوقتي: components. نفس الـ card ونفس السلوك — متغلفة في <SaveCard /> مع props و state تقدر تعيد استخدامهم.",
+  },
+  roadmapPreviewLabel: {
+    en: "Watch the same UI grow",
+    ar: "شوف نفس الـ UI وهو بيكبر",
+  },
+  roadmapJobStructure: { en: "Structure", ar: "Structure" },
+  roadmapJobLook: { en: "Styling", ar: "Styling" },
+  roadmapJobBehavior: { en: "Behavior", ar: "Behavior" },
+  roadmapJobComponents: { en: "Components", ar: "Components" },
+  roadmapDemoTitle: {
+    en: "Welcome back",
+    ar: "أهلاً بيك تاني",
+  },
+  roadmapDemoBody: {
+    en: "Save your progress and keep learning.",
+    ar: "احفظ تقدمك وكمل التعلّم.",
+  },
+  roadmapDemoBtnIdle: { en: "Save", ar: "احفظ" },
+  roadmapDemoBtnDone: { en: "Saved ✓", ar: "اتحفظ ✓" },
+  roadmapDemoWaitingCss: {
+    en: "Plain document — styling (CSS) not applied yet",
+    ar: "Document عادي — الـ styling (CSS) لسه متطبّقش",
+  },
+  roadmapDemoWaitingJs: {
+    en: "Looks ready — waiting for JS to handle the click",
+    ar: "شكله جاهز — مستني JS يمسك الضغطة",
+  },
+  roadmapDemoJsNote: {
+    en: "JS handled the click · state updated · UI re-rendered",
+    ar: "JS مسك الضغطة · state اتحدّث · الـ UI اتعمله re-render",
+  },
+  roadmapDemoReactNote: {
+    en: "<SaveCard saved={true} /> · props + state · reusable",
+    ar: "<SaveCard saved={true} /> · props + state · reusable",
+  },
+  roadmapTechHtml: { en: "HTML", ar: "HTML" },
+  roadmapTechCss: { en: "CSS", ar: "CSS" },
+  roadmapTechJs: { en: "JavaScript", ar: "JavaScript" },
+  roadmapTechReact: { en: "React", ar: "React" },
+  roadmapStartCta: {
+    en: "Start with HTML",
+    ar: "ابدأ بـ HTML",
+  },
+  roadmapNow: {
+    en: "You are here",
+    ar: "إنت هنا",
+  },
+  roadmapLocked: {
+    en: "Next",
+    ar: "بعدين",
   },
   comingSoon: {
     en: "Coming soon",
@@ -56,15 +174,6 @@ export const ui = {
     en: "Continue learning",
     ar: "كمّل التعلم",
   },
-  curriculumLabPrimers: {
-    en: "Lab primers",
-    ar: "مقدمات المعمل",
-  },
-  curriculumLabPrimersHint: {
-    en: "Shared references for the whole track — not repeated inside every lesson",
-    ar: "مراجع مشتركة للـ track كله — مش متكررة جوّه كل درس",
-  },
-
   lessonsCount: {
     en: "lessons",
     ar: "دروس",

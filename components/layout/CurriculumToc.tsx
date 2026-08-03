@@ -13,7 +13,6 @@ import {
   Layers,
   Sparkles,
 } from "lucide-react";
-import { RenderPipeline } from "@/components/lesson/RenderPipeline";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
 import { loc, t } from "@/content/i18n/ui-strings";
@@ -232,7 +231,7 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
 
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
         <Link
-          href="/"
+          href="/tracks"
           onClick={() => playClick()}
           className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-white/10"
         >
@@ -303,20 +302,6 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
             </Link>
           ) : null}
         </motion.section>
-
-        {track.id === "html" ? (
-          <section className="mb-8 space-y-4">
-            <div>
-              <p className="text-sm font-semibold text-slate-200">
-                {t("curriculumLabPrimers", locale)}
-              </p>
-              <p className="text-xs text-slate-400">
-                {t("curriculumLabPrimersHint", locale)}
-              </p>
-            </div>
-            <RenderPipeline />
-          </section>
-        ) : null}
 
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm font-semibold text-slate-200">

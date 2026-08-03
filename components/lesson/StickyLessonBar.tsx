@@ -21,14 +21,8 @@ export function StickyLessonBar({
   challengePassed?: boolean;
 }) {
   const { locale, dir } = useLanguage();
-  const {
-    lessons,
-    isComplete,
-    toggleComplete,
-    setActiveLessonId,
-    progressPercent,
-    completedCount,
-  } = useProgress();
+  const { lessons, isComplete, toggleComplete, setActiveLessonId } =
+    useProgress();
   const { playClick, playSuccess } = useSound();
 
   const done = isComplete(lesson.id);
@@ -43,28 +37,13 @@ export function StickyLessonBar({
       <motion.div
         initial={{ y: 24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="pointer-events-auto mx-auto flex max-w-4xl flex-col gap-2 rounded-2xl border border-white/15 bg-slate-950/90 p-3 shadow-[0_-8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:flex-row sm:items-center sm:gap-3 sm:p-3.5"
+        className="pointer-events-auto mx-auto flex max-w-4xl flex-col gap-2 rounded-2xl border border-white/15 bg-slate-950/90 p-3 shadow-[0_-8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:flex-row sm:items-center sm:justify-end sm:gap-3 sm:p-3.5"
       >
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex items-center justify-between gap-2 text-[11px] text-slate-400">
-            <span>
-              {completedCount}/{lessons.length} · {progressPercent}%
-            </span>
-            {!challengePassed && lesson.content.challenge ? (
-              <span className="text-yellow-200/80">
-                {t("challengeHintBar", locale)}
-              </span>
-            ) : null}
-          </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
-            <motion.div
-              className="h-full rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300"
-              initial={false}
-              animate={{ width: `${progressPercent}%` }}
-              transition={{ type: "spring", stiffness: 120, damping: 20 }}
-            />
-          </div>
-        </div>
+        {!challengePassed && lesson.content.challenge ? (
+          <p className="min-w-0 flex-1 text-[11px] text-yellow-200/80 sm:me-auto">
+            {t("challengeHintBar", locale)}
+          </p>
+        ) : null}
 
         <div className="flex flex-wrap items-center gap-2">
           <button

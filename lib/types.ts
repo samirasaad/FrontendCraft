@@ -12,7 +12,7 @@ export type Tier =
 /** @deprecated Use Tier — kept as alias during migration reads. */
 export type Difficulty = Tier;
 
-export type TrackId = "javascript" | "html" | "css" | "tailwind";
+export type TrackId = "javascript" | "html" | "css" | "tailwind" | "react";
 
 export type TrackStatus = "available" | "coming-soon";
 

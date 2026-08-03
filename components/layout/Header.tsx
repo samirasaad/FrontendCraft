@@ -45,20 +45,27 @@ export function Header({ track }: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="hidden min-w-[140px] sm:block">
-            <div className="mb-1 flex justify-between text-[10px] uppercase tracking-wider text-slate-400">
-              <span>{t("progress", locale)}</span>
-              <span className="text-cyan-300">
-                {completedCount}/{totalCount}
-              </span>
-            </div>
-            <div className="h-1.5 overflow-hidden rounded-full bg-slate-800">
-              <div
-                className={`h-full rounded-full bg-gradient-to-r ${track.accent} transition-all duration-500`}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Compact glance — survives a collapsed sidebar; full meter lives in the sidebar */}
+          <div
+            className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5"
+            title={`${t("progress", locale)} ${completedCount}/${totalCount}`}
+          >
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+              {t("progress", locale)}
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-cyan-300">
+              {completedCount}/{totalCount}
+            </span>
+            <span
+              className="relative hidden h-1.5 w-14 overflow-hidden rounded-full bg-slate-800 sm:block"
+              aria-hidden
+            >
+              <span
+                className={`absolute inset-y-0 start-0 rounded-full bg-gradient-to-r ${track.accent} transition-all duration-500`}
                 style={{ width: `${progressPercent}%` }}
               />
-            </div>
+            </span>
           </div>
           <SfxToggle />
           <LangToggle />
