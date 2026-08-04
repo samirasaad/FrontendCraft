@@ -57,8 +57,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           code: `<!DOCTYPE html>`,
           language: "html",
           hint: L(
-            "Put it on the very first line, before `<html>`.",
-            "حطه في أول سطر قبل `<html>`.",
+            "Open your file and put `<!DOCTYPE html>` on line 1 — above `<html>`, with nothing before it.",
+            "افتح الملف وحط `<!DOCTYPE html>` في السطر الأول — فوق `<html>` ومفيش حاجة قبله.",
           ),
         },
       ),
@@ -95,8 +95,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           code: `<html>\n  <head></head>\n  <body></body>\n</html>`,
           language: "html",
           hint: L(
-            "Compare each option — look for `DOCTYPE`, `lang`, and `charset`.",
-            "قارن كل اختيار — دور على `DOCTYPE` و `lang` و `charset`.",
+            "Pick the option that adds three things: `<!DOCTYPE html>`, `lang` on `<html>`, and early `charset` in `<head>`.",
+            "اختار اللي بيضيف تلات حاجات: `<!DOCTYPE html>` و `lang` على `<html>` و `charset` بدري في `<head>`.",
           ),
         },
       ),
@@ -126,8 +126,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           code: `<head>\n  <title>FrontendCraft</title>\n  <meta charset="UTF-8" />\n</head>`,
           language: "html",
           hint: L(
-            "Peek at `<head>` — `charset` belongs near the top.",
-            "بص على `<head>` — الـ `charset` مكانه في الأول.",
+            "Move `<meta charset=\"UTF-8\">` to the top of `<head>` — before title and other tags.",
+            "انقل `<meta charset=\"UTF-8\">` لأول `<head>` — قبل `title` وباقي الوسوم.",
           ),
         },
       ),
@@ -156,8 +156,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           code: `<html lang="ar">`,
           language: "html",
           hint: L(
-            "The `lang` attribute goes on `<html>`, not `<body>`.",
-            "خاصية `lang` بتتحط على `<html>`، مش `<body>`.",
+            "Edit the opening tag to `<html lang=\"ar\">` (or `en`) — not on `<body>`.",
+            "عدّل تاج الفتح لـ `<html lang=\"ar\">` (أو `en`) — مش على `<body>`.",
           ),
         },
       ),
@@ -180,8 +180,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "Browser tab titles live in `<head>`, inside `<title>`.",
-            "عنوان التاب بيعيش في `<head>` جوّه `<title>`.",
+            "Add `<title>Your page name</title>` inside `<head>` — that text is what the browser tab shows.",
+            "ضيف `<title>اسم صفحتك</title>` جوّه `<head>` — ده النص اللي بيظهر في تاب المتصفح.",
           ),
         },
       ),
@@ -212,8 +212,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           code: `<div class="header"></div>\n<div class="main"></div>`,
           language: "html",
           hint: L(
-            "Compare the options — real landmark tags beat `div` classes.",
-            "قارن الاختيارات — وسوم `landmarks` الحقيقية أحسن من `div` بـ `classes`.",
+            "Replace outer `<div class=\"header\">` / `main` wrappers with real `<header>`, `<nav>`, `<main>`, and `<footer>` tags.",
+            "بدّل أغلفة `<div class=\"header\">` / `main` بوسوم حقيقية: `<header>` و `<nav>` و `<main>` و `<footer>`.",
           ),
         },
       ),
@@ -233,8 +233,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "Think primary content — one `main` region per page.",
-            "فكّر في المحتوى الأساسي — منطقة `main` واحدة لكل صفحة.",
+            "Keep a single `<main>` around the page’s primary content — don’t nest another `<main>` in every section.",
+            "خلّي `<main>` واحد حوالين المحتوى الأساسي — متكررش `<main>` جوّه كل قسم.",
           ),
         },
       ),
@@ -261,8 +261,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "Ask: could this content stand alone as its own page?",
-            "اسأل: المحتوى ده يقدر يعيش لوحده كصفحة؟",
+            "If the block could be shared or opened alone (blog post, product card), wrap it in `<article>` instead of a plain `<div>`.",
+            "لو القطعة تقدر تتشارك أو تتفتح لوحدها (بوست، كارت منتج)، لفّها في `<article>` بدل `<div>` عادي.",
           ),
         },
       ),
@@ -404,8 +404,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "Heading level is about outline meaning — size is a CSS job.",
-            "مستوى الـ heading معناه للـ outline — المقاس شغلانة CSS.",
+            "Keep the real outline (`h1` → `h2` → `h3`) and change font size with CSS — don’t pick `<h4>` just because it looks smaller.",
+            "سيّب الـ outline الحقيقي (`h1` → `h2` → `h3`) وغيّر حجم الخط بـ CSS — متختارش `<h4>` عشان شكله أصغر بس.",
           ),
         },
       ),
@@ -958,8 +958,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "Input types shape the keyboard and give free validation hints — not a formatting choice.",
-            "أنواع الـ input بتشكّل الكيبورد وبتدي تلميحات validation ببلاش — مش موضوع تنسيق نص.",
+            "Use `type=\"email\"` / `tel` / `number` so mobiles show the right keyboard and the browser can check the value — don’t fake it with styled text inputs.",
+            "استخدم `type=\"email\"` / `tel` / `number` عشان الموبايل يوري الكيبورد الصح والمتصفح يقدر يتحقق من القيمة — متقلّدش ده بـ text input متستايل.",
           ),
         },
       ),
@@ -1207,8 +1207,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "One attribute changes the software keyboard; the other changes real value behavior.",
-            "خاصية بتغيّر كيبورد الشاشة؛ التانية بتغيّر سلوك القيمة الحقيقي.",
+            "Keep a real `type` (like `tel`) for value checks, and add `inputmode=\"numeric\"` only when you want a different on-screen keyboard.",
+            "سيّب `type` حقيقي (زي `tel`) لفحص القيمة، وضيف `inputmode=\"numeric\"` بس لما تحتاج كيبورد شاشة مختلف.",
           ),
         },
       ),
@@ -1315,8 +1315,8 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ),
         {
           hint: L(
-            "What happens in a user's head when a regex silently rejects their input?",
-            "المستخدم هيحس بإيه لما regex يرفض إدخاله من غير كلمة واحدة؟",
+            "Add a clear `title` (or custom error text) next to `pattern` so the user knows the expected format when validation fails.",
+            "ضيف `title` واضح (أو نص خطأ مخصص) جنب `pattern` عشان المستخدم يعرف الصيغة المطلوبة لما التحقق يفشل.",
           ),
         },
       ),

@@ -634,7 +634,7 @@ export const ui = {
   },
   quizHint: {
     en: "Hint",
-    ar: "Hint",
+    ar: "نصيحة",
   },
   quizRetry: {
     en: "Try again",
