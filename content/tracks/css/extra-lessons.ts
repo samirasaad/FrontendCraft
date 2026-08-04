@@ -13,7 +13,7 @@ export const extraLessons: LessonDraft[] = [
     order: 0,
     slug: "css-common-pitfalls",
     tier: "pro",
-    readMinutes: 11,
+    readMinutes: 7,
     icon: "AlertTriangle",
     visualizer: "css-pitfalls-lab",
     content: {
@@ -40,6 +40,8 @@ export const extraLessons: LessonDraft[] = [
         L("Inspect computed styles before overriding", "افحص `computed styles` قبل `override`"),
         L("Keep layout in normal flow when possible", "خلّي `layout` في `normal flow` لما ينفع"),
         L("Use explicit, accessible interaction states", "استخدم حالات تفاعل صريحة ومتاحة"),
+        L("Fix specificity instead of reaching for `!important`", "اصلح `specificity` بدل ما تلجأ لـ `!important`"),
+        L("Prefer fluid sizing (`min()`, `dvh`) over fixed pixels", "فضّل مقاسات سائلة (`min()`, `dvh`) عن `pixels` ثابتة"),
       ],
       examples: [
         simpleExample(
@@ -142,7 +144,7 @@ export const extraLessons: LessonDraft[] = [
     order: 0,
     slug: "css-cheatsheet",
     tier: "cheatsheet",
-    readMinutes: 7,
+    readMinutes: 5,
     icon: "BookCopy",
     visualizer: "css-cheatsheet-lab",
     content: {

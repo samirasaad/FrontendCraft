@@ -13,7 +13,7 @@ export const extraLessons: LessonDraft[] = [
     order: 11,
     slug: "perf-debounce-throttle",
     tier: "pro",
-    readMinutes: 10,
+    readMinutes: 8,
     icon: "Zap",
     visualizer: "debounce-throttle-lab",
     content: {
@@ -106,7 +106,7 @@ console.log("done burst");`,
     order: 12,
     slug: "memory-leaks-refs",
     tier: "pro",
-    readMinutes: 11,
+    readMinutes: 8,
     icon: "Cpu",
     visualizer: "memory-leaks-lab",
     content: {
@@ -221,7 +221,8 @@ clearInterval(id);`,
       keyPoints: [
         L("Float math needs tolerance", "حسابات float محتاجة tolerance"),
         L("`typeof null` is \"object\"", "`typeof null` بتطلع \"object\""),
-        L("Prefer Number.isNaN", "فضّل Number.isNaN"),
+        L("Prefer `Number.isNaN` over global `isNaN`", "فضّل `Number.isNaN` عن `isNaN` العامة"),
+        L("`Number.isFinite` guards against Infinity", "`Number.isFinite` بيحميك من Infinity"),
       ],
       examples: [
         simpleExample(
@@ -271,7 +272,7 @@ console.log(isPresent(null), isPresent(0));`,
     order: 14,
     slug: "pitfall-async-races",
     tier: "pitfalls",
-    readMinutes: 9,
+    readMinutes: 7,
     icon: "AlertTriangle",
     visualizer: "async-await",
     content: {
@@ -371,7 +372,7 @@ async function load(url) {
     order: 15,
     slug: "js-cheatsheet",
     tier: "cheatsheet",
-    readMinutes: 5,
+    readMinutes: 7,
     icon: "BookCopy",
     visualizer: "event-loop",
     content: {

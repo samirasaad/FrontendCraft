@@ -28,6 +28,10 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "`let` صندوق حديث تقدر تفتحه وتغيّر اللي جواه. `const` غطاؤه مقفول — مينفعش تعمل reassign للـ binding.",
         },
         {
+          en: "Both `let` and `const` sit in a temporal dead zone (TDZ) from the top of their block until their line runs — reading them earlier throws, instead of silently giving `undefined` like `var`.",
+          ar: "`let` و `const` بيقعدوا في temporal dead zone (TDZ) من أول الـ block لحد السطر بتاعهم — لو قريتهم قبل كده، بتاخد error بدل ما تاخد `undefined` بهدوء زي `var`.",
+        },
+        {
           en: "Prefer `const` by default. Switch to `let` only when the value must change. Avoid `var` in modern code.",
           ar: "ابدأ بـ `const`. استخدم `let` بس لو الـ value لازم تتغير. وابتعد عن `var` في الـ code الحديث.",
         },
@@ -44,6 +48,10 @@ export const legacyLessons: LegacyLesson[] = [
         {
           en: "`const` locks the binding, not deep object contents",
           ar: "`const` بيقفل الـ binding، مش المحتوى الداخلي للـ object",
+        },
+        {
+          en: "`let` / `const` exist but stay unreachable (TDZ) before their declaration line",
+          ar: "`let` و `const` موجودين بس متعرفش توصلهم (TDZ) قبل سطر الـ declaration",
         },
       ],
       code: `const PI = 3.14;
@@ -68,7 +76,7 @@ console.log(PI, score);`,
     order: 2,
     slug: "data-types",
     difficulty: "beginner",
-    readMinutes: 7,
+    readMinutes: 6,
     icon: "Layers",
     visualizer: "primitive-vs-reference",
     content: {
@@ -154,8 +162,8 @@ console.log(user1.name); // Omar  ← same object`,
           ar: "الـ strict equality (`===`) من غير coercion. types مختلفة؟ على طول `false`. دي الـ default اللي تستخدمها في أغلب الأماكن.",
         },
         {
-          en: "Exception to learn later: `NaN === NaN` is `false` — use `Number.isNaN` for that check.",
-          ar: "استثناء هتتعلمه بعدين: `NaN === NaN` بتطلع `false` — استخدم `Number.isNaN` للـ check ده.",
+          en: "Exception to learn later: `NaN === NaN` is `false` — use `Number.isNaN` for that check. (`Object.is` fixes this edge case too, but `===` is fine for almost everything you'll write now.)",
+          ar: "استثناء هتتعلمه بعدين: `NaN === NaN` بتطلع `false` — استخدم `Number.isNaN` للـ check ده. (`Object.is` بيحل الحالة دي كمان، بس `===` كفاية لحد كبير من اللي هتكتبه دلوقتي.)",
         },
       ],
       keyPoints: [
@@ -191,7 +199,7 @@ console.log("5" === 5);    // false`,
     order: 4,
     slug: "functions-scope",
     difficulty: "intermediate",
-    readMinutes: 8,
+    readMinutes: 5,
     icon: "Focus",
     visualizer: "scope",
     content: {
@@ -255,7 +263,7 @@ console.log(greet("JS"));
     order: 5,
     slug: "arrow-this",
     difficulty: "intermediate",
-    readMinutes: 8,
+    readMinutes: 5,
     icon: "Target",
     visualizer: "this-context",
     content: {
@@ -322,7 +330,7 @@ console.log(counter.count);`,
     order: 6,
     slug: "arrays-hof",
     difficulty: "intermediate",
-    readMinutes: 9,
+    readMinutes: 5,
     icon: "ListFilter",
     visualizer: "array-hof",
     content: {
@@ -361,6 +369,10 @@ console.log(counter.count);`,
           en: "`reduce` → accumulate to one result",
           ar: "`reduce` → accumulate لنتيجة واحدة",
         },
+        {
+          en: "Don't mutate inside the callback — return new values",
+          ar: "متعملش mutation جوه الـ callback — رجّع values جديدة",
+        },
       ],
       code: `const prices = [10, 25, 40, 5];
 
@@ -386,7 +398,7 @@ console.log(total);`,
     order: 7,
     slug: "objects-destructuring",
     difficulty: "intermediate",
-    readMinutes: 7,
+    readMinutes: 5,
     icon: "Gift",
     visualizer: "destructuring",
     content: {
@@ -450,7 +462,7 @@ console.log(greet(user));`,
     order: 8,
     slug: "promises",
     difficulty: "advanced",
-    readMinutes: 10,
+    readMinutes: 5,
     icon: "Timer",
     visualizer: "promises",
     content: {
@@ -514,7 +526,7 @@ orderFood(800)
     order: 9,
     slug: "async-await-fetch",
     difficulty: "advanced",
-    readMinutes: 10,
+    readMinutes: 6,
     icon: "Network",
     visualizer: "async-await",
     content: {
@@ -539,6 +551,10 @@ orderFood(800)
           en: "Wrap awaits in `try/catch` for readable error handling — the modern twin of `.catch`.",
           ar: "حط الـ `await` جوه `try/catch` لـ error handling مقروء — النسخة الحديثة من `.catch`.",
         },
+        {
+          en: "If the caller can go away before the response arrives (a component unmounting, a newer request starting), cancel with `AbortController` instead of letting a stale response update old UI.",
+          ar: "لو ممكن اللي طلب يختفي قبل ما الرد يوصل (component بيتشال، أو request أحدث بدأ)، اعمل cancel بـ `AbortController` بدل ما تسيب رد قديم يحدّث UI مش موجودة.",
+        },
       ],
       keyPoints: [
         {
@@ -552,6 +568,10 @@ orderFood(800)
         {
           en: "`try/catch` for fetch failures",
           ar: "`try/catch` لأخطاء الـ fetch",
+        },
+        {
+          en: "Cancel stale requests with `AbortController`",
+          ar: "اعمل cancel للـ requests القديمة بـ `AbortController`",
         },
       ],
       code: `async function loadUser() {
@@ -581,7 +601,7 @@ loadUser();`,
     order: 10,
     slug: "event-loop",
     difficulty: "advanced",
-    readMinutes: 11,
+    readMinutes: 5,
     icon: "Workflow",
     visualizer: "event-loop",
     content: {

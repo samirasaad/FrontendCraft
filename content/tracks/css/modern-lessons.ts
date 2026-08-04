@@ -5,6 +5,8 @@ import type { Tier } from "@/lib/types";
 type LessonSpec = {
   slug: string;
   tier: Extract<Tier, "beginner" | "intermediate" | "advanced">;
+  /** Estimated minutes for concept + lab + quiz. */
+  readMinutes: number;
   title: [string, string];
   summary: [string, string];
   paragraphs: [string, string][];
@@ -27,7 +29,7 @@ function lesson(spec: LessonSpec, index: number): LessonDraft {
     order: 0,
     slug: spec.slug,
     tier: spec.tier,
-    readMinutes: spec.tier === "advanced" ? 10 : 8,
+    readMinutes: spec.readMinutes,
     icon: spec.icon,
     visualizer: spec.visualizer,
     content: {
@@ -54,7 +56,7 @@ function lesson(spec: LessonSpec, index: number): LessonDraft {
 
 const specs: LessonSpec[] = [
   {
-    slug: "cascade-specificity", tier: "beginner", icon: "Layers", visualizer: "cascade-lab",
+    slug: "cascade-specificity", tier: "beginner", readMinutes: 5, icon: "Layers", visualizer: "cascade-lab",
     title: ["The Cascade & Specificity", "الـ `Cascade` و `Specificity`"],
     summary: ["Learn why one CSS rule wins when several rules target the same element.", "اتعلّم ليه قاعدة `CSS` بتكسب لما كذا قاعدة تستهدف نفس العنصر."],
     paragraphs: [
@@ -68,7 +70,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Add or remove a class on the element and see which color wins.", "غيّر `class` واحد على العنصر واتفرّج أنهي لون بيكسب."],
   },
   {
-    slug: "box-model", tier: "beginner", icon: "Box", visualizer: "box-model-lab",
+    slug: "box-model", tier: "beginner", readMinutes: 5, icon: "Box", visualizer: "box-model-lab",
     title: ["The CSS Box Model", "نموذج الصندوق في `CSS`"],
     summary: ["Every visible element is content surrounded by `padding`, `border`, and `margin`.", "كل عنصر ظاهر هو محتوى حوالينه `padding` و`border` و`margin`."],
     paragraphs: [
@@ -82,7 +84,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Switch between `content-box` and `border-box`, then resize the panel.", "بدّل بين `content-box` و`border-box`، وبعدين غيّر مقاس اللوحة."],
   },
   {
-    slug: "units-sizing", tier: "beginner", icon: "Ruler", visualizer: "sizing-lab",
+    slug: "units-sizing", tier: "beginner", readMinutes: 5, icon: "Ruler", visualizer: "sizing-lab",
     title: ["Units & Responsive Sizing", "الوحدات والمقاسات المتجاوبة"],
     summary: ["Choose units that match the thing you are sizing: text, containers, or viewport.", "اختار `units` مناسبة للي بتقيسه: نص أو `container` أو `viewport`."],
     paragraphs: [
@@ -96,7 +98,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Resize the preview and watch `clamp()` scale the heading.", "غيّر عرض المعاينة واتفرّج على `clamp()` وهي بتكبّر العنوان."],
   },
   {
-    slug: "colors-typography", tier: "beginner", icon: "Palette", visualizer: "type-color-lab",
+    slug: "colors-typography", tier: "beginner", readMinutes: 5, icon: "Palette", visualizer: "type-color-lab",
     title: ["Color & Typography", "الألوان و`Typography`"],
     summary: ["Build readable text systems before decorating a page with color.", "ابنِ نظام نص مقروء قبل ما تزيّن الصفحة بالألوان."],
     paragraphs: [
@@ -110,7 +112,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Tweak `font-size` or `line-height` and read the paragraph aloud.", "عدّل `font-size` أو `line-height` واقرأ الفقرة بصوت عالي."],
   },
   {
-    slug: "display-flow", tier: "beginner", icon: "Square", visualizer: "flow-lab",
+    slug: "display-flow", tier: "beginner", readMinutes: 5, icon: "Square", visualizer: "flow-lab",
     title: ["Display & Normal Flow", "`Display` والـ `Normal Flow`"],
     summary: ["Understand the default layout algorithm before reaching for positioning.", "افهم الـ `layout` الافتراضي قبل ما تلجأ للـ `positioning`."],
     paragraphs: [
@@ -124,7 +126,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Toggle `display` between `block` and `inline-block` on the tag.", "بدّل `display` بين `block` و`inline-block` على الـ `tag`."],
   },
   {
-    slug: "backgrounds-borders", tier: "beginner", icon: "Paintbrush", visualizer: "surface-lab",
+    slug: "backgrounds-borders", tier: "beginner", readMinutes: 5, icon: "Paintbrush", visualizer: "surface-lab",
     title: ["Backgrounds & Borders", "الخلفيات والحدود"],
     summary: ["Layer color, images, radius, and borders to create clear surfaces.", "ركّب لون وصور و`radius` وحدود عشان تعمل `surfaces` واضحة."],
     paragraphs: [
@@ -138,7 +140,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Change `border-radius` or add an `outline` and see what moves.", "غيّر `border-radius` أو ضيف `outline` واتفرّج إيه اللي بيتحرك."],
   },
   {
-    slug: "flexbox-basics", tier: "intermediate", icon: "Columns2", visualizer: "flexbox-lab",
+    slug: "flexbox-basics", tier: "intermediate", readMinutes: 5, icon: "Columns2", visualizer: "flexbox-lab",
     title: ["Flexbox Basics", "أساسيات `Flexbox`"],
     summary: ["Align and distribute items along one responsive axis.", "حاذي ووزّع العناصر على محور `responsive` واحد."],
     paragraphs: [
@@ -152,7 +154,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Change `justify-content` or `align-items` and watch the row shift.", "غيّر `justify-content` أو `align-items` واتفرّج الصف بيتحرك إزاي."],
   },
   {
-    slug: "css-grid", tier: "intermediate", icon: "LayoutGrid", visualizer: "grid-lab",
+    slug: "css-grid", tier: "intermediate", readMinutes: 5, icon: "LayoutGrid", visualizer: "grid-lab",
     title: ["CSS Grid", "`CSS Grid`"],
     summary: ["Create rows and columns together for page and component layouts.", "اعمل صفوف وأعمدة مع بعض للصفحات والمكوّنات."],
     paragraphs: [
@@ -166,21 +168,22 @@ const specs: LessonSpec[] = [
     visualHint: ["Edit `grid-template-columns` and resize to see columns reflow.", "عدّل `grid-template-columns` وغيّر العرض واتفرّج الأعمدة بتتغيّر."],
   },
   {
-    slug: "positioning", tier: "intermediate", icon: "Move", visualizer: "positioning-lab",
+    slug: "positioning", tier: "intermediate", readMinutes: 6, icon: "Move", visualizer: "positioning-lab",
     title: ["Positioning", "`Positioning`"],
     summary: ["Use `relative`, `absolute`, `fixed`, and `sticky` positioning without escaping layout by accident.", "استخدم `relative` و`absolute` و`fixed` و`sticky` من غير ما تهرب من الـ `layout` بالغلط."],
     paragraphs: [
       ["`static` is normal flow. `relative` keeps its normal space but can become the containing block for absolute descendants.", "`static` هو الـ `normal flow`. `relative` بيحتفظ بمكانه وبيقدر يبقى `containing block` لأطفال `absolute`."],
       ["`absolute` and `fixed` boxes are removed from normal flow. Use them for overlays and anchored affordances, not for ordinary page geometry.", "صناديق `absolute` و`fixed` بتخرج من `normal flow`. استخدمها للـ `overlays` والعناصر المربوطة، مش لهندسة الصفحة العادية."],
       ["`sticky` participates in flow until it reaches an inset threshold. It needs a scrolling context with enough room, and overflow ancestors can change its behavior.", "`sticky` بتشارك في `flow` لحد ما توصل `inset` معين. محتاجة `scroll context` بمساحة كفاية، و`overflow ancestors` ممكن يغيّر سلوكها."],
+      ["Positioning also creates a stacking context, so `z-index` only settles fights between positioned siblings, not the whole page.", "الـ `positioning` بتعمل كمان `stacking context`، فـ `z-index` بيحسم بس بين إخوة `positioned`، مش الصفحة كلها."],
     ],
-    points: [["`relative` anchors absolute children", "`relative` بتربط أطفال `absolute`"], ["`absolute` leaves normal flow", "`absolute` بتخرج من `normal flow`"], ["`sticky` needs an inset like `top`", "`sticky` محتاجة `inset` زي `top`"]],
+    points: [["`relative` anchors absolute children", "`relative` بتربط أطفال `absolute`"], ["`absolute` leaves normal flow", "`absolute` بتخرج من `normal flow`"], ["`sticky` needs an inset like `top`", "`sticky` محتاجة `inset` زي `top`"], ["`z-index` only compares positioned elements", "`z-index` بيقارن بس عناصر `positioned`"]],
     simple: html(`.badge-wrap { position: relative; width: 14rem; padding: 2rem; background: #e0f2fe; }\n.badge { position: absolute; top: -.5rem; right: -.5rem; padding: .25rem .5rem; background: #0284c7; color: white; border-radius: 999px; }`, `<div class="badge-wrap">Course card <span class="badge">New</span></div>`),
     real: html(`.toolbar { position: sticky; top: 0; z-index: 1; padding: .75rem; background: white; border-bottom: 1px solid #cbd5e1; }`, `<div class="toolbar">Lesson tools stay visible while you scroll.</div><p style="min-height:180px">Scroll space</p>`),
     visualHint: ["Switch `position` values and scroll to test `sticky`.", "بدّل قيم `position` واعمل scroll عشان تجرب `sticky`."],
   },
   {
-    slug: "responsive-media", tier: "intermediate", icon: "Tablet", visualizer: "responsive-lab",
+    slug: "responsive-media", tier: "intermediate", readMinutes: 5, icon: "Tablet", visualizer: "responsive-lab",
     title: ["Responsive Media", "الميديا المتجاوبة"],
     summary: ["Make layouts adapt to available space, not a list of phone names.", "خلّي `layouts` تتكيف مع المساحة المتاحة، مش قائمة أسماء موبايلات."],
     paragraphs: [
@@ -194,7 +197,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Resize the preview and watch the layout break at the breakpoint.", "غيّر عرض المعاينة واتفرّج الـ `layout` بتتغيّر عند الـ `breakpoint`."],
   },
   {
-    slug: "custom-properties", tier: "advanced", icon: "Variable", visualizer: "variables-lab",
+    slug: "custom-properties", tier: "advanced", readMinutes: 5, icon: "Variable", visualizer: "variables-lab",
     title: ["Custom Properties", "`Custom Properties`"],
     summary: ["Use CSS variables as design tokens that inherit through your component tree.", "استخدم `CSS variables` كـ `design tokens` بتتورث في شجرة المكوّنات."],
     paragraphs: [
@@ -208,7 +211,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Change a `--token` value and watch every linked rule update.", "غيّر قيمة `--token` واتفرّج كل القواعد المربوطة بتتحدّث."],
   },
   {
-    slug: "transitions-transforms", tier: "advanced", icon: "Sparkles", visualizer: "motion-lab",
+    slug: "transitions-transforms", tier: "advanced", readMinutes: 5, icon: "Sparkles", visualizer: "motion-lab",
     title: ["Transitions & Transforms", "`Transitions` و`Transforms`"],
     summary: ["Add focused, performant feedback to state changes.", "ضيف `feedback` مركز وأداؤه كويس لتغييرات الحالة."],
     paragraphs: [
@@ -222,7 +225,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Hover or focus the button and watch the `transform` kick in.", "اعمل `hover` أو `focus` على الزر واتفرّج `transform` بتشتغل."],
   },
   {
-    slug: "css-animations", tier: "advanced", icon: "Film", visualizer: "animation-lab",
+    slug: "css-animations", tier: "advanced", readMinutes: 5, icon: "Film", visualizer: "animation-lab",
     title: ["CSS Animations", "`CSS Animations`"],
     summary: ["Use keyframes for multi-step motion with a clear lifecycle.", "استخدم `keyframes` لحركة متعددة المراحل وليها `lifecycle` واضح."],
     paragraphs: [
@@ -236,7 +239,7 @@ const specs: LessonSpec[] = [
     visualHint: ["Replay the animation and toggle `prefers-reduced-motion`.", "شغّل الـ `animation` تاني وبدّل `prefers-reduced-motion`."],
   },
   {
-    slug: "logical-properties", tier: "advanced", icon: "ArrowLeftRight", visualizer: "logical-layout-lab",
+    slug: "logical-properties", tier: "advanced", readMinutes: 5, icon: "ArrowLeftRight", visualizer: "logical-layout-lab",
     title: ["Logical Properties & RTL", "`Logical Properties` و`RTL`"],
     summary: ["Write layout rules that follow reading direction instead of hard-coded left and right.", "اكتب `layout rules` بتتبع اتجاه القراءة بدل `left` و`right` الثابتين."],
     paragraphs: [

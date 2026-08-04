@@ -13,7 +13,7 @@ export const extraLessons: LessonDraft[] = [
     order: 20,
     slug: "html-core-web-vitals",
     tier: "pro",
-    readMinutes: 11,
+    readMinutes: 8,
     icon: "Gauge",
     visualizer: "cwv-lab",
     content: {
@@ -117,7 +117,7 @@ export const extraLessons: LessonDraft[] = [
     order: 21,
     slug: "html-perf-media",
     tier: "pro",
-    readMinutes: 9,
+    readMinutes: 8,
     icon: "Zap",
     visualizer: "media-perf-lab",
     content: {
@@ -145,9 +145,10 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Reserve space to avoid `CLS`", "احجز مساحة عشان تتجنب `CLS`"),
-        L("`Lazy-load` non-critical media", "أخّر تحميل الميديا غير الحرجة"),
-        L("Preload `LCP` carefully", "Preload لـ `LCP` بحذر"),
+        L("Always size media with `width`/`height` or `aspect-ratio`", "دايمًا حط مقاس بـ `width`/`height` أو `aspect-ratio`"),
+        L("`loading=\"lazy\"` for anything below the fold", "`loading=\"lazy\"` لأي حاجة تحت الشاشة"),
+        L("Never `lazy-load` the `LCP` image — preload it instead", "متعملش `lazy` على صورة `LCP` — اعمل preload بدالها"),
+        L("`Lazy-load` iframes; try click-to-load for heavy embeds", "أخّر تحميل الـ iframes؛ جرّب click-to-load للـ embeds التقيلة"),
       ],
       examples: [
         simpleExample(
@@ -218,7 +219,7 @@ export const extraLessons: LessonDraft[] = [
     order: 18,
     slug: "html-architecture-partials",
     tier: "advanced",
-    readMinutes: 10,
+    readMinutes: 8,
     icon: "Blocks",
     visualizer: "semantic-blocks",
     content: {
@@ -229,22 +230,27 @@ export const extraLessons: LessonDraft[] = [
       ),
       paragraphs: [
         L(
-          "Keep one `<main>` landmark. Split recurring chrome (nav/footer) so content pages stay focused.",
-          "خلّي `<main>` واحد. افصل الـ chrome المتكرر (nav/footer) عشان صفحات المحتوى تفضل مركزة.",
+          "Keep exactly one `<main>` landmark per page and pull recurring chrome — header, nav, footer — into their own regions. That split keeps `<main>` scannable and gives assistive tech clear jump points.",
+          "خلّي `<main>` واحد بس في كل صفحة، وحطّ الـ chrome المتكرر — header و nav و footer — في مناطقه. الفصل ده بيخلي `<main>` سهل التصفح وبيدي التقنية المساعدة نقط قفز واضحة.",
         ),
         L(
-          "In component frameworks, your component tree should still emit sensible landmarks and heading ranks.",
-          "في أطر المكونات، الـ tree لسه لازم يطلع landmarks ومراتب headings معقولة.",
+          "Landmarks are only half the structure — headings need a logical rank too. One `<h1>` per page, then `<h2>`/`<h3>` nested by actual content hierarchy, not by the font size you want.",
+          "الـ landmarks نص الهيكل بس — العناوين لازم مرتبة منطقية كمان. `<h1>` واحد لكل صفحة، وبعدين `<h2>`/`<h3>` متداخلة حسب ترتيب المحتوى الحقيقي، مش حسب حجم الخط اللي عايزه.",
         ),
         L(
-          "Prefer server-rendered meaningful HTML for critical content — JS can enhance, not invent the whole document.",
-          "فضّل HTML معنوي من السيرفر للمحتوى الحرج — JS يعزّز، مش يخترع المستند كله.",
+          "In component frameworks the same rules apply — your component tree should still emit one main, sensible landmarks, and correct heading ranks, even when the markup is split across many files.",
+          "في أطر المكونات نفس القواعد سارية — الـ component tree لسه لازم يطلّع main واحد و landmarks معقولة ومراتب headings صح، حتى لو الـ markup متقسم على ملفات كتير.",
+        ),
+        L(
+          "Prefer server-rendered, meaningful HTML for critical content. JavaScript should enhance an already-usable document — add interactivity — not invent the whole page from an empty shell.",
+          "فضّل HTML معنوي من السيرفر للمحتوى الحرج. الـ JavaScript المفروض يعزّز مستند شغال بالفعل — يضيف تفاعلية — مش يخترع الصفحة كلها من قالب فاضي.",
         ),
       ],
       keyPoints: [
-        L("`Landmarks` first", "`Landmarks` أولًا"),
-        L("One main per page", "main واحد لكل صفحة"),
-        L("Enhance, don't replace, `HTML`", "عزّز `HTML` ومتستبدلوش"),
+        L("`Landmarks` first — one `<main>` per page", "`Landmarks` أولًا — `<main>` واحد لكل صفحة"),
+        L("Heading ranks follow content, not font size", "مراتب العناوين تتبع المحتوى مش حجم الخط"),
+        L("Component trees still need real landmarks + headings", "الـ component trees لسه محتاجة landmarks + headings حقيقية"),
+        L("Enhance with `JS`, don't replace server `HTML`", "عزّز بـ `JS`، ومتستبدلش `HTML` السيرفر"),
       ],
       examples: [
         simpleExample(
@@ -302,8 +308,8 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Blocks lock into a clear page architecture.",
-        "البلوكات بتتركب في معمارية صفحة واضحة.",
+        "Landmarks assemble step by step — tree, page preview, and AT roles stay in sync.",
+        "الـ landmarks بتتجمّع خطوة بخطوة — الشجرة ومعاينة الصفحة وأدوار التقنية المساعدة متزامنين.",
       ),
     },
   },
@@ -312,7 +318,7 @@ export const extraLessons: LessonDraft[] = [
     order: 22,
     slug: "html-security-hardening",
     tier: "pro",
-    readMinutes: 13,
+    readMinutes: 9,
     icon: "Shield",
     visualizer: "html-security-lab",
     content: {
@@ -323,28 +329,24 @@ export const extraLessons: LessonDraft[] = [
       ),
       paragraphs: [
         L(
-          "HTML is a trust-boundary surface, not a security system by itself. Every URL, embedded document, and submitted field declares what another origin or server may receive. Review that contract before styling the component.",
-          "HTML سطح حدود ثقة، مش security system لوحده. كل URL و document مضمّن وfield بيتبعت بيعلن إيه origin أو server تاني ممكن يستقبله. راجع العقد ده قبل ما تركز في الستايل.",
+          "HTML sits at your app's trust boundary — every URL, embedded document, and submitted field decides what another origin or server can receive. Review that contract before you touch the styling.",
+          "الـ HTML بيقعد عند حدود الثقة بتاعة تطبيقك — كل URL و document مضمّن وfield بيتبعت بيحدد إيه اللي origin أو server تاني ممكن يستقبله. راجع العقد ده قبل ما تلمس الستايل.",
         ),
         L(
-          "For an external `target=\"_blank\"` link, add `rel=\"noopener noreferrer\"`. `noopener` prevents the new page from controlling `window.opener`; `noreferrer` also suppresses the Referer header. Tell users when a link opens a new tab when that context matters.",
-          "مع لينك خارجي `target=\"_blank\"` ضيف `rel=\"noopener noreferrer\"`. `noopener` يمنع الصفحة الجديدة تتحكم في `window.opener`؛ و`noreferrer` كمان يمنع Referer header. وضّح للمستخدم لما اللينك هيفتح tab جديدة لو السياق مهم.",
+          "For an external `target=\"_blank\"` link, always add `rel=\"noopener noreferrer\"`. `noopener` stops the new tab from controlling `window.opener`; `noreferrer` also drops the Referer header.",
+          "مع أي لينك خارجي `target=\"_blank\"` ضيف دايمًا `rel=\"noopener noreferrer\"`. `noopener` بيمنع الـ tab الجديدة تتحكم في `window.opener`؛ و`noreferrer` كمان بيشيل الـ Referer header.",
         ),
         L(
-          "Treat every iframe as untrusted until proven otherwise. Start with a restrictive `sandbox` and add only the tokens the embed needs. Avoid combining `allow-scripts` and `allow-same-origin` for a same-origin frame: that can let it remove its own sandbox.",
-          "اعتبر كل iframe غير موثوق لحد ما تثبت العكس. ابدأ بـ `sandbox` مقيّد وزوّد tokens اللي الـ embed محتاجها بس. متجمعش `allow-scripts` و`allow-same-origin` مع frame من نفس الـ origin: ده ممكن يخلّيه يشيل sandbox بنفسه.",
+          "Treat every iframe as untrusted. Start with a restrictive `sandbox` and grant only the tokens the embed needs — never combine `allow-scripts` with `allow-same-origin` on a same-origin frame, or it can strip its own sandbox.",
+          "اعتبر كل iframe غير موثوق. ابدأ بـ `sandbox` مقيّد وزوّد الـ tokens اللي محتاجها الـ embed بس — متجمعش `allow-scripts` مع `allow-same-origin` على frame من نفس الـ origin، عشان ممكن يشيل الـ sandbox بتاعه لوحده.",
         ),
         L(
-          "Autocomplete is user-data routing. Use precise values such as `username`, `current-password`, `new-password`, `one-time-code`, `cc-number`, and `transaction-amount` so the browser and password manager understand intent. Do not use `autocomplete=\"off\"` as a security control; browsers may ignore it.",
-          "Autocomplete هو routing لبيانات المستخدم. استخدم قيم دقيقة زي `username` و`current-password` و`new-password` و`one-time-code` و`cc-number` و`transaction-amount` عشان المتصفح وpassword manager يفهموا النية. متستخدمش `autocomplete=\"off\"` كـ security control؛ المتصفحات ممكن تتجاهله.",
+          "`autocomplete` routes user data — use precise values like `username`, `new-password`, `one-time-code`, and `cc-number` so browsers and password managers understand intent. Don't use `autocomplete=\"off\"` as a security control; browsers may ignore it.",
+          "`autocomplete` بيوجّه بيانات المستخدم — استخدم قيم دقيقة زي `username` و`new-password` و`one-time-code` و`cc-number` عشان المتصفح وpassword manager يفهموا القصد. متستخدمش `autocomplete=\"off\"` كـ security control؛ المتصفحات ممكن تتجاهله.",
         ),
         L(
-          "Never place API keys, auth tokens, private URLs, or business secrets in HTML, comments, hidden inputs, `data-*`, or client bundles. A hidden field is visible to the user. Keep secrets on the server and authorize every request there.",
-          "متحطش API keys أو auth tokens أو URLs خاصة أو business secrets في HTML أو comments أو hidden inputs أو `data-*` أو client bundles. الـ hidden field ظاهر للمستخدم. خلّي الأسرار على السيرفر وauthorize كل request هناك.",
-        ),
-        L(
-          "Forms create a data egress path. Audit the form `action`, method, and every submit button's `formaction` — a secondary button can send the same fields elsewhere. Set a deliberate `referrerpolicy`, and treat `download` as a hint: cross-origin behavior varies, and a download never makes untrusted content safe.",
-          "الـ forms بتعمل مسار خروج للبيانات. راجع `action` وmethod وكل `formaction` على submit buttons — زرار ثانوي ممكن يبعت نفس fields لمكان تاني. حدّد `referrerpolicy` بقصد، واعتبر `download` hint: السلوك cross-origin بيختلف، والتحميل مش بيخلي محتوى غير موثوق آمن.",
+          "Never put API keys, tokens, or secrets in HTML, comments, hidden inputs, or client bundles — a hidden field is still visible. The same care applies to forms: audit every `action` and `formaction` (a secondary button can submit elsewhere), and set a deliberate `referrerpolicy`.",
+          "متحطش API keys أو tokens أو أسرار في HTML أو comments أو hidden inputs أو client bundles — الـ hidden field لسه ظاهر. نفس الحذر مع الفورم: راجع كل `action` و`formaction` (زرار ثانوي ممكن يبعت لمكان تاني)، وحدّد `referrerpolicy` بقصد.",
         ),
       ],
       keyPoints: [
@@ -424,7 +426,7 @@ export const extraLessons: LessonDraft[] = [
     order: 23,
     slug: "html-speculation-rules",
     tier: "pro",
-    readMinutes: 12,
+    readMinutes: 9,
     icon: "Radar",
     visualizer: "html-speculation-lab",
     content: {
@@ -438,28 +440,24 @@ export const extraLessons: LessonDraft[] = [
       ),
       paragraphs: [
         L(
-          "The Speculation Rules API lets a document describe likely future navigations with `<script type=\"speculationrules\">`. It is a performance enhancement layered over ordinary links, not a replacement for real `<a href>` navigation.",
-          "Speculation Rules API بتخلي الـ document يوصف التنقلات المحتملة بـ `<script type=\"speculationrules\">`. ده performance enhancement فوق لينكات عادية، مش بديل لـ `<a href>` حقيقي.",
+          "The Speculation Rules API lets a page hint at likely future navigations with `<script type=\"speculationrules\">`. It's a performance layer on top of ordinary `<a href>` links — unsupported browsers just ignore it, so every destination must still work on a direct visit.",
+          "Speculation Rules API بتخلي الصفحة تلمّح للتنقلات المحتملة بـ `<script type=\"speculationrules\">`. ده طبقة أداء فوق لينكات `<a href>` عادية — المتصفحات غير المدعومة بتتجاهلها ببساطة، فكل وجهة لازم تفضل شغالة في الزيارة المباشرة.",
         ),
         L(
-          "`prefetch` warms a future document's response so navigation still renders it normally. `prerender` goes further: the browser loads and renders a likely next page in the background, then can activate it quickly. Prerender is more powerful and costs more CPU, memory, and bandwidth.",
-          "`prefetch` بيسخّن response للـ document الجاي عشان التنقل لسه يرسمه بشكل عادي. `prerender` أعمق: المتصفح بيحمّل ويرسم الصفحة المحتملة في الخلفية، وبعدها يفعّلها بسرعة. Prerender أقوى وتكلفته أعلى CPU وmemory وbandwidth.",
+          "`prefetch` warms a page's response so navigation still renders normally. `prerender` goes further — the browser loads and renders the page in the background so activation feels instant. Prerender is more powerful but costs more CPU, memory, and bandwidth.",
+          "`prefetch` بيسخّن response الصفحة عشان التنقل يترسم عادي. `prerender` أعمق — المتصفح بيحمّل ويرسم الصفحة في الخلفية عشان التفعيل يحس فوري. Prerender أقوى لكن تكلفته أعلى CPU وmemory وbandwidth.",
         ),
         L(
-          "Keep rules same-origin unless you have an explicit, tested cross-origin policy. Start with a small list of high-confidence, read-only destinations such as a product detail or lesson page—not every link in the navigation.",
-          "خلّي القواعد same-origin إلا لو عندك policy صريحة ومختبرة للـ cross-origin. ابدأ بقائمة صغيرة من وجهات read-only عالية الثقة زي صفحة منتج أو درس — مش كل لينك في الـ navigation.",
+          "Keep rules same-origin unless you have a tested cross-origin policy. Start with a short list of high-confidence, read-only destinations — a product page or the next lesson — not every link on the page.",
+          "خلّي القواعد same-origin إلا لو عندك policy مختبرة للـ cross-origin. ابدأ بقائمة قصيرة من وجهات read-only عالية الثقة — صفحة منتج أو الدرس الجاي — مش كل لينك في الصفحة.",
         ),
         L(
-          "Never prerender logout, checkout, delete, unsubscribe, or any URL that mutates state or burns one-time tokens. A prerender can execute page code before the user commits to navigation; keep destructive work behind a user gesture and a server-side confirmation.",
-          "ماتعملش prerender لـ logout أو checkout أو delete أو unsubscribe أو أي URL بيغيّر state أو يستهلك one-time tokens. الـ prerender ممكن يشغّل page code قبل ما المستخدم يقرر يتنقل؛ خلّي الشغل المدمر ورا user gesture وserver-side confirmation.",
+          "Never prerender logout, checkout, delete, or any URL that mutates state or burns a one-time token — a prerender can run page code before the user commits to navigating. Keep destructive actions behind a real user gesture.",
+          "ماتعملش prerender لـ logout أو checkout أو delete أو أي URL بيغيّر state أو يستهلك token لمرة واحدة — الـ prerender ممكن يشغّل كود الصفحة قبل ما المستخدم يقرر يتنقل. خلّي الأفعال المدمرة ورا user gesture حقيقي.",
         ),
         L(
-          "Progressive enhancement is mandatory. Unsupported browsers simply ignore the rules, so the destination must be complete and fast on a direct visit. Feature-detect only when you need UI behavior; the markup stays safe to ship without detection.",
-          "Progressive enhancement إلزامي. المتصفحات غير المدعومة بتتجاهل القواعد ببساطة، فوجهة التنقل لازم تكون كاملة وسريعة في الزيارة المباشرة. اعمل feature detect بس لو محتاج سلوك UI؛ الـ markup يفضل آمن للنشر من غير detection.",
-        ),
-        L(
-          "Measure the next-page journey, not just a prettier waterfall. A correctly targeted prerender can improve the next navigation's LCP, but over-speculation competes with the current page's LCP and wastes data. Monitor Core Web Vitals and real-user conversion paths before widening rules.",
-          "قِس رحلة الصفحة الجاية، مش waterfall أحلى بس. prerender مستهدف صح ممكن يحسن LCP للتنقل الجاي، لكن speculation زيادة بتنافس LCP للصفحة الحالية وبتضيّع data. راقب Core Web Vitals ومسارات المستخدمين الحقيقيين قبل ما توسّع القواعد.",
+          "Measure the next page's journey, not just a prettier waterfall — a well-targeted prerender improves the next LCP, but over-speculation competes with the current page and wastes data. Watch Core Web Vitals before widening the rules.",
+          "قِس رحلة الصفحة الجاية، مش waterfall أحلى بس — prerender مستهدف صح بيحسّن LCP الجاي، لكن speculation زيادة بتنافس الصفحة الحالية وتضيّع data. راقب Core Web Vitals قبل ما توسّع القواعد.",
         ),
       ],
       keyPoints: [
@@ -537,7 +535,7 @@ export const extraLessons: LessonDraft[] = [
     order: 24,
     slug: "html-global-rtl",
     tier: "pro",
-    readMinutes: 13,
+    readMinutes: 9,
     icon: "Languages",
     visualizer: "html-global-rtl-lab",
     content: {
@@ -555,11 +553,11 @@ export const extraLessons: LessonDraft[] = [
           "الـ HTML العالمي بيبدأ من الـ root: حط `lang` للغة الأساسية و `dir` للاتجاه الأساسي. صفحة بتعلّم بالمصري مع مصطلحات إنجليزية غالبًا تستخدم `lang=\"ar\" dir=\"rtl\"` على `<html>`، وبعدين تعدّل الاتجاه بس لما الجملة فعلاً LTR.",
         ),
         L(
-          "`dir=\"auto\"` lets the browser infer direction from the first strong character — useful for user-generated names and comments. Prefer an explicit `dir` for chrome you control (nav, forms, product UI) so layout does not flip unexpectedly.",
-          "`dir=\"auto\"` بيخلّي المتصفح يستنتج الاتجاه من أول حرف قوي — مفيد لأسماء وتعليقات المستخدم. فضّل `dir` صريح للـ chrome اللي بتتحكم فيه (nav و forms و UI المنتج) عشان الـ layout ما يتقلبش فجأة.",
+          "`dir=\"auto\"` infers direction from the first strong character — handy for user-generated names and comments. Use an explicit `dir` for chrome you control (nav, forms, dialogs), and set it again on any teleported UI like a modal or popover — a forgotten `dir` there can strand focus and reading order.",
+          "`dir=\"auto\"` بيستنتج الاتجاه من أول حرف قوي — مفيد لأسماء وتعليقات المستخدم. استخدم `dir` صريح للـ chrome اللي بتتحكم فيه (nav و forms و dialogs)، وحطه تاني على أي UI بينتقل زي modal أو popover — `dir` منسي هناك ممكن يبوّظ الـ focus وترتيب القراءة.",
         ),
         L(
-          "Mixed strings break without isolation. Wrap an English product code or URL inside Arabic copy with `<bdi>` (bidirectional isolate) or a span with `dir=\"ltr\"`. Use `<bdo dir=\"ltr\">` only when you must force order against the Unicode bidi algorithm.",
+          "Mixed strings break without isolation. Wrap an English product code or URL inside Arabic copy with `<bdi>` (bidirectional isolate) or a span with `dir=\"ltr\"`. Reach for `<bdo dir=\"ltr\">` only when you must force order against the Unicode bidi algorithm.",
           "الجمل المخلوطة بتكسر من غير عزل. لفّ كود منتج إنجليزي أو URL جوّه نص عربي بـ `<bdi>` (bidirectional isolate) أو span بـ `dir=\"ltr\"`. استخدم `<bdo dir=\"ltr\">` بس لما تضطر تفرض الترتيب ضد خوارزمية Unicode bidi.",
         ),
         L(
@@ -567,12 +565,8 @@ export const extraLessons: LessonDraft[] = [
           "الـ forms والـ inputs بتورّث الاتجاه. لإيميل و URL و OTP وحقول الكود جوّه صفحة RTL، حط `dir=\"ltr\"` (وغالبًا `inputmode`) على الـ control عشان حركة الـ caret واللصق يفضلوا مقروءين. خلّي الـ `<label>` الظاهر بلغة الصفحة.",
         ),
         L(
-          "Assistive tech and SEO both read language tags. Mark a long English quotation with `lang=\"en\"` inside Arabic content. Do not rely on CSS alone for mirroring — logical CSS helps layout, but correct `lang`/`dir` in HTML is what screen readers and browsers use for pronunciation and bidi.",
-          "التقنيات المساعدة والـ SEO بيقرأوا وسوم اللغة. علّم اقتباس إنجليزي طويل بـ `lang=\"en\"` جوّه محتوى عربي. متعتمدش على CSS لوحده للعكس — الـ CSS المنطقي بيساعد الـ layout، لكن `lang`/`dir` الصح في HTML هو اللي قارئات الشاشة والمتصفحات بتستخدمه للنطق و bidi.",
-        ),
-        L(
-          "Treat direction flips as product bugs: a forgotten `dir` on a modal, toast, or portal can strand focus and reading order. When you teleport UI (dialog, popover), inherit or set `dir`/`lang` explicitly on the teleported root.",
-          "اعتبر تقلّب الاتجاه bug منتج: `dir` منسي على modal أو toast أو portal يقدر يبوّظ الـ focus وترتيب القراءة. لما تنقل UI (dialog أو popover)، ورّث أو حط `dir`/`lang` صراحة على جذر العنصر المنقول.",
+          "Screen readers and search engines both read language tags, so mark a long English quotation with `lang=\"en\"` inside Arabic content. Logical CSS helps layout mirror correctly, but correct `lang`/`dir` in the HTML is what actually drives pronunciation and bidi behavior.",
+          "قارئات الشاشة ومحركات البحث بيقرأوا وسوم اللغة، فعلّم اقتباس إنجليزي طويل بـ `lang=\"en\"` جوّه محتوى عربي. الـ CSS المنطقي بيساعد الـ layout يتقلب صح، لكن `lang`/`dir` الصح في HTML هو اللي فعلًا بيتحكم في النطق وسلوك bidi.",
         ),
       ],
       keyPoints: [
@@ -691,9 +685,10 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Capstone for the whole `HTML` track", "خاتمة للـ `HTML` track كله"),
-        L("Wrong vs right on every card", "غلط مقابل صح في كل كارت"),
-        L("Revisit the matching lesson after each card", "ارجع للدرس المناسب بعد كل كارت"),
+        L("Missing `lang`, missing `alt`, skipped headings — the repeat offenders", "`lang` أو `alt` ناقص وقفز في العناوين — أكتر الأخطاء تكرارًا"),
+        L("A `<div>` with `onclick` is never a real `<button>`", "الـ `<div>` مع `onclick` مش بديل لـ `<button>` حقيقي"),
+        L("Labels, alt text, and table headers must match what's on screen", "الـ labels والـ alt والـ table headers لازم تطابق اللي ظاهر"),
+        L("When a card clicks, rebuild the fix in the playground now", "لما كارت يوضّحلك، ابنِ الإصلاح في الـ playground فورًا"),
       ],
       examples: [
         simpleExample(
@@ -779,9 +774,10 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("`Filter` → `preview` → `copy` → `paste` in `playground`", "فلتر → معاينة → نسخ → لصق في الـ `playground`"),
-        L("Prefer `boilerplate` for full `document` fragments", "فضّل `boilerplate` لمقاطع المستند الكاملة"),
-        L("Check `Baseline` before shipping bleeding-edge `tags`", "راجع `Baseline` قبل ما تنشر `tags` جديدة"),
+        L("Use category chips to jump straight to what you need", "استخدم أزرار الفئات عشان توصل لللي محتاجه على طول"),
+        L("`Copy Code` for the snippet, `Copy Boilerplate` for a full document", "`Copy Code` للمقطع، `Copy Boilerplate` للمستند الكامل"),
+        L("The `Baseline` bar tells you if a `tag` is safe to ship today", "شريط `Baseline` بيقولك لو الـ `tag` آمن للنشر دلوقتي"),
+        L("Paste into the playground and tweak live before using it for real", "حطه في الـ playground وعدّل مباشرة قبل ما تستخدمه فعليًا"),
       ],
       examples: [
         simpleExample(

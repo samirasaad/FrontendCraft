@@ -14,7 +14,7 @@ export const modernLessons: LessonDraft[] = [
     order: 9,
     slug: "form-ux-attributes",
     tier: "intermediate",
-    readMinutes: 9,
+    readMinutes: 7,
     icon: "Keyboard",
     visualizer: "form-flow",
     content: {
@@ -41,8 +41,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Use `type` for meaning; `inputmode` for the `keyboard`", "استخدم `type` للمعنى؛ `inputmode` للكيبورد"),
-        L("Prefer standard `autocomplete` `tokens`", "فضّل رموز `autocomplete` القياسية"),
+        L("Use `type` for meaning; `inputmode` for the keyboard", "استخدم `type` للمعنى؛ `inputmode` للكيبورد"),
+        L("Prefer standard `autocomplete` tokens", "فضّل رموز `autocomplete` القياسية"),
         L("Explain `pattern` failures in plain language", "اشرح فشل `pattern` بلغة بسيطة"),
       ],
       examples: [
@@ -96,7 +96,7 @@ export const modernLessons: LessonDraft[] = [
     order: 14,
     slug: "browser-compatibility",
     tier: "advanced",
-    readMinutes: 11,
+    readMinutes: 8,
     icon: "MonitorCheck",
     visualizer: "baseline-compat",
     content: {
@@ -110,24 +110,20 @@ export const modernLessons: LessonDraft[] = [
       ),
       paragraphs: [
         L(
-          "Evergreen browsers update often, but “works on my machine” is not a release plan. Check W3C Baseline (Widely / Newly / Limited) and engine minimums before you bet a UX on a tag or API.",
-          "المتصفحات الحديثة بتتحدث كتير، بس “شغال عندي” مش خطة إطلاق. راجع W3C Baseline (Widely / Newly / Limited) وأقل إصدارات قبل ما تبني UX على tag أو API.",
+          "Evergreen browsers auto-update, but that doesn't mean every API landed everywhere at once. W3C Baseline scores each feature as Widely available, Newly available, or Limited availability — check it before you design a UX around a tag or API.",
+          "المتصفحات بتحدّث نفسها لوحدها، بس ده مش معناه إن كل API وصل لكل حتة في نفس الوقت. W3C Baseline بيقيّم كل ميزة إنها Widely أو Newly أو Limited — راجعها قبل ما تبني UX على tag أو API.",
         ),
         L(
-          "Baseline Widely available means safe defaults for most products. Newly available (e.g. reliable `<dialog showModal()>`) needs an explicit support policy or a polyfill / progressive enhancement path.",
-          "Baseline Widely يعني افتراضي آمن لمعظم المنتجات. Newly (زي `<dialog showModal()>` الموثوق) محتاج سياسة دعم واضحة أو polyfill / progressive enhancement.",
+          "Widely available means safe to use as a default for almost any product. Newly available (like reliable `<dialog>` `showModal()`) works in current browsers but still needs an explicit support policy, a polyfill, or a progressive-enhancement fallback for laggards.",
+          "Widely يعني آمن كافتراضي لأي منتج تقريبًا. Newly (زي `showModal()` الموثوق في `<dialog>`) شغال في المتصفحات الحالية لكن لسه محتاج سياسة دعم واضحة أو polyfill أو progressive enhancement للمتأخرين.",
         ),
         L(
-          "Prefer feature detection over user-agent sniffing: `if ('showModal' in HTMLDialogElement.prototype)`. Keep a usable HTML fallback so Safari gaps or corporate Chrome lag don’t brick the flow.",
-          "فضّل feature detection عن شمّ الـ user-agent: `if ('showModal' in HTMLDialogElement.prototype)`. سيّب HTML fallback مفيد عشان فجوات Safari أو Chrome الشركات متكسرش التدفق.",
+          "Detect features, don't sniff user agents: `if ('showModal' in HTMLDialogElement.prototype)`. Keep a usable HTML fallback path so a gap in Safari or a lagging corporate Chrome build never breaks the flow completely.",
+          "اعمل feature detection وسيبك من شمّ الـ user-agent: `if ('showModal' in HTMLDialogElement.prototype)`. سيّب مسار HTML fallback يشتغل عشان فجوة في Safari أو Chrome شركات متأخر ميكسرش التدفق خالص.",
         ),
         L(
-          "Document your matrix once per feature family — don’t paste vague “supported everywhere” notes on every lesson. This lesson is the source of truth; cheat cards link back here with compact badges.",
-          "وثّق المصفوفة مرة لكل عائلة ميزات — متلصقش ملاحظات “مدعوم في كل حتة” على كل درس. الدرس ده هو المصدر؛ كروت الـ CheatSheet بترجع له بشارات مختصرة.",
-        ),
-        L(
-          "The matrices below cover the HTML track’s high-stakes tags and attributes: dialog, details, picture, lazy/fetchpriority media, forms hints, template, search, popover, inert, and media tracks.",
-          "المصفوفات تحت بتغطي tags و attributes الحساسة في الـ HTML track: dialog و details و picture و lazy/fetchpriority و تلميحات الفورم و template و search و popover و inert و media tracks.",
+          "Safari/WebKit ships fewer engines and often lags Chrome/Firefox on newer APIs, so it's the one path worth testing manually. The matrices below are the source of truth for this track's high-stakes tags — dialog, details, picture, lazy media, forms hints, template, search, popover, inert, and media tracks.",
+          "Safari/WebKit بيطلع أقل نسخ وغالبًا بيتأخر عن Chrome/Firefox في الـ APIs الجديدة، فهو المسار اللي يستاهل تختبره يدويًا. المصفوفات تحت هي المصدر الموثوق لـ tags الحساسة في الـ track ده — dialog و details و picture و lazy media وتلميحات الفورم و template و search و popover و inert و media tracks.",
         ),
       ],
       keyPoints: [
@@ -408,7 +404,7 @@ export const modernLessons: LessonDraft[] = [
     order: 12,
     slug: "native-dialog",
     tier: "advanced",
-    readMinutes: 10,
+    readMinutes: 7,
     icon: "AppWindow",
     visualizer: "native-dialog",
     content: {
@@ -419,22 +415,27 @@ export const modernLessons: LessonDraft[] = [
       ),
       paragraphs: [
         L(
-          "`HTMLDialogElement.showModal()` opens a top-layer dialog with a `::backdrop` and moves focus inside. `close()` / `form method=\"dialog\"` dismisses it and restores focus to the invoker when possible.",
-          "`showModal()` بيفتح dialog في الـ top layer مع `::backdrop` وبينقل الـ focus لجواه. `close()` أو `form method=\"dialog\"` بيقفله ويرجّع الـ focus للزر اللي فتحه لما ينفع.",
+          "`showModal()` opens the dialog in the top layer, dims the page with a `::backdrop`, and moves focus inside automatically. Pressing Escape closes it out of the box — no extra JS needed for that keyboard path.",
+          "`showModal()` بيفتح الـ dialog في الـ top layer، وبيعتّم الصفحة بـ `::backdrop`، وبينقل الـ focus لجواه تلقائي. الضغط على Escape بيقفله من غير ما تكتب كود إضافي لمسار الكيبورد ده.",
         ),
         L(
-          "Non-modal `show()` is rarer — prefer `showModal()` for confirms and blocking flows. Style `dialog::backdrop` for dimming; don't invent a second full-screen overlay.",
-          "`show()` غير الـ modal نادر — فضّل `showModal()` للتأكيد والتدفقات الحاجزة. ستايل `dialog::backdrop` للتعتيم؛ متخترعش overlay تاني يغطي الشاشة.",
+          "Use `<form method=\"dialog\">` buttons to close and report a value without JS — the button's `value` becomes `dialog.returnValue`. `close()` and Escape both restore focus to whichever element opened the dialog.",
+          "استخدم أزرار `<form method=\"dialog\">` عشان تقفل وترجّع قيمة من غير JS — قيمة الزرار بتبقى `dialog.returnValue`. `close()` أو Escape الاتنين بيرجّعوا الـ focus للعنصر اللي فتح الـ dialog.",
         ),
         L(
-          "Compatibility details live in the Browser Compatibility lesson — treat Safari < 15.4 as needing a fallback when `showModal()` is critical.",
-          "تفاصيل التوافق في درس Browser Compatibility — اعتبر Safari < 15.4 محتاج fallback لما `showModal()` يكون حرج.",
+          "Non-modal `show()` is rare — prefer `showModal()` for confirms and blocking flows. Style `dialog::backdrop` for dimming instead of inventing a second full-screen overlay.",
+          "`show()` غير الـ modal نادر — فضّل `showModal()` للتأكيد والتدفقات الحاجزة. ستايل `dialog::backdrop` للتعتيم بدل ما تخترع overlay تاني يغطي الشاشة.",
+        ),
+        L(
+          "Compatibility details live in the Browser Compatibility lesson — treat Safari below 15.4 as needing a fallback when `showModal()` is critical to the flow.",
+          "تفاصيل التوافق في درس Browser Compatibility — اعتبر Safari أقل من 15.4 محتاج fallback لما `showModal()` يكون حرج للتدفق.",
         ),
       ],
       keyPoints: [
         L("Prefer `showModal()` over custom div `overlays`", "فضّل `showModal()` عن `overlays` بـ div"),
-        L("Use `method=\"dialog\"` `buttons` for built-in close", "استخدم أزرار `method=\"dialog\"` للإغلاق المدمج"),
-        L("Name the dialog; manage `focus` on open/close", "سمّي الـ dialog؛ أدِر الـ `focus` عند الفتح/القفل"),
+        L("Escape and `method=\"dialog\"` close it for free", "Escape و`method=\"dialog\"` بيقفلوه من غير كود إضافي"),
+        L("Style `dialog::backdrop` instead of a custom overlay", "ستايل `dialog::backdrop` بدل overlay مخصص"),
+        L("Focus moves in on open and returns to the invoker on close", "الـ `focus` بيدخل عند الفتح ويرجع للزر عند القفل"),
       ],
       examples: [
         simpleExample(
@@ -485,7 +486,7 @@ export const modernLessons: LessonDraft[] = [
     order: 10,
     slug: "details-summary",
     tier: "intermediate",
-    readMinutes: 8,
+    readMinutes: 7,
     icon: "ListTree",
     visualizer: "details-accordion",
     content: {
@@ -513,7 +514,7 @@ export const modernLessons: LessonDraft[] = [
       ],
       keyPoints: [
         L("Summary is the only direct child that acts as the `toggle`", "summary هو الابن المباشر اللي بيعمل `toggle`"),
-        L("Use `open` for `default`-`expanded` sections sparingly", "استخدم `open` للفتح الافتراضي بحذر"),
+        L("Use `open` for default-expanded sections sparingly", "استخدم `open` للفتح الافتراضي بحذر"),
         L("`name` groups exclusive disclosures where supported", "`name` بيجمّع disclosures حصرية حسب الدعم"),
       ],
       examples: [
@@ -549,7 +550,7 @@ export const modernLessons: LessonDraft[] = [
     order: 13,
     slug: "picture-source",
     tier: "advanced",
-    readMinutes: 10,
+    readMinutes: 7,
     icon: "Images",
     visualizer: "picture-source",
     content: {
@@ -626,7 +627,7 @@ export const modernLessons: LessonDraft[] = [
     order: 16,
     slug: "head-social-meta",
     tier: "advanced",
-    readMinutes: 9,
+    readMinutes: 7,
     icon: "Share2",
     visualizer: "meta-card",
     content: {
@@ -657,9 +658,10 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("`SSR`/`SSG` the social `tags` in `<head>`", "طلّع وسوم السوشيال من السيرفر في `<head>`"),
-        L("Absolute og:image URLs", "روابط og:image مطلقة"),
-        L("SVG + ICO favicon strategy", "استراتيجية favicon: SVG + ICO"),
+        L("Ship `OG` + `Twitter` tags in the first `HTML` response", "طلّع وسوم `OG` و`Twitter` في أول استجابة `HTML`"),
+        L("Absolute `HTTPS` URLs for `og:image`", "روابط `HTTPS` مطلقة لـ `og:image`"),
+        L("`theme-color` tints the mobile browser chrome", "`theme-color` بيلوّن واجهة المتصفح على الموبايل"),
+        L("`SVG` favicon + `ICO` fallback + `apple-touch-icon`", "`favicon` بـ`SVG` + fallback `ICO` + `apple-touch-icon`"),
       ],
       examples: [
         simpleExample(
@@ -718,7 +720,7 @@ export const modernLessons: LessonDraft[] = [
     order: 19,
     slug: "sr-practice",
     tier: "advanced",
-    readMinutes: 16,
+    readMinutes: 8,
     icon: "Volume2",
     visualizer: "sr-ready",
     content: {
