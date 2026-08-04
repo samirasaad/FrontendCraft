@@ -327,7 +327,7 @@ export const modernLessons: LessonDraft[] = [
           support: support("20+", "4+", "12.1+", "12+", "widely", {
             notes: L(
               "Suggestions only — users can still type free text unless you validate.",
-              "اقتراحات بس — المستخدم يقدر يكتب نص حر إلا لو عملت validation.",
+              "اقتراحات بس — المستخدم يقدر يكتب نص حر إلا لو عملت التحقق من البيانات (validation).",
             ),
             fallback: L(
               "Plain <input> or a <select> when the list must be closed.",
@@ -721,7 +721,7 @@ export const modernLessons: LessonDraft[] = [
     slug: "sr-practice",
     tier: "advanced",
     readMinutes: 8,
-    icon: "Volume2",
+    icon: "Eye",
     visualizer: "sr-ready",
     content: {
       title: L(

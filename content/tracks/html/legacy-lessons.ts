@@ -7,7 +7,7 @@ export const legacyLessons: LegacyLesson[] = [
     slug: "document-anatomy",
     difficulty: "beginner",
     readMinutes: 6,
-    icon: "FileCode",
+    icon: "FileText",
     visualizer: "document-tree",
     content: {
       title: {
@@ -77,7 +77,7 @@ export const legacyLessons: LegacyLesson[] = [
     slug: "semantic-structure",
     difficulty: "beginner",
     readMinutes: 9,
-    icon: "LayoutTemplate",
+    icon: "Layers",
     visualizer: "semantic-blocks",
     content: {
       title: {
@@ -450,7 +450,7 @@ export const legacyLessons: LegacyLesson[] = [
         },
         {
           en: "Attributes like `required`, `min`, `max`, and `pattern` give free, built-in validation before any JavaScript runs.",
-          ar: "خصائص زي `required` و `min` و `max` و `pattern` بتديك `validation` جاهز ببلاش قبل أي `JavaScript`.",
+          ar: "خصائص زي `required` و `min` و `max` و `pattern` بتديك التحقق من البيانات (Input Validation) جاهز ببلاش قبل أي `JavaScript`.",
         },
       ],
       keyPoints: [
@@ -468,7 +468,7 @@ export const legacyLessons: LegacyLesson[] = [
         },
         {
           en: "Native validation attributes help before JavaScript",
-          ar: "خصائص الـ `validation` الأصلية بتساعد قبل `JavaScript`",
+          ar: "خصائص التحقق من البيانات الأصلية بتساعد قبل `JavaScript`",
         },
       ],
       code: `<form action="/signup" method="post">
@@ -566,7 +566,7 @@ export const legacyLessons: LegacyLesson[] = [
     slug: "accessibility-basics",
     difficulty: "advanced",
     readMinutes: 6,
-    icon: "Ear",
+    icon: "HeartHandshake",
     visualizer: "a11y-check",
     content: {
       title: {
@@ -642,7 +642,7 @@ export const legacyLessons: LegacyLesson[] = [
     slug: "meta-seo",
     difficulty: "advanced",
     readMinutes: 8,
-    icon: "Search",
+    icon: "Globe",
     visualizer: "seo-crawl",
     content: {
       title: {
