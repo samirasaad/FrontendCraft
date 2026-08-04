@@ -2,7 +2,7 @@ import type { TrackMeta } from "@/lib/types";
 
 export const cssMeta: TrackMeta = {
   id: "css",
-  status: "coming-soon",
+  status: "available",
   order: 3,
   accent: "from-sky-400 to-blue-500",
   icon: "Palette",

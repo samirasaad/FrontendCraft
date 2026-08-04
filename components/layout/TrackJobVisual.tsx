@@ -19,19 +19,25 @@ export const TRACK_JOB_KEYS: Record<
       | "trackJobCss"
       | "trackJobJs"
       | "trackJobReact"
-      | "trackJobTw";
+      | "trackJobTw"
+      | "trackJobA11y"
+      | "trackJobSeo";
     hint:
       | "trackJobHtmlHint"
       | "trackJobCssHint"
       | "trackJobJsHint"
       | "trackJobReactHint"
-      | "trackJobTwHint";
+      | "trackJobTwHint"
+      | "trackJobA11yHint"
+      | "trackJobSeoHint";
     body:
       | "trackJobHtmlBody"
       | "trackJobCssBody"
       | "trackJobJsBody"
       | "trackJobReactBody"
-      | "trackJobTwBody";
+      | "trackJobTwBody"
+      | "trackJobA11yBody"
+      | "trackJobSeoBody";
   }
 > = {
   html: {
@@ -58,6 +64,16 @@ export const TRACK_JOB_KEYS: Record<
     job: "trackJobTw",
     hint: "trackJobTwHint",
     body: "trackJobTwBody",
+  },
+  accessibility: {
+    job: "trackJobA11y",
+    hint: "trackJobA11yHint",
+    body: "trackJobA11yBody",
+  },
+  seo: {
+    job: "trackJobSeo",
+    hint: "trackJobSeoHint",
+    body: "trackJobSeoBody",
   },
 };
 
@@ -912,12 +928,150 @@ function TwScene({
   );
 }
 
+function A11yScene({
+  hero,
+  animate,
+  locale,
+  playing,
+  onTogglePlay,
+  controls,
+  freezeAt,
+}: SceneProps) {
+  const step = useStep(4, LAB_STEP_MS, animate, freezeAt);
+  const focused = step >= 1;
+  const labeled = step >= 2;
+  const ready = step >= 3;
+  const captions = [
+    t("trackCapA11y0", locale),
+    t("trackCapA11y1", locale),
+    t("trackCapA11y2", locale),
+    t("trackCapA11y3", locale),
+  ];
+
+  return (
+    <Stage
+      hero={hero}
+      caption={controls ? captions[step] : undefined}
+      playing={playing}
+      onTogglePlay={onTogglePlay}
+      controls={controls}
+    >
+      <div className="mx-auto flex h-full max-w-lg flex-col justify-center gap-3">
+        <motion.div
+          animate={{
+            boxShadow: focused
+              ? "0 0 0 3px rgba(52,211,153,0.85)"
+              : "0 0 0 0px rgba(52,211,153,0)",
+            borderColor: focused
+              ? "rgba(52,211,153,0.55)"
+              : "rgba(255,255,255,0.12)",
+          }}
+          className={`inline-flex items-center self-start border bg-orange-300 font-mono font-bold text-slate-950 ${
+            hero ? "h-11 rounded-xl px-5 text-sm" : "h-8 rounded-lg px-3 text-xs"
+          }`}
+        >
+          Save
+        </motion.div>
+        <div
+          className={`space-y-1.5 font-mono ${hero ? "text-xs" : "text-[10px]"}`}
+        >
+          <motion.p
+            animate={{ opacity: labeled ? 1 : 0.25 }}
+            className="text-emerald-200"
+          >
+            aria-label=&quot;Save progress&quot;
+          </motion.p>
+          <motion.p
+            animate={{ opacity: ready ? 1 : 0.25 }}
+            className="text-slate-400"
+          >
+            tabIndex=0 · role=&quot;button&quot;
+          </motion.p>
+        </div>
+      </div>
+    </Stage>
+  );
+}
+
+function SeoScene({
+  hero,
+  animate,
+  locale,
+  playing,
+  onTogglePlay,
+  controls,
+  freezeAt,
+}: SceneProps) {
+  const step = useStep(4, LAB_STEP_MS, animate, freezeAt);
+  const hasTitle = step >= 1;
+  const hasMeta = step >= 2;
+  const live = step >= 3;
+  const captions = [
+    t("trackCapSeo0", locale),
+    t("trackCapSeo1", locale),
+    t("trackCapSeo2", locale),
+    t("trackCapSeo3", locale),
+  ];
+
+  return (
+    <Stage
+      hero={hero}
+      caption={controls ? captions[step] : undefined}
+      playing={playing}
+      onTogglePlay={onTogglePlay}
+      controls={controls}
+    >
+      <div className="mx-auto flex h-full max-w-xl flex-col justify-center gap-3">
+        <div
+          className={`rounded-xl border border-white/10 bg-slate-900/80 ${
+            hero ? "p-4" : "p-2.5"
+          }`}
+        >
+          <p
+            className={`mb-2 font-mono uppercase tracking-wider text-slate-500 ${
+              hero ? "text-[10px]" : "text-[8px]"
+            }`}
+          >
+            Search preview
+          </p>
+          <motion.p
+            animate={{ opacity: hasTitle ? 1 : 0.2 }}
+            className={`font-semibold text-sky-300 ${
+              hero ? "text-base" : "text-xs"
+            }`}
+          >
+            Save your progress — FrontendCraft
+          </motion.p>
+          <motion.p
+            animate={{ opacity: hasMeta ? 1 : 0.15 }}
+            className={`mt-1 leading-relaxed text-emerald-300/90 ${
+              hero ? "text-sm" : "text-[10px]"
+            }`}
+          >
+            frontendcraft.dev/save
+          </motion.p>
+          <motion.p
+            animate={{ opacity: live ? 1 : 0.15 }}
+            className={`mt-1.5 leading-relaxed text-slate-400 ${
+              hero ? "text-sm" : "text-[10px]"
+            }`}
+          >
+            Learn structure, look, and behavior in an interactive lab.
+          </motion.p>
+        </div>
+      </div>
+    </Stage>
+  );
+}
+
 const PREVIEW_STEP: Record<string, number> = {
   html: 3,
   css: 2,
   javascript: 3,
   react: 2,
   tailwind: 6,
+  accessibility: 3,
+  seo: 3,
 };
 
 /** Animated scene per track — same Save UI, different job. */
@@ -951,5 +1105,7 @@ export function TrackJobVisual({
   if (trackId === "javascript") return <JsScene {...props} />;
   if (trackId === "react") return <ReactScene {...props} />;
   if (trackId === "tailwind") return <TwScene {...props} />;
+  if (trackId === "accessibility") return <A11yScene {...props} />;
+  if (trackId === "seo") return <SeoScene {...props} />;
   return null;
 }

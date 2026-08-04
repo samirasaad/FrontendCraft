@@ -2743,7 +2743,7 @@ export function PictureSourceVisualizer() {
                   <p className="font-mono text-[8px] text-slate-500">
                     {active ? (
                       <>
-                        <span className="inline-block rtl:rotate-180">←</span>{" "}
+                        <span className={`inline-block ${RTL_FLIP}`}>→</span>{" "}
                         chosen
                       </>
                     ) : passed ? (

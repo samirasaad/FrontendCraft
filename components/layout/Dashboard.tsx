@@ -40,10 +40,10 @@ function EmptyTrackState({ track }: { track: TrackDefinition }) {
 }
 
 function DashboardShell({ track }: { track: TrackDefinition }) {
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
+    const mq = window.matchMedia("(min-width: 1024px)");
     function sync() {
       setMenuOpen(mq.matches);
     }

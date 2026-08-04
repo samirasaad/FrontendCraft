@@ -3,7 +3,7 @@ import type { TrackMeta } from "@/lib/types";
 export const htmlMeta: TrackMeta = {
   id: "html",
   status: "available",
-  order: 2,
+  order: 1,
   accent: "from-orange-400 to-amber-300",
   icon: "Code2",
   title: { en: "HTML", ar: "HTML" },

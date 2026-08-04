@@ -1,17 +1,10 @@
-import { withProductionInsights } from "@/content/tracks/_insights";
-import { enrichLegacyLesson } from "@/content/tracks/javascript/enrichment";
-import { extraLessons } from "@/content/tracks/javascript/extra-lessons";
-import { javascriptInsights } from "@/content/tracks/javascript/insights";
-import { legacyLessons } from "@/content/tracks/javascript/legacy-lessons";
 import type { Lesson } from "@/lib/types";
 
-const coreLessons: Lesson[] = legacyLessons.map((lesson, index) =>
-  enrichLegacyLesson(lesson, index + 1),
-);
-
-export const lessons: Lesson[] = [...coreLessons, ...extraLessons].map(
-  (lesson) => withProductionInsights(lesson, javascriptInsights),
-);
+/**
+ * JavaScript curriculum paused — lesson sources remain under this folder
+ * (legacy-lessons, extra-lessons, enrichment, insights) for a later revive.
+ */
+export const lessons: Lesson[] = [];
 
 export function getLessonById(id: string): Lesson | undefined {
   return lessons.find((lesson) => lesson.id === id);

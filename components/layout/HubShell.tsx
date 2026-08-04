@@ -2,10 +2,10 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { Atmosphere } from "@/components/shared/Atmosphere";
+import { BrandLockup } from "@/components/shared/BrandLockup";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
-import { Atmosphere } from "@/components/shared/Atmosphere";
 import { t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -32,35 +32,9 @@ export function HubShell({
     >
       <Atmosphere />
 
-      <header
-        className={`mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between px-4 sm:px-6 ${
-          fitViewport ? "py-2.5" : "py-5"
-        }`}
-      >
+      <header className="mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between gap-3 px-4 py-3 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
-          <Link href="/" className="flex min-w-0 items-center gap-2">
-            <span
-              className={`flex shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-yellow-300 to-cyan-400 text-slate-950 ${
-                fitViewport ? "h-8 w-8" : "h-10 w-10"
-              }`}
-            >
-              <Sparkles size={fitViewport ? 15 : 18} />
-            </span>
-            {fitViewport ? (
-              <p className="font-[family-name:var(--font-display)] text-sm font-bold text-white">
-                {t("brand", locale)}
-              </p>
-            ) : (
-              <div className="min-w-0">
-                <p className="font-[family-name:var(--font-display)] text-lg font-bold text-white">
-                  {t("brand", locale)}
-                </p>
-                <p className="text-xs text-slate-400">
-                  {t("hubTagline", locale)}
-                </p>
-              </div>
-            )}
-          </Link>
+          <BrandLockup compact={fitViewport} />
           {showHomeLink ? (
             <Link
               href="/"

@@ -365,9 +365,10 @@ function StartRoadmap() {
         <Link
           href="/tracks"
           onClick={() => playClick()}
-          className="text-sm font-medium text-cyan-300 transition hover:text-cyan-200"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300 transition hover:text-cyan-200"
         >
           {t("browseTracks", locale)}
+          <Arrow size={14} className={RTL_FLIP} />
         </Link>
       </div>
     </div>

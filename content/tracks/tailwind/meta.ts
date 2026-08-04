@@ -3,7 +3,7 @@ import type { TrackMeta } from "@/lib/types";
 export const tailwindMeta: TrackMeta = {
   id: "tailwind",
   status: "coming-soon",
-  order: 4,
+  order: 6,
   accent: "from-teal-300 to-cyan-500",
   icon: "Wind",
   title: { en: "Tailwind CSS", ar: "Tailwind CSS" },

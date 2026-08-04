@@ -11,19 +11,20 @@ import {
   ChevronDown,
   Circle,
   Layers,
-  Sparkles,
 } from "lucide-react";
 import {
   TRACK_JOB_KEYS,
   TrackJobVisual,
 } from "@/components/layout/TrackJobVisual";
 import { Atmosphere } from "@/components/shared/Atmosphere";
+import { BrandLockup } from "@/components/shared/BrandLockup";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { ProgressProvider, useProgress } from "@/context/ProgressContext";
 import { SoundProvider, useSound } from "@/context/SoundContext";
+import { RTL_FLIP } from "@/lib/rtl";
 import {
   TIER_ORDER,
   tierBadgeClass,
@@ -59,11 +60,10 @@ function TierBranch({
   onToggle: () => void;
   trackId: string;
 }) {
-  const { locale, dir } = useLanguage();
+  const { locale } = useLanguage();
   const { isComplete } = useProgress();
   const { playClick } = useSound();
   const doneCount = lessons.filter((l) => isComplete(l.id)).length;
-  const Arrow = dir === "rtl" ? ArrowLeft : ArrowRight;
 
   if (lessons.length === 0) return null;
 
@@ -160,9 +160,9 @@ function TierBranch({
                           {lesson.readMinutes} {t("readTime", locale)}
                         </span>
                       </span>
-                      <Arrow
+                      <ArrowRight
                         size={14}
-                        className="mt-1 shrink-0 text-slate-600 transition group-hover:text-cyan-300"
+                        className={`mt-1 shrink-0 text-slate-500 transition group-hover:text-cyan-300 ${RTL_FLIP}`}
                       />
                     </Link>
                   </li>
@@ -177,7 +177,7 @@ function TierBranch({
 }
 
 function CurriculumTocInner({ track }: { track: TrackDefinition }) {
-  const { locale, dir } = useLanguage();
+  const { locale } = useLanguage();
   const { playClick } = useSound();
   const {
     progressPercent,
@@ -197,9 +197,6 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
     lessons.find((l) => !isComplete(l.id)) ??
     lessons[0];
 
-  const BackArrow = dir === "rtl" ? ArrowRight : ArrowLeft;
-  const ForwardArrow = dir === "rtl" ? ArrowLeft : ArrowRight;
-
   function setAll(open: boolean) {
     playClick();
     if (open) {
@@ -215,16 +212,19 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
       <Atmosphere />
 
-      <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
-        <Link
-          href="/tracks"
-          onClick={() => playClick()}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-white/10"
-        >
-          <BackArrow size={12} />
-          {t("backToTracks", locale)}
-        </Link>
-        <div className="flex items-center gap-2">
+      <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
+          <BrandLockup href="/" onClick={() => playClick()} />
+          <Link
+            href="/tracks"
+            onClick={() => playClick()}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-white/10"
+          >
+            <ArrowLeft size={12} className={RTL_FLIP} />
+            {t("backToTracks", locale)}
+          </Link>
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
           <SfxToggle />
           <LangToggle />
         </div>
@@ -237,23 +237,16 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
           className="mb-8 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 p-5 sm:p-7"
         >
           <div className="mb-6 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-            <div className="flex min-w-0 items-start gap-3">
-              <span
-                className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br ${track.accent} text-slate-950 shadow-lg shadow-cyan-400/15`}
-              >
-                <Sparkles size={20} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
-                  {t("curriculumToc", locale)}
-                </p>
-                <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  {loc(track.title, locale)}
-                </h1>
-                <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
-                  {loc(track.description, locale)}
-                </p>
-              </div>
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
+                {t("curriculumToc", locale)}
+              </p>
+              <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                {loc(track.title, locale)}
+              </h1>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
+                {loc(track.description, locale)}
+              </p>
             </div>
 
             <div className="w-full shrink-0 sm:w-72">
@@ -284,7 +277,7 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
                     {completedCount > 0
                       ? t("continueLearning", locale)
                       : t("startCurriculum", locale)}
-                    <ForwardArrow size={11} />
+                    <ArrowRight size={11} className={RTL_FLIP} />
                   </Link>
                 ) : null}
               </div>

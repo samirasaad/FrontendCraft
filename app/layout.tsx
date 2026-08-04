@@ -1,10 +1,19 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "FrontendCraft — Interactive Learning Lab",
   description:
     "A bilingual interactive dashboard for learning JavaScript, HTML, CSS, and Tailwind with motion visuals and a code playground.",
+  applicationName: "FrontendCraft",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#020617" },
+    { media: "(prefers-color-scheme: light)", color: "#020617" },
+  ],
+  colorScheme: "dark",
 };
 
 export default function RootLayout({

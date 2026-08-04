@@ -3,8 +3,8 @@ import type { Locale, LocalizedString } from "@/lib/types";
 export const ui = {
   brand: { en: "FrontendCraft", ar: "FrontendCraft" },
   hubTagline: {
-    en: "See it. Build it. Own it.",
-    ar: "شوفه. ابنِه. امتلكه.",
+    en: "Learn frontend in a live lab",
+    ar: "اتعلّم الفرونت في معمل حي",
   },
   heroWidgetEyebrow: {
     en: "Live concept",
@@ -19,16 +19,36 @@ export const ui = {
     ar: "الـ Call Stack بيشغّل دلوقتي — الـ Queue بيستنى — الـ Event Loop بيربطهم.",
   },
   chooseTrack: {
-    en: "Choose a track",
-    ar: "اختار track",
+    en: "Pick a lab",
+    ar: "اختار معمل",
   },
   chooseTrackHint: {
-    en: "Learn in order: structure → look → behavior → components. Open any live track when you’re ready.",
-    ar: "اتعلّم بالترتيب: structure → look → behavior → components. افتح أي track متاح لما تكون جاهز.",
+    en: "Open a lab, watch the idea move, then build it lesson by lesson.",
+    ar: "افتح معمل، شوف الفكرة وهي بتتحرك، وبعدين ابنِها درس ورا درس.",
   },
   trackPathLabel: {
-    en: "The path",
-    ar: "الطريق",
+    en: "Live now",
+    ar: "متاح دلوقتي",
+  },
+  trackUpcomingLabel: {
+    en: "Coming up",
+    ar: "جاي قريب",
+  },
+  trackPathNav: {
+    en: "Lab path",
+    ar: "مسار المعامل",
+  },
+  trackStartCta: {
+    en: "Enter the HTML lab",
+    ar: "ادخل معمل HTML",
+  },
+  trackEnterLab: {
+    en: "Enter the lab",
+    ar: "ادخل المعمل",
+  },
+  trackPeekLabel: {
+    en: "Live concept",
+    ar: "مفهوم مباشر",
   },
   trackStartHere: {
     en: "Start here",
@@ -37,6 +57,10 @@ export const ui = {
   trackLive: {
     en: "Live",
     ar: "متاح",
+  },
+  trackLockedHint: {
+    en: "Lab opens soon",
+    ar: "المعمل قريب",
   },
   trackUtilityLabel: {
     en: "Optional speed layer",
@@ -51,6 +75,8 @@ export const ui = {
   trackJobJs: { en: "Behavior", ar: "Behavior" },
   trackJobReact: { en: "Components", ar: "Components" },
   trackJobTw: { en: "Faster CSS", ar: "CSS أسرع" },
+  trackJobA11y: { en: "Inclusive UI", ar: "UI للجميع" },
+  trackJobSeo: { en: "Discoverability", ar: "الاكتشاف" },
   trackJobHtmlHint: {
     en: "Tags give the page meaning — before any paint.",
     ar: "الـ tags بتدي الصفحة معنى — قبل أي لون.",
@@ -71,6 +97,14 @@ export const ui = {
     en: "Still CSS — utilities just write it faster.",
     ar: "لسه CSS — الـ utilities بتكتبها أسرع بس.",
   },
+  trackJobA11yHint: {
+    en: "Keyboard, labels, and contrast — everyone can use it.",
+    ar: "كيبورد و labels و contrast — الكل يقدر يستخدمه.",
+  },
+  trackJobSeoHint: {
+    en: "Titles and structure help search understand the page.",
+    ar: "الـ titles والـ structure بيساعدوا البحث يفهم الصفحة.",
+  },
   trackJobHtmlBody: {
     en: "HTML is the document. You place content in tags so the browser knows what is a heading, what is a paragraph, and what is a button — structure and meaning, with no styling yet.",
     ar: "HTML هو الـ document. بتحط المحتوى في tags عشان المتصفح يعرف إيه عنوان وإيه فقرة وإيه زر — structure ومعنى، من غير styling لسه.",
@@ -90,6 +124,14 @@ export const ui = {
   trackJobTwBody: {
     en: "Tailwind is still CSS — just written as utilities in your markup (`flex`, `gap-2`, `rounded-xl`) so you ship the same look with less custom stylesheet work.",
     ar: "Tailwind لسه CSS — مكتوب كـ utilities في الـ markup (`flex` و `gap-2` و `rounded-xl`) عشان تطلّع نفس الشكل بمجهود stylesheet أقل.",
+  },
+  trackJobA11yBody: {
+    en: "Accessibility makes the UI usable with keyboard, screen readers, and clear contrast. Same product — more people can complete the task.",
+    ar: "الـ Accessibility بتخلي الـ UI يشتغل بالكيبورد وقارئ الشاشة وcontrast واضح. نفس المنتج — ناس أكتر تقدر تكمّل المهمة.",
+  },
+  trackJobSeoBody: {
+    en: "SEO is how search engines read your page: clear titles, meta descriptions, and meaningful structure so the right people can find what you built.",
+    ar: "الـ SEO هو طريقة محركات البحث في قراءة صفحتك: titles واضحة و meta descriptions و structure له معنى عشان الناس الصح تلقى اللي بنيته.",
   },
   trackCapHtml0: {
     en: "Start from an empty document…",
@@ -159,13 +201,45 @@ export const ui = {
     en: "Same CSS result — quicker to ship.",
     ar: "نفس نتيجة CSS — أسرع في الشغل.",
   },
+  trackCapA11y0: {
+    en: "Looks fine — but can everyone use it?",
+    ar: "شكله كويس — بس كل الناس تقدر تستخدمه؟",
+  },
+  trackCapA11y1: {
+    en: "Add a visible keyboard focus ring.",
+    ar: "ضيف focus ring باين للكيبورد.",
+  },
+  trackCapA11y2: {
+    en: "Name the control for assistive tech.",
+    ar: "سمّي الـ control لوسائل المساعدة.",
+  },
+  trackCapA11y3: {
+    en: "Now keyboard and screen readers can Save.",
+    ar: "دلوقتي الكيبورد وقارئ الشاشة يقدروا يعملوا Save.",
+  },
+  trackCapSeo0: {
+    en: "A page with no search signals…",
+    ar: "صفحة من غير إشارات بحث…",
+  },
+  trackCapSeo1: {
+    en: "Write a clear title for the result.",
+    ar: "اكتب title واضح لنتيجة البحث.",
+  },
+  trackCapSeo2: {
+    en: "Add a meta description under it.",
+    ar: "ضيف meta description تحته.",
+  },
+  trackCapSeo3: {
+    en: "Search can preview — and people can click.",
+    ar: "البحث يقدر يعرض معاينة — والناس تضغط.",
+  },
   trackJobDemoLabel: {
     en: "What this track teaches",
     ar: "الـ track ده بيعلّمك إيه",
   },
   browseTracks: {
-    en: "Browse all tracks →",
-    ar: "شوف كل الـ tracks ←",
+    en: "Browse all tracks",
+    ar: "شوف كل الـ tracks",
   },
   backHome: {
     en: "Home",
@@ -576,6 +650,11 @@ export const ui = {
   restoreCode: { en: "Restore original", ar: "رجّع الأصلي" },
   playgroundFullscreen: { en: "Full screen", ar: "شاشة كاملة" },
   playgroundExitFullscreen: { en: "Exit full screen", ar: "خروج من الشاشة الكاملة" },
+  splitSideBySide: { en: "Side by side", ar: "جنب بعض" },
+  splitStacked: { en: "Stacked", ar: "فوق بعض" },
+  splitSwap: { en: "Swap panels", ar: "بدّل اللوحات" },
+  splitLayout: { en: "Split layout", ar: "تقسيم العرض" },
+  preview: { en: "Preview", ar: "معاينة" },
   sfxOn: { en: "SFX on", ar: "الصوت شغال" },
   sfxOff: { en: "SFX off", ar: "الصوت مقفول" },
   next: { en: "Next lesson", ar: "الدرس اللي بعده" },

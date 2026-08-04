@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {
   SandpackCodeEditor,
   SandpackConsole,
-  SandpackLayout,
   SandpackPreview,
   SandpackProvider,
   useSandpack,
@@ -12,11 +11,14 @@ import {
 } from "@codesandbox/sandpack-react";
 import {
   Check,
+  Columns2,
   Copy,
   Maximize2,
   Minimize2,
   Play,
   RotateCcw,
+  Rows2,
+  ArrowLeftRight,
   Terminal,
 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
@@ -28,6 +30,8 @@ import type { CodeExample, TrackId } from "@/lib/types";
 interface CodeRunnerProps {
   examples: CodeExample[];
 }
+
+type SplitOrientation = "side" | "stack";
 
 const sandpackTheme = {
   colors: {
@@ -80,7 +84,119 @@ ${code}
 }
 
 function isHtmlTrack(trackId: TrackId) {
-  return trackId === "html" || trackId === "css" || trackId === "tailwind";
+  return (
+    trackId === "html" ||
+    trackId === "css" ||
+    trackId === "tailwind" ||
+    trackId === "accessibility" ||
+    trackId === "seo"
+  );
+}
+
+function SplitToggle({
+  orientation,
+  editorFirst,
+  onOrientation,
+  onSwap,
+}: {
+  orientation: SplitOrientation;
+  editorFirst: boolean;
+  onOrientation: (next: SplitOrientation) => void;
+  onSwap: () => void;
+}) {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+
+  const btn = (active: boolean) =>
+    `inline-flex h-7 w-7 items-center justify-center rounded-md transition ${
+      active
+        ? "bg-white/10 text-cyan-200"
+        : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+    }`;
+
+  return (
+    <div
+      className="inline-flex items-center gap-0.5"
+      role="group"
+      aria-label={t("splitLayout", locale)}
+    >
+      <button
+        type="button"
+        title={t("splitSideBySide", locale)}
+        aria-label={t("splitSideBySide", locale)}
+        aria-pressed={orientation === "side"}
+        onClick={() => {
+          playClick();
+          onOrientation("side");
+        }}
+        className={btn(orientation === "side")}
+      >
+        <Columns2 size={14} />
+      </button>
+      <button
+        type="button"
+        title={t("splitStacked", locale)}
+        aria-label={t("splitStacked", locale)}
+        aria-pressed={orientation === "stack"}
+        onClick={() => {
+          playClick();
+          onOrientation("stack");
+        }}
+        className={btn(orientation === "stack")}
+      >
+        <Rows2 size={14} />
+      </button>
+      <button
+        type="button"
+        title={t("splitSwap", locale)}
+        aria-label={t("splitSwap", locale)}
+        aria-pressed={!editorFirst}
+        onClick={() => {
+          playClick();
+          onSwap();
+        }}
+        className={btn(!editorFirst)}
+      >
+        <ArrowLeftRight size={14} />
+      </button>
+    </div>
+  );
+}
+
+function IconAction({
+  label,
+  onClick,
+  pressed,
+  disabled,
+  accent,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  pressed?: boolean;
+  disabled?: boolean;
+  accent?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      aria-pressed={pressed}
+      disabled={disabled}
+      onClick={onClick}
+      className={`inline-flex h-7 w-7 items-center justify-center rounded-md transition disabled:opacity-50 ${
+        accent
+          ? "bg-gradient-to-br from-yellow-300 to-cyan-300 text-slate-950 hover:brightness-110"
+          : pressed
+            ? "bg-white/10 text-cyan-200"
+            : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+      }`}
+    >
+      {children}
+    </button>
+  );
 }
 
 function RunControls({
@@ -88,11 +204,21 @@ function RunControls({
   expectedHint,
   fullscreen,
   onToggleFullscreen,
+  showSplit,
+  orientation,
+  editorFirst,
+  onOrientation,
+  onSwap,
 }: {
   sourceCode: string;
   expectedHint: string;
   fullscreen: boolean;
   onToggleFullscreen: () => void;
+  showSplit: boolean;
+  orientation: SplitOrientation;
+  editorFirst: boolean;
+  onOrientation: (next: SplitOrientation) => void;
+  onSwap: () => void;
 }) {
   const { locale } = useLanguage();
   const { playClick } = useSound();
@@ -124,63 +250,88 @@ function RunControls({
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 px-4 py-3">
-      <div className="flex items-center gap-2 text-sm text-slate-200">
-        <Terminal size={16} className="text-yellow-300" />
-        <span className="font-medium">{t("playground", locale)}</span>
-        <span className="hidden text-[11px] text-slate-500 sm:inline">
-          · {t("liveSandbox", locale)}
-        </span>
+    <div className="flex flex-col gap-2 border-b border-white/10 px-3 py-2 lg:flex-row lg:items-center lg:gap-3">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-1.5 text-sm text-slate-200">
+          <Terminal size={14} className="shrink-0 text-yellow-300" />
+          <span className="truncate font-medium">{t("playground", locale)}</span>
+        </div>
+        {expectedHint ? (
+          <p className="mt-0.5 truncate ps-5 font-mono text-[10px] text-slate-500">
+            {expectedHint}
+          </p>
+        ) : null}
       </div>
-      <div className="flex flex-wrap items-center gap-2">
-        <button
-          type="button"
+
+      <div className="flex shrink-0 items-center gap-0.5 ps-5 lg:ps-0">
+        {showSplit ? (
+          <>
+            <SplitToggle
+              orientation={orientation}
+              editorFirst={editorFirst}
+              onOrientation={onOrientation}
+              onSwap={onSwap}
+            />
+            <span className="mx-1 h-4 w-px bg-white/10" aria-hidden />
+          </>
+        ) : null}
+        <IconAction
+          label={
+            fullscreen
+              ? t("playgroundExitFullscreen", locale)
+              : t("playgroundFullscreen", locale)
+          }
+          pressed={fullscreen}
           onClick={() => {
             playClick();
             onToggleFullscreen();
           }}
-          aria-pressed={fullscreen}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200 transition hover:bg-white/10"
         >
           {fullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
-          {fullscreen
-            ? t("playgroundExitFullscreen", locale)
-            : t("playgroundFullscreen", locale)}
-        </button>
-        <button
-          type="button"
-          onClick={handleRestore}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200 transition hover:bg-white/10"
-        >
+        </IconAction>
+        <IconAction label={t("restoreCode", locale)} onClick={handleRestore}>
           <RotateCcw size={14} />
-          {t("restoreCode", locale)}
-        </button>
-        <button
-          type="button"
+        </IconAction>
+        <IconAction
+          label={copied ? t("copied", locale) : t("copy", locale)}
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200 transition hover:bg-white/10"
         >
           {copied ? (
             <Check size={14} className="text-cyan-300" />
           ) : (
             <Copy size={14} />
           )}
-          {copied ? t("copied", locale) : t("copy", locale)}
-        </button>
-        <button
-          type="button"
+        </IconAction>
+        <IconAction
+          label={running ? t("running", locale) : t("run", locale)}
           onClick={handleRun}
           disabled={running}
-          className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-3 py-1.5 text-xs font-bold text-slate-950 transition hover:brightness-110 disabled:opacity-70"
+          accent
         >
           <Play size={14} />
-          {running ? t("running", locale) : t("run", locale)}
-        </button>
+        </IconAction>
       </div>
-      <p className="w-full text-[11px] text-slate-500">
-        {t("expectedHint", locale)}:{" "}
-        <span className="font-mono text-yellow-200/80">{expectedHint}</span>
+    </div>
+  );
+}
+
+function PanelChrome({
+  label,
+  children,
+  className = "",
+}: {
+  label: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flex min-h-0 min-w-0 flex-col overflow-hidden border-white/10 ${className}`}
+    >
+      <p className="shrink-0 border-b border-white/10 bg-black/25 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+        {label}
       </p>
+      <div className="min-h-0 flex-1 overflow-hidden">{children}</div>
     </div>
   );
 }
@@ -197,6 +348,8 @@ function CodeRunnerInner({
   const htmlMode = isHtmlTrack(trackId);
   const { locale } = useLanguage();
   const [fullscreen, setFullscreen] = useState(false);
+  const [orientation, setOrientation] = useState<SplitOrientation>("side");
+  const [editorFirst, setEditorFirst] = useState(true);
 
   const files = useMemo((): SandpackFiles => {
     if (htmlMode) {
@@ -222,15 +375,60 @@ function CodeRunnerInner({
     };
   }, [fullscreen]);
 
-  const editorHeight = fullscreen ? "min(46vh, 520px)" : 260;
-  const previewHeight = fullscreen ? "min(38vh, 420px)" : 220;
-  const consoleHeight = fullscreen ? "min(28vh, 280px)" : 160;
+  const paneHeight = "100%";
+  const workspaceClass = fullscreen
+    ? "h-full min-h-0 flex-1"
+    : "h-[min(68vh,560px)] min-h-[420px]";
+
+  const splitGridClass =
+    orientation === "side"
+      ? "grid-cols-1 sm:grid-cols-2"
+      : "grid-rows-2 grid-rows-[minmax(0,1fr)_minmax(0,1fr)]";
+
+  const editorPanel = (
+    <PanelChrome label={htmlMode ? "HTML" : "JS"} className="h-full">
+      <SandpackCodeEditor
+        showLineNumbers
+        showInlineErrors
+        showRunButton={false}
+        wrapContent
+        className="!h-full !min-h-0 !rounded-none [&_.cm-editor]:!h-full [&_.cm-scroller]:!h-full"
+        style={{ height: paneHeight }}
+      />
+    </PanelChrome>
+  );
+
+  const outputPanel = htmlMode ? (
+    <PanelChrome label={t("preview", locale)} className="h-full">
+      <SandpackPreview
+        showOpenInCodeSandbox={false}
+        showRefreshButton={false}
+        showRestartButton={false}
+        showNavigator={false}
+        className="!h-full !min-h-0 !rounded-none [&_.sp-preview-container]:!h-full [&_iframe]:!h-full"
+        style={{ height: paneHeight, flex: 1 }}
+      />
+    </PanelChrome>
+  ) : (
+    <PanelChrome label={t("output", locale)} className="h-full">
+      <SandpackConsole
+        showHeader={false}
+        showSyntaxError
+        style={{ height: paneHeight }}
+        className="!h-full !bg-transparent font-mono text-sm [&_.sp-console-item]:!text-yellow-200"
+      />
+    </PanelChrome>
+  );
+
+  const panels = editorFirst
+    ? [editorPanel, outputPanel]
+    : [outputPanel, editorPanel];
 
   return (
     <section
       className={
         fullscreen
-          ? "fixed inset-0 z-[80] flex flex-col overflow-hidden border-0 bg-slate-950 shadow-none"
+          ? "fixed inset-0 z-[80] flex h-dvh max-h-dvh flex-col overflow-hidden border-0 bg-slate-950 shadow-none"
           : "overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-[0_0_40px_rgba(15,23,42,0.5)]"
       }
       aria-modal={fullscreen || undefined}
@@ -244,65 +442,53 @@ function CodeRunnerInner({
         theme={sandpackTheme}
         files={files}
         options={{
-          autorun: false,
-          autoReload: false,
+          autorun: true,
+          autoReload: true,
           recompileMode: "delayed",
-          recompileDelay: 300,
+          recompileDelay: 400,
           classes: {
-            "sp-wrapper": "!bg-transparent !border-0 !rounded-none !h-full",
-            "sp-layout": "!bg-transparent !border-0 !rounded-none",
-            "sp-stack": "!bg-slate-950",
-            "sp-editor": "!bg-slate-950",
+            "sp-wrapper": fullscreen
+              ? "!bg-transparent !border-0 !rounded-none !flex !min-h-0 !h-full !flex-1 !flex-col"
+              : "!bg-transparent !border-0 !rounded-none !flex !flex-col",
+            "sp-layout": "!bg-transparent !border-0 !rounded-none !flex !min-h-0 !h-full !flex-1 !flex-col",
+            "sp-stack": "!bg-slate-950 !h-full !min-h-0",
+            "sp-editor": "!bg-slate-950 !h-full !min-h-0",
+            "sp-code-editor": "!h-full !min-h-0",
             "sp-tabs": "!bg-slate-950 !border-white/10",
-            "sp-console": "!bg-black/40 !border-white/10",
-            "sp-preview-container": "!bg-slate-950",
+            "sp-console": "!bg-black/40 !border-white/10 !h-full",
+            "sp-preview": "!h-full !min-h-0 !flex !flex-col",
+            "sp-preview-container": "!bg-slate-950 !h-full !min-h-0 !flex-1",
+            "sp-preview-iframe": "!bg-white !h-full !min-h-0",
           },
         }}
       >
-        <RunControls
-          sourceCode={code}
-          expectedHint={expectedHint}
-          fullscreen={fullscreen}
-          onToggleFullscreen={() => setFullscreen((value) => !value)}
-        />
-        <SandpackLayout
-          className={`!block !rounded-none !border-0 ${fullscreen ? "min-h-0 flex-1 overflow-auto" : ""}`}
-        >
-          <SandpackCodeEditor
-            showLineNumbers
-            showInlineErrors
-            showRunButton={false}
-            wrapContent
-            className={`${fullscreen ? "min-h-[320px]" : "min-h-[220px]"} !rounded-none`}
-            style={{ height: editorHeight }}
+        <div className="shrink-0">
+          <RunControls
+            sourceCode={code}
+            expectedHint={expectedHint}
+            fullscreen={fullscreen}
+            onToggleFullscreen={() => setFullscreen((value) => !value)}
+            showSplit
+            orientation={orientation}
+            editorFirst={editorFirst}
+            onOrientation={setOrientation}
+            onSwap={() => setEditorFirst((v) => !v)}
           />
-          {htmlMode ? (
-            <div className="border-t border-white/10">
-              <p className="border-b border-white/10 bg-black/20 px-4 py-2 text-[11px] uppercase tracking-wider text-slate-500">
-                Preview
-              </p>
-              <SandpackPreview
-                showOpenInCodeSandbox={false}
-                showRefreshButton={false}
-                showRestartButton={false}
-                showNavigator={false}
-                style={{ height: previewHeight }}
-              />
-            </div>
-          ) : (
-            <div className="border-t border-white/10 bg-black/30">
-              <p className="border-b border-white/10 px-4 py-2 text-[11px] uppercase tracking-wider text-slate-500">
-                Console
-              </p>
-              <SandpackConsole
-                showHeader={false}
-                showSyntaxError
-                style={{ height: consoleHeight }}
-                className="!bg-transparent font-mono text-sm [&_.sp-console-item]:!text-yellow-200"
-              />
-            </div>
-          )}
-        </SandpackLayout>
+        </div>
+        <div className={`grid min-h-0 ${splitGridClass} ${workspaceClass}`}>
+          <div
+            className={`flex min-h-0 min-w-0 flex-col overflow-hidden ${
+              orientation === "side"
+                ? "border-b border-white/10 sm:border-b-0 sm:border-e"
+                : "border-b border-white/10"
+            }`}
+          >
+            {panels[0]}
+          </div>
+          <div className="flex min-h-0 min-w-0 flex-col overflow-hidden">
+            {panels[1]}
+          </div>
+        </div>
       </SandpackProvider>
     </section>
   );

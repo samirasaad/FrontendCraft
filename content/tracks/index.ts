@@ -9,6 +9,10 @@ import { tailwindMeta } from "@/content/tracks/tailwind/meta";
 import { lessons as tailwindLessons } from "@/content/tracks/tailwind/lessons";
 import { reactMeta } from "@/content/tracks/react/meta";
 import { lessons as reactLessons } from "@/content/tracks/react/lessons";
+import { accessibilityMeta } from "@/content/tracks/accessibility/meta";
+import { lessons as accessibilityLessons } from "@/content/tracks/accessibility/lessons";
+import { seoMeta } from "@/content/tracks/seo/meta";
+import { lessons as seoLessons } from "@/content/tracks/seo/lessons";
 
 export const tracks: TrackDefinition[] = [
   { ...javascriptMeta, lessons: javascriptLessons },
@@ -16,6 +20,8 @@ export const tracks: TrackDefinition[] = [
   { ...cssMeta, lessons: cssLessons },
   { ...tailwindMeta, lessons: tailwindLessons },
   { ...reactMeta, lessons: reactLessons },
+  { ...accessibilityMeta, lessons: accessibilityLessons },
+  { ...seoMeta, lessons: seoLessons },
 ].sort((a, b) => a.order - b.order);
 
 export const trackIds = tracks.map((track) => track.id);

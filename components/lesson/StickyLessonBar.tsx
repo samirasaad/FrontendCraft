@@ -25,7 +25,7 @@ export function StickyLessonBar({
   onOpenQuiz?: () => void;
 }) {
   const router = useRouter();
-  const { locale, dir } = useLanguage();
+  const { locale } = useLanguage();
   const {
     lessons,
     isComplete,
@@ -39,8 +39,6 @@ export function StickyLessonBar({
   const index = lessons.findIndex((l) => l.id === lesson.id);
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const prev = index > 0 ? lessons[index - 1] : null;
-  const PrevIcon = dir === "rtl" ? ChevronRight : ChevronLeft;
-  const NextIcon = dir === "rtl" ? ChevronLeft : ChevronRight;
   const showQuizHint =
     !challengePassed &&
     Boolean(lesson.content.challenge || lesson.content.quiz);
@@ -109,7 +107,7 @@ export function StickyLessonBar({
               aria-label={t("prev", locale)}
               className="inline-flex items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2.5 py-2 text-xs text-slate-200 hover:bg-white/10 sm:px-3"
             >
-              <PrevIcon size={14} />
+              <ChevronLeft size={14} className={RTL_FLIP} />
               <span className="hidden sm:inline">{t("prev", locale)}</span>
             </button>
           ) : null}
@@ -126,7 +124,7 @@ export function StickyLessonBar({
             className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-3 py-2 text-xs font-bold text-slate-950 transition enabled:hover:brightness-110 disabled:opacity-40 sm:px-3.5"
           >
             <span className="hidden sm:inline">{t("nextLessonArrow", locale)}</span>
-            <NextIcon size={14} />
+            <ChevronRight size={14} className={RTL_FLIP} />
           </button>
         </div>
       </motion.div>

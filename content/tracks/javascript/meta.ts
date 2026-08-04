@@ -2,8 +2,8 @@ import type { TrackMeta } from "@/lib/types";
 
 export const javascriptMeta: TrackMeta = {
   id: "javascript",
-  status: "available",
-  order: 1,
+  status: "coming-soon",
+  order: 4,
   accent: "from-yellow-300 to-cyan-400",
   icon: "Braces",
   title: { en: "JavaScript", ar: "JavaScript" },
