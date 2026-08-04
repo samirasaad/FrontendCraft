@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { TrackId } from "@/lib/types";
+import { cssVisualizers } from "@/components/visualizers/css";
 import { javascriptVisualizers } from "@/components/visualizers/javascript";
 import {
   DocumentTreeVisualizer,
@@ -13,10 +14,12 @@ import {
   FormFlowVisualizer,
   TableGridVisualizer,
   A11yCheckVisualizer,
+  SrReadyVisualizer,
   SeoCrawlVisualizer,
   CwvLabVisualizer,
   MetaCardVisualizer,
   MediaStageVisualizer,
+  MediaPerfVisualizer,
   DetailsAccordionVisualizer,
   BaselineCompatVisualizer,
   NativeDialogVisualizer,
@@ -25,6 +28,7 @@ import {
   HtmlSecurityLabVisualizer,
   HtmlSpeculationLabVisualizer,
   HtmlGlobalRtlLabVisualizer,
+  HtmlPitfallsLabVisualizer,
 } from "@/components/visualizers/html";
 import { LAB_FRAME_CLASS } from "@/components/visualizers/html/LabStage";
 
@@ -38,10 +42,12 @@ const htmlVisualizers: Record<string, () => ReactNode> = {
   "form-flow": () => <FormFlowVisualizer />,
   "table-grid": () => <TableGridVisualizer />,
   "a11y-check": () => <A11yCheckVisualizer />,
+  "sr-ready": () => <SrReadyVisualizer />,
   "seo-crawl": () => <SeoCrawlVisualizer />,
   "cwv-lab": () => <CwvLabVisualizer />,
   "meta-card": () => <MetaCardVisualizer />,
   "media-stage": () => <MediaStageVisualizer />,
+  "media-perf-lab": () => <MediaPerfVisualizer />,
   "details-accordion": () => <DetailsAccordionVisualizer />,
   "baseline-compat": () => <BaselineCompatVisualizer />,
   "native-dialog": () => <NativeDialogVisualizer />,
@@ -50,11 +56,13 @@ const htmlVisualizers: Record<string, () => ReactNode> = {
   "html-security-lab": () => <HtmlSecurityLabVisualizer />,
   "html-speculation-lab": () => <HtmlSpeculationLabVisualizer />,
   "html-global-rtl-lab": () => <HtmlGlobalRtlLabVisualizer />,
+  "html-pitfalls-lab": () => <HtmlPitfallsLabVisualizer />,
 };
 
 const registries: Partial<Record<TrackId, Record<string, () => ReactNode>>> = {
   javascript: javascriptVisualizers,
   html: htmlVisualizers,
+  css: cssVisualizers,
 };
 
 export function Visualizer({

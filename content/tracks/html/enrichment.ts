@@ -24,7 +24,7 @@ const overlays: Record<string, Overlay> = {
   "document-anatomy": {
     realWorld: realWorldExample(
       `<!DOCTYPE html>
-<html lang="ar">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -225,7 +225,12 @@ const specific: Record<string, Partial<Overlay>> = {
   "links-images": {
     realWorld: realWorldExample(
       `<a href="/javascript">
-  <img src="/og.png" alt="" width="80" height="80" />
+  <img
+    src="https://placehold.co/80x80/64748b/fff.jpg?text=JS"
+    alt=""
+    width="80"
+    height="80"
+  />
   <span>Start JavaScript track</span>
 </a>`,
       "Link with decorative image (empty alt) + text",
@@ -238,12 +243,12 @@ const specific: Record<string, Partial<Overlay>> = {
       ),
     ],
     pitfalls: pitfall(
-      `<a href="/x"><img src="x.png"></a>`,
+      `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X"></a>`,
       L(
         "Missing alt → empty accessible name.",
         "من غير alt → اسم وصول فاضي.",
       ),
-      `<a href="/x"><img src="x.png" alt="Open track X" /></a>`,
+      `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X" alt="Open track X" /></a>`,
       L(
         "Give the link a spoken name.",
         "ادي للينك اسم يتقال.",
@@ -427,7 +432,11 @@ const specific: Record<string, Partial<Overlay>> = {
   "media-embed": {
     realWorld: realWorldExample(
       `<figure>
-  <video controls playsinline poster="/poster.jpg">
+  <video
+    controls
+    playsinline
+    poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
+  >
     <source src="/intro.mp4" type="video/mp4" />
     <track kind="captions" srclang="en" src="/intro.vtt" default />
   </video>

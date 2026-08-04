@@ -206,7 +206,10 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                   ) : null}
                 </div>
 
-                <pre className="max-h-28 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-slate-950/70 p-3 font-mono text-[11px] leading-5 text-yellow-100/90">
+                <pre
+                  dir="ltr"
+                  className="max-h-28 overflow-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-slate-950/70 p-3 text-start font-mono text-[11px] leading-5 text-yellow-100/90"
+                >
                   {card.snippet}
                 </pre>
 

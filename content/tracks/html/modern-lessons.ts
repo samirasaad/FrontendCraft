@@ -455,15 +455,21 @@ export const modernLessons: LessonDraft[] = [
           "dialog modal بعنوان مسمّى + form dialog",
         ),
         realWorldExample(
-          `<dialog id="share">
+          `<button type="button" id="share-open">Share lesson</button>
+<dialog id="share" aria-labelledby="share-title">
   <form method="dialog">
+    <h2 id="share-title">Share</h2>
     <label>
       Copy link
-      <input readonly value="https://frontendcraft-app.vercel.app/html" />
+      <input readonly dir="ltr" value="https://frontendcraft-app.vercel.app/html" />
     </label>
     <button value="done">Done</button>
   </form>
-</dialog>`,
+</dialog>
+<script>
+  const share = document.getElementById("share");
+  document.getElementById("share-open").onclick = () => share.showModal();
+</script>`,
           "Lightweight share sheet pattern",
           "نمط share sheet خفيف",
         ),
@@ -577,9 +583,16 @@ export const modernLessons: LessonDraft[] = [
       examples: [
         simpleExample(
           `<picture>
-  <source type="image/avif" srcset="/hero.avif" />
-  <source type="image/webp" srcset="/hero.webp" />
-  <img src="/hero.jpg" alt="Learner coding" width="640" height="360" />
+  <source
+    type="image/webp"
+    srcset="https://placehold.co/640x360/0ea5e9/fff.webp?text=WebP"
+  />
+  <img
+    src="https://placehold.co/640x360/0284c7/fff.jpg?text=JPEG+fallback"
+    alt="Learner coding"
+    width="640"
+    height="360"
+  />
 </picture>`,
           "Format waterfall with img fallback",
           "تسلسل صيغ مع img fallback",
@@ -588,12 +601,10 @@ export const modernLessons: LessonDraft[] = [
           `<picture>
   <source
     media="(max-width: 640px)"
-    srcset="/hero-mobile.avif 1x, /hero-mobile-2x.avif 2x"
-    type="image/avif"
+    srcset="https://placehold.co/640x360/f59e0b/111.jpg?text=Mobile+crop"
   />
-  <source srcset="/hero.avif" type="image/avif" />
   <img
-    src="/hero.jpg"
+    src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Desktop+hero"
     alt="FrontendCraft playground"
     width="1200"
     height="630"
@@ -652,27 +663,46 @@ export const modernLessons: LessonDraft[] = [
       ],
       examples: [
         simpleExample(
-          `<head>
-  <meta charset="UTF-8" />
-  <title>FrontendCraft — HTML</title>
-  <meta name="description" content="Interactive HTML lab" />
-  <meta name="theme-color" content="#020617" />
-</head>`,
+          `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>FrontendCraft — HTML</title>
+    <meta name="description" content="Interactive HTML lab" />
+    <meta name="theme-color" content="#020617" />
+  </head>
+  <body>
+    <main>
+      <h1>HTML track</h1>
+      <p>Check the browser tab title and theme-color from this head.</p>
+    </main>
+  </body>
+</html>`,
           "Core head tags + theme color",
           "وسوم head أساسية + theme color",
         ),
         realWorldExample(
-          `<head>
-  <title>Document Anatomy — FrontendCraft</title>
-  <meta property="og:title" content="Document Anatomy" />
-  <meta property="og:description" content="Learn the HTML document shell" />
-  <meta property="og:image" content="https://example.com/og/html.png" />
-  <meta property="og:type" content="article" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="/favicon.ico" sizes="any" />
-  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-</head>`,
+          `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document Anatomy — FrontendCraft</title>
+    <meta name="description" content="Learn the HTML document shell" />
+    <meta property="og:title" content="Document Anatomy" />
+    <meta property="og:description" content="Learn the HTML document shell" />
+    <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=FrontendCraft" />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <main>
+      <h1>Document Anatomy</h1>
+      <p>Share-ready head tags for a lesson page — title, description, and Open Graph.</p>
+    </main>
+  </body>
+</html>`,
           "Share-ready head for a lesson page",
           "head جاهز للمشاركة لصفحة درس",
         ),
@@ -690,7 +720,7 @@ export const modernLessons: LessonDraft[] = [
     tier: "advanced",
     readMinutes: 16,
     icon: "Volume2",
-    visualizer: "a11y-check",
+    visualizer: "sr-ready",
     content: {
       title: L(
         "Bad vs Screen-Reader Ready",
@@ -776,8 +806,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Warm-up: watch name · role · value as focus moves — then practice on the Bad vs Ready cards below.",
-        "تسخين: اتفرّج على name · role · value مع حركة الـ focus — وبعدين تدرّب على كروت Bad مقابل Ready تحت.",
+        "Warm-up: Bad vs Ready — hear what AT announces, then practice on the cards below.",
+        "تسخين: غلط مقابل جاهز — اسمع إيه اللي AT بتعلنه، وبعدين تدرّب على الكروت تحت.",
       ),
       compareCards: screenReaderPracticeCards,
     },

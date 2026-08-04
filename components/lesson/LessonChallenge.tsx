@@ -70,7 +70,10 @@ export function LessonChallenge({
                 <RichText text={loc(option.label, locale)} />
               </span>
               {option.code ? (
-                <pre className="mt-2 overflow-x-auto whitespace-pre-wrap font-mono text-[11px] leading-5 text-cyan-100/85">
+                <pre
+                  dir="ltr"
+                  className="mt-2 overflow-x-auto whitespace-pre-wrap text-start font-mono text-[11px] leading-5 text-cyan-100/85"
+                >
                   {option.code}
                 </pre>
               ) : null}

@@ -36,7 +36,7 @@ export function simpleExample(
 ): CodeExample {
   return {
     id: "simple",
-    label: L("Simple", "Simple"),
+    label: L("Simple", "بسيط"),
     code,
     expectedOutput: L(expectedEn, expectedAr),
   };
@@ -49,7 +49,7 @@ export function realWorldExample(
 ): CodeExample {
   return {
     id: "realWorld",
-    label: L("Real-World", "Real-World"),
+    label: L("Real-world", "واقعي"),
     code,
     expectedOutput: L(expectedEn, expectedAr),
   };

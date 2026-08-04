@@ -258,28 +258,41 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("Responsive picture", "`<picture>` متجاوب"),
     `<picture>
-  <source type="image/avif" srcset="/hero.avif" />
-  <source type="image/webp" srcset="/hero.webp" />
-  <img src="/hero.jpg" alt="Learner coding" width="640" height="360" />
+  <source
+    type="image/webp"
+    srcset="https://placehold.co/640x360/0ea5e9/fff.webp?text=WebP"
+  />
+  <img
+    src="https://placehold.co/640x360/0284c7/fff.jpg?text=JPEG"
+    alt="Learner coding"
+    width="640"
+    height="360"
+  />
 </picture>`,
     L("Art direction + format negotiation — always end with `<img>`.", "توجيه بصري + تفاوض صيغ — دايمًا اختم بـ `<img>`."),
     {
       id: "picture",
       category: "media",
       previewHtml: `<picture>
-  <img src="https://picsum.photos/seed/frontendcraft/320/180" alt="Learner coding" width="320" height="180" />
+  <img
+    src="https://placehold.co/320x180/0ea5e9/fff.jpg?text=Picture"
+    alt="Learner coding"
+    width="320"
+    height="180"
+  />
 </picture>
 <p class="chip">AVIF → WebP → JPEG</p>`,
       boilerplate: `<picture>
   <source
     media="(max-width: 640px)"
-    srcset="/hero-mobile.avif"
-    type="image/avif"
+    srcset="https://placehold.co/640x360/f59e0b/111.jpg?text=Mobile"
   />
-  <source srcset="/hero.avif" type="image/avif" />
-  <source srcset="/hero.webp" type="image/webp" />
+  <source
+    type="image/webp"
+    srcset="https://placehold.co/1200x630/0ea5e9/fff.webp?text=WebP"
+  />
   <img
-    src="/hero.jpg"
+    src="https://placehold.co/1200x630/0284c7/fff.jpg?text=JPEG"
     alt="Learner at a code playground"
     width="1200"
     height="630"
@@ -292,7 +305,7 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("Sized lazy image", "صورة `lazy` بمقاس"),
     `<img
-  src="/lesson.webp"
+  src="https://placehold.co/640x360/0284c7/fff.jpg?text=Lesson"
   alt="Sandbox preview"
   width="640"
   height="360"
@@ -303,7 +316,12 @@ export const htmlCheatCards: CheatCard[] = [
     {
       id: "img-lazy",
       category: "media",
-      previewHtml: `<img src="https://picsum.photos/seed/craft/280/158" alt="Sandbox preview" width="280" height="158" />
+      previewHtml: `<img
+  src="https://placehold.co/280x158/0284c7/fff.jpg?text=Lazy"
+  alt="Sandbox preview"
+  width="280"
+  height="158"
+/>
 <p class="chip">width · height · loading=lazy</p>`,
       support: support("77+", "75+", "15.4+", "79+", "widely"),
     },
@@ -676,7 +694,12 @@ export const htmlCheatCards: CheatCard[] = [
   ),
   cheatCard(
     L("Video + captions", "`<video>` + `captions`"),
-    `<video controls width="640" height="360" poster="/poster.jpg">
+    `<video
+  controls
+  width="640"
+  height="360"
+  poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
+>
   <source src="/lesson.webm" type="video/webm" />
   <source src="/lesson.mp4" type="video/mp4" />
   <track kind="captions" srclang="en" src="/captions.vtt" label="English" default />
@@ -693,7 +716,7 @@ export const htmlCheatCards: CheatCard[] = [
   controls
   width="640"
   height="360"
-  poster="/poster.jpg"
+  poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
   preload="metadata"
 >
   <source src="/lesson.webm" type="video/webm" />
@@ -741,9 +764,14 @@ export const htmlCheatCards: CheatCard[] = [
   ),
   cheatCard(
     L("`LCP` image priority", "أولوية صورة `LCP`"),
-    `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
+    `<link
+  rel="preload"
+  as="image"
+  href="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=LCP"
+  fetchpriority="high"
+/>
 <img
-  src="/hero.webp"
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=LCP"
   alt="Learner at a code playground"
   width="1200"
   height="630"
@@ -753,7 +781,12 @@ export const htmlCheatCards: CheatCard[] = [
     {
       id: "lcp-priority",
       category: "media",
-      previewHtml: `<img src="https://picsum.photos/seed/lcp/280/148" alt="Hero" width="280" height="148" />
+      previewHtml: `<img
+  src="https://placehold.co/280x148/0f172a/38bdf8.jpg?text=LCP"
+  alt="Hero"
+  width="280"
+  height="148"
+/>
 <p class="chip">fetchpriority=high · no lazy</p>`,
       support: support("102+", "132+", "17.2+", "102+", "newly", {
         notes: L(

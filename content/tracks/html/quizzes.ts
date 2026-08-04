@@ -2599,7 +2599,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "العرض/الارتفاع بيحجزوا الـ layout (CLS)؛ متعملش lazy على LCP؛ fetchpriority بيساعد الصورة الحرجة.",
         ),
         {
-          code: `<img src="/hero.jpg" alt="Hero" loading="lazy" />`,
+          code: `<img src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero" alt="Hero" loading="lazy" />`,
           language: "html",
           hint: L(
             "Use meaning tags (`strong`/`em`) not just look tags.",
@@ -2814,7 +2814,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`srcset` + `sizes` بيخلو المتصفح يحمّل صورة بالمقاس المناسب.",
         ),
         {
-          code: `<img src="hero.jpg" srcset="hero-800.jpg 800w, hero-1600.jpg 1600w" sizes="100vw" alt="Hero" />`,
+          code: `<img
+  src="https://placehold.co/800x450/0ea5e9/fff.jpg?text=Hero"
+  srcset="https://placehold.co/800x450/0ea5e9/fff.jpg?text=Hero 800w, https://placehold.co/1600x900/0ea5e9/fff.jpg?text=Hero 1600w"
+  sizes="100vw"
+  alt="Hero"
+/>`,
           language: "html",
           hint: L(
             "Ask: does the image carry info? Then it needs useful `alt`.",

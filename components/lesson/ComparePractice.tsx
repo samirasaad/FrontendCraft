@@ -37,7 +37,10 @@ export function ComparePractice({ cards }: { cards: ComparePair[] }) {
                   <X size={14} />
                   <RichText text={loc(card.bad.label, locale)} />
                 </p>
-                <pre className="mb-3 overflow-x-auto whitespace-pre-wrap rounded-xl border border-rose-400/15 bg-slate-950/50 p-3 font-mono text-[11px] leading-5 text-rose-100/90">
+                <pre
+                  dir="ltr"
+                  className="mb-3 overflow-x-auto whitespace-pre-wrap rounded-xl border border-rose-400/15 bg-slate-950/50 p-3 text-start font-mono text-[11px] leading-5 text-rose-100/90"
+                >
                   {card.bad.code}
                 </pre>
                 <p className="text-sm leading-6 text-slate-300">
@@ -63,7 +66,10 @@ export function ComparePractice({ cards }: { cards: ComparePair[] }) {
                   <Check size={14} />
                   <RichText text={loc(card.good.label, locale)} />
                 </p>
-                <pre className="mb-3 overflow-x-auto whitespace-pre-wrap rounded-xl border border-emerald-400/15 bg-slate-950/50 p-3 font-mono text-[11px] leading-5 text-emerald-100/90">
+                <pre
+                  dir="ltr"
+                  className="mb-3 overflow-x-auto whitespace-pre-wrap rounded-xl border border-emerald-400/15 bg-slate-950/50 p-3 text-start font-mono text-[11px] leading-5 text-emerald-100/90"
+                >
                   {card.good.code}
                 </pre>
                 <p className="text-sm leading-6 text-slate-300">

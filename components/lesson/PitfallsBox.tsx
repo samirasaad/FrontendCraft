@@ -1,46 +1,125 @@
 "use client";
 
-import { AlertTriangle, Check, X } from "lucide-react";
+import { AlertTriangle, ArrowDown, ArrowRight, Check, X } from "lucide-react";
 import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
-import type { PitfallExample } from "@/lib/types";
+import { RTL_FLIP } from "@/lib/rtl";
+import type { PitfallExample, PitfallSide } from "@/lib/types";
 
-function PitfallCard({ item }: { item: PitfallExample }) {
+function SidePanel({
+  side,
+  tone,
+  showNote = true,
+}: {
+  side: PitfallSide;
+  tone: "wrong" | "right";
+  showNote?: boolean;
+}) {
+  const { locale } = useLanguage();
+  const isWrong = tone === "wrong";
+
+  return (
+    <article
+      className={`flex h-full flex-col overflow-hidden rounded-2xl border ${
+        isWrong
+          ? "border-rose-400/35 bg-gradient-to-b from-rose-400/12 via-slate-950/70 to-slate-950/40"
+          : "border-emerald-400/35 bg-gradient-to-b from-emerald-400/12 via-slate-950/70 to-slate-950/40"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-2 border-b px-3.5 py-2.5 ${
+          isWrong
+            ? "border-rose-400/20 bg-rose-400/10"
+            : "border-emerald-400/20 bg-emerald-400/10"
+        }`}
+      >
+        <p
+          className={`inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] ${
+            isWrong ? "text-rose-100" : "text-emerald-100"
+          }`}
+        >
+          <span
+            className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${
+              isWrong
+                ? "bg-rose-400/25 text-rose-100"
+                : "bg-emerald-400/25 text-emerald-100"
+            }`}
+          >
+            {isWrong ? (
+              <X size={12} strokeWidth={2.5} />
+            ) : (
+              <Check size={12} strokeWidth={2.5} />
+            )}
+          </span>
+          {t(isWrong ? "wrongWay" : "rightWay", locale)}
+        </p>
+      </div>
+
+      <pre
+        dir="ltr"
+        className={`flex-1 overflow-x-auto whitespace-pre-wrap px-3.5 py-3 font-mono text-[12px] leading-5 sm:text-[13px] ${
+          showNote ? "border-b" : ""
+        } ${
+          isWrong
+            ? "border-rose-400/15 bg-slate-950/55 text-rose-100/95"
+            : "border-emerald-400/15 bg-slate-950/55 text-emerald-100/95"
+        }`}
+      >
+        {side.code}
+      </pre>
+
+      {showNote ? (
+        <p className="px-3.5 py-3 text-sm leading-relaxed text-slate-300">
+          <RichText text={loc(side.note, locale)} />
+        </p>
+      ) : null}
+    </article>
+  );
+}
+
+function PitfallCard({
+  item,
+  index,
+}: {
+  item: PitfallExample;
+  index: number;
+}) {
   const { locale } = useLanguage();
 
   return (
-    <div className="rounded-3xl border border-orange-400/30 bg-gradient-to-br from-orange-400/10 via-slate-950/40 to-emerald-400/5 p-5 sm:p-6">
-      {item.title ? (
-        <p className="mb-3 text-sm font-semibold text-orange-50">
-          <RichText text={loc(item.title, locale)} />
-        </p>
-      ) : null}
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-2xl border border-rose-400/25 bg-rose-400/5 p-4">
-          <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-200">
-            <X size={14} />
-            {t("wrongWay", locale)}
-          </p>
-          <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-[12px] leading-5 text-rose-100/90">
-            {item.wrong.code}
-          </pre>
-          <p className="mt-3 text-sm leading-6 text-slate-300">
+    <div className="overflow-hidden rounded-3xl border border-orange-400/25 bg-gradient-to-br from-orange-400/[0.08] via-slate-950/55 to-emerald-400/[0.06] shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-xl">
+      <div className="flex items-start gap-3 border-b border-white/8 px-4 py-3.5 sm:px-5">
+        <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-orange-300/30 bg-orange-400/15 font-mono text-[11px] font-bold text-orange-100">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-[15px] font-semibold leading-snug text-white sm:text-base">
+            {item.title ? (
+              <RichText text={loc(item.title, locale)} />
+            ) : locale === "ar" ? (
+              `خطأ شائع ${index + 1}`
+            ) : (
+              `Pitfall ${index + 1}`
+            )}
+          </h3>
+          <p className="mt-1 text-sm leading-relaxed text-rose-100/85">
             <RichText text={loc(item.wrong.note, locale)} />
           </p>
         </div>
-        <div className="rounded-2xl border border-emerald-400/25 bg-emerald-400/5 p-4">
-          <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-200">
-            <Check size={14} />
-            {t("rightWay", locale)}
-          </p>
-          <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-[12px] leading-5 text-emerald-100/90">
-            {item.right.code}
-          </pre>
-          <p className="mt-3 text-sm leading-6 text-slate-300">
-            <RichText text={loc(item.right.note, locale)} />
-          </p>
+      </div>
+
+      <div className="grid items-stretch gap-3 p-4 sm:p-5 md:grid-cols-[1fr_auto_1fr]">
+        <SidePanel side={item.wrong} tone="wrong" showNote={false} />
+
+        <div className="flex items-center justify-center" aria-hidden="true">
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-orange-300/25 bg-slate-950/80 text-orange-200 shadow-[0_0_22px_rgba(251,146,60,0.12)]">
+            <ArrowDown size={16} className="md:hidden" />
+            <ArrowRight size={16} className={`hidden md:block ${RTL_FLIP}`} />
+          </span>
         </div>
+
+        <SidePanel side={item.right} tone="right" />
       </div>
     </div>
   );
@@ -57,16 +136,27 @@ export function PitfallsBox({
   if (items.length === 0) return null;
 
   return (
-    <section className="space-y-3">
-      <div className="flex items-center gap-2 px-1 text-sm font-semibold text-orange-100">
-        <AlertTriangle size={16} className="text-orange-300" />
-        {t("commonPitfalls", locale)}
+    <section className="space-y-4">
+      <div className="flex items-start gap-3 px-1">
+        <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-orange-300/30 bg-orange-400/15 text-orange-200">
+          <AlertTriangle size={18} />
+        </span>
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold text-orange-50 sm:text-lg">
+            {t("commonPitfalls", locale)}
+          </h2>
+          <p className="mt-0.5 text-sm leading-relaxed text-slate-400">
+            {t("pitfallsHint", locale)}
+          </p>
+        </div>
       </div>
+
       <div className="space-y-4">
         {items.map((item, index) => (
           <PitfallCard
             key={`${item.wrong.code}-${item.right.code}-${index}`}
             item={item}
+            index={index}
           />
         ))}
       </div>

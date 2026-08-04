@@ -159,12 +159,12 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
       {
         id: "a",
         label: L("Lazy `hero` with no size", "`Hero` lazy من غير مقاس"),
-        code: `<img src="/hero.jpg" alt="Hero" loading="lazy" />`,
+        code: `<img src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero" alt="Hero" loading="lazy" />`,
       },
       {
         id: "b",
         label: L("Sized `hero`, high priority", "`Hero` بمقاس وأولوية عالية"),
-        code: `<img src="/hero.jpg" alt="Hero" width="1200" height="630" fetchpriority="high" />`,
+        code: `<img src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero" alt="Hero" width="1200" height="630" fetchpriority="high" />`,
       },
     ],
     correctId: "b",

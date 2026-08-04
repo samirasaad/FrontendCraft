@@ -105,7 +105,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     title: L("`Images` need text alternatives", "الصور محتاجة text alternatives"),
     bad: {
       label: L("Accessibility barrier", "حاجز `accessibility`"),
-      code: `<img src="/chart.png" />`,
+      code: `<img src="https://placehold.co/640x360/1e293b/94a3b8.jpg?text=Chart" />`,
       note: L(
         "Missing `alt` — AT may read a useless filename or just “image”.",
         "مفيش `alt` — AT ممكن تقرأ اسم ملف فاضي أو “image” بس.",
@@ -113,7 +113,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     },
     good: {
       label: L("Semantic & SR ready", "`semantic` وجاهز لقارئ الشاشة"),
-      code: `<img src="/chart.png" alt="Sales grew 20% in March" />`,
+      code: `<img src="https://placehold.co/640x360/1e293b/94a3b8.jpg?text=Chart" alt="Sales grew 20% in March" />`,
       note: L(
         "Describe the meaning, not the file. Skip “image of…” fluff.",
         "وصف المعنى، مش الملف. متكتبش “image of…” زيادة.",
@@ -124,7 +124,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     title: L("`Decorative` `images` stay silent", "الصور التزيينية تفضل صامتة"),
     bad: {
       label: L("Accessibility barrier", "حاجز `accessibility`"),
-      code: `<img src="/sparkle.svg" alt="sparkle decoration" />`,
+      code: `<img src="https://placehold.co/48x48/e2e8f0/64748b.svg?text=%2A" alt="sparkle decoration" />`,
       note: L(
         "Decorative noise clutters the screen reader reading order.",
         "الضوضاء التزيينية بتزحّم ترتيب قراءة الـ screen reader.",
@@ -132,7 +132,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     },
     good: {
       label: L("Semantic & SR ready", "`semantic` وجاهز لقارئ الشاشة"),
-      code: `<img src="/sparkle.svg" alt="" />`,
+      code: `<img src="https://placehold.co/48x48/e2e8f0/64748b.svg?text=%2A" alt="" />`,
       note: L(
         "Empty `alt` tells AT to skip pure decoration (better than omitting `alt`).",
         "`alt` فاضي بيقول لـ AT تتخطى التزيين (أحسن من حذف `alt`).",

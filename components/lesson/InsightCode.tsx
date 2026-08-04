@@ -54,7 +54,10 @@ export function InsightCode({
           {copied ? t("copied", locale) : t("copy", locale)}
         </button>
       </div>
-      <pre className="overflow-x-auto p-3 font-mono text-[12px] leading-5 text-cyan-100/90">
+      <pre
+        dir="ltr"
+        className="overflow-x-auto p-3 text-start font-mono text-[12px] leading-5 text-cyan-100/90"
+      >
         {code}
       </pre>
     </div>

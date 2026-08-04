@@ -62,8 +62,8 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "صفحة عنوانها Hello HTML وفيها heading Welcome",
       },
       visualHint: {
-        en: "Watch the `DOM` tree reveal Parent → Child → Text — use `Play`, `Pause`, `Stop`, or `Step`.",
-        ar: "اتفرّج على شجرة الـ `DOM` وهي بتظهر Parent → Child → Text — استخدم `Play` أو `Pause` أو `Stop` أو `Step`.",
+        en: "Watch the `DOM` tree reveal Parent → Child → Text — use `Play` or `Pause`.",
+        ar: "اتفرّج على شجرة الـ `DOM` وهي بتظهر Parent → Child → Text — استخدم `Play` أو `Pause`.",
       },
     },
   },
@@ -327,7 +327,12 @@ export const legacyLessons: LegacyLesson[] = [
 <a href="https://example.com" target="_blank" rel="noopener noreferrer">
   External site
 </a>
-<img src="/hero.webp" alt="Students coding together" width="800" height="450" />`,
+<img
+  src="students-coding.svg"
+  alt="Students coding together"
+  width="800"
+  height="450"
+/>`,
       expectedOutput: {
         en: "Internal link, safe external link, accessible image",
         ar: "لينك داخلي، لينك خارجي آمن، وصورة accessible",
@@ -600,7 +605,10 @@ export const legacyLessons: LegacyLesson[] = [
   </button>
   <div id="panel" hidden>Details for screen readers and keyboard users.</div>
 </main>
-<img src="/chart.png" alt="Sales grew 20% in March" />
+<img
+  src="https://placehold.co/640x360/1e293b/94a3b8.jpg?text=Sales+chart"
+  alt="Sales grew 20% in March"
+/>
 <nav aria-label="Primary">…</nav>`,
       expectedOutput: {
         en: "Skip link, named landmarks, expandable control, meaningful alt",
@@ -773,7 +781,11 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "تجنّب autoplay للصوت بالمفاجأة",
         },
       ],
-      code: `<video controls width="640" poster="/poster.jpg">
+      code: `<video
+  controls
+  width="640"
+  poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
+>
   <source src="/intro.webm" type="video/webm" />
   <source src="/intro.mp4" type="video/mp4" />
   <track kind="captions" src="/captions.vtt" srclang="en" label="English" />

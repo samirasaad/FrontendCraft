@@ -11,6 +11,8 @@ import { DestructuringVisualizer } from "./DestructuringVisualizer";
 import { PromisesVisualizer } from "./PromisesVisualizer";
 import { AsyncAwaitVisualizer } from "./AsyncAwaitVisualizer";
 import { EventLoopVisualizer } from "./EventLoopVisualizer";
+import { DebounceThrottleVisualizer } from "./DebounceThrottleVisualizer";
+import { MemoryLeaksVisualizer } from "./MemoryLeaksVisualizer";
 
 export const javascriptVisualizers: Record<string, () => ReactNode> = {
   "memory-lock": () => <MemoryLockVisualizer />,
@@ -23,4 +25,6 @@ export const javascriptVisualizers: Record<string, () => ReactNode> = {
   promises: () => <PromisesVisualizer />,
   "async-await": () => <AsyncAwaitVisualizer />,
   "event-loop": () => <EventLoopVisualizer />,
+  "debounce-throttle-lab": () => <DebounceThrottleVisualizer />,
+  "memory-leaks-lab": () => <MemoryLeaksVisualizer />,
 };

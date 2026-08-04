@@ -156,14 +156,14 @@ function ConceptPanel({
 
         <motion.section
           layout
-          className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-slate-900/60 p-5 backdrop-blur-xl sm:p-6 xl:col-span-2"
+          className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-slate-900/60 p-4 backdrop-blur-xl sm:p-5 xl:col-span-2 xl:sticky xl:top-20 xl:self-start"
         >
-          <div className="relative z-10">
-            <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-cyan-200">
+          <div className="relative z-10 flex flex-col">
+            <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-cyan-200">
               <Sparkles size={16} />
               {t("visualLab", locale)}
             </div>
-            <p className="mb-4 text-sm leading-relaxed text-slate-300">
+            <p className="mb-3 text-sm leading-snug text-slate-300">
               <RichText text={loc(lesson.content.visualHint, locale)} />
             </p>
             <Visualizer trackId={trackId} kind={lesson.visualizer} />

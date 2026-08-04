@@ -344,7 +344,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("`Decorative` `images`: alt=\"\" — omit from `accessibility tree`", "`Decorative` `images`: alt=\"\" — خارج `accessibility tree`"),
         ],
         code: `<img
-  src="/hero.webp"
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
   alt="Team collaborating in Cairo office"
   width="1200"
   height="630"
@@ -1030,7 +1030,12 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("iframe title attribute required", "iframe title attribute مطلوب"),
           L("preconnect to embed origins when `LCP`-adjacent", "preconnect لـ embed origins لما `LCP`-adjacent"),
         ],
-        code: `<video controls width="640" height="360" poster="/poster.jpg">
+        code: `<video
+  controls
+  width="640"
+  height="360"
+  poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
+>
   <source src="/clip.webm" type="video/webm" />
   <source src="/clip.mp4" type="video/mp4" />
   <track kind="captions" src="/clip.vtt" srclang="en" label="English" />
@@ -1115,8 +1120,19 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("Reserve space before `bytes` arrive", "احجز المساحة قبل ما الـ `bytes` توصل"),
           L("Keep interaction `handlers` short on the main thread", "خلّي `handlers` التفاعل قصيرة على الـ main thread"),
         ],
-        code: `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
-<img src="/hero.webp" alt="…" width="1200" height="630" fetchpriority="high" />`,
+        code: `<link
+  rel="preload"
+  as="image"
+  href="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  fetchpriority="high"
+/>
+<img
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  alt="…"
+  width="1200"
+  height="630"
+  fetchpriority="high"
+/>`,
         codeCaption: L("`LCP`-friendly `hero` `markup`", "`markup` `hero` مناسب لـ `LCP`"),
       },
     ),
@@ -1185,8 +1201,18 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("Modern formats via `<picture>` — WebP/AVIF + `fallback`", "Modern formats عبر `<picture>` — WebP/AVIF + `fallback`"),
           L("defer/async scripts — avoid `render`-blocking `JS`", "defer/async scripts — تجنب `render`-blocking `JS`"),
         ],
-        code: `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
-<img src="/hero.webp" alt="..." width="1200" height="630" />`,
+        code: `<link
+  rel="preload"
+  as="image"
+  href="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  fetchpriority="high"
+/>
+<img
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  alt="..."
+  width="1200"
+  height="630"
+/>`,
         codeCaption: L("Preload + sized `LCP` image", "Preload + sized `LCP` image"),
       },
     ),
@@ -1891,7 +1917,18 @@ main.querySelector("h1")?.focus();`,
           L("Always terminate with `<img>`", "دايمًا اختم بـ `<img>`"),
           L("AVIF/WebP reduce `LCP` `bytes` when supported", "AVIF/WebP بيقلّلوا بايتات `LCP` لما يتدعموا"),
         ],
-        code: `<picture>\n  <source type="image/avif" srcset="/h.avif" />\n  <img src="/h.jpg" alt="…" width="1200" height="630" />\n</picture>`,
+        code: `<picture>
+  <source
+    type="image/webp"
+    srcset="https://placehold.co/1200x630/0ea5e9/fff.webp?text=WebP"
+  />
+  <img
+    src="https://placehold.co/1200x630/0284c7/fff.jpg?text=JPEG"
+    alt="…"
+    width="1200"
+    height="630"
+  />
+</picture>`,
         codeCaption: L("Format `waterfall`", "تسلسل الصيغ"),
       },
     ),

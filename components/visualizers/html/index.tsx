@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Check, ChevronRight, Shield, Volume2 } from "lucide-react";
-import { DomTreeEngine } from "@/components/visualizers/html/DomTreeEngine";
+import { Check, ChevronRight, Shield, Volume2, X } from "lucide-react";
 import {
   LabStage,
   labEase,
@@ -15,9 +14,154 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
 import { RTL_FLIP } from "@/lib/rtl";
 
-/** Interactive DOM Tree Graph Engine — live Parent → Child → Text simulation. */
+/** Document shell — doctype → html → head → body. */
+const DOC_STEPS = [
+  {
+    id: "doctype",
+    chip: "doctype",
+    tip: {
+      en: "`<!DOCTYPE html>` — modern standards mode, not quirks.",
+      ar: "`<!DOCTYPE html>` — وضع standards الحديث، مش quirks.",
+    },
+    markup: "<!DOCTYPE html>",
+  },
+  {
+    id: "html",
+    chip: "html",
+    tip: {
+      en: "`<html lang>` — set the page language on the root.",
+      ar: "`<html lang>` — حط لغة الصفحة على الـ root.",
+    },
+    markup: '<html lang="en">\n  …\n</html>',
+  },
+  {
+    id: "head",
+    chip: "head",
+    tip: {
+      en: "`<head>` holds metadata — charset, title, viewport.",
+      ar: "`<head>` للـ metadata — charset و title و viewport.",
+    },
+    markup: `<head>
+  <meta charset="UTF-8" />
+  <title>Hello HTML</title>
+</head>`,
+  },
+  {
+    id: "body",
+    chip: "body",
+    tip: {
+      en: "`<body>` is what users see — heading + content.",
+      ar: "`<body>` اللي المستخدم بيشوفه — عنوان + محتوى.",
+    },
+    markup: `<body>
+  <h1>Welcome</h1>
+  <p>This is the body.</p>
+</body>`,
+  },
+] as const;
+
 export function DocumentTreeVisualizer() {
-  return <DomTreeEngine />;
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = DOC_STEPS[step];
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % DOC_STEPS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  const shell = [
+    { id: "doctype", label: "<!DOCTYPE html>" },
+    { id: "html", label: '<html lang="en">' },
+    { id: "head", label: "<head>…" },
+    { id: "body", label: "<body>…" },
+  ] as const;
+  const activeIdx = shell.findIndex((s) => s.id === current.id);
+
+  return (
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "تشريح المستند" : "Document anatomy"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md space-y-2"
+          >
+            {shell.map((row, i) => {
+              const on = i <= activeIdx;
+              const lit = i === activeIdx;
+              return (
+                <motion.div
+                  key={row.id}
+                  animate={{
+                    opacity: on ? 1 : 0.25,
+                    x: on ? 0 : -4,
+                  }}
+                  style={{ marginInlineStart: i * 10 }}
+                  className={`rounded-xl border px-3 py-2 font-mono text-[12px] ${
+                    lit
+                      ? "border-cyan-300/50 bg-cyan-400/15 text-cyan-50"
+                      : on
+                        ? "border-white/10 bg-slate-950/60 text-slate-300"
+                        : "border-white/5 bg-slate-950/30 text-slate-500"
+                  }`}
+                >
+                  {row.label}
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        </AnimatePresence>
+
+        <pre
+          dir="ltr"
+          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {DOC_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
+      </div>
+    </LabStage>
+  );
 }
 
 const LANDMARKS = [
@@ -29,8 +173,11 @@ const LANDMARKS = [
 ] as const;
 
 export function SemanticBlocksVisualizer() {
+  const { locale } = useLanguage();
   const { playClick } = useSound();
   const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [focus, setFocus] = useState(0);
   const [on, setOn] = useState<Record<string, boolean>>({
     header: true,
     nav: true,
@@ -39,487 +186,1261 @@ export function SemanticBlocksVisualizer() {
     footer: true,
   });
 
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setFocus((i) => (i + 1) % LANDMARKS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
   const healthy = on.main && on.article;
+  const current = LANDMARKS[focus];
+  const captions = {
+    en: `Highlighting <${current.tag}> — landmark role “${current.role}”. Toggle chips to rebuild the page outline.`,
+    ar: `بنظلّل <${current.tag}> — دور الـ landmark هو “${current.role}”. بدّل الشيبس عشان تعيد بناء هيكل الصفحة.`,
+  };
 
   return (
-    <LabStage>
-      <div className="mb-3 flex flex-wrap gap-1.5">
-        {LANDMARKS.map((block) => {
-          const active = on[block.id];
-          return (
-            <motion.button
-              key={block.id}
-              type="button"
-              whileTap={reduce ? undefined : { scale: 0.96 }}
-              onClick={() => {
-                playClick();
-                setOn((prev) => ({ ...prev, [block.id]: !prev[block.id] }));
-              }}
-              className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
-                active
-                  ? "border-amber-300/45 bg-amber-400/20 text-amber-50"
-                  : "border-white/10 bg-slate-950/50 text-slate-500"
-              }`}
-              aria-pressed={active}
-            >
-              &lt;{block.tag}&gt;
-            </motion.button>
-          );
-        })}
-      </div>
-
-      <div className="grid grid-cols-2 gap-1.5 rounded-xl border border-white/10 bg-slate-950/60 p-2">
-        <AnimatePresence mode="popLayout">
-          {LANDMARKS.filter((b) => on[b.id]).map((block, i) => (
-            <motion.div
-              key={block.id}
-              layout
-              initial={reduce ? false : { opacity: 0, y: 10, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.15 } }}
-              transition={{ ...labSpring, delay: reduce ? 0 : i * 0.04 }}
-              className={`${block.span} rounded-lg border border-amber-300/35 bg-gradient-to-r from-amber-400/20 to-orange-400/5 px-2.5 py-2`}
-            >
-              <p className="font-mono text-[11px] font-semibold text-amber-50">
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "الهيكل الدلالي" : "Semantic structure"}
+      caption={locale === "ar" ? captions.ar : captions.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="mb-2 flex shrink-0 flex-wrap gap-1.5">
+          {LANDMARKS.map((block, i) => {
+            const active = on[block.id];
+            const lit = i === focus;
+            return (
+              <motion.button
+                key={block.id}
+                type="button"
+                whileTap={reduce ? undefined : { scale: 0.96 }}
+                onClick={() => {
+                  playClick();
+                  setOn((prev) => ({ ...prev, [block.id]: !prev[block.id] }));
+                  setFocus(i);
+                }}
+                className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                  lit
+                    ? "border-cyan-300/55 bg-cyan-400/25 text-cyan-50"
+                    : active
+                      ? "border-amber-300/45 bg-amber-400/20 text-amber-50"
+                      : "border-white/10 bg-slate-950/50 text-slate-500"
+                }`}
+                aria-pressed={active}
+              >
                 &lt;{block.tag}&gt;
-              </p>
-              <p className="text-[9px] uppercase tracking-wider text-amber-200/60">
-                role: {block.role}
-              </p>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+              </motion.button>
+            );
+          })}
+        </div>
 
-      <AnimatePresence>
-        {healthy ? (
-          <motion.p
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="mt-2 text-[10px] font-medium text-emerald-300"
-          >
-            main → article nesting looks healthy
-          </motion.p>
-        ) : null}
-      </AnimatePresence>
+        <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-1.5 overflow-hidden rounded-xl border border-white/10 bg-slate-950/60 p-2">
+          <AnimatePresence mode="popLayout">
+            {LANDMARKS.filter((b) => on[b.id]).map((block, i) => {
+              const lit = block.id === current.id;
+              return (
+                <motion.div
+                  key={block.id}
+                  layout
+                  initial={reduce ? false : { opacity: 0, y: 10, scale: 0.96 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: lit ? 1.02 : 1,
+                  }}
+                  exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.15 } }}
+                  transition={{ ...labSpring, delay: reduce ? 0 : i * 0.04 }}
+                  className={`${block.span} rounded-lg border px-2.5 py-2 ${
+                    lit
+                      ? "border-cyan-300/55 bg-gradient-to-r from-cyan-400/25 to-amber-400/10 shadow-[0_0_18px_rgba(34,211,238,0.15)]"
+                      : "border-amber-300/35 bg-gradient-to-r from-amber-400/20 to-orange-400/5"
+                  }`}
+                >
+                  <p className="font-mono text-[11px] font-semibold text-amber-50">
+                    &lt;{block.tag}&gt;
+                  </p>
+                  <p className="text-[9px] uppercase tracking-wider text-amber-200/60">
+                    role: {block.role}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+
+        <p
+          className={`mt-2 shrink-0 text-[11px] font-medium ${
+            healthy ? "text-emerald-300" : "text-amber-200/80"
+          }`}
+        >
+          {healthy
+            ? locale === "ar"
+              ? "تعشيش main → article سليم ✓"
+              : "main → article nesting looks healthy ✓"
+            : locale === "ar"
+              ? "فعّل main و article عشان الهيكل يبقى سليم"
+              : "Turn on main + article for a healthy outline"}
+        </p>
+      </div>
     </LabStage>
   );
 }
 
+type HeadingLevel = {
+  tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  level: number;
+  label: { en: string; ar: string };
+  sample: { en: string; ar: string };
+  tip: { en: string; ar: string };
+  size: string;
+};
+
+const HEADING_LEVELS: HeadingLevel[] = [
+  {
+    tag: "h1",
+    level: 1,
+    label: { en: "Page title", ar: "عنوان الصفحة" },
+    sample: { en: "FrontendCraft HTML", ar: "FrontendCraft HTML" },
+    tip: {
+      en: "One clear `<h1>` per page — the document’s top of the outline.",
+      ar: "`<h1>` واحد واضح لكل صفحة — قمة الـ outline.",
+    },
+    size: "text-xl sm:text-2xl",
+  },
+  {
+    tag: "h2",
+    level: 2,
+    label: { en: "Section", ar: "قسم" },
+    sample: { en: "Text & headings", ar: "النص والعناوين" },
+    tip: {
+      en: "`<h2>` opens a major section under the page title.",
+      ar: "`<h2>` بيفتح قسم كبير تحت عنوان الصفحة.",
+    },
+    size: "text-lg sm:text-xl",
+  },
+  {
+    tag: "h3",
+    level: 3,
+    label: { en: "Subsection", ar: "قسم فرعي" },
+    sample: { en: "Why order matters", ar: "ليه الترتيب مهم" },
+    tip: {
+      en: "Step down one level — never jump `h1` → `h3` for looks.",
+      ar: "انزل مستوى واحد — متنطّش من `h1` لـ `h3` عشان الشكل.",
+    },
+    size: "text-base sm:text-lg",
+  },
+  {
+    tag: "h4",
+    level: 4,
+    label: { en: "Detail", ar: "تفصيلة" },
+    sample: { en: "Outline tips", ar: "نصايح الـ outline" },
+    tip: {
+      en: "Deeper headings nest under the previous section.",
+      ar: "العناوين الأعمق بتعشّش تحت القسم السابق.",
+    },
+    size: "text-sm sm:text-base",
+  },
+  {
+    tag: "h5",
+    level: 5,
+    label: { en: "Minor note", ar: "ملاحظة صغيرة" },
+    sample: { en: "Style with CSS", ar: "الشكل من CSS" },
+    tip: {
+      en: "Need a big look? Keep the rank — restyle with CSS.",
+      ar: "عايز شكل كبير؟ خلّي الرتبة — والشكل من CSS.",
+    },
+    size: "text-sm",
+  },
+  {
+    tag: "h6",
+    level: 6,
+    label: { en: "Finest label", ar: "أدق تسمية" },
+    sample: { en: "Fine print heading", ar: "عنوان دقيق" },
+    tip: {
+      en: "Full ladder `h1`–`h6` — then a `<p>` carries the story.",
+      ar: "السلم كامل `h1`–`h6` — وبعدين `<p>` بيحمل القصة.",
+    },
+    size: "text-xs sm:text-sm",
+  },
+];
+
+/** Extra beats after the ladder: trap → fix → paragraph. */
+type HeadingBeat =
+  | { kind: "level"; index: number }
+  | { kind: "skip" }
+  | { kind: "fix" }
+  | { kind: "paragraph" };
+
+const HEADING_BEATS: HeadingBeat[] = [
+  ...HEADING_LEVELS.map((_, index) => ({ kind: "level" as const, index })),
+  { kind: "skip" },
+  { kind: "fix" },
+  { kind: "paragraph" },
+];
+
 export function HeadingLadderVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
-  const levels = [
-    { tag: "h1", label: "Page title", size: "text-base" },
-    { tag: "h2", label: "Section", size: "text-sm" },
-    { tag: "h3", label: "Subsection", size: "text-xs" },
-    { tag: "h4", label: "Sub-detail", size: "text-[11px]" },
-    { tag: "h5", label: "Minor", size: "text-[10px]" },
-    { tag: "h6", label: "Finest", size: "text-[10px]" },
-  ];
-  const [active, setActive] = useState(0);
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
     if (reduce || !playing) return;
     const id = window.setInterval(
-      () => setActive((i) => (i + 1) % levels.length),
+      () => setStep((s) => (s + 1) % HEADING_BEATS.length),
       LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
-  }, [reduce, playing, levels.length]);
+  }, [reduce, playing]);
+
+  const beat = HEADING_BEATS[step];
+  const climbIndex =
+    beat.kind === "level"
+      ? beat.index
+      : beat.kind === "skip"
+        ? 2
+        : HEADING_LEVELS.length - 1;
+  const revealThrough =
+    beat.kind === "level"
+      ? beat.index
+      : beat.kind === "skip"
+        ? 0
+        : HEADING_LEVELS.length - 1;
+  const showSkipTrap = beat.kind === "skip";
+  const showParagraph = beat.kind === "paragraph" || beat.kind === "fix";
+
+  const caption =
+    beat.kind === "skip"
+      ? locale === "ar"
+        ? "غلط شائع: `h1` وبعدين `h3` — الـ outline اتكسر."
+        : "Common trap: `h1` then `h3` — the outline breaks."
+      : beat.kind === "fix"
+        ? locale === "ar"
+          ? "الصح: مستوى واحد كل مرة — `h1` → `h2` → `h3`…"
+          : "Prefer: one level at a time — `h1` → `h2` → `h3`…"
+        : beat.kind === "paragraph"
+          ? locale === "ar"
+            ? "بعد العناوين: `<p>` بيحمل الفكرة — مش عنوان تاني."
+            : "After headings: a `<p>` carries the idea — not another heading."
+          : locale === "ar"
+            ? HEADING_LEVELS[beat.index].tip.ar
+            : HEADING_LEVELS[beat.index].tip.en;
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="relative space-y-1 overflow-hidden">
-        {levels.map((level, i) => {
-          const on = i <= active;
-          const current = i === active;
-          return (
-            <motion.div
-              key={level.tag}
-              initial={false}
-              animate={{
-                opacity: on ? 1 : 0.28,
-                x: on ? 0 : -4,
-              }}
-              transition={{ duration: 0.3, ease: labEase }}
-              className="relative"
-              style={{ marginInlineStart: i * 10 }}
-            >
-              {i > 0 ? (
-                <span
-                  aria-hidden
-                  className="absolute -top-1 start-2.5 h-1 w-px bg-orange-300/40"
-                />
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "النص والعناوين" : "Text & headings"}
+      caption={caption}
+    >
+      <div className="flex min-h-0 flex-1 flex-col gap-3">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl border border-orange-300/25 bg-gradient-to-br from-slate-950 via-slate-950/90 to-orange-950/30">
+          <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-1.5">
+            <div className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
+            </div>
+            <span className="font-mono text-[9px] text-slate-500">
+              {locale === "ar" ? "معاينة الصفحة" : "page preview"}
+            </span>
+          </div>
+
+          <div className="min-h-0 flex-1 space-y-2 overflow-hidden p-3 sm:p-4">
+            {showSkipTrap ? (
+              <div className="space-y-2">
+                <motion.div
+                  initial={reduce ? false : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-lg border border-rose-300/40 bg-rose-400/10 px-3 py-2"
+                >
+                  <p className="font-mono text-[10px] text-rose-200/80">
+                    &lt;h1&gt;
+                  </p>
+                  <p className="text-lg font-bold text-rose-50">
+                    FrontendCraft HTML
+                  </p>
+                </motion.div>
+                <motion.div
+                  initial={reduce ? false : { opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.12 }}
+                  className="ms-6 rounded-lg border border-dashed border-rose-300/45 bg-rose-400/5 px-3 py-2"
+                >
+                  <p className="font-mono text-[10px] text-rose-200/70">
+                    &lt;h3&gt; · skipped h2
+                  </p>
+                  <p className="text-base font-semibold text-rose-100/90">
+                    {locale === "ar" ? "قسم فرعي؟" : "Subsection?"}
+                  </p>
+                  <p className="mt-1 text-[10px] text-rose-200/65">
+                    {locale === "ar"
+                      ? "قارئ الشاشة بيحس إن في مستوى ناقص"
+                      : "AT hears a missing level in the outline"}
+                  </p>
+                </motion.div>
+              </div>
+            ) : (
+              HEADING_LEVELS.map((level, i) => {
+                const visible = i <= revealThrough;
+                const isCurrent =
+                  beat.kind === "level"
+                    ? i === beat.index
+                    : beat.kind === "fix" || beat.kind === "paragraph"
+                      ? i === climbIndex
+                      : false;
+                const Tag = level.tag;
+                return (
+                  <motion.div
+                    key={level.tag}
+                    initial={false}
+                    animate={{
+                      opacity: visible ? 1 : 0.18,
+                      y: visible ? 0 : 4,
+                      filter: visible ? "blur(0px)" : "blur(0.5px)",
+                    }}
+                    transition={{ duration: 0.35, ease: labEase }}
+                    style={{ marginInlineStart: i * 8 }}
+                    className="relative"
+                  >
+                    {i > 0 ? (
+                      <span
+                        aria-hidden
+                        className="absolute -top-2 start-3 h-2 w-px bg-orange-300/35"
+                      />
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => goTo(i)}
+                      className={`w-full rounded-xl border px-3 py-2 text-start transition ${
+                        isCurrent
+                          ? "border-orange-300/55 bg-orange-400/20 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                          : visible
+                            ? "border-orange-300/20 bg-orange-400/8"
+                            : "border-white/5 bg-white/[0.02]"
+                      }`}
+                    >
+                      <div className="mb-0.5 flex items-center gap-2">
+                        <span className="font-mono text-[10px] text-orange-200/75">
+                          &lt;{level.tag}&gt;
+                        </span>
+                        <span className="text-[9px] uppercase tracking-wider text-slate-500">
+                          {locale === "ar" ? level.label.ar : level.label.en}
+                        </span>
+                      </div>
+                      <Tag
+                        className={`font-semibold leading-snug ${level.size} ${
+                          isCurrent ? "text-orange-50" : "text-orange-100/85"
+                        }`}
+                      >
+                        {locale === "ar" ? level.sample.ar : level.sample.en}
+                      </Tag>
+                    </button>
+                  </motion.div>
+                );
+              })
+            )}
+
+            <AnimatePresence>
+              {showParagraph && !showSkipTrap ? (
+                <motion.p
+                  key="story-p"
+                  initial={reduce ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.35, ease: labEase }}
+                  className="ms-2 rounded-xl border border-cyan-300/25 bg-cyan-400/10 px-3 py-2.5 text-sm leading-relaxed text-cyan-50"
+                >
+                  <span className="me-2 font-mono text-[10px] text-cyan-200/70">
+                    &lt;p&gt;
+                  </span>
+                  {locale === "ar"
+                    ? "العناوين بتبني الـ outline. الفقرات بتحكي القصة — فكرة واحدة لكل فقرة."
+                    : "Headings build the outline. Paragraphs carry the story — one idea per paragraph."}
+                </motion.p>
               ) : null}
-              <div
-                className={`rounded-lg border px-2 py-1 font-mono leading-tight ${level.size} ${
-                  current
-                    ? "border-orange-300/55 bg-orange-400/25 text-orange-50 shadow-[0_0_16px_rgba(251,146,60,0.18)]"
-                    : "border-orange-300/25 bg-orange-400/10 text-orange-100/80"
+            </AnimatePresence>
+          </div>
+        </div>
+
+        <motion.div
+          key={beat.kind === "level" ? HEADING_LEVELS[beat.index].tag : beat.kind}
+          initial={reduce ? false : { opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`shrink-0 rounded-xl border px-3 py-2.5 ${
+            showSkipTrap
+              ? "border-rose-300/35 bg-rose-400/10"
+              : beat.kind === "fix" || beat.kind === "paragraph"
+                ? "border-emerald-300/35 bg-emerald-400/10"
+                : "border-orange-300/30 bg-orange-400/10"
+          }`}
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            {showSkipTrap
+              ? locale === "ar"
+                ? "تجنّب"
+                : "Avoid"
+              : beat.kind === "fix" || beat.kind === "paragraph"
+                ? locale === "ar"
+                  ? "فضّل"
+                  : "Prefer"
+                : locale === "ar"
+                  ? "الرتبة"
+                  : "Rank"}
+          </p>
+          <p
+            dir="ltr"
+            className="mt-1 font-mono text-[11px] leading-5 text-slate-100"
+          >
+            {showSkipTrap
+              ? "<h1>…</h1>  <h3>…</h3>  ✗"
+              : beat.kind === "paragraph"
+                ? "<h2>…</h2>  <p>One idea…</p>"
+                : beat.kind === "fix"
+                  ? "<h1> → <h2> → <h3>"
+                  : `<${HEADING_LEVELS[beat.index].tag}>${
+                      locale === "ar"
+                        ? HEADING_LEVELS[beat.index].sample.ar
+                        : HEADING_LEVELS[beat.index].sample.en
+                    }</${HEADING_LEVELS[beat.index].tag}>`}
+          </p>
+        </motion.div>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {HEADING_BEATS.map((b, i) => {
+            const label =
+              b.kind === "level"
+                ? b.index + 1
+                : b.kind === "skip"
+                  ? "!"
+                  : b.kind === "fix"
+                    ? "✓"
+                    : "p";
+            return (
+              <button
+                key={`${b.kind}-${i}`}
+                type="button"
+                aria-label={
+                  b.kind === "level"
+                    ? `<${HEADING_LEVELS[b.index].tag}>`
+                    : b.kind
+                }
+                aria-current={i === step ? "step" : undefined}
+                onClick={() => goTo(i)}
+                className={`min-w-6 rounded-full px-2 py-1 font-mono text-[10px] font-semibold transition ${
+                  i === step
+                    ? "bg-orange-300 text-slate-950"
+                    : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
                 }`}
               >
-                <span className="font-semibold">&lt;{level.tag}&gt;</span>
-                <span className="ms-1.5 text-[10px] text-orange-200/70">
-                  {level.label}
-                </span>
-              </div>
-            </motion.div>
-          );
-        })}
+                {b.kind === "level" ? `h${label}` : label}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </LabStage>
   );
 }
 
-type FormatTag = {
+type FormatStep = {
   tag: string;
-  sample: string;
-  hint: string;
+  tip: { en: string; ar: string };
+  sample: { en: string; ar: string };
+  markup: string;
   prefix?: string;
   title?: string;
   datetime?: string;
 };
 
-const FORMAT_TAGS: FormatTag[] = [
-  { tag: "strong", sample: "important", hint: "strong importance" },
-  { tag: "em", sample: "emphasis", hint: "stressed emphasis" },
-  { tag: "mark", sample: "highlight", hint: "marked / relevant" },
-  { tag: "small", sample: "fine print", hint: "side comments" },
-  { tag: "del", sample: "removed", hint: "deleted text" },
-  { tag: "ins", sample: "added", hint: "inserted text" },
-  { tag: "s", sample: "no longer true", hint: "strikethrough meaning" },
-  { tag: "u", sample: "unarticulated", hint: "spelling hint / label" },
-  { tag: "code", sample: "npm run", hint: "inline code" },
-  { tag: "kbd", sample: "Ctrl+S", hint: "keyboard input" },
-  { tag: "samp", sample: "OK 200", hint: "sample output" },
-  { tag: "var", sample: "x", hint: "variable / placeholder" },
-  { tag: "sub", sample: "2", hint: "subscript", prefix: "H" },
-  { tag: "sup", sample: "2", hint: "superscript", prefix: "x" },
+const FORMAT_STEPS: FormatStep[] = [
+  {
+    tag: "strong",
+    tip: {
+      en: "`<strong>` marks importance — not just bold looks.",
+      ar: "`<strong>` بيعلّم أهمية — مش bold شكل بس.",
+    },
+    sample: { en: "important", ar: "مهم" },
+    markup: "<strong>important</strong>",
+  },
+  {
+    tag: "em",
+    tip: {
+      en: "`<em>` is stressed emphasis for meaning.",
+      ar: "`<em>` تشديد له معنى.",
+    },
+    sample: { en: "emphasis", ar: "تشديد" },
+    markup: "<em>emphasis</em>",
+  },
+  {
+    tag: "b",
+    tip: {
+      en: "`<b>` is stylistic bold — no extra importance.",
+      ar: "`<b>` غامق شكلي — من غير أهمية زيادة.",
+    },
+    sample: { en: "stylistic bold", ar: "غامق شكلي" },
+    markup: "<b>stylistic bold</b>",
+  },
+  {
+    tag: "i",
+    tip: {
+      en: "`<i>` is stylistic italic / alternate voice.",
+      ar: "`<i>` مائل شكلي / صوت بديل.",
+    },
+    sample: { en: "stylistic italic", ar: "مائل شكلي" },
+    markup: "<i>stylistic italic</i>",
+  },
+  {
+    tag: "mark",
+    tip: {
+      en: "`<mark>` highlights relevant text.",
+      ar: "`<mark>` بيميّز نص مهم.",
+    },
+    sample: { en: "highlight", ar: "تمييز" },
+    markup: "<mark>highlight</mark>",
+  },
+  {
+    tag: "del",
+    tip: {
+      en: "`<del>` shows removed text in an edit.",
+      ar: "`<del>` بيورّي نص اتشال في تعديل.",
+    },
+    sample: { en: "removed", ar: "اتشال" },
+    markup: "<del>removed</del>",
+  },
+  {
+    tag: "ins",
+    tip: {
+      en: "`<ins>` shows inserted text in an edit.",
+      ar: "`<ins>` بيورّي نص اتضاف في تعديل.",
+    },
+    sample: { en: "added", ar: "اتضاف" },
+    markup: "<ins>added</ins>",
+  },
+  {
+    tag: "s",
+    tip: {
+      en: "`<s>` marks text that is no longer accurate.",
+      ar: "`<s>` لنص مش دقيق دلوقتي.",
+    },
+    sample: { en: "outdated", ar: "قديم" },
+    markup: "<s>outdated</s>",
+  },
+  {
+    tag: "code",
+    tip: {
+      en: "`<code>` for short inline code.",
+      ar: "`<code>` لكود قصير جوّه السطر.",
+    },
+    sample: { en: "npm run", ar: "npm run" },
+    markup: "<code>npm run</code>",
+  },
+  {
+    tag: "kbd",
+    tip: {
+      en: "`<kbd>` for keyboard keys and shortcuts.",
+      ar: "`<kbd>` لمفاتيح الكيبورد والاختصارات.",
+    },
+    sample: { en: "Ctrl+S", ar: "Ctrl+S" },
+    markup: "<kbd>Ctrl</kbd>+<kbd>S</kbd>",
+  },
+  {
+    tag: "samp",
+    tip: {
+      en: "`<samp>` for sample program output.",
+      ar: "`<samp>` لعيّنة ناتج برنامج.",
+    },
+    sample: { en: "OK 200", ar: "OK 200" },
+    markup: "<samp>OK 200</samp>",
+  },
+  {
+    tag: "var",
+    tip: {
+      en: "`<var>` for a variable or placeholder.",
+      ar: "`<var>` لمتغير أو placeholder.",
+    },
+    sample: { en: "x", ar: "x" },
+    markup: "<var>x</var>",
+  },
+  {
+    tag: "sub",
+    tip: {
+      en: "`<sub>` for subscripts like H₂O.",
+      ar: "`<sub>` للنص تحت السطر زي H₂O.",
+    },
+    sample: { en: "2", ar: "2" },
+    markup: "H<sub>2</sub>O",
+    prefix: "H",
+  },
+  {
+    tag: "sup",
+    tip: {
+      en: "`<sup>` for superscripts like E=mc².",
+      ar: "`<sup>` للنص فوق السطر زي E=mc².",
+    },
+    sample: { en: "2", ar: "2" },
+    markup: "E=mc<sup>2</sup>",
+    prefix: "x",
+  },
   {
     tag: "abbr",
-    sample: "HTML",
-    hint: "abbreviation",
+    tip: {
+      en: "`<abbr title>` expands an abbreviation.",
+      ar: "`<abbr title>` بيوضّح الاختصار.",
+    },
+    sample: { en: "HTML", ar: "HTML" },
+    markup: '<abbr title="HyperText Markup Language">HTML</abbr>',
     title: "HyperText Markup Language",
   },
-  { tag: "q", sample: "short quote", hint: "inline quote" },
-  { tag: "cite", sample: "MDN", hint: "work title" },
   {
     tag: "time",
-    sample: "Aug 2, 2026",
-    hint: "date / time",
+    tip: {
+      en: "`<time datetime>` makes dates machine-readable.",
+      ar: "`<time datetime>` بيخلّي التاريخ مقروء للآلة.",
+    },
+    sample: { en: "Aug 2, 2026", ar: "٢ أغسطس ٢٠٢٦" },
+    markup: '<time datetime="2026-08-02">Aug 2, 2026</time>',
     datetime: "2026-08-02",
   },
-  { tag: "b", sample: "stylistic bold", hint: "bold without stress" },
-  { tag: "i", sample: "stylistic italic", hint: "alternate voice" },
+  {
+    tag: "q",
+    tip: {
+      en: "`<q>` for a short inline quote.",
+      ar: "`<q>` لاقتباس قصير جوّه السطر.",
+    },
+    sample: { en: "short quote", ar: "اقتباس قصير" },
+    markup: "<q>short quote</q>",
+  },
+  {
+    tag: "cite",
+    tip: {
+      en: "`<cite>` for the title of a work.",
+      ar: "`<cite>` لعنوان عمل.",
+    },
+    sample: { en: "MDN", ar: "MDN" },
+    markup: "<cite>MDN</cite>",
+  },
+  {
+    tag: "small",
+    tip: {
+      en: "`<small>` for fine print / side notes.",
+      ar: "`<small>` للطباعة الصغيرة / ملاحظات جانبية.",
+    },
+    sample: { en: "fine print", ar: "طباعة صغيرة" },
+    markup: "<small>fine print</small>",
+  },
+  {
+    tag: "u",
+    tip: {
+      en: "`<u>` for unarticulated annotation — don’t fake a link.",
+      ar: "`<u>` لتظليل غير ملفوظ — متقلّدش لينك.",
+    },
+    sample: { en: "annotated", ar: "مظلّل" },
+    markup: "<u>annotated</u>",
+  },
 ];
 
-/** Render real formatting so the card shows the visual shape of the tag. */
-function FormatPreview({ item }: { item: FormatTag }) {
-  const text = item.sample;
-  const styled = (() => {
-    switch (item.tag) {
+export function TextFormatVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % FORMAT_STEPS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  const current = FORMAT_STEPS[step];
+  const sample = locale === "ar" ? current.sample.ar : current.sample.en;
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  const rendered = (() => {
+    switch (current.tag) {
       case "strong":
-        return <strong className="font-bold text-orange-50">{text}</strong>;
+        return <strong className="font-bold text-orange-50">{sample}</strong>;
       case "em":
-        return <em className="italic text-orange-50">{text}</em>;
+        return <em className="italic text-orange-50">{sample}</em>;
       case "b":
-        return <b className="font-bold text-orange-50">{text}</b>;
+        return <b className="font-bold text-orange-50">{sample}</b>;
       case "i":
-        return <i className="italic text-orange-50">{text}</i>;
+        return <i className="italic text-orange-50">{sample}</i>;
       case "mark":
         return (
-          <mark className="rounded-sm bg-yellow-300/85 px-0.5 text-slate-950">
-            {text}
+          <mark className="rounded-sm bg-yellow-300/90 px-1 text-slate-950">
+            {sample}
           </mark>
         );
-      case "small":
-        return <small className="text-[10px] text-slate-300">{text}</small>;
       case "del":
-        return <del className="text-rose-200/90 line-through">{text}</del>;
+        return <del className="text-rose-200 line-through">{sample}</del>;
       case "ins":
         return (
           <ins className="text-emerald-200 underline decoration-emerald-300/80">
-            {text}
+            {sample}
           </ins>
         );
       case "s":
-        return <s className="text-slate-400 line-through">{text}</s>;
-      case "u":
-        return (
-          <u className="text-orange-50 underline decoration-orange-300/70">
-            {text}
-          </u>
-        );
+        return <s className="text-slate-400 line-through">{sample}</s>;
       case "code":
         return (
-          <code className="rounded bg-slate-950/80 px-1 font-mono text-[10px] text-cyan-200">
-            {text}
+          <code className="rounded bg-slate-950/80 px-1.5 font-mono text-cyan-200">
+            {sample}
           </code>
         );
       case "kbd":
         return (
-          <kbd className="rounded border border-white/20 bg-slate-950/70 px-1 font-mono text-[10px] text-amber-100 shadow-[inset_0_-1px_0_rgba(255,255,255,0.12)]">
-            {text}
+          <kbd className="rounded border border-white/20 bg-slate-950/70 px-1.5 font-mono text-sm text-amber-100 shadow-[inset_0_-1px_0_rgba(255,255,255,0.12)]">
+            {sample}
           </kbd>
         );
       case "samp":
         return (
-          <samp className="font-mono text-[10px] text-lime-200/90">{text}</samp>
+          <samp className="font-mono text-lime-200/90">{sample}</samp>
         );
       case "var":
-        return <var className="italic text-violet-200">{text}</var>;
+        return <var className="italic text-violet-200">{sample}</var>;
       case "sub":
         return (
-          <>
-            {item.prefix}
-            <sub className="text-[10px] text-orange-50">{text}</sub>
-          </>
+          <span className="text-orange-50">
+            {current.prefix}
+            <sub>{sample}</sub>O
+          </span>
         );
       case "sup":
         return (
-          <>
-            {item.prefix}
-            <sup className="text-[10px] text-orange-50">{text}</sup>
-          </>
+          <span className="text-orange-50">
+            E=mc
+            <sup>{sample}</sup>
+          </span>
         );
       case "abbr":
         return (
           <abbr
-            title={item.title}
+            title={current.title}
             className="cursor-help text-orange-50 underline decoration-dotted"
           >
-            {text}
+            {sample}
           </abbr>
         );
-      case "q":
-        return <q className="italic text-orange-50">{text}</q>;
-      case "cite":
-        return <cite className="italic text-sky-200">{text}</cite>;
       case "time":
         return (
-          <time dateTime={item.datetime} className="text-orange-50">
-            {text}
+          <time dateTime={current.datetime} className="text-orange-50">
+            {sample}
           </time>
         );
+      case "q":
+        return <q className="italic text-orange-50">{sample}</q>;
+      case "cite":
+        return <cite className="italic text-sky-200">{sample}</cite>;
+      case "small":
+        return <small className="text-sm text-slate-300">{sample}</small>;
+      case "u":
+        return (
+          <u className="text-orange-50 underline decoration-orange-300/70">
+            {sample}
+          </u>
+        );
       default:
-        return <span className="text-orange-50">{text}</span>;
+        return sample;
     }
   })();
 
   return (
-    <span className="inline-flex max-w-full items-baseline gap-1 truncate text-[11px] leading-snug text-slate-200">
-      {styled}
-    </span>
-  );
-}
-
-export function TextFormatVisualizer() {
-  const reduce = useReducedMotion();
-  const { playing, toggle } = useAutoPlay(true);
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    if (reduce || !playing) return;
-    const id = window.setInterval(
-      () => setActive((i) => (i + 1) % FORMAT_TAGS.length),
-      LAB_STEP_MS,
-    );
-    return () => window.clearInterval(id);
-  }, [reduce, playing]);
-
-  const current = FORMAT_TAGS[active];
-
-  return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        &lt;{current.tag}&gt; — {current.hint}
-      </p>
-      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-        {FORMAT_TAGS.map((item, i) => {
-          const on = i === active;
-          return (
-            <motion.div
-              key={item.tag}
-              animate={{
-                opacity: on ? 1 : 0.5,
-                scale: on && !reduce ? 1.03 : 1,
-                borderColor: on
-                  ? "rgba(251,146,60,0.55)"
-                  : "rgba(255,255,255,0.1)",
-                backgroundColor: on
-                  ? "rgba(251,146,60,0.18)"
-                  : "rgba(15,23,42,0.45)",
-              }}
-              transition={{ duration: 0.28, ease: labEase }}
-              className="rounded-lg border px-2 py-1.5"
-            >
-              <div className="flex items-start justify-between gap-1">
-                <p className="font-mono text-[10px] font-semibold text-orange-100/90">
-                  &lt;{item.tag}&gt;
-                </p>
-              </div>
-              <div className="mt-1 border-t border-white/5 pt-1">
-                <FormatPreview item={item} />
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-    </LabStage>
-  );
-}
-
-export function LinkImageVisualizer() {
-  const reduce = useReducedMotion();
-  const { playing, toggle } = useAutoPlay(true);
-  const [phase, setPhase] = useState(0);
-
-  useEffect(() => {
-    if (reduce || !playing) return;
-    const id = window.setInterval(() => setPhase((p) => (p + 1) % 3), LAB_STEP_MS);
-    return () => window.clearInterval(id);
-  }, [reduce, playing]);
-
-  return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="flex flex-col items-center gap-3">
-        <motion.div
-          animate={
-            reduce
-              ? undefined
-              : {
-                  y: phase === 0 ? [0, -3, 0] : 0,
-                  boxShadow:
-                    phase === 0
-                      ? [
-                          "0 0 0 rgba(34,211,238,0)",
-                          "0 0 18px rgba(34,211,238,0.35)",
-                          "0 0 0 rgba(34,211,238,0)",
-                        ]
-                      : "0 0 0 rgba(34,211,238,0)",
-                }
-          }
-          transition={{ duration: 1.2 }}
-          className="rounded-full border border-cyan-300/40 bg-cyan-400/15 px-4 py-2 font-mono text-xs text-cyan-50"
-        >
-          &lt;a href=&quot;/lesson&quot;&gt;
-        </motion.div>
-
-        <div className="relative flex h-8 w-full max-w-[180px] items-center justify-center">
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "تنسيق النص" : "Text formatting"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5">
+        <AnimatePresence mode="wait">
           <motion.div
-            aria-hidden
-            className="h-px w-full origin-top bg-gradient-to-b from-cyan-300/80 to-orange-300/80"
-            style={{ width: 2, height: "100%" }}
-            animate={reduce ? undefined : { scaleY: [0.4, 1, 0.4], opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.span
-            aria-hidden
-            className="absolute text-cyan-200"
-            animate={reduce ? undefined : { y: [0, 10, 0], opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
+            key={current.tag}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="flex w-full max-w-md flex-col items-center gap-4"
           >
-            ↓
-          </motion.span>
-        </div>
+            <p className="text-center text-lg leading-relaxed text-slate-200 sm:text-xl">
+              {current.tag === "sub" || current.tag === "sup" ? (
+                <motion.span
+                  animate={reduce ? undefined : { scale: [1, 1.04, 1] }}
+                  transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
+                  className="inline-block"
+                >
+                  {rendered}
+                </motion.span>
+              ) : (
+                <>
+                  <span className="text-slate-400">
+                    {locale === "ar" ? "اتعلّم " : "Learn "}
+                  </span>
+                  <motion.span
+                    animate={reduce ? undefined : { scale: [1, 1.04, 1] }}
+                    transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
+                    className="inline-block"
+                  >
+                    {rendered}
+                  </motion.span>
+                  <span className="text-slate-400">
+                    {locale === "ar" ? " بوضوح." : " clearly."}
+                  </span>
+                </>
+              )}
+            </p>
 
-        <motion.div
-          animate={
-            reduce
-              ? undefined
-              : {
-                  opacity: phase >= 1 ? 1 : 0.55,
-                  scale: phase === 1 ? 1.03 : 1,
-                }
-          }
-          className="relative flex h-24 w-40 flex-col justify-between overflow-hidden rounded-2xl border border-orange-300/35 bg-gradient-to-br from-orange-400/35 via-amber-500/15 to-slate-950 p-2.5"
-        >
-          <motion.div
-            aria-hidden
-            className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_55%)]"
-            animate={reduce ? undefined : { opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
-          />
-          <span className="relative text-[10px] font-semibold text-orange-50">
-            &lt;img&gt;
-          </span>
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={phase >= 2 ? "alt" : "wait"}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="relative rounded-md border border-orange-200/30 bg-slate-950/50 px-1.5 py-0.5 font-mono text-[10px] text-orange-100"
+            <pre
+              dir="ltr"
+              className="w-full overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-center font-mono text-[11px] leading-5 text-cyan-100"
             >
-              {phase >= 2 ? 'alt="Chart up 20%"' : "alt=?"}
-            </motion.span>
-          </AnimatePresence>
-        </motion.div>
-      </div>
-    </LabStage>
-  );
-}
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
 
-export function ListStackVisualizer() {
-  const reduce = useReducedMotion();
-  const { playing, toggle } = useAutoPlay(true);
-  const kinds = [
-    { label: "ul", items: ["• HTML", "• CSS"], tint: "border-cyan-300/35 bg-cyan-400/10" },
-    { label: "ol", items: ["1. One", "2. Two"], tint: "border-orange-300/35 bg-orange-400/10" },
-    { label: "dl", items: ["dt Term", "dd Def"], tint: "border-amber-300/35 bg-amber-400/10" },
-  ];
-  const [active, setActive] = useState(0);
-
-  useEffect(() => {
-    if (reduce || !playing) return;
-    const id = window.setInterval(
-      () => setActive((i) => (i + 1) % kinds.length),
-      LAB_STEP_MS,
-    );
-    return () => window.clearInterval(id);
-  }, [reduce, playing, kinds.length]);
-
-  return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="grid grid-cols-3 gap-2">
-        {kinds.map((kind, i) => {
-          const on = i === active;
-          return (
-            <motion.div
-              key={kind.label}
-              animate={{
-                y: on && !reduce ? -4 : 0,
-                scale: on ? 1.03 : 0.97,
-                opacity: on ? 1 : 0.55,
-              }}
-              transition={{ duration: 0.35, ease: labEase }}
-              className={`rounded-xl border p-2 ${kind.tint} ${
-                on ? "shadow-[0_0_18px_rgba(251,146,60,0.18)]" : ""
+        <div className="flex max-w-full flex-wrap items-center justify-center gap-1.5">
+          {FORMAT_STEPS.map((s, i) => (
+            <button
+              key={s.tag}
+              type="button"
+              aria-label={`<${s.tag}>`}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
               }`}
             >
-              <p className="mb-2 text-center font-mono text-[10px] font-semibold text-orange-100">
-                &lt;{kind.label}&gt;
-              </p>
-              {kind.items.map((item, j) => (
-                <motion.div
-                  key={item}
-                  initial={false}
-                  animate={
-                    on && !reduce
-                      ? { opacity: [0.4, 1], x: [4, 0] }
-                      : { opacity: 0.85, x: 0 }
+              {s.tag}
+            </button>
+          ))}
+        </div>
+      </div>
+    </LabStage>
+  );
+}
+
+const LINK_IMAGE_STEPS = [
+  {
+    id: "link",
+    tip: {
+      en: "Clear link text + a real `href`.",
+      ar: "نص لينك واضح + `href` حقيقي.",
+    },
+    markup: '<a href="/about">About us</a>',
+  },
+  {
+    id: "external",
+    tip: {
+      en: "New tab? Add `rel=\"noopener noreferrer\"`.",
+      ar: "تاب جديد؟ حط `rel=\"noopener noreferrer\"`.",
+    },
+    markup:
+      '<a href="https://example.com" target="_blank" rel="noopener noreferrer">Docs</a>',
+  },
+  {
+    id: "img",
+    tip: {
+      en: "Images need meaningful `alt` and size.",
+      ar: "الصور محتاجة `alt` مفيد ومقاس.",
+    },
+    markup:
+      '<img src="students-coding.svg" alt="Students coding" width="800" height="450" />',
+  },
+] as const;
+
+export function LinkImageVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % LINK_IMAGE_STEPS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  const current = LINK_IMAGE_STEPS[step];
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  return (
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "اللينكات والصور" : "Links & images"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="flex w-full max-w-sm flex-col items-center gap-4"
+          >
+            {current.id === "link" ? (
+              <motion.a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="rounded-full border border-cyan-300/45 bg-cyan-400/15 px-5 py-2.5 text-sm font-semibold text-cyan-50 underline decoration-cyan-300/60 underline-offset-4"
+                animate={reduce ? undefined : { y: [0, -3, 0] }}
+                transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
+              >
+                {locale === "ar" ? "من نحن" : "About us"}
+              </motion.a>
+            ) : null}
+
+            {current.id === "external" ? (
+              <motion.a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="inline-flex items-center gap-2 rounded-full border border-amber-300/45 bg-amber-400/15 px-5 py-2.5 text-sm font-semibold text-amber-50 underline decoration-amber-300/50 underline-offset-4"
+                animate={reduce ? undefined : { scale: [1, 1.02, 1] }}
+                transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
+              >
+                {locale === "ar" ? "وثائق" : "Docs"}
+                <span className="rounded bg-amber-400/20 px-1.5 py-0.5 font-mono text-[9px]">
+                  rel ✓
+                </span>
+              </motion.a>
+            ) : null}
+
+            {current.id === "img" ? (
+              <div className="w-full space-y-2">
+                <motion.img
+                  src="/students-coding.svg"
+                  alt={
+                    locale === "ar" ? "طلاب بيبرمجوا مع بعض" : "Students coding"
                   }
-                  transition={{ delay: j * 0.12, duration: 0.35 }}
-                  className="mb-1 rounded-md bg-slate-950/40 px-2 py-1 font-mono text-[10px] text-orange-50"
+                  width={800}
+                  height={450}
+                  className="h-auto w-full rounded-xl border border-orange-300/40 bg-slate-900 object-cover"
+                  animate={reduce ? undefined : { scale: [1, 1.015, 1] }}
+                  transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
+                />
+                <p
+                  dir="ltr"
+                  className="text-center font-mono text-[11px] text-orange-100/90"
                 >
-                  {item}
-                </motion.div>
-              ))}
-            </motion.div>
-          );
-        })}
+                  alt=&quot;Students coding&quot; · 800×450
+                </p>
+              </div>
+            ) : null}
+
+            <pre
+              dir="ltr"
+              className="w-full overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-center font-mono text-[11px] leading-5 text-cyan-100"
+            >
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex gap-1.5">
+          {LINK_IMAGE_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.id}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === step
+                  ? "w-4 bg-cyan-300"
+                  : "w-1.5 bg-slate-600 hover:bg-slate-400"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </LabStage>
+  );
+}
+
+const LIST_STEPS = [
+  {
+    id: "ul",
+    tip: {
+      en: "`<ul>` — unordered bullets when order doesn’t matter.",
+      ar: "`<ul>` — نقط بدون ترتيب لما الترتيب مش مهم.",
+    },
+    markup: `<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>`,
+    tint: "border-cyan-300/40 from-cyan-400/15",
+    chip: "ul",
+  },
+  {
+    id: "ol",
+    tip: {
+      en: "`<ol>` — numbered steps when order matters.",
+      ar: "`<ol>` — خطوات مرقّمة لما الترتيب مهم.",
+    },
+    markup: `<ol>
+  <li>Open editor</li>
+  <li>Write markup</li>
+  <li>Check preview</li>
+</ol>`,
+    tint: "border-orange-300/40 from-orange-400/15",
+    chip: "ol",
+  },
+  {
+    id: "dl",
+    tip: {
+      en: "`<dl>` — term (`dt`) + definition (`dd`) pairs.",
+      ar: "`<dl>` — أزواج مصطلح (`dt`) + تعريف (`dd`).",
+    },
+    markup: `<dl>
+  <dt>Semantic</dt>
+  <dd>HTML that describes meaning</dd>
+  <dt>List</dt>
+  <dd>Grouped related items</dd>
+</dl>`,
+    tint: "border-amber-300/40 from-amber-400/15",
+    chip: "dl",
+  },
+  {
+    id: "nest",
+    tip: {
+      en: "Nest another list inside an `<li>` — keep nesting shallow.",
+      ar: "عشّش قائمة جوّه `<li>` — خليه shallow.",
+    },
+    markup: `<ul>
+  <li>HTML
+    <ul>
+      <li>Links</li>
+      <li>Lists</li>
+    </ul>
+  </li>
+  <li>CSS</li>
+</ul>`,
+    tint: "border-violet-300/40 from-violet-400/15",
+    chip: "nest",
+  },
+] as const;
+
+export function ListStackVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % LIST_STEPS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  const current = LIST_STEPS[step];
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  const itemsEn =
+    current.id === "ul"
+      ? ["HTML", "CSS", "JavaScript"]
+      : current.id === "ol"
+        ? ["Open editor", "Write markup", "Check preview"]
+        : current.id === "dl"
+          ? null
+          : null;
+  const itemsAr =
+    current.id === "ul"
+      ? ["HTML", "CSS", "JavaScript"]
+      : current.id === "ol"
+        ? ["افتح المحرر", "اكتب الـ markup", "راجع المعاينة"]
+        : null;
+  const items = locale === "ar" ? itemsAr : itemsEn;
+
+  return (
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "القوائم" : "Lists"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className={`w-full max-w-md rounded-2xl border bg-gradient-to-br ${current.tint} via-slate-950/70 to-slate-950 px-4 py-4 sm:px-5`}
+          >
+            <p className="mb-3 font-mono text-[11px] font-semibold text-orange-100/90">
+              &lt;{current.id === "nest" ? "ul" : current.chip}&gt;
+              {current.id === "nest" ? (
+                <span className="ms-2 text-[10px] font-normal text-violet-200/80">
+                  + nested &lt;ul&gt;
+                </span>
+              ) : null}
+            </p>
+
+            {current.id === "ul" && items ? (
+              <ul className="list-disc space-y-2 ps-5 text-sm text-cyan-50">
+                {items.map((item, j) => (
+                  <motion.li
+                    key={item}
+                    initial={reduce ? false : { opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: j * 0.1, duration: 0.3, ease: labEase }}
+                  >
+                    {item}
+                  </motion.li>
+                ))}
+              </ul>
+            ) : null}
+
+            {current.id === "ol" && items ? (
+              <ol className="list-decimal space-y-2 ps-5 text-sm text-orange-50">
+                {items.map((item, j) => (
+                  <motion.li
+                    key={item}
+                    initial={reduce ? false : { opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: j * 0.1, duration: 0.3, ease: labEase }}
+                  >
+                    {item}
+                  </motion.li>
+                ))}
+              </ol>
+            ) : null}
+
+            {current.id === "dl" ? (
+              <dl className="space-y-3 text-sm">
+                {(
+                  locale === "ar"
+                    ? [
+                        ["Semantic", "HTML بيوصف المعنى"],
+                        ["List", "عناصر مرتبطة متجمّعة"],
+                      ]
+                    : [
+                        ["Semantic", "HTML that describes meaning"],
+                        ["List", "Grouped related items"],
+                      ]
+                ).map(([dt, dd], j) => (
+                  <motion.div
+                    key={dt}
+                    initial={reduce ? false : { opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: j * 0.12, duration: 0.3, ease: labEase }}
+                  >
+                    <dt className="font-semibold text-amber-100">{dt}</dt>
+                    <dd className="mt-0.5 ps-3 text-amber-50/85">{dd}</dd>
+                  </motion.div>
+                ))}
+              </dl>
+            ) : null}
+
+            {current.id === "nest" ? (
+              <ul className="list-disc space-y-2 ps-5 text-sm text-violet-50">
+                <motion.li
+                  initial={reduce ? false : { opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, ease: labEase }}
+                >
+                  HTML
+                  <ul className="mt-1.5 list-[circle] space-y-1 ps-5 text-violet-100/90">
+                    <motion.li
+                      initial={reduce ? false : { opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.12, duration: 0.3 }}
+                    >
+                      {locale === "ar" ? "اللينكات" : "Links"}
+                    </motion.li>
+                    <motion.li
+                      initial={reduce ? false : { opacity: 0, x: -6 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2, duration: 0.3 }}
+                    >
+                      {locale === "ar" ? "القوائم" : "Lists"}
+                    </motion.li>
+                  </ul>
+                </motion.li>
+                <motion.li
+                  initial={reduce ? false : { opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.28, duration: 0.3, ease: labEase }}
+                >
+                  CSS
+                </motion.li>
+              </ul>
+            ) : null}
+          </motion.div>
+        </AnimatePresence>
+
+        <pre
+          dir="ltr"
+          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {LIST_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );
@@ -584,7 +1505,7 @@ const DETAILS_STEPS = [
 
 export function DetailsAccordionVisualizer() {
   const reduce = useReducedMotion();
-  const { dir } = useLanguage();
+  const { locale, dir } = useLanguage();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = DETAILS_STEPS[step];
@@ -604,7 +1525,12 @@ export function DetailsAccordionVisualizer() {
   }, [reduce, playing]);
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "Details و Summary" : "Details & summary"}
+      caption={current.tip}
+    >
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-amber-300/35 bg-amber-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-100">
           {current.showName ? 'name="faq"' : "<details>"}
@@ -756,6 +1682,7 @@ const FORM_STEPS = [
 ] as const;
 
 export function FormFlowVisualizer() {
+  const { locale } = useLanguage();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
@@ -801,11 +1728,12 @@ export function FormFlowVisualizer() {
   }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        {current.status}
-      </p>
-
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "تدفّق الفورم" : "Form flow"}
+      caption={current.status}
+    >
       <form
         className="space-y-2.5 rounded-xl border border-orange-300/25 bg-slate-950/50 p-3"
         onSubmit={(e) => e.preventDefault()}
@@ -983,70 +1911,117 @@ export function FormFlowVisualizer() {
   );
 }
 
-/** Build a data table one layer at a time — structure, not AT walk. */
+/** Build a data table one layer at a time — structure, not page layout. */
 const TABLE_BUILD = [
   {
     id: "shell",
-    tag: "<table>",
-    line: "Start with a table — for data, not page layout.",
+    chip: "table",
+    tip: {
+      en: "`<table>` is for tabular data — not page layout.",
+      ar: "`<table>` للبيانات الجدولية — مش لـ layout الصفحة.",
+    },
+    markup: "<table>\n  …\n</table>",
     showCaption: false,
     showHead: false,
     rows: 0,
     showScope: false,
+    showLayoutTrap: false,
   },
   {
     id: "caption",
-    tag: "<caption>",
-    line: "Caption titles the whole table for everyone.",
+    chip: "caption",
+    tip: {
+      en: "`<caption>` titles the whole table for everyone.",
+      ar: "`<caption>` بيسمّي الجدول كله للجميع.",
+    },
+    markup: "<table>\n  <caption>Scoreboard</caption>\n</table>",
     showCaption: true,
     showHead: false,
     rows: 0,
     showScope: false,
+    showLayoutTrap: false,
   },
   {
     id: "thead",
-    tag: "<thead> + <th>",
-    line: "Column headers live in thead — Name and Score.",
+    chip: "thead",
+    tip: {
+      en: "`<thead>` + `<th>` — column headers for Name and Score.",
+      ar: "`<thead>` + `<th>` — عناوين أعمدة للاسم والنتيجة.",
+    },
+    markup: `<thead>
+  <tr>
+    <th>Name</th>
+    <th>Score</th>
+  </tr>
+</thead>`,
     showCaption: true,
     showHead: true,
     rows: 0,
     showScope: false,
+    showLayoutTrap: false,
   },
   {
-    id: "row1",
-    tag: "<tbody> + <tr>",
-    line: "First data row — row header + value.",
+    id: "tbody",
+    chip: "tbody",
+    tip: {
+      en: "`<tbody>` holds data rows — related values per column.",
+      ar: "`<tbody>` بيحمل صفوف البيانات — قيم مرتبطة لكل عمود.",
+    },
+    markup: `<tbody>
+  <tr>
+    <th>Nour</th>
+    <td>42</td>
+  </tr>
+</tbody>`,
     showCaption: true,
     showHead: true,
     rows: 1,
     showScope: false,
+    showLayoutTrap: false,
   },
   {
-    id: "row2",
-    tag: "<tr>",
-    line: "More rows stack — same columns, related values.",
-    showCaption: true,
-    showHead: true,
-    rows: 2,
-    showScope: false,
-  },
-  {
-    id: "row3",
-    tag: "<tr>",
-    line: "Full scoreboard — three players, two columns.",
+    id: "rows",
+    chip: "rows",
+    tip: {
+      en: "More `<tr>` rows stack — same columns, comparable values.",
+      ar: "صفوف `<tr>` زيادة — نفس الأعمدة وقيم قابلة للمقارنة.",
+    },
+    markup: `<tr><th>Sam</th><td>90</td></tr>
+<tr><th>Ava</th><td>95</td></tr>`,
     showCaption: true,
     showHead: true,
     rows: 3,
     showScope: false,
+    showLayoutTrap: false,
   },
   {
     id: "scope",
-    tag: 'scope="col|row"',
-    line: "scope tells assistive tech which header applies.",
+    chip: "scope",
+    tip: {
+      en: '`scope="col"` / `scope="row"` ties cells to the right headers.',
+      ar: '`scope="col"` / `scope="row"` بيربط الخلايا بالـ headers الصح.',
+    },
+    markup: `<th scope="col">Name</th>
+<th scope="row">Nour</th>`,
     showCaption: true,
     showHead: true,
     rows: 3,
     showScope: true,
+    showLayoutTrap: false,
+  },
+  {
+    id: "layout",
+    chip: "≠ layout",
+    tip: {
+      en: "Trap: don’t use tables for page layout — use CSS.",
+      ar: "فخ: متستخدمش الجداول لـ layout الصفحة — استخدم CSS.",
+    },
+    markup: "<!-- layout → CSS Grid / Flexbox -->\n<!-- tables → data only -->",
+    showCaption: false,
+    showHead: false,
+    rows: 0,
+    showScope: false,
+    showLayoutTrap: true,
   },
 ] as const;
 
@@ -1057,6 +2032,8 @@ const TABLE_ROWS = [
 ] as const;
 
 export function TableGridVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
@@ -1064,7 +2041,7 @@ export function TableGridVisualizer() {
 
   useEffect(() => {
     if (reduce) {
-      setStep(TABLE_BUILD.length - 1);
+      setStep(TABLE_BUILD.length - 2);
       return;
     }
     if (!playing) return;
@@ -1075,92 +2052,187 @@ export function TableGridVisualizer() {
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  const colName = locale === "ar" ? "الاسم" : "Name";
+  const colScore = locale === "ar" ? "النتيجة" : "Score";
+  const captionLabel = locale === "ar" ? "لوحة النتائج" : "Scoreboard";
+
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="mb-3 flex min-h-8 items-center gap-2">
-        <span className="shrink-0 rounded-md border border-orange-300/35 bg-orange-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-orange-100">
-          {current.tag}
-        </span>
-        <p className="text-sm leading-relaxed text-slate-300">
-          {current.line}
-        </p>
-      </div>
-
-      {/* Full table always laid out — layers fade in so height never jumps */}
-      <div className="rounded-xl border border-dashed border-orange-300/40 bg-slate-950/40">
-        <table className="w-full border-collapse text-[11px]">
-          <motion.caption
-            animate={{ opacity: current.showCaption ? 1 : 0 }}
-            transition={{ duration: 0.35, ease: labEase }}
-            className="border-b border-orange-300/20 bg-orange-400/10 px-3 py-2 text-start"
-          >
-            <span className="font-semibold text-orange-50">Scoreboard</span>
-          </motion.caption>
-          <thead>
-            <motion.tr
-              animate={{ opacity: current.showHead ? 1 : 0 }}
-              transition={{ duration: 0.35, ease: labEase }}
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "الجداول" : "Tables"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col gap-3">
+        <AnimatePresence mode="wait">
+          {current.showLayoutTrap ? (
+            <motion.div
+              key="layout-trap"
+              initial={reduce ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: labEase }}
+              className="grid min-h-0 flex-1 gap-2 sm:grid-cols-2"
             >
-              {(["Name", "Score"] as const).map((label) => (
-                <th
-                  key={label}
-                  scope="col"
-                  className="border border-orange-300/15 bg-orange-400/12 px-2.5 py-2 text-start text-[11px] font-semibold text-orange-50"
+              <div className="rounded-xl border border-rose-300/40 bg-rose-400/10 p-3">
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-rose-200/80">
+                  {locale === "ar" ? "تجنّب" : "Avoid"}
+                </p>
+                <div className="grid grid-cols-2 gap-1.5 font-mono text-[10px] text-rose-100/90">
+                  <div className="rounded-md border border-rose-300/30 bg-rose-400/10 px-2 py-3 text-center">
+                    nav
+                  </div>
+                  <div className="rounded-md border border-rose-300/30 bg-rose-400/10 px-2 py-3 text-center">
+                    aside
+                  </div>
+                  <div className="col-span-2 rounded-md border border-dashed border-rose-300/35 bg-rose-400/5 px-2 py-4 text-center">
+                    &lt;table&gt; as layout ✗
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-xl border border-emerald-300/40 bg-emerald-400/10 p-3">
+                <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/80">
+                  {locale === "ar" ? "فضّل" : "Prefer"}
+                </p>
+                <div className="space-y-1.5 font-mono text-[10px] text-emerald-50">
+                  <div className="rounded-md border border-emerald-300/35 bg-emerald-400/15 px-2 py-2">
+                    CSS Grid / Flexbox
+                  </div>
+                  <div className="rounded-md border border-emerald-300/35 bg-emerald-400/15 px-2 py-2">
+                    &lt;table&gt; → data only ✓
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="data-table"
+              initial={reduce ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduce ? undefined : { opacity: 0, y: -6 }}
+              transition={{ duration: 0.3, ease: labEase }}
+              className="min-h-0 flex-1 overflow-hidden rounded-xl border border-orange-300/35 bg-gradient-to-br from-orange-400/10 via-slate-950/80 to-slate-950"
+            >
+              <table className="w-full border-collapse text-[11px]">
+                <motion.caption
+                  animate={{
+                    opacity: current.showCaption ? 1 : 0.15,
+                    height: current.showCaption ? "auto" : 28,
+                  }}
+                  transition={{ duration: 0.35, ease: labEase }}
+                  className="border-b border-orange-300/20 bg-orange-400/10 px-3 py-2 text-start"
                 >
-                  <span className="inline-flex flex-wrap items-center gap-1.5">
-                    {label}
-                    <motion.span
-                      animate={{ opacity: current.showScope ? 1 : 0 }}
-                      transition={{ duration: 0.3, ease: labEase }}
-                      className="font-mono text-[8px] font-medium text-orange-200/70"
-                    >
-                      scope=&quot;col&quot;
-                    </motion.span>
+                  <span className="inline-flex items-center gap-2 font-semibold text-orange-50">
+                    {current.showCaption ? captionLabel : "…"}
+                    {current.showCaption ? (
+                      <span className="font-mono text-[9px] font-normal text-orange-200/70">
+                        &lt;caption&gt;
+                      </span>
+                    ) : null}
                   </span>
-                </th>
-              ))}
-            </motion.tr>
-          </thead>
-          <tbody>
-            {TABLE_ROWS.map((row, i) => (
-              <motion.tr
-                key={row.name}
-                animate={{ opacity: current.rows > i ? 1 : 0 }}
-                transition={{ duration: 0.35, ease: labEase }}
-              >
-                <th
-                  scope="row"
-                  className="border border-orange-300/15 bg-slate-950/55 px-2.5 py-2 text-start text-[11px] font-semibold text-amber-100/90"
-                >
-                  <span className="inline-flex flex-wrap items-center gap-1.5">
-                    {row.name}
-                    <motion.span
-                      animate={{ opacity: current.showScope ? 1 : 0 }}
-                      transition={{ duration: 0.3, ease: labEase }}
-                      className="font-mono text-[8px] font-medium text-slate-400"
-                    >
-                      scope=&quot;row&quot;
-                    </motion.span>
-                  </span>
-                </th>
-                <td className="border border-orange-300/15 bg-slate-950/35 px-2.5 py-2 font-mono text-[11px] text-slate-200">
-                  {row.score}
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </motion.caption>
+                <thead>
+                  <motion.tr
+                    animate={{ opacity: current.showHead ? 1 : 0.12 }}
+                    transition={{ duration: 0.35, ease: labEase }}
+                  >
+                    {([colName, colScore] as const).map((label) => (
+                      <th
+                        key={label}
+                        scope="col"
+                        className="border border-orange-300/15 bg-orange-400/12 px-2.5 py-2 text-start text-[11px] font-semibold text-orange-50"
+                      >
+                        <span className="inline-flex flex-wrap items-center gap-1.5">
+                          {current.showHead ? label : "·"}
+                          <motion.span
+                            animate={{ opacity: current.showScope ? 1 : 0 }}
+                            transition={{ duration: 0.3, ease: labEase }}
+                            className="font-mono text-[8px] font-medium text-orange-200/70"
+                          >
+                            scope=&quot;col&quot;
+                          </motion.span>
+                        </span>
+                      </th>
+                    ))}
+                  </motion.tr>
+                </thead>
+                <tbody>
+                  {TABLE_ROWS.map((row, i) => {
+                    const visible = current.rows > i;
+                    return (
+                      <motion.tr
+                        key={row.name}
+                        initial={false}
+                        animate={{
+                          opacity: visible ? 1 : 0.1,
+                          y: visible ? 0 : 4,
+                        }}
+                        transition={{
+                          duration: 0.35,
+                          ease: labEase,
+                          delay: visible && !reduce ? i * 0.05 : 0,
+                        }}
+                      >
+                        <th
+                          scope="row"
+                          className="border border-orange-300/15 bg-slate-950/55 px-2.5 py-2 text-start text-[11px] font-semibold text-amber-100/90"
+                        >
+                          <span className="inline-flex flex-wrap items-center gap-1.5">
+                            {visible ? row.name : "·"}
+                            <motion.span
+                              animate={{
+                                opacity: current.showScope && visible ? 1 : 0,
+                              }}
+                              transition={{ duration: 0.3, ease: labEase }}
+                              className="font-mono text-[8px] font-medium text-slate-400"
+                            >
+                              scope=&quot;row&quot;
+                            </motion.span>
+                          </span>
+                        </th>
+                        <td className="border border-orange-300/15 bg-slate-950/35 px-2.5 py-2 font-mono text-[11px] text-slate-200">
+                          {visible ? row.score : "·"}
+                        </td>
+                      </motion.tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      <div className="mt-3 flex justify-center gap-1.5">
-        {TABLE_BUILD.map((s, i) => (
-          <span
-            key={s.id}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${
-              i === step ? "bg-orange-300" : "bg-slate-600"
-            }`}
-          />
-        ))}
+        <pre
+          dir="ltr"
+          className="shrink-0 overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {TABLE_BUILD.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );
@@ -1170,63 +2242,78 @@ export function TableGridVisualizer() {
 const A11Y_STEPS = [
   {
     id: "skip",
-    focus: "skip" as const,
-    tip: "Skip link — first Tab target before chrome.",
-    speech: "Skip to content, link",
-    name: "Skip to content",
-    role: "link",
-    value: "—",
+    chip: "skip",
+    tip: {
+      en: "Skip link — first Tab target before chrome.",
+      ar: "Skip link — أول هدف لـ Tab قبل الـ chrome.",
+    },
+    speech: { en: "Skip to content, link", ar: "تخطي للمحتوى، رابط" },
+    preview: { en: "Skip to content", ar: "تخطي للمحتوى" },
+    markup: '<a href="#main">Skip to content</a>',
   },
   {
     id: "button",
-    focus: "button" as const,
-    tip: "Native button exposes name, role, and expanded state.",
-    speech: "More info, button, collapsed",
-    name: "More info",
-    role: "button",
-    value: "collapsed",
+    chip: "button",
+    tip: {
+      en: "Native `<button>` exposes name, role, and state.",
+      ar: "`<button>` الأصلي بيعرض الاسم والـ role والحالة.",
+    },
+    speech: {
+      en: "More info, button, collapsed",
+      ar: "مزيد من المعلومات، زر، مطوي",
+    },
+    preview: { en: "More info", ar: "مزيد من المعلومات" },
+    markup: '<button type="button" aria-expanded="false">\n  More info\n</button>',
   },
   {
-    id: "image",
-    focus: "image" as const,
-    tip: "Meaningful alt becomes the image's accessible name.",
-    speech: "Sales grew 20% in March, image",
-    name: "Sales grew 20% in March",
-    role: "image",
-    value: "—",
+    id: "alt",
+    chip: "alt",
+    tip: {
+      en: "Meaningful `alt` becomes the image’s accessible name.",
+      ar: "`alt` الهادف بيبقى الاسم الـ accessible للصورة.",
+    },
+    speech: {
+      en: "Sales grew 20% in March, image",
+      ar: "المبيعات زادت 20% في مارس، صورة",
+    },
+    preview: { en: 'alt="Sales grew 20%…"', ar: 'alt="المبيعات زادت 20%…"' },
+    markup: '<img src="chart.svg" alt="Sales grew 20% in March" />',
   },
   {
-    id: "input",
-    focus: "input" as const,
-    tip: "label + input association → accessible name.",
-    speech: "Email, edit text",
-    name: "Email",
-    role: "textbox",
-    value: "blank",
+    id: "label",
+    chip: "label",
+    tip: {
+      en: "`<label for>` + `<input>` → accessible name.",
+      ar: "`<label for>` + `<input>` → اسم accessible.",
+    },
+    speech: { en: "Email, edit text", ar: "البريد، نص قابل للتعديل" },
+    preview: { en: "Email", ar: "البريد" },
+    markup: `<label for="email">Email</label>
+<input id="email" type="email" />`,
   },
   {
     id: "live",
-    focus: "live" as const,
-    tip: "aria-live announces async UI without stealing focus.",
-    speech: "Saved",
-    name: "Saved",
-    role: "status",
-    value: "polite",
+    chip: "live",
+    tip: {
+      en: "`aria-live` announces updates without stealing focus.",
+      ar: "`aria-live` بيعلن التحديث من غير ما يسرق الـ focus.",
+    },
+    speech: { en: "Saved", ar: "اتحفظ" },
+    preview: { en: "Saved", ar: "اتحفظ" },
+    markup: '<p role="status" aria-live="polite">Saved</p>',
   },
 ] as const;
 
 export function A11yCheckVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = A11Y_STEPS[step];
 
   useEffect(() => {
-    if (reduce) {
-      setStep(A11Y_STEPS.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % A11Y_STEPS.length),
       LAB_STEP_MS,
@@ -1234,157 +2321,264 @@ export function A11yCheckVisualizer() {
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
-  function ring(id: (typeof A11Y_STEPS)[number]["focus"]) {
-    return current.focus === id
-      ? "0 0 0 2px rgba(251,146,60,0.55)"
-      : "0 0 0 0 rgba(0,0,0,0)";
-  }
-
-  function dim(id: (typeof A11Y_STEPS)[number]["focus"]) {
-    return current.focus === id ? 1 : 0.45;
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
   }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        {current.tip}
-      </p>
-
-      {/* Fixed-height stage: UI always fully laid out */}
-      <div className="space-y-2.5 rounded-xl border border-emerald-400/25 bg-slate-950/50 p-3">
-        <motion.a
-          href="#main"
-          tabIndex={-1}
-          animate={{ boxShadow: ring("skip"), opacity: dim("skip") }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="inline-flex rounded-lg border border-white/10 bg-slate-900/80 px-2.5 py-1.5 text-[11px] font-medium text-emerald-100"
-          onClick={(e) => e.preventDefault()}
-        >
-          Skip to content
-          <span className="ms-1.5 font-mono text-[9px] text-slate-500">
-            &lt;a href=&quot;#main&quot;&gt;
-          </span>
-        </motion.a>
-
-        <motion.button
-          type="button"
-          tabIndex={-1}
-          animate={{ boxShadow: ring("button"), opacity: dim("button") }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="flex w-full items-center justify-between rounded-lg border border-white/10 bg-slate-900/70 px-2.5 py-2 text-start text-[11px] font-medium text-slate-100"
-        >
-          <span>
-            More info
-            <span className="ms-1.5 font-mono text-[9px] font-normal text-slate-500">
-              aria-expanded=&quot;false&quot;
-            </span>
-          </span>
-          <span className="font-mono text-[9px] text-slate-500">&lt;button&gt;</span>
-        </motion.button>
-
-        <motion.div
-          animate={{ boxShadow: ring("image"), opacity: dim("image") }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="flex items-center gap-2.5 rounded-lg border border-white/10 bg-slate-900/70 px-2.5 py-2"
-        >
-          <div
-            aria-hidden
-            className="flex h-9 w-12 shrink-0 items-center justify-center rounded-md bg-emerald-400/15 font-mono text-[9px] text-emerald-200/80"
-          >
-            img
-          </div>
-          <div className="min-w-0">
-            <p className="truncate text-[11px] text-slate-200">
-              alt=&quot;Sales grew 20% in March&quot;
-            </p>
-            <p className="font-mono text-[9px] text-slate-500">
-              accessible name from alt
-            </p>
-          </div>
-        </motion.div>
-
-        <motion.label
-          animate={{ boxShadow: ring("input"), opacity: dim("input") }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="block rounded-lg border border-white/10 bg-slate-900/70 px-2.5 py-2"
-        >
-          <div className="mb-1 flex items-center justify-between gap-2">
-            <span className="text-[11px] font-medium text-slate-100">Email</span>
-            <span className="font-mono text-[9px] text-slate-500">
-              &lt;label for&gt; + &lt;input&gt;
-            </span>
-          </div>
-          <div className="flex h-7 items-center rounded-md border border-white/10 bg-slate-950/80 px-2 font-mono text-[10px] text-slate-500">
-            type=&quot;email&quot;
-          </div>
-        </motion.label>
-
-        <motion.div
-          animate={{ boxShadow: ring("live"), opacity: dim("live") }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="rounded-lg border border-dashed border-emerald-400/30 bg-emerald-400/5 px-2.5 py-2"
-        >
-          <p className="font-mono text-[9px] text-emerald-200/70">
-            aria-live=&quot;polite&quot;
-          </p>
-          <p className="mt-0.5 text-[11px] font-medium text-emerald-100">
-            {current.focus === "live" ? "Saved" : "…"}
-          </p>
-        </motion.div>
-      </div>
-
-      {/* AT announcement panel — fixed slot */}
-      <div className="mt-3 rounded-xl border border-cyan-400/25 bg-cyan-950/30 px-3 py-2.5">
-        <div className="mb-1.5 flex items-center gap-1.5 text-cyan-200/80">
-          <Volume2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
-          <span className="text-[10px] font-semibold uppercase tracking-wide">
-            Screen reader
-          </span>
-        </div>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "فحص الوصولية" : "Accessibility check"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
         <AnimatePresence mode="wait">
-          <motion.p
+          <motion.div
             key={current.id}
-            initial={reduce ? false : { opacity: 0, y: 4 }}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.25, ease: labEase }}
-            className="min-h-5 font-mono text-[12px] font-medium text-cyan-50"
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md space-y-3"
           >
-            “{current.speech}”
-          </motion.p>
-        </AnimatePresence>
-        <div className="mt-2 grid grid-cols-3 gap-1.5">
-          {(
-            [
-              ["name", current.name],
-              ["role", current.role],
-              ["value", current.value],
-            ] as const
-          ).map(([key, val]) => (
-            <div
-              key={key}
-              className="rounded-md border border-white/10 bg-slate-950/50 px-1.5 py-1"
-            >
-              <p className="font-mono text-[8px] uppercase tracking-wide text-slate-500">
-                {key}
-              </p>
-              <p className="truncate font-mono text-[10px] text-slate-200">
-                {val}
+            <div className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3">
+              <p className="text-sm font-semibold text-emerald-50">
+                {locale === "ar" ? current.preview.ar : current.preview.en}
               </p>
             </div>
+
+            <div className="rounded-xl border border-cyan-400/25 bg-cyan-950/30 px-3 py-2.5">
+              <div className="mb-1 flex items-center gap-1.5 text-cyan-200/80">
+                <Volume2 className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span className="text-[10px] font-semibold uppercase tracking-wide">
+                  {locale === "ar" ? "قارئ الشاشة" : "Screen reader"}
+                </span>
+              </div>
+              <p className="font-mono text-[12px] font-medium text-cyan-50">
+                “{locale === "ar" ? current.speech.ar : current.speech.en}”
+              </p>
+            </div>
+
+            <pre
+              dir="ltr"
+              className="overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+            >
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {A11Y_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-emerald-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
           ))}
         </div>
       </div>
+    </LabStage>
+  );
+}
 
-      <div className="mt-3 flex justify-center gap-1.5">
-        {A11Y_STEPS.map((s, i) => (
-          <span
-            key={s.id}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${
-              i === step ? "bg-emerald-300" : "bg-slate-600"
-            }`}
-          />
-        ))}
+/** Bad vs Screen-Reader Ready — practice flips (sr-practice lesson). */
+const SR_READY_STEPS = [
+  {
+    id: "button",
+    chip: "button",
+    tip: {
+      en: "Actions need a real `<button>` — not a clickable `div`.",
+      ar: "الأفعال محتاجة `<button>` حقيقي — مش `div` قابل للضغط.",
+    },
+    bad: {
+      code: `<div class="btn" onclick="save()">Save</div>`,
+      hear: { en: "(not in Tab order)", ar: "(مش في ترتيب Tab)" },
+    },
+    good: {
+      code: `<button type="button">Save</button>`,
+      hear: { en: "Save, button", ar: "حفظ، زر" },
+    },
+  },
+  {
+    id: "link",
+    chip: "link",
+    tip: {
+      en: "Navigation needs a real `href` — not a fake `span`.",
+      ar: "التنقّل محتاج `href` حقيقي — مش `span` مزيف.",
+    },
+    bad: {
+      code: `<span onclick="location='/js'">Open JS</span>`,
+      hear: { en: "(no link role)", ar: "(مفيش role رابط)" },
+    },
+    good: {
+      code: `<a href="/javascript">Open JS track</a>`,
+      hear: { en: "Open JS track, link", ar: "افتح مسار JS، رابط" },
+    },
+  },
+  {
+    id: "alt",
+    chip: "alt",
+    tip: {
+      en: "Meaningful `alt` names the image for AT.",
+      ar: "`alt` الهادف بيسمّي الصورة لـ AT.",
+    },
+    bad: {
+      code: `<img src="chart.svg" />`,
+      hear: { en: "image", ar: "صورة" },
+    },
+    good: {
+      code: `<img src="chart.svg" alt="Sales grew 20% in March" />`,
+      hear: {
+        en: "Sales grew 20% in March, image",
+        ar: "المبيعات زادت 20% في مارس، صورة",
+      },
+    },
+  },
+  {
+    id: "label",
+    chip: "label",
+    tip: {
+      en: "Visible `<label>` beats placeholder-only names.",
+      ar: "`<label>` الظاهر أحسن من اسم placeholder بس.",
+    },
+    bad: {
+      code: `<input type="email" placeholder="Email" />`,
+      hear: { en: "edit text", ar: "نص قابل للتعديل" },
+    },
+    good: {
+      code: `<label for="email">Email</label>\n<input id="email" type="email" />`,
+      hear: { en: "Email, edit text", ar: "البريد، نص قابل للتعديل" },
+    },
+  },
+  {
+    id: "live",
+    chip: "live",
+    tip: {
+      en: "`aria-live` announces status — a silent toast is missed.",
+      ar: "`aria-live` بيعلن الحالة — toast صامت بيتفوت.",
+    },
+    bad: {
+      code: `<p class="toast">Saved!</p>`,
+      hear: { en: "(silence)", ar: "(صمت)" },
+    },
+    good: {
+      code: `<p role="status" aria-live="polite">Saved!</p>`,
+      hear: { en: "Saved!", ar: "اتحفظ!" },
+    },
+  },
+] as const;
+
+export function SrReadyVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = SR_READY_STEPS[step];
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % SR_READY_STEPS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  const ar = locale === "ar";
+
+  return (
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={ar ? "غلط مقابل جاهز للـ SR" : "Bad vs SR ready"}
+      caption={ar ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="grid w-full max-w-md gap-2 sm:grid-cols-2"
+          >
+            <div className="rounded-xl border border-rose-300/40 bg-rose-400/10 p-3">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-rose-200/80">
+                {ar ? "غلط" : "Bad"}
+              </p>
+              <pre
+                dir="ltr"
+                className="overflow-x-auto whitespace-pre-wrap break-all font-mono text-[10px] leading-4 text-rose-50/90"
+              >
+                {current.bad.code}
+              </pre>
+              <div className="mt-2 flex items-start gap-1.5 text-rose-100/70">
+                <Volume2 className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                <p className="font-mono text-[10px]">
+                  “{ar ? current.bad.hear.ar : current.bad.hear.en}”
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-emerald-300/40 bg-emerald-400/10 p-3">
+              <p className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-emerald-200/80">
+                {ar ? "جاهز" : "Ready"}
+              </p>
+              <pre
+                dir="ltr"
+                className="overflow-x-auto whitespace-pre-wrap break-all font-mono text-[10px] leading-4 text-emerald-50/90"
+              >
+                {current.good.code}
+              </pre>
+              <div className="mt-2 flex items-start gap-1.5 text-emerald-100/80">
+                <Volume2 className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
+                <p className="font-mono text-[10px]">
+                  “{ar ? current.good.hear.ar : current.good.hear.en}”
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {SR_READY_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-emerald-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );
@@ -1393,64 +2587,70 @@ export function A11yCheckVisualizer() {
 /** SEO crawl lab — first HTML response → SERP (CWV lives in Pro performance). */
 const SEO_STEPS = [
   {
-    id: "csr",
-    tip: "CSR-only shell — crawler gets an empty root, thin index.",
-    title: false,
-    desc: false,
-    canonical: false,
-    body: false,
-    mode: "csr" as const,
-  },
-  {
     id: "title",
-    tip: "<title> in the first HTML — tab + SERP title.",
-    title: true,
-    desc: false,
-    canonical: false,
-    body: false,
-    mode: "ssr" as const,
+    chip: "title",
+    tip: {
+      en: "`<title>` in the first HTML — tab + SERP title.",
+      ar: "`<title>` في أول HTML — تاب المتصفح + عنوان النتائج.",
+    },
+    serpTitle: true,
+    serpDesc: false,
+    serpUrl: false,
+    serpBody: false,
+    markup: "<title>FrontendCraft — HTML</title>",
   },
   {
     id: "desc",
-    tip: "meta description — honest snippet under the result.",
-    title: true,
-    desc: true,
-    canonical: false,
-    body: false,
-    mode: "ssr" as const,
+    chip: "desc",
+    tip: {
+      en: "`meta description` — honest snippet under the result.",
+      ar: "`meta description` — مقتطف صادق تحت النتيجة.",
+    },
+    serpTitle: true,
+    serpDesc: true,
+    serpUrl: false,
+    serpBody: false,
+    markup:
+      '<meta name="description" content="Learn HTML with interactive labs." />',
   },
   {
     id: "canonical",
-    tip: 'rel="canonical" — one preferred URL for duplicates.',
-    title: true,
-    desc: true,
-    canonical: true,
-    body: false,
-    mode: "ssr" as const,
+    chip: "canonical",
+    tip: {
+      en: '`rel="canonical"` — one preferred URL for duplicates.',
+      ar: '`rel="canonical"` — رابط مفضّل واحد للنسخ المكررة.',
+    },
+    serpTitle: true,
+    serpDesc: true,
+    serpUrl: true,
+    serpBody: false,
+    markup: '<link rel="canonical" href="https://example.com/html" />',
   },
   {
     id: "body",
-    tip: "Primary copy in <main> — indexable in the first response.",
-    title: true,
-    desc: true,
-    canonical: true,
-    body: true,
-    mode: "ssr" as const,
+    chip: "main",
+    tip: {
+      en: "Primary copy in `<main>` — indexable in the first response.",
+      ar: "المحتوى الأساسي في `<main>` — قابل للفهرسة من أول رد.",
+    },
+    serpTitle: true,
+    serpDesc: true,
+    serpUrl: true,
+    serpBody: true,
+    markup: "<main>\n  <h1>HTML track</h1>\n  <p>…</p>\n</main>",
   },
 ] as const;
 
 export function SeoCrawlVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = SEO_STEPS[step];
 
   useEffect(() => {
-    if (reduce) {
-      setStep(SEO_STEPS.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % SEO_STEPS.length),
       LAB_STEP_MS,
@@ -1458,113 +2658,106 @@ export function SeoCrawlVisualizer() {
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="mb-2 flex min-h-8 items-center gap-2">
-        <span
-          className={`shrink-0 rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold ${
-            current.mode === "csr"
-              ? "border-rose-300/35 bg-rose-400/15 text-rose-100"
-              : "border-emerald-300/35 bg-emerald-400/15 text-emerald-100"
-          }`}
-        >
-          {current.mode === "csr" ? "CSR shell" : "SSR HTML"}
-        </span>
-        <p className="text-sm leading-relaxed text-slate-300">
-          {current.tip}
-        </p>
-      </div>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "زحف الـ SEO" : "SEO crawl"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md space-y-3"
+          >
+            <div className="space-y-2 rounded-xl border border-orange-300/30 bg-slate-950/60 p-3">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-orange-200/60">
+                {locale === "ar" ? "معاينة نتيجة البحث" : "Search result"}
+              </p>
+              <p
+                className={`text-sm font-semibold leading-snug ${
+                  current.serpTitle ? "text-sky-300" : "text-slate-600"
+                }`}
+              >
+                FrontendCraft — HTML track
+              </p>
+              <p
+                className={`truncate font-mono text-[10px] ${
+                  current.serpUrl ? "text-emerald-300/80" : "text-slate-600"
+                }`}
+              >
+                {current.serpUrl
+                  ? 'https://example.com/html · rel="canonical"'
+                  : "example.com/html"}
+              </p>
+              <p
+                className={`min-h-8 text-sm leading-relaxed ${
+                  current.serpDesc ? "text-slate-300" : "text-slate-600"
+                }`}
+              >
+                {locale === "ar"
+                  ? "اتعلم HTML بمعامل تفاعلية وصناديق حية."
+                  : "Learn HTML with interactive labs and live sandboxes."}
+              </p>
+              <div
+                className={`rounded-lg border border-dashed px-2.5 py-2 ${
+                  current.serpBody
+                    ? "border-orange-300/40 bg-orange-400/10"
+                    : "border-white/10 bg-slate-900/50"
+                }`}
+              >
+                <p className="font-mono text-[9px] text-slate-500">&lt;main&gt;</p>
+                <p className="mt-0.5 text-[11px] font-medium text-orange-50">
+                  {current.serpBody ? (
+                    <>
+                      <span className="text-orange-200/80">&lt;h1&gt;</span>{" "}
+                      {locale === "ar" ? "مسار HTML" : "HTML track"}
+                    </>
+                  ) : (
+                    <span className="text-slate-600">…</span>
+                  )}
+                </p>
+              </div>
+            </div>
 
-      {/* Browser tab — fixed slot */}
-      <div className="rounded-lg border border-white/10 bg-slate-900/90 px-3 py-2">
-        <div className="mb-1.5 flex items-center gap-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-300/80" />
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
-          <span className="ms-1 text-[9px] text-slate-500">browser tab</span>
+            <pre
+              dir="ltr"
+              className="overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+            >
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {SEO_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
         </div>
-        <p className="min-h-4 font-mono text-xs text-orange-100">
-          {current.title ? (
-            <>
-              &lt;title&gt;FrontendCraft — HTML&lt;/title&gt;
-            </>
-          ) : (
-            <span className="text-slate-500">untitled document</span>
-          )}
-        </p>
-      </div>
-
-      {/* SERP + body — always full height via opacity */}
-      <div className="mt-2.5 space-y-2 rounded-xl border border-orange-300/25 bg-slate-950/50 p-3">
-        <p className="text-[9px] font-semibold uppercase tracking-wider text-orange-200/60">
-          Search result preview
-        </p>
-
-        <motion.p
-          animate={{ opacity: current.title ? 1 : 0.25 }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className={`text-sm font-semibold leading-snug ${
-            current.title ? "text-sky-300" : "text-slate-600"
-          }`}
-        >
-          FrontendCraft — HTML track
-        </motion.p>
-
-        <motion.p
-          animate={{ opacity: current.canonical ? 1 : 0.25 }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="truncate font-mono text-[10px] text-emerald-300/80"
-        >
-          {current.canonical
-            ? "https://example.com/html · rel=\"canonical\""
-            : "example.com/html"}
-        </motion.p>
-
-        <motion.p
-          animate={{ opacity: current.desc ? 1 : 0.25 }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className={`min-h-10 text-sm leading-relaxed ${
-            current.desc ? "text-slate-300" : "text-slate-600"
-          }`}
-        >
-          Learn HTML with interactive labs and live sandboxes.
-        </motion.p>
-
-        <motion.div
-          animate={{
-            opacity: current.body ? 1 : 0.3,
-            borderColor: current.body
-              ? "rgba(251,146,60,0.35)"
-              : "rgba(255,255,255,0.1)",
-          }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="rounded-lg border border-dashed bg-slate-900/60 px-2.5 py-2"
-        >
-          <p className="font-mono text-[9px] text-slate-500">
-            &lt;main&gt; in first response
-          </p>
-          <p className="mt-0.5 text-[11px] font-medium text-orange-50">
-            {current.body ? (
-              <>
-                <span className="text-orange-200/80">&lt;h1&gt;</span> HTML
-                track
-              </>
-            ) : (
-              <span className="text-slate-600">&lt;div id=&quot;root&quot;&gt;&lt;/div&gt;</span>
-            )}
-          </p>
-        </motion.div>
-      </div>
-
-      <div className="mt-3 flex justify-center gap-1.5">
-        {SEO_STEPS.map((s, i) => (
-          <span
-            key={s.id}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${
-              i === step ? "bg-orange-300" : "bg-slate-600"
-            }`}
-          />
-        ))}
       </div>
     </LabStage>
   );
@@ -1574,67 +2767,153 @@ export function SeoCrawlVisualizer() {
 const CWV_STEPS = [
   {
     id: "lcp-bad",
-    tip: "LCP — oversized hero without size or preload paints late.",
+    chip: "LCP ✗",
+    tip: {
+      en: "LCP — oversized hero without size or preload paints late.",
+      ar: "LCP — hero كبير من غير مقاس أو preload بيتأخر.",
+    },
     focus: "lcp" as const,
     good: false,
     scores: { lcp: "4.2s", inp: "—", cls: "—" },
+    markup: '<img src="hero.jpg" loading="lazy" />',
+    hero: { en: "hero · no size · lazy", ar: "hero · من غير مقاس · lazy" },
+    click: { en: "Click — waiting…", ar: "اضغط — مستني…" },
+    shift: { en: "layout idle", ar: "الـ layout ثابت" },
   },
   {
     id: "lcp-good",
-    tip: "LCP fix — sized image + fetchpriority / preload.",
+    chip: "LCP ✓",
+    tip: {
+      en: "LCP fix — sized image + `fetchpriority=\"high\"` / preload.",
+      ar: "إصلاح LCP — صورة بمقاس + `fetchpriority=\"high\"` / preload.",
+    },
     focus: "lcp" as const,
     good: true,
     scores: { lcp: "1.8s", inp: "—", cls: "—" },
+    markup:
+      '<img src="hero.jpg" width="1200" height="630" fetchpriority="high" />',
+    hero: {
+      en: "hero · width/height · high priority",
+      ar: "hero · مقاس · أولوية عالية",
+    },
+    click: { en: "Click — ready", ar: "اضغط — جاهز" },
+    shift: { en: "layout idle", ar: "الـ layout ثابت" },
   },
   {
     id: "inp-bad",
-    tip: "INP — heavy main-thread work delays the click.",
+    chip: "INP ✗",
+    tip: {
+      en: "INP — heavy main-thread work delays the click.",
+      ar: "INP — شغل ثقيل على الـ main thread بيأخر الضغط.",
+    },
     focus: "inp" as const,
     good: false,
     scores: { lcp: "1.8s", inp: "380ms", cls: "—" },
+    markup: "onClick={() => heavySyncWork()}",
+    hero: {
+      en: "hero · width/height · high priority",
+      ar: "hero · مقاس · أولوية عالية",
+    },
+    click: {
+      en: "Click… (main thread busy)",
+      ar: "اضغط… (الـ main thread مشغول)",
+    },
+    shift: { en: "layout idle", ar: "الـ layout ثابت" },
   },
   {
     id: "inp-good",
-    tip: "INP fix — light handlers; defer non-critical JS.",
+    chip: "INP ✓",
+    tip: {
+      en: "INP fix — light handlers; defer non-critical JS.",
+      ar: "إصلاح INP — handlers خفيفة؛ أجّل JS غير الحرج.",
+    },
     focus: "inp" as const,
     good: true,
     scores: { lcp: "1.8s", inp: "120ms", cls: "—" },
+    markup: "onClick={() => queueMicrotask(work)}\n<script defer src=\"app.js\">",
+    hero: {
+      en: "hero · width/height · high priority",
+      ar: "hero · مقاس · أولوية عالية",
+    },
+    click: { en: "Click — snappy response", ar: "اضغط — استجابة سريعة" },
+    shift: { en: "layout idle", ar: "الـ layout ثابت" },
   },
   {
     id: "cls-bad",
-    tip: "CLS — unsized media / late banner shoves content.",
+    chip: "CLS ✗",
+    tip: {
+      en: "CLS — unsized media / late banner shoves content.",
+      ar: "CLS — ميديا من غير مقاس / بانر متأخر بيزق المحتوى.",
+    },
     focus: "cls" as const,
     good: false,
     scores: { lcp: "1.8s", inp: "120ms", cls: "0.28" },
+    markup: "<aside class=\"ad\">…late inject…</aside>",
+    hero: {
+      en: "hero · width/height · high priority",
+      ar: "hero · مقاس · أولوية عالية",
+    },
+    click: { en: "Click — snappy response", ar: "اضغط — استجابة سريعة" },
+    shift: {
+      en: "banner injects → content shifts",
+      ar: "البانر يدخل → المحتوى يتحرك",
+    },
   },
   {
     id: "cls-good",
-    tip: "CLS fix — width/height (or aspect-ratio) reserved.",
+    chip: "CLS ✓",
+    tip: {
+      en: "CLS fix — `width`/`height` (or `aspect-ratio`) reserved.",
+      ar: "إصلاح CLS — احجز `width`/`height` (أو `aspect-ratio`).",
+    },
     focus: "cls" as const,
     good: true,
     scores: { lcp: "1.8s", inp: "120ms", cls: "0.04" },
+    markup: '<aside style="aspect-ratio: 16/5; min-height: 120px">…</aside>',
+    hero: {
+      en: "hero · width/height · high priority",
+      ar: "hero · مقاس · أولوية عالية",
+    },
+    click: { en: "Click — snappy response", ar: "اضغط — استجابة سريعة" },
+    shift: {
+      en: "reserved space · stable layout",
+      ar: "مساحة محجوزة · layout ثابت",
+    },
   },
   {
     id: "pass",
-    tip: "Field targets — LCP < 2.5s · INP < 200ms · CLS < 0.1",
+    chip: "pass",
+    tip: {
+      en: "Field targets — LCP < 2.5s · INP < 200ms · CLS < 0.1",
+      ar: "أهداف الميدان — LCP < 2.5s · INP < 200ms · CLS < 0.1",
+    },
     focus: "all" as const,
     good: true,
     scores: { lcp: "1.8s", inp: "120ms", cls: "0.04" },
+    markup: "/* ship checklist */\nLCP ✓  INP ✓  CLS ✓",
+    hero: {
+      en: "hero · width/height · high priority",
+      ar: "hero · مقاس · أولوية عالية",
+    },
+    click: { en: "Click — snappy response", ar: "اضغط — استجابة سريعة" },
+    shift: {
+      en: "reserved space · stable layout",
+      ar: "مساحة محجوزة · layout ثابت",
+    },
   },
 ] as const;
 
 export function CwvLabVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = CWV_STEPS[step];
+  const ar = locale === "ar";
 
   useEffect(() => {
-    if (reduce) {
-      setStep(CWV_STEPS.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % CWV_STEPS.length),
       LAB_STEP_MS,
@@ -1642,188 +2921,215 @@ export function CwvLabVisualizer() {
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
   const metrics = [
     {
       id: "LCP",
       key: "lcp" as const,
-      label: "largest paint",
+      label: ar ? "أكبر رسم" : "largest paint",
       score: current.scores.lcp,
     },
     {
       id: "INP",
       key: "inp" as const,
-      label: "interaction",
+      label: ar ? "تفاعل" : "interaction",
       score: current.scores.inp,
     },
     {
       id: "CLS",
       key: "cls" as const,
-      label: "layout shift",
+      label: ar ? "إزاحة" : "layout shift",
       score: current.scores.cls,
     },
   ];
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        {current.tip}
-      </p>
-
-      {/* Mini page stage — fixed height */}
-      <div className="relative overflow-hidden rounded-xl border border-orange-300/25 bg-slate-950/50 p-3">
-        <div className="mb-2 flex items-center justify-between gap-2">
-          <span className="text-[9px] font-semibold uppercase tracking-wider text-orange-200/60">
-            page paint
-          </span>
-          <span
-            className={`rounded-md border px-1.5 py-0.5 font-mono text-[9px] font-semibold ${
-              current.good
-                ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"
-                : "border-rose-300/40 bg-rose-400/15 text-rose-100"
-            }`}
-          >
-            {current.good ? "good" : "needs work"}
-          </span>
-        </div>
-
-        {/* LCP hero */}
-        <motion.div
-          animate={{
-            opacity: current.focus === "lcp" || current.focus === "all" ? 1 : 0.45,
-            y: current.focus === "lcp" && !current.good && !reduce ? [0, 2, 0] : 0,
-            borderColor:
-              current.focus === "lcp"
-                ? current.good
-                  ? "rgba(52,211,153,0.5)"
-                  : "rgba(251,113,133,0.5)"
-                : "rgba(255,255,255,0.1)",
-          }}
-          transition={{ duration: 0.35, ease: labEase }}
-          className="mb-2 flex h-14 items-center justify-center rounded-lg border bg-gradient-to-r from-orange-400/25 via-amber-300/10 to-cyan-400/15"
-        >
-          <span className="font-mono text-[10px] text-orange-100/90">
-            {current.focus === "lcp" && !current.good
-              ? "hero img · no size · lazy"
-              : "hero · width/height · high priority"}
-          </span>
-        </motion.div>
-
-        {/* Content + INP button */}
-        <div className="mb-2 flex items-center gap-2">
-          <div className="h-2 flex-1 rounded-full bg-white/10" />
-          <div className="h-2 w-1/3 rounded-full bg-white/10" />
-        </div>
-        <motion.button
-          type="button"
-          tabIndex={-1}
-          animate={{
-            opacity: current.focus === "inp" || current.focus === "all" ? 1 : 0.45,
-            scale:
-              current.focus === "inp" && !current.good && !reduce
-                ? [1, 0.96, 1]
-                : 1,
-            boxShadow:
-              current.focus === "inp"
-                ? current.good
-                  ? "0 0 0 2px rgba(52,211,153,0.45)"
-                  : "0 0 0 2px rgba(251,113,133,0.45)"
-                : "0 0 0 0 rgba(0,0,0,0)",
-          }}
-          transition={{ duration: 0.4, ease: labEase }}
-          className="mb-2 w-full rounded-lg bg-orange-300/90 px-3 py-2 text-center text-[11px] font-bold text-slate-950"
-        >
-          {current.focus === "inp" && !current.good
-            ? "Click… (main thread busy)"
-            : "Click — snappy response"}
-        </motion.button>
-
-        {/* CLS shove block */}
-        <motion.div
-          animate={{
-            opacity: current.focus === "cls" || current.focus === "all" ? 1 : 0.45,
-            y:
-              current.focus === "cls" && !current.good && !reduce
-                ? [0, 10, 0]
-                : 0,
-            borderColor:
-              current.focus === "cls"
-                ? current.good
-                  ? "rgba(52,211,153,0.5)"
-                  : "rgba(251,113,133,0.5)"
-                : "rgba(255,255,255,0.1)",
-          }}
-          transition={{
-            duration: current.focus === "cls" && !current.good ? LAB_LOOP_S : 0.35,
-            ease: labEase,
-            repeat:
-              current.focus === "cls" && !current.good && !reduce
-                ? Infinity
-                : 0,
-          }}
-          className="rounded-lg border border-dashed bg-slate-900/70 px-2.5 py-2"
-        >
-          <p className="font-mono text-[10px] text-slate-300">
-            {current.focus === "cls" && !current.good
-              ? "banner injects → content shifts"
-              : "reserved space · stable layout"}
-          </p>
-        </motion.div>
-      </div>
-
-      <div className="mt-2.5 grid grid-cols-3 gap-1.5">
-        {metrics.map((metric) => {
-          const active =
-            current.focus === "all" || current.focus === metric.key;
-          const lit = active && current.good;
-          const warn = active && !current.good;
-          return (
-            <motion.div
-              key={metric.id}
-              animate={{
-                borderColor: lit
-                  ? "rgba(52,211,153,0.5)"
-                  : warn
-                    ? "rgba(251,113,133,0.45)"
-                    : "rgba(255,255,255,0.1)",
-                backgroundColor: lit
-                  ? "rgba(52,211,153,0.12)"
-                  : warn
-                    ? "rgba(251,113,133,0.1)"
-                    : "rgba(15,23,42,0.45)",
-                opacity: active ? 1 : 0.45,
-              }}
-              transition={{ duration: 0.3, ease: labEase }}
-              className="rounded-lg border px-2 py-1.5 text-center"
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title="Core Web Vitals"
+      caption={ar ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
+        <div className="w-full max-w-md overflow-hidden rounded-xl border border-orange-300/25 bg-slate-950/50 p-3">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-orange-200/60">
+              {ar ? "رسم الصفحة" : "page paint"}
+            </span>
+            <span
+              className={`rounded-md border px-1.5 py-0.5 font-mono text-[9px] font-semibold ${
+                current.good
+                  ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"
+                  : "border-rose-300/40 bg-rose-400/15 text-rose-100"
+              }`}
             >
-              <p
-                className={`font-mono text-[11px] font-bold ${
-                  lit
-                    ? "text-emerald-300"
-                    : warn
-                      ? "text-rose-300"
-                      : "text-slate-500"
-                }`}
-              >
-                {metric.id}
-              </p>
-              <p className="font-mono text-[10px] text-slate-300">
-                {metric.score}
-              </p>
-              <p className="text-[8px] text-slate-500">{metric.label}</p>
-            </motion.div>
-          );
-        })}
-      </div>
+              {current.good
+                ? ar
+                  ? "جيد"
+                  : "good"
+                : ar
+                  ? "يحتاج شغل"
+                  : "needs work"}
+            </span>
+          </div>
 
-      <div className="mt-3 flex justify-center gap-1.5">
-        {CWV_STEPS.map((s, i) => (
-          <span
-            key={s.id}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${
-              i === step ? "bg-orange-300" : "bg-slate-600"
-            }`}
-          />
-        ))}
+          <motion.div
+            animate={{
+              opacity:
+                current.focus === "lcp" || current.focus === "all" ? 1 : 0.45,
+              y:
+                current.focus === "lcp" && !current.good && !reduce
+                  ? [0, 2, 0]
+                  : 0,
+              borderColor:
+                current.focus === "lcp"
+                  ? current.good
+                    ? "rgba(52,211,153,0.5)"
+                    : "rgba(251,113,133,0.5)"
+                  : "rgba(255,255,255,0.1)",
+            }}
+            transition={{ duration: 0.35, ease: labEase }}
+            className="mb-2 flex h-14 items-center justify-center rounded-lg border bg-gradient-to-r from-orange-400/25 via-amber-300/10 to-cyan-400/15"
+          >
+            <span className="font-mono text-[10px] text-orange-100/90">
+              {ar ? current.hero.ar : current.hero.en}
+            </span>
+          </motion.div>
+
+          <div className="mb-2 flex items-center gap-2">
+            <div className="h-2 flex-1 rounded-full bg-white/10" />
+            <div className="h-2 w-1/3 rounded-full bg-white/10" />
+          </div>
+          <motion.button
+            type="button"
+            tabIndex={-1}
+            animate={{
+              opacity:
+                current.focus === "inp" || current.focus === "all" ? 1 : 0.45,
+              scale:
+                current.focus === "inp" && !current.good && !reduce
+                  ? [1, 0.96, 1]
+                  : 1,
+              boxShadow:
+                current.focus === "inp"
+                  ? current.good
+                    ? "0 0 0 2px rgba(52,211,153,0.45)"
+                    : "0 0 0 2px rgba(251,113,133,0.45)"
+                  : "0 0 0 0 rgba(0,0,0,0)",
+            }}
+            transition={{ duration: 0.4, ease: labEase }}
+            className="mb-2 w-full rounded-lg bg-orange-300/90 px-3 py-2 text-center text-[11px] font-bold text-slate-950"
+          >
+            {ar ? current.click.ar : current.click.en}
+          </motion.button>
+
+          <motion.div
+            animate={{
+              opacity:
+                current.focus === "cls" || current.focus === "all" ? 1 : 0.45,
+              y:
+                current.focus === "cls" && !current.good && !reduce
+                  ? [0, 10, 0]
+                  : 0,
+              borderColor:
+                current.focus === "cls"
+                  ? current.good
+                    ? "rgba(52,211,153,0.5)"
+                    : "rgba(251,113,133,0.5)"
+                  : "rgba(255,255,255,0.1)",
+            }}
+            transition={{
+              duration:
+                current.focus === "cls" && !current.good ? LAB_LOOP_S : 0.35,
+              ease: labEase,
+              repeat:
+                current.focus === "cls" && !current.good && !reduce
+                  ? Infinity
+                  : 0,
+            }}
+            className="rounded-lg border border-dashed bg-slate-900/70 px-2.5 py-2"
+          >
+            <p className="font-mono text-[10px] text-slate-300">
+              {ar ? current.shift.ar : current.shift.en}
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="grid w-full max-w-md grid-cols-3 gap-1.5">
+          {metrics.map((metric) => {
+            const active =
+              current.focus === "all" || current.focus === metric.key;
+            const lit = active && current.good;
+            const warn = active && !current.good;
+            return (
+              <motion.div
+                key={metric.id}
+                animate={{
+                  borderColor: lit
+                    ? "rgba(52,211,153,0.5)"
+                    : warn
+                      ? "rgba(251,113,133,0.45)"
+                      : "rgba(255,255,255,0.1)",
+                  backgroundColor: lit
+                    ? "rgba(52,211,153,0.12)"
+                    : warn
+                      ? "rgba(251,113,133,0.1)"
+                      : "rgba(15,23,42,0.45)",
+                  opacity: active ? 1 : 0.45,
+                }}
+                transition={{ duration: 0.3, ease: labEase }}
+                className="rounded-lg border px-2 py-1.5 text-center"
+              >
+                <p
+                  className={`font-mono text-[11px] font-bold ${
+                    lit
+                      ? "text-emerald-300"
+                      : warn
+                        ? "text-rose-300"
+                        : "text-slate-500"
+                  }`}
+                >
+                  {metric.id}
+                </p>
+                <p className="font-mono text-[10px] text-slate-300">
+                  {metric.score}
+                </p>
+                <p className="text-[8px] text-slate-500">{metric.label}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <pre
+          dir="ltr"
+          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {CWV_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );
@@ -1832,40 +3138,71 @@ export function CwvLabVisualizer() {
 const OG_STEPS = [
   {
     id: "title",
-    tip: "<title> + og:title — first thing previews show.",
-    title: true,
-    desc: false,
-    image: false,
+    chip: "og:title",
+    tip: {
+      en: "`og:title` — first line share previews show.",
+      ar: "`og:title` — أول سطر في معاينة المشاركة.",
+    },
+    showTitle: true,
+    showDesc: false,
+    showImage: false,
+    showTheme: false,
+    markup: '<meta property="og:title" content="Document Anatomy" />',
   },
   {
     id: "desc",
-    tip: "og:description — short line under the title.",
-    title: true,
-    desc: true,
-    image: false,
+    chip: "og:desc",
+    tip: {
+      en: "`og:description` — short line under the title.",
+      ar: "`og:description` — سطر قصير تحت العنوان.",
+    },
+    showTitle: true,
+    showDesc: true,
+    showImage: false,
+    showTheme: false,
+    markup:
+      '<meta property="og:description" content="Learn the HTML document shell." />',
   },
   {
     id: "image",
-    tip: "og:image — absolute HTTPS URL in the first HTML.",
-    title: true,
-    desc: true,
-    image: true,
+    chip: "og:image",
+    tip: {
+      en: "`og:image` — absolute HTTPS URL in the first HTML.",
+      ar: "`og:image` — رابط HTTPS مطلق في أول HTML.",
+    },
+    showTitle: true,
+    showDesc: true,
+    showImage: true,
+    showTheme: false,
+    markup: '<meta property="og:image" content="https://…/og.png" />',
+  },
+  {
+    id: "theme",
+    chip: "theme",
+    tip: {
+      en: "`theme-color` + Twitter card — browser chrome & X previews.",
+      ar: "`theme-color` + Twitter card — شريط المتصفح ومعاينة X.",
+    },
+    showTitle: true,
+    showDesc: true,
+    showImage: true,
+    showTheme: true,
+    markup: `<meta name="theme-color" content="#0f172a" />
+<meta name="twitter:card" content="summary_large_image" />`,
   },
 ] as const;
 
 /** Open Graph unfurl — head tags → share preview (Head & Social Meta lesson). */
 export function MetaCardVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = OG_STEPS[step];
 
   useEffect(() => {
-    if (reduce) {
-      setStep(OG_STEPS.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % OG_STEPS.length),
       LAB_STEP_MS,
@@ -1873,62 +3210,104 @@ export function MetaCardVisualizer() {
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        {current.tip}
-      </p>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "ميتـا السوشيال" : "Social meta"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md space-y-3"
+          >
+            <div
+              className={`overflow-hidden rounded-xl border bg-slate-950/60 ${
+                current.showTheme
+                  ? "border-violet-300/40"
+                  : "border-orange-300/35"
+              }`}
+              style={
+                current.showTheme
+                  ? { boxShadow: "inset 0 3px 0 0 #0f172a" }
+                  : undefined
+              }
+            >
+              <div
+                className={`flex h-14 items-center justify-center ${
+                  current.showImage
+                    ? "bg-gradient-to-r from-orange-400/40 via-amber-300/20 to-cyan-400/25"
+                    : "bg-slate-900/80"
+                }`}
+              >
+                <span className="font-mono text-[10px] text-orange-100/80">
+                  {current.showImage
+                    ? "og:image · https://…/og.png"
+                    : "og:image …"}
+                </span>
+              </div>
+              <div className="space-y-1 p-3">
+                <p className="text-[9px] uppercase tracking-wider text-orange-200/60">
+                  {current.showTheme ? "twitter:card · theme-color" : "og share card"}
+                </p>
+                <p
+                  className={`text-sm font-semibold ${
+                    current.showTitle ? "text-orange-50" : "text-slate-600"
+                  }`}
+                >
+                  {locale === "ar" ? "تشريح المستند" : "Document Anatomy"}
+                </p>
+                <p
+                  className={`min-h-8 text-sm leading-relaxed ${
+                    current.showDesc ? "text-slate-300" : "text-slate-600"
+                  }`}
+                >
+                  {locale === "ar"
+                    ? "اتعلم هيكل مستند HTML بمعامل تفاعلية."
+                    : "Learn the HTML document shell with interactive labs."}
+                </p>
+              </div>
+            </div>
 
-      <div className="overflow-hidden rounded-xl border border-orange-300/35 bg-slate-950/60">
-        <motion.div
-          animate={{ opacity: current.image ? 1 : 0.35 }}
-          transition={{ duration: 0.35, ease: labEase }}
-          className="flex h-14 items-center justify-center bg-gradient-to-r from-orange-400/35 via-amber-300/15 to-cyan-400/20"
-        >
-          <span className="font-mono text-[10px] text-orange-100/80">
-            {current.image ? 'og:image · https://…/og.png' : "og:image pending…"}
-          </span>
-        </motion.div>
-        <div className="space-y-1 p-3">
-          <p className="text-[9px] uppercase tracking-wider text-orange-200/60">
-            og:title · share card
-          </p>
-          <motion.p
-            animate={{ opacity: current.title ? 1 : 0.3 }}
-            className="text-sm font-semibold text-orange-50"
-          >
-            Document Anatomy
-          </motion.p>
-          <motion.p
-            animate={{ opacity: current.desc ? 1 : 0.3 }}
-            className="min-h-10 text-sm leading-relaxed text-slate-300"
-          >
-            Learn the HTML document shell with interactive labs.
-          </motion.p>
+            <pre
+              dir="ltr"
+              className="overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+            >
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {OG_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
         </div>
-      </div>
-
-      <div className="mt-2.5 flex flex-wrap gap-1.5 font-mono text-[9px] text-slate-500">
-        <span className={current.title ? "text-orange-200/80" : ""}>
-          &lt;meta property=&quot;og:title&quot;&gt;
-        </span>
-        <span className={current.desc ? "text-orange-200/80" : ""}>
-          og:description
-        </span>
-        <span className={current.image ? "text-orange-200/80" : ""}>
-          og:image
-        </span>
-      </div>
-
-      <div className="mt-3 flex justify-center gap-1.5">
-        {OG_STEPS.map((s, i) => (
-          <span
-            key={s.id}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${
-              i === step ? "bg-orange-300" : "bg-slate-600"
-            }`}
-          />
-        ))}
       </div>
     </LabStage>
   );
@@ -1974,6 +3353,7 @@ const DIALOG_STEPS = [
 ] as const;
 
 export function NativeDialogVisualizer() {
+  const { locale } = useLanguage();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
@@ -1999,7 +3379,16 @@ export function NativeDialogVisualizer() {
   }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "Dialog الأصلي" : "Native dialog"}
+      caption={
+        locale === "ar"
+        ? "`<dialog>` + `showModal()` — مودال أصلي بـ focus trap."
+        : "`<dialog>` + `showModal()` — native modal with focus trap."
+      }
+    >
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-orange-300/35 bg-orange-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-orange-100">
           {current.call}
@@ -2142,435 +3531,170 @@ export function NativeDialogVisualizer() {
   );
 }
 
-/** Browser Compatibility & Baseline — engines, Baseline band, detect → fallback. */
-const BASELINE_FEATURES = [
+const BASELINE_STEPS = [
   {
-    id: "details",
+    id: "widely",
+    chip: "widely",
+    tip: {
+      en: "Baseline Widely — safe to ship as the default path.",
+      ar: "Baseline Widely — آمن كمسار افتراضي.",
+    },
     feature: "<details> / <summary>",
-    baseline: "widely" as const,
-    tip: "Baseline Widely — ship as the default path.",
+    markup: "<details>\n  <summary>More</summary>\n  …\n</details>",
     engines: { chrome: "ok", firefox: "ok", safari: "ok", edge: "ok" },
-    detect: false,
-    fallback: false,
-    code: "<details><summary>…",
-    verdict: "Safe default",
   },
   {
-    id: "lazy",
-    feature: 'loading="lazy"',
-    baseline: "widely" as const,
-    tip: "Widely supported — still never lazy-load the LCP hero.",
-    engines: { chrome: "ok", firefox: "ok", safari: "ok", edge: "ok" },
-    detect: false,
-    fallback: false,
-    code: '<img loading="lazy" …>',
-    verdict: "Safe (below fold)",
-  },
-  {
-    id: "dialog",
+    id: "newly",
+    chip: "newly",
+    tip: {
+      en: "Baseline Newly — needs a support policy or fallback.",
+      ar: "Baseline Newly — محتاج سياسة دعم أو fallback.",
+    },
     feature: "<dialog> showModal()",
-    baseline: "newly" as const,
-    tip: "Baseline Newly — Safari needs 15.4+; don't assume parity.",
+    markup: "dialog.showModal()",
     engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
-    detect: false,
-    fallback: false,
-    code: "dialog.showModal()",
-    verdict: "Needs a policy",
   },
   {
     id: "detect",
-    feature: "<dialog> showModal()",
-    baseline: "newly" as const,
-    tip: "Feature-detect the API — never sniff the user-agent.",
+    chip: "detect",
+    tip: {
+      en: "Feature-detect the API — never sniff the user-agent.",
+      ar: "اعمل feature-detect للـ API — متشمّش الـ user-agent.",
+    },
+    feature: "showModal in prototype",
+    markup: "'showModal' in HTMLDialogElement.prototype",
     engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
-    detect: true,
-    fallback: false,
-    code: "'showModal' in HTMLDialogElement.prototype",
-    verdict: "Ask the engine",
-  },
-  {
-    id: "fallback",
-    feature: "<dialog> showModal()",
-    baseline: "newly" as const,
-    tip: "Progressive enhance — keep usable HTML if the API is missing.",
-    engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
-    detect: true,
-    fallback: true,
-    code: "canModal ? showModal() : fallback()",
-    verdict: "Enhance, don't brick",
-  },
-  {
-    id: "popover",
-    feature: "popover attribute",
-    baseline: "newly" as const,
-    tip: "Newly available menus/tooltips — plan a non-top-layer fallback.",
-    engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
-    detect: true,
-    fallback: true,
-    code: '<div popover>…</div>',
-    verdict: "Detect + fallback",
   },
   {
     id: "limited",
-    feature: "bleeding-edge API",
-    baseline: "limited" as const,
-    tip: "Baseline Limited — never ship as the only path.",
-    engines: {
-      chrome: "ok",
-      firefox: "lag",
-      safari: "no",
-      edge: "ok",
+    chip: "limited",
+    tip: {
+      en: "Baseline Limited — never ship as the only path.",
+      ar: "Baseline Limited — متخلّيهوش المسار الوحيد.",
     },
-    detect: true,
-    fallback: true,
-    code: "if (supported) enhance()",
-    verdict: "Gate hard",
+    feature: "bleeding-edge API",
+    markup: "if (supported) enhance()\nelse fallback()",
+    engines: { chrome: "ok", firefox: "lag", safari: "no", edge: "ok" },
   },
 ] as const;
 
-const ENGINES = [
-  { id: "chrome" as const, label: "Chrome", short: "Chr", tint: "#60a5fa" },
-  { id: "firefox" as const, label: "Firefox", short: "FF", tint: "#fb923c" },
-  { id: "safari" as const, label: "Safari", short: "Saf", tint: "#67e8f9" },
-  { id: "edge" as const, label: "Edge", short: "Edg", tint: "#38bdf8" },
-] as const;
-
-const BASELINE_BANDS = [
-  { id: "widely" as const, label: "Widely", hint: "default" },
-  { id: "newly" as const, label: "Newly", hint: "plan" },
-  { id: "limited" as const, label: "Limited", hint: "gate" },
-] as const;
-
-function baselineStyle(band: "widely" | "newly" | "limited") {
-  switch (band) {
-    case "widely":
-      return "border-emerald-300/40 bg-emerald-400/15 text-emerald-100";
-    case "newly":
-      return "border-amber-300/40 bg-amber-400/15 text-amber-100";
-    case "limited":
-      return "border-rose-300/40 bg-rose-400/15 text-rose-100";
-  }
+function bandStyle(band: "widely" | "newly" | "detect" | "limited") {
+  if (band === "widely")
+    return "border-emerald-300/40 bg-emerald-400/15 text-emerald-100";
+  if (band === "newly" || band === "detect")
+    return "border-amber-300/40 bg-amber-400/15 text-amber-100";
+  return "border-rose-300/40 bg-rose-400/15 text-rose-100";
 }
 
-function baselineGlow(band: "widely" | "newly" | "limited") {
-  switch (band) {
-    case "widely":
-      return "rgba(52,211,153,0.55)";
-    case "newly":
-      return "rgba(251,191,36,0.55)";
-    case "limited":
-      return "rgba(251,113,133,0.55)";
-  }
-}
-
-function engineStyle(state: "ok" | "lag" | "no") {
-  switch (state) {
-    case "ok":
-      return {
-        border: "rgba(52,211,153,0.55)",
-        bg: "rgba(52,211,153,0.16)",
-        text: "text-emerald-200",
-        label: "ok",
-        pulse: "rgba(52,211,153,0.35)",
-      };
-    case "lag":
-      return {
-        border: "rgba(251,191,36,0.55)",
-        bg: "rgba(251,191,36,0.16)",
-        text: "text-amber-100",
-        label: "lag",
-        pulse: "rgba(251,191,36,0.35)",
-      };
-    case "no":
-      return {
-        border: "rgba(251,113,133,0.55)",
-        bg: "rgba(251,113,133,0.14)",
-        text: "text-rose-200",
-        label: "no",
-        pulse: "rgba(251,113,133,0.3)",
-      };
-  }
+function engineLabel(state: "ok" | "lag" | "no") {
+  if (state === "ok") return { cls: "border-emerald-300/40 bg-emerald-400/15 text-emerald-100", text: "ok" };
+  if (state === "lag") return { cls: "border-amber-300/40 bg-amber-400/15 text-amber-100", text: "lag" };
+  return { cls: "border-rose-300/40 bg-rose-400/15 text-rose-100", text: "no" };
 }
 
 export function BaselineCompatVisualizer() {
-  const reduce = useReducedMotion();
+  const { locale } = useLanguage();
   const { playClick } = useSound();
-  const { dir } = useLanguage();
+  const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
-  const current = BASELINE_FEATURES[step];
-  const bandIndex = BASELINE_BANDS.findIndex((b) => b.id === current.baseline);
-  const flow = dir === "rtl" ? -1 : 1;
+  const current = BASELINE_STEPS[step];
 
   useEffect(() => {
-    if (reduce) {
-      setStep(BASELINE_FEATURES.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
-      () => setStep((s) => (s + 1) % BASELINE_FEATURES.length),
+      () => setStep((s) => (s + 1) % BASELINE_STEPS.length),
       LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
   function goTo(index: number) {
+    if (index === step) return;
     playClick();
     setStep(index);
   }
 
+  const engines = [
+    { id: "chrome" as const, label: "Chrome" },
+    { id: "firefox" as const, label: "Firefox" },
+    { id: "safari" as const, label: "Safari" },
+    { id: "edge" as const, label: "Edge" },
+  ];
+
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="mb-2 flex min-h-9 items-start gap-2">
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "التوافق و Baseline" : "Browser & Baseline"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
         <AnimatePresence mode="wait">
-          <motion.span
-            key={current.verdict}
-            initial={reduce ? false : { opacity: 0, y: 4 }}
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: 0.22, ease: labEase }}
-            className={`shrink-0 rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold ${baselineStyle(current.baseline)}`}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md space-y-3"
           >
-            {current.verdict}
-          </motion.span>
-        </AnimatePresence>
-        <p className="text-sm leading-relaxed text-slate-300">
-          {current.tip}
-        </p>
-      </div>
-
-      {/* Mini browser stage */}
-      <div className="overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/60">
-        <div className="flex items-center gap-1.5 border-b border-white/10 bg-slate-900/80 px-2.5 py-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
-          <span className="ms-2 truncate rounded-md border border-white/10 bg-black/30 px-2 py-0.5 font-mono text-[9px] text-slate-400">
-            caniuse · Baseline · MDN
-          </span>
-        </div>
-
-        <div className="space-y-3 p-3">
-          {/* Feature + Baseline badge */}
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={current.feature + current.id}
-                initial={reduce ? false : { opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 6 }}
-                transition={{ duration: 0.25, ease: labEase }}
-                className="font-mono text-[12px] font-semibold text-cyan-50"
-              >
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="font-mono text-sm font-semibold text-cyan-50">
                 {current.feature}
-              </motion.p>
-            </AnimatePresence>
-            <motion.span
-              key={current.baseline}
-              animate={{
-                boxShadow: `0 0 0 1px ${baselineGlow(current.baseline)}, 0 0 18px ${baselineGlow(current.baseline)}`,
-              }}
-              transition={{ duration: 0.35, ease: labEase }}
-              className={`rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${baselineStyle(current.baseline)}`}
-            >
-              Baseline {current.baseline}
-            </motion.span>
-          </div>
+              </p>
+              <span
+                className={`rounded-full border px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase ${bandStyle(current.id)}`}
+              >
+                {current.chip}
+              </span>
+            </div>
 
-          {/* Baseline spectrum with traveling marker */}
-          <div className="relative">
-            <div className="grid grid-cols-3 gap-1">
-              {BASELINE_BANDS.map((band) => {
-                const active = band.id === current.baseline;
+            <div className="grid grid-cols-4 gap-1.5">
+              {engines.map((engine) => {
+                const state = current.engines[engine.id];
+                const style = engineLabel(state);
                 return (
                   <div
-                    key={band.id}
-                    className={`rounded-lg border px-2 py-1.5 text-center transition-colors ${
-                      active
-                        ? baselineStyle(band.id)
-                        : "border-white/10 bg-white/[0.03] text-slate-500"
-                    }`}
+                    key={engine.id}
+                    className={`rounded-lg border px-1.5 py-2 text-center ${style.cls}`}
                   >
-                    <p className="text-[10px] font-semibold">{band.label}</p>
-                    <p className="font-mono text-[8px] opacity-70">{band.hint}</p>
+                    <p className="text-[10px] font-semibold">{engine.label}</p>
+                    <p className="mt-0.5 font-mono text-[9px] font-bold uppercase">
+                      {style.text}
+                    </p>
                   </div>
                 );
               })}
             </div>
-            {!reduce ? (
-              <motion.div
-                aria-hidden
-                className="pointer-events-none absolute -bottom-1 h-0.5 rounded-full bg-cyan-300"
-                animate={{
-                  left: `${(bandIndex / 3) * 100 + 4}%`,
-                  width: "25%",
-                  backgroundColor: baselineGlow(current.baseline),
-                }}
-                transition={{ ...labSpring }}
-              />
-            ) : null}
-          </div>
 
-          {/* Engine matrix with scan pulse */}
-          <div className="relative">
-            {!reduce ? (
-              <motion.div
-                aria-hidden
-                className="pointer-events-none absolute inset-y-0 w-8 rounded-lg bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent"
-                animate={{ left: ["-10%", "110%"] }}
-                transition={{
-                  duration: LAB_LOOP_S,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  repeatDelay: 0.6,
-                }}
-              />
-            ) : null}
-            <div className="grid grid-cols-4 gap-1.5">
-              {ENGINES.map((engine, i) => {
-                const state = current.engines[engine.id];
-                const style = engineStyle(state);
-                return (
-                  <motion.div
-                    key={engine.id}
-                    initial={false}
-                    animate={{
-                      borderColor: style.border,
-                      backgroundColor: style.bg,
-                      scale: state === "no" && !reduce ? [1, 0.96, 1] : 1,
-                      boxShadow:
-                        state !== "ok"
-                          ? `0 0 12px ${style.pulse}`
-                          : "0 0 0 transparent",
-                    }}
-                    transition={{
-                      duration: 0.4,
-                      ease: labEase,
-                      delay: reduce ? 0 : i * 0.05,
-                    }}
-                    className="relative overflow-hidden rounded-lg border px-1.5 py-2 text-center"
-                  >
-                    <span
-                      aria-hidden
-                      className="mx-auto mb-1 block h-1.5 w-1.5 rounded-full"
-                      style={{ backgroundColor: engine.tint }}
-                    />
-                    <p className="text-[10px] font-semibold text-slate-100">
-                      {engine.short}
-                    </p>
-                    <p className={`mt-0.5 font-mono text-[9px] font-bold uppercase ${style.text}`}>
-                      {style.label}
-                    </p>
-                  </motion.div>
-                );
-              })}
-            </div>
-            <p className="mt-1.5 text-center text-[8px] text-slate-500">
-              Chrome · Firefox · Safari · Edge
-            </p>
-          </div>
-
-          {/* Live code chip */}
-          <AnimatePresence mode="wait">
-            <motion.pre
-              key={current.code}
-              initial={reduce ? false : { opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.25, ease: labEase }}
-              className="overflow-x-auto rounded-lg border border-white/10 bg-black/35 px-2.5 py-2 font-mono text-[10px] leading-relaxed text-yellow-100/90"
+            <pre
+              dir="ltr"
+              className="overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
             >
-              {current.code}
-            </motion.pre>
-          </AnimatePresence>
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Detect → fallback pipeline */}
-          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1.5">
-            <motion.div
-              animate={{
-                opacity: current.detect ? 1 : 0.35,
-                borderColor: current.detect
-                  ? "rgba(34,211,238,0.5)"
-                  : "rgba(255,255,255,0.1)",
-                backgroundColor: current.detect
-                  ? "rgba(34,211,238,0.12)"
-                  : "rgba(15,23,42,0.45)",
-                boxShadow: current.detect
-                  ? "0 0 16px rgba(34,211,238,0.2)"
-                  : "0 0 0 transparent",
-              }}
-              transition={{ duration: 0.3, ease: labEase }}
-              className="rounded-lg border px-2.5 py-2"
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {BASELINE_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
             >
-              <p className="font-mono text-[9px] text-cyan-200/80">
-                1 · feature detect
-              </p>
-              <p className="mt-0.5 text-[10px] leading-snug text-slate-300">
-                Ask the engine at runtime
-              </p>
-            </motion.div>
-
-            <motion.div
-              animate={{
-                opacity: current.detect ? 1 : 0.25,
-                x: current.detect && !reduce ? [0, 3 * flow, 0] : 0,
-                color: current.fallback
-                  ? "rgb(110 231 183)"
-                  : "rgb(103 232 249)",
-              }}
-              transition={{
-                duration: LAB_LOOP_S,
-                repeat: current.detect && !reduce ? Infinity : 0,
-                ease: "easeInOut",
-              }}
-              className="flex items-center justify-center"
-            >
-              <ChevronRight size={16} className={RTL_FLIP} />
-            </motion.div>
-
-            <motion.div
-              animate={{
-                opacity: current.fallback ? 1 : 0.35,
-                borderColor: current.fallback
-                  ? "rgba(52,211,153,0.5)"
-                  : "rgba(255,255,255,0.1)",
-                backgroundColor: current.fallback
-                  ? "rgba(52,211,153,0.12)"
-                  : "rgba(15,23,42,0.45)",
-                boxShadow: current.fallback
-                  ? "0 0 16px rgba(52,211,153,0.2)"
-                  : "0 0 0 transparent",
-              }}
-              transition={{ duration: 0.3, ease: labEase }}
-              className="rounded-lg border px-2.5 py-2"
-            >
-              <p className="font-mono text-[9px] text-emerald-200/80">
-                2 · fallback
-              </p>
-              <p className="mt-0.5 text-[10px] leading-snug text-slate-300">
-                Usable HTML without the API
-              </p>
-            </motion.div>
-          </div>
+              {s.chip}
+            </button>
+          ))}
         </div>
-      </div>
-
-      <div className="mt-3 flex justify-center gap-1.5">
-        {BASELINE_FEATURES.map((s, i) => (
-          <button
-            key={s.id}
-            type="button"
-            aria-label={`Step ${i + 1}: ${s.feature}`}
-            aria-current={i === step ? "step" : undefined}
-            onClick={() => goTo(i)}
-            className={`h-1.5 rounded-full transition-all ${
-              i === step
-                ? "w-4 bg-cyan-300"
-                : "w-1.5 bg-slate-600 hover:bg-slate-400"
-            }`}
-          />
-        ))}
       </div>
     </LabStage>
   );
@@ -2641,6 +3765,7 @@ const ART_SOURCES = [
 ] as const;
 
 export function PictureSourceVisualizer() {
+  const { locale } = useLanguage();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
@@ -2662,7 +3787,16 @@ export function PictureSourceVisualizer() {
   }, [reduce, playing]);
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "Picture و Source" : "Picture & source"}
+      caption={
+        locale === "ar"
+        ? "`<picture>` بيختار المصدر الأنسب حسب الشاشة."
+        : "`<picture>` picks the best source for the screen."
+      }
+    >
       <div className="mb-2 flex min-h-8 items-center gap-2">
         <span className="shrink-0 rounded-md border border-cyan-300/35 bg-cyan-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-cyan-100">
           {current.mode === "format" ? "type=" : "media="}
@@ -2773,80 +3907,488 @@ export function PictureSourceVisualizer() {
   );
 }
 
+const MEDIA_STEPS = [
+  {
+    id: "video",
+    chip: "video",
+    tip: {
+      en: "`<video controls>` — let the user start playback.",
+      ar: "`<video controls>` — خلّي المستخدم يبدأ التشغيل.",
+    },
+    markup: `<video controls width="640" poster="poster.jpg">
+  …
+</video>`,
+  },
+  {
+    id: "sources",
+    chip: "source",
+    tip: {
+      en: "Multiple `<source>`s — browser picks the first it can play.",
+      ar: "أكتر من `<source>` — المتصفح بيختار أول واحد يقدر يشغّله.",
+    },
+    markup: `<source src="intro.webm" type="video/webm" />
+<source src="intro.mp4" type="video/mp4" />`,
+  },
+  {
+    id: "captions",
+    chip: "track",
+    tip: {
+      en: "`<track kind=\"captions\">` — captions are part of accessibility.",
+      ar: "`<track kind=\"captions\">` — الترجمة جزء من الـ accessibility.",
+    },
+    markup: `<track
+  kind="captions"
+  srclang="en"
+  src="captions.vtt"
+  label="English"
+  default
+/>`,
+  },
+  {
+    id: "iframe",
+    chip: "iframe",
+    tip: {
+      en: "`iframe` needs `title`, prefer `loading=\"lazy\"` + `sandbox`.",
+      ar: "`iframe` محتاج `title`، وفضّل `loading=\"lazy\"` + `sandbox`.",
+    },
+    markup: `<iframe
+  title="Map"
+  src="https://example.com/map"
+  loading="lazy"
+  sandbox="allow-scripts allow-same-origin"
+></iframe>`,
+  },
+  {
+    id: "autoplay",
+    chip: "no autoplay",
+    tip: {
+      en: "Trap: don’t autoplay sound — media should be opt-in.",
+      ar: "فخ: متشغّلش صوت تلقائي — الـ media باختيار المستخدم.",
+    },
+    markup: `<!-- avoid -->
+<video src="x.mp4" autoplay></video>
+<!-- prefer -->
+<video controls src="x.mp4"></video>`,
+  },
+] as const;
+
 export function MediaStageVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
-  const sources = ["AVIF", "WebP", "JPG"];
-  const [source, setSource] = useState(0);
+  const [step, setStep] = useState(0);
 
   useEffect(() => {
     if (reduce || !playing) return;
     const id = window.setInterval(
-      () => setSource((s) => (s + 1) % sources.length),
+      () => setStep((s) => (s + 1) % MEDIA_STEPS.length),
       LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
-  }, [reduce, playing, sources.length]);
+  }, [reduce, playing]);
+
+  const current = MEDIA_STEPS[step];
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="relative mx-auto w-full max-w-xs overflow-hidden rounded-2xl border border-orange-300/35 bg-gradient-to-br from-orange-400/25 via-slate-900 to-slate-950">
-        <motion.div
-          aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(251,146,60,0.25),transparent_50%)]"
-          animate={reduce ? undefined : { opacity: [0.4, 0.85, 0.4] }}
-          transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
-        />
-        <div className="relative flex h-28 flex-col items-center justify-center gap-2 p-3">
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={sources[source]}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              className="rounded-full border border-orange-200/30 bg-slate-950/50 px-2 py-0.5 font-mono text-[10px] text-orange-100"
-            >
-              &lt;source type=&quot;image/{sources[source].toLowerCase()}&quot;&gt;
-            </motion.span>
-          </AnimatePresence>
-          <motion.span
-            animate={
-              playing && !reduce
-                ? { scale: [1, 1.08, 1], boxShadow: ["0 0 0 rgba(251,146,60,0)", "0 0 20px rgba(251,146,60,0.45)", "0 0 0 rgba(251,146,60,0)"] }
-                : { scale: 1 }
-            }
-            transition={{ duration: LAB_LOOP_S, repeat: playing && !reduce ? Infinity : 0 }}
-            className="rounded-full bg-orange-300 px-3 py-1 text-xs font-bold text-slate-950"
-          >
-            {playing ? "▶ video" : "❚❚ pause"}
-          </motion.span>
-        </div>
-        <motion.div
-          className="h-1 bg-white/10"
-          aria-hidden
-        >
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "الوسائط والـ embeds" : "Media & embeds"}
+      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
           <motion.div
-            className="h-full bg-gradient-to-r from-orange-300 to-cyan-300"
-            animate={
-              reduce
-                ? { width: "40%" }
-                : { width: playing ? ["8%", "72%", "8%"] : "35%" }
-            }
-            transition={{
-              duration: LAB_LOOP_S,
-              repeat: playing && !reduce ? Infinity : 0,
-              ease: "easeInOut",
-            }}
-          />
-        </motion.div>
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md"
+          >
+            {current.id === "video" ||
+            current.id === "sources" ||
+            current.id === "captions" ? (
+              <div className="overflow-hidden rounded-2xl border border-orange-300/35 bg-gradient-to-br from-orange-400/20 via-slate-900 to-slate-950">
+                <div className="relative flex h-36 flex-col items-center justify-center gap-2 p-4">
+                  <img
+                    src="/students-coding.svg"
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover opacity-40"
+                  />
+                  <div className="relative z-10 flex flex-col items-center gap-2">
+                    <motion.span
+                      animate={
+                        playing && !reduce && current.id === "video"
+                          ? {
+                              scale: [1, 1.06, 1],
+                              boxShadow: [
+                                "0 0 0 rgba(251,146,60,0)",
+                                "0 0 18px rgba(251,146,60,0.4)",
+                                "0 0 0 rgba(251,146,60,0)",
+                              ],
+                            }
+                          : { scale: 1 }
+                      }
+                      transition={{
+                        duration: LAB_LOOP_S,
+                        repeat: playing && !reduce ? Infinity : 0,
+                      }}
+                      className="rounded-full bg-orange-300 px-3 py-1 text-xs font-bold text-slate-950"
+                    >
+                      {current.id === "video"
+                        ? "▶ controls"
+                        : current.id === "sources"
+                          ? "webm → mp4"
+                          : "CC captions"}
+                    </motion.span>
+                    {current.id === "sources" ? (
+                      <div className="flex gap-1.5">
+                        {["webm", "mp4"].map((type, i) => (
+                          <motion.span
+                            key={type}
+                            initial={reduce ? false : { opacity: 0, y: 4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.12 }}
+                            className="rounded-md border border-cyan-300/35 bg-slate-950/70 px-2 py-0.5 font-mono text-[10px] text-cyan-100"
+                          >
+                            &lt;source type=&quot;video/{type}&quot;&gt;
+                          </motion.span>
+                        ))}
+                      </div>
+                    ) : null}
+                    {current.id === "captions" ? (
+                      <motion.div
+                        initial={reduce ? false : { opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="rounded-md border border-amber-300/40 bg-slate-950/80 px-3 py-1.5 text-center text-[11px] text-amber-50"
+                      >
+                        {locale === "ar"
+                          ? "مرحبا بيك في الدرس…"
+                          : "Welcome to the lesson…"}
+                      </motion.div>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="relative h-1.5 bg-white/10">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-orange-300 to-cyan-300"
+                    animate={
+                      reduce
+                        ? { width: "40%" }
+                        : {
+                            width:
+                              playing && current.id === "video"
+                                ? ["10%", "70%", "10%"]
+                                : "45%",
+                          }
+                    }
+                    transition={{
+                      duration: LAB_LOOP_S,
+                      repeat: playing && !reduce && current.id === "video" ? Infinity : 0,
+                      ease: "easeInOut",
+                    }}
+                  />
+                </div>
+                <div className="flex items-center gap-2 border-t border-white/10 px-3 py-2 font-mono text-[10px] text-slate-400">
+                  <span>▶</span>
+                  <span>controls</span>
+                  {current.id === "captions" ? (
+                    <span className="ms-auto rounded bg-amber-400/20 px-1.5 py-0.5 text-amber-100">
+                      track
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {current.id === "iframe" ? (
+              <div className="overflow-hidden rounded-2xl border border-cyan-300/35 bg-gradient-to-br from-cyan-400/15 via-slate-950 to-slate-950">
+                <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-1.5">
+                  <div className="flex gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
+                  </div>
+                  <span className="font-mono text-[9px] text-cyan-200/80">
+                    title=&quot;Map&quot; · lazy · sandbox
+                  </span>
+                </div>
+                <motion.div
+                  initial={reduce ? false : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex h-36 flex-col items-center justify-center gap-2 p-4"
+                >
+                  <div className="rounded-xl border border-dashed border-cyan-300/40 bg-cyan-400/10 px-6 py-8 text-center">
+                    <p className="font-mono text-xs text-cyan-50">
+                      &lt;iframe&gt;
+                    </p>
+                    <p className="mt-1 text-[10px] text-cyan-200/70">
+                      {locale === "ar" ? "محتوى طرف تالت" : "third-party content"}
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            ) : null}
+
+            {current.id === "autoplay" ? (
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div className="rounded-xl border border-rose-300/40 bg-rose-400/10 p-3">
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-rose-200/80">
+                    {locale === "ar" ? "تجنّب" : "Avoid"}
+                  </p>
+                  <p className="font-mono text-[11px] text-rose-100">
+                    autoplay
+                  </p>
+                  <p className="mt-1 text-[11px] text-rose-200/70">
+                    {locale === "ar"
+                      ? "صوت مفاجئ · بيستهلك داتا"
+                      : "surprise sound · burns data"}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-emerald-300/40 bg-emerald-400/10 p-3">
+                  <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-emerald-200/80">
+                    {locale === "ar" ? "فضّل" : "Prefer"}
+                  </p>
+                  <p className="font-mono text-[11px] text-emerald-100">
+                    controls
+                  </p>
+                  <p className="mt-1 text-[11px] text-emerald-200/70">
+                    {locale === "ar"
+                      ? "المستخدم يختار التشغيل"
+                      : "user starts playback"}
+                  </p>
+                </div>
+              </div>
+            ) : null}
+          </motion.div>
+        </AnimatePresence>
+
+        <pre
+          dir="ltr"
+          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {MEDIA_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
       </div>
-      <motion.div
-        animate={reduce ? undefined : { x: [0, 4, 0] }}
-        transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
-        className="mx-auto mt-3 w-full max-w-xs rounded-xl border border-dashed border-amber-300/40 bg-slate-950/40 px-3 py-2 text-center font-mono text-[11px] text-amber-100"
-      >
-        &lt;iframe title=&quot;Demo&quot; loading=&quot;lazy&quot;&gt;
-      </motion.div>
+    </LabStage>
+  );
+}
+
+/** Pro Media & Loading Performance — sized / lazy / LCP / iframe budget. */
+const MEDIA_PERF_STEPS = [
+  {
+    id: "cls",
+    chip: "size",
+    tip: {
+      en: "Unsized media shoves the page — reserve `width`/`height` (or aspect-ratio).",
+      ar: "ميديا من غير مقاس بتزق الصفحة — احجز `width`/`height` (أو aspect-ratio).",
+    },
+    good: false,
+    metric: "CLS",
+    score: { en: "0.28 shift", ar: "إزاحة 0.28" },
+    preview: {
+      en: "img drops in → text jumps",
+      ar: "الصورة تنزل → النص يقفز",
+    },
+    markup: "<!-- bad -->\n<img src=\"hero.jpg\" />\n<!-- good -->\n<img src=\"hero.jpg\" width=\"1200\" height=\"630\" />",
+  },
+  {
+    id: "lazy",
+    chip: "lazy",
+    tip: {
+      en: '`loading="lazy"` for below-the-fold — don’t lazy the LCP hero.',
+      ar: '`loading="lazy"` لتحت الشاشة — متlazy-ش hero الـ LCP.',
+    },
+    good: true,
+    metric: "bytes",
+    score: { en: "below-fold deferred", ar: "تحت الشاشة متأجل" },
+    preview: {
+      en: "gallery cards wait for scroll",
+      ar: "كروت الجاليري مستنية السكرول",
+    },
+    markup: `<img src="card-1.jpg" width="400" height="300" loading="lazy" />
+<img src="card-2.jpg" width="400" height="300" loading="lazy" />`,
+  },
+  {
+    id: "lcp",
+    chip: "LCP",
+    tip: {
+      en: "LCP hero — sized + `fetchpriority=\"high\"` (preload only when sure).",
+      ar: "Hero الـ LCP — بمقاس + `fetchpriority=\"high\"` (preload لما تبقى متأكد).",
+    },
+    good: true,
+    metric: "LCP",
+    score: { en: "1.8s", ar: "1.8ث" },
+    preview: {
+      en: "hero paints early · high priority",
+      ar: "الـ hero بيرسم بدري · أولوية عالية",
+    },
+    markup: `<link rel="preload" as="image" href="hero.avif" />
+<img src="hero.avif" width="1200" height="630" fetchpriority="high" alt="…" />`,
+  },
+  {
+    id: "iframe",
+    chip: "iframe",
+    tip: {
+      en: "Iframes are expensive — lazy-load or click-to-load embeds.",
+      ar: "الـ iframes غالية — lazy أو click-to-load للإيمبد.",
+    },
+    good: true,
+    metric: "main",
+    score: { en: "on demand", ar: "عند الطلب" },
+    preview: {
+      en: "poster → load map on click",
+      ar: "بوستر → حمّل الخريطة عند الضغط",
+    },
+    markup: `<iframe
+  title="Store map"
+  src="https://maps.example/embed"
+  loading="lazy"
+  width="600"
+  height="400"
+></iframe>`,
+  },
+] as const;
+
+export function MediaPerfVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = MEDIA_PERF_STEPS[step];
+  const ar = locale === "ar";
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % MEDIA_PERF_STEPS.length),
+      LAB_STEP_MS,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  return (
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={ar ? "أداء الميديا" : "Media performance"}
+      caption={ar ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, y: -6 }}
+            transition={{ duration: 0.3, ease: labEase }}
+            className="w-full max-w-md space-y-3"
+          >
+            <div
+              className={`overflow-hidden rounded-xl border p-3 ${
+                current.good
+                  ? "border-emerald-300/35 bg-emerald-400/10"
+                  : "border-rose-300/35 bg-rose-400/10"
+              }`}
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <span className="font-mono text-[10px] font-semibold uppercase tracking-wider text-slate-300">
+                  {current.metric}
+                </span>
+                <span
+                  className={`rounded-full border px-2 py-0.5 font-mono text-[10px] font-semibold ${
+                    current.good
+                      ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"
+                      : "border-rose-300/40 bg-rose-400/15 text-rose-100"
+                  }`}
+                >
+                  {ar ? current.score.ar : current.score.en}
+                </span>
+              </div>
+              <motion.div
+                animate={
+                  current.id === "cls" && !current.good && !reduce
+                    ? { y: [0, 10, 0] }
+                    : { y: 0 }
+                }
+                transition={{
+                  duration: LAB_LOOP_S,
+                  repeat:
+                    current.id === "cls" && !current.good && !reduce
+                      ? Infinity
+                      : 0,
+                  ease: labEase,
+                }}
+                className="flex h-24 items-center justify-center rounded-lg border border-white/10 bg-slate-950/50"
+              >
+                <p className="px-3 text-center font-mono text-[11px] text-slate-100">
+                  {ar ? current.preview.ar : current.preview.en}
+                </p>
+              </motion.div>
+            </div>
+
+            <pre
+              dir="ltr"
+              className="overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+            >
+              {current.markup}
+            </pre>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {MEDIA_PERF_STEPS.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={s.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-orange-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {s.chip}
+            </button>
+          ))}
+        </div>
+      </div>
     </LabStage>
   );
 }
@@ -2959,6 +4501,7 @@ function cheatBaselineStyle(band: "widely" | "newly") {
 }
 
 export function CheatSheetLabVisualizer() {
+  const { locale } = useLanguage();
   const reduce = useReducedMotion();
   const { playClick } = useSound();
   const { playing, toggle } = useAutoPlay(true);
@@ -2990,10 +4533,12 @@ export function CheatSheetLabVisualizer() {
   }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        {current.tip}
-      </p>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "مرجع HTML" : "HTML cheatsheet"}
+      caption={current.tip}
+    >
 
       {/* Filter chips */}
       <div className="mb-2.5 flex flex-wrap gap-1.5">
@@ -3205,47 +4750,94 @@ export function CheatSheetLabVisualizer() {
 
 const SECURITY_STEPS = [
   {
-    title: "External tab: unsafe",
-    code: `<a target="_blank">Partner docs</a>`,
-    detail: "New page can reach window.opener",
-    state: "unsafe",
+    id: "opener",
+    chip: "opener",
+    tip: {
+      en: "`target=_blank` without `rel` — the new page can reach `window.opener`.",
+      ar: "`target=_blank` من غير `rel` — الصفحة الجديدة توصل لـ `window.opener`.",
+    },
+    remote: {
+      en: "external origin",
+      ar: "أصل خارجي",
+    },
+    status: {
+      en: "opener access possible",
+      ar: "وصول للـ opener ممكن",
+    },
+    boundary: { en: "trust boundary exposed", ar: "حدود الثقة مكشوفة" },
+    markup: '<a href="https://partner.example" target="_blank">Docs</a>',
+    state: "unsafe" as const,
+    lane: "link" as const,
   },
   {
-    title: "Close the opener",
-    code: `rel="noopener noreferrer"`,
-    detail: "No opener control · no referrer leak",
-    state: "safe",
+    id: "rel",
+    chip: "rel=",
+    tip: {
+      en: '`rel="noopener noreferrer"` — no opener control, no referrer leak.',
+      ar: '`rel="noopener noreferrer"` — مفيش opener، ومفيش تسريب referrer.',
+    },
+    remote: { en: "external origin", ar: "أصل خارجي" },
+    status: {
+      en: "minimum access granted",
+      ar: "أقل صلاحية مسموحة",
+    },
+    boundary: { en: "trust boundary protected", ar: "حدود الثقة محمية" },
+    markup:
+      '<a href="https://partner.example" target="_blank" rel="noopener noreferrer">Docs</a>',
+    state: "safe" as const,
+    lane: "link" as const,
   },
   {
-    title: "Sandbox the embed",
-    code: `sandbox="allow-forms allow-scripts"`,
-    detail: "Third-party frame gets minimum capability",
-    state: "safe",
+    id: "sandbox",
+    chip: "sandbox",
+    tip: {
+      en: "Sandbox third-party embeds — grant only the capabilities you need.",
+      ar: "اعمل sandbox للإيمبد — امنح الصلاحيات اللي محتاجها بس.",
+    },
+    remote: { en: "embed origin", ar: "أصل الإيمبد" },
+    status: {
+      en: "minimum access granted",
+      ar: "أقل صلاحية مسموحة",
+    },
+    boundary: { en: "trust boundary protected", ar: "حدود الثقة محمية" },
+    markup:
+      '<iframe src="https://widget.example" sandbox="allow-scripts allow-forms" title="Widget"></iframe>',
+    state: "safe" as const,
+    lane: "embed" as const,
   },
   {
-    title: "Name sensitive data",
-    code: `autocomplete="one-time-code"`,
-    detail: "Browser and password manager understand intent",
-    state: "safe",
+    id: "secrets",
+    chip: "secrets",
+    tip: {
+      en: "Never put tokens in HTML — name sensitive fields for the browser vault.",
+      ar: "متحطش tokens في HTML — سمّي الحقول الحساسة لخزنة المتصفح.",
+    },
+    remote: { en: "browser-held data", ar: "بيانات عند المتصفح" },
+    status: {
+      en: "vault understands intent",
+      ar: "الخزنة فاهمة القصد",
+    },
+    boundary: { en: "trust boundary protected", ar: "حدود الثقة محمية" },
+    markup: `<input name="otp" autocomplete="one-time-code" />
+<!-- never: <script>const KEY = "sk_live_…"</script> -->`,
+    state: "safe" as const,
+    lane: "form" as const,
   },
 ] as const;
 
 export function HtmlSecurityLabVisualizer() {
   const reduce = useReducedMotion();
   const { playClick } = useSound();
-  const { dir } = useLanguage();
+  const { locale, dir } = useLanguage();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = SECURITY_STEPS[step];
   const safe = current.state === "safe";
   const flow = dir === "rtl" ? -1 : 1;
+  const ar = locale === "ar";
 
   useEffect(() => {
-    if (reduce) {
-      setStep(SECURITY_STEPS.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((index) => (index + 1) % SECURITY_STEPS.length),
       LAB_STEP_MS,
@@ -3254,129 +4846,210 @@ export function HtmlSecurityLabVisualizer() {
   }, [playing, reduce]);
 
   function goTo(index: number) {
+    if (index === step) return;
     playClick();
     setStep(index);
   }
 
+  const localLabel =
+    current.lane === "link"
+      ? "target=_blank"
+      : current.lane === "embed"
+        ? "<iframe>"
+        : "<input>";
+
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="mb-3 flex items-center gap-2">
-        <motion.div
-          animate={{
-            backgroundColor: safe ? "rgba(16,185,129,0.18)" : "rgba(251,113,133,0.18)",
-            borderColor: safe ? "rgba(110,231,183,0.55)" : "rgba(253,164,175,0.55)",
-          }}
-          className="rounded-lg border p-1.5"
-        >
-          <Shield
-            size={16}
-            className={safe ? "text-emerald-200" : "text-rose-200"}
-          />
-        </motion.div>
-        <div>
-          <p className="text-[11px] font-semibold text-slate-100">{current.title}</p>
-          <p className={`text-[9px] font-semibold ${safe ? "text-emerald-300" : "text-rose-300"}`}>
-            {safe ? "trust boundary protected" : "trust boundary exposed"}
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={ar ? "أمن HTML" : "HTML security"}
+      caption={ar ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
+        <div className="flex w-full max-w-md items-center gap-2">
+          <motion.div
+            animate={{
+              backgroundColor: safe
+                ? "rgba(16,185,129,0.18)"
+                : "rgba(251,113,133,0.18)",
+              borderColor: safe
+                ? "rgba(110,231,183,0.55)"
+                : "rgba(253,164,175,0.55)",
+            }}
+            className="rounded-lg border p-1.5"
+          >
+            <Shield
+              size={16}
+              className={safe ? "text-emerald-200" : "text-rose-200"}
+            />
+          </motion.div>
+          <p
+            className={`text-[11px] font-semibold ${
+              safe ? "text-emerald-300" : "text-rose-300"
+            }`}
+          >
+            {ar ? current.boundary.ar : current.boundary.en}
           </p>
         </div>
-      </div>
 
-      <div className="overflow-hidden rounded-xl border border-white/10 bg-slate-950/65">
-        <div className="flex items-center gap-1.5 border-b border-white/10 bg-slate-900/80 px-3 py-1.5">
-          <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
-          <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
-          <span className="ms-2 font-mono text-[9px] text-slate-500">markup security review</span>
+        <div className="w-full max-w-md overflow-hidden rounded-xl border border-white/10 bg-slate-950/65">
+          <div className="grid gap-2 p-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+            <motion.div
+              animate={{
+                borderColor: safe
+                  ? "rgba(110,231,183,0.32)"
+                  : "rgba(253,164,175,0.45)",
+              }}
+              className="rounded-lg border bg-slate-900/70 p-2.5"
+            >
+              <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-slate-500">
+                {ar ? "صفحتك" : "your page"}
+              </p>
+              <p className="font-mono text-[10px] text-yellow-100/90">
+                {localLabel}
+              </p>
+            </motion.div>
+            <motion.div
+              aria-hidden
+              animate={{
+                x: safe || reduce ? 0 : [0, 5 * flow, 0],
+                color: safe ? "rgb(110 231 183)" : "rgb(251 113 133)",
+              }}
+              transition={{
+                duration: LAB_LOOP_S,
+                repeat: safe || reduce ? 0 : Infinity,
+              }}
+            >
+              <ChevronRight size={18} className={RTL_FLIP} />
+            </motion.div>
+            <motion.div
+              animate={{
+                borderColor: safe
+                  ? "rgba(110,231,183,0.5)"
+                  : "rgba(253,164,175,0.45)",
+                backgroundColor: safe
+                  ? "rgba(6,78,59,0.28)"
+                  : "rgba(76,5,25,0.28)",
+              }}
+              className="rounded-lg border p-2.5"
+            >
+              <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-slate-400">
+                {ar ? current.remote.ar : current.remote.en}
+              </p>
+              <p
+                className={`text-[10px] font-semibold ${
+                  safe ? "text-emerald-100" : "text-rose-100"
+                }`}
+              >
+                {ar ? current.status.ar : current.status.en}
+              </p>
+            </motion.div>
+          </div>
         </div>
-        <div className="grid gap-2 p-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-          <motion.div
-            animate={{
-              borderColor: safe ? "rgba(110,231,183,0.32)" : "rgba(253,164,175,0.45)",
-              opacity: step < 2 ? 1 : 0.58,
-            }}
-            className="rounded-lg border bg-slate-900/70 p-2.5"
-          >
-            <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-slate-500">your page</p>
-            <p className="font-mono text-[10px] text-yellow-100/90">{step < 2 ? "target=_blank" : "<iframe / form>"}</p>
-          </motion.div>
-          <motion.div
-            aria-hidden
-            animate={{
-              x: safe || reduce ? 0 : [0, 5 * flow, 0],
-              color: safe ? "rgb(110 231 183)" : "rgb(251 113 133)",
-            }}
-            transition={{ duration: LAB_LOOP_S, repeat: safe || reduce ? 0 : Infinity }}
-          >
-            <ChevronRight size={18} className={RTL_FLIP} />
-          </motion.div>
-          <motion.div
-            animate={{
-              borderColor: safe ? "rgba(110,231,183,0.5)" : "rgba(253,164,175,0.45)",
-              backgroundColor: safe ? "rgba(6,78,59,0.28)" : "rgba(76,5,25,0.28)",
-            }}
-            className="rounded-lg border p-2.5"
-          >
-            <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-slate-400">
-              {step < 2 ? "external origin" : step === 2 ? "embed origin" : "browser-held data"}
-            </p>
-            <p className={`text-[10px] font-semibold ${safe ? "text-emerald-100" : "text-rose-100"}`}>
-              {safe ? "minimum access granted" : "opener access possible"}
-            </p>
-          </motion.div>
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.code}
-            initial={reduce ? false : { opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
-            transition={{ duration: 0.24, ease: labEase }}
-            className="mx-3 mb-3 rounded-lg border border-white/10 bg-black/30 px-2.5 py-2"
-          >
-            <code className="font-mono text-[10px] text-cyan-100">{current.code}</code>
-            <p className="mt-1 text-[9px] text-slate-400">{current.detail}</p>
-          </motion.div>
-        </AnimatePresence>
-      </div>
 
-      <div className="mt-3 flex justify-center gap-1.5">
-        {SECURITY_STEPS.map((item, index) => (
-          <button
-            key={item.title}
-            type="button"
-            aria-label={`Step ${index + 1}: ${item.title}`}
-            aria-current={index === step ? "step" : undefined}
-            onClick={() => goTo(index)}
-            className={`h-1.5 rounded-full transition-all ${index === step ? "w-5 bg-emerald-300" : "w-1.5 bg-slate-600 hover:bg-slate-400"}`}
-          />
-        ))}
+        <pre
+          dir="ltr"
+          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {SECURITY_STEPS.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-label={item.chip}
+              aria-current={index === step ? "step" : undefined}
+              onClick={() => goTo(index)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                index === step
+                  ? "bg-emerald-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {item.chip}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );
 }
 
 const SPECULATION_STEPS = [
-  { title: "Click and wait", mode: "cold", detail: "Next LCP waits for navigation" },
-  { title: "Prefetch response", mode: "prefetch", detail: "Likely same-origin document is warm" },
-  { title: "Prerender safely", mode: "prerender", detail: "Read-only destination is rendered in background" },
-  { title: "Navigate instant", mode: "instant", detail: "Activation makes the next LCP feel fast" },
+  {
+    id: "cold",
+    chip: "cold",
+    tip: {
+      en: "Cold click — next LCP waits for a full navigation.",
+      ar: "ضغط بارد — الـ LCP الجاي مستني navigation كامل.",
+    },
+    next: { en: "Not requested", ar: "متطلبش" },
+    markup: "/* no speculationrules yet */",
+  },
+  {
+    id: "prefetch",
+    chip: "prefetch",
+    tip: {
+      en: "Prefetch likely same-origin HTML — warm the network response.",
+      ar: "Prefetch لـ HTML متوقع من نفس الـ origin — سخّن الرد.",
+    },
+    next: { en: "Response prefetched", ar: "الرد اتعمل له prefetch" },
+    markup: `{
+  "prefetch": [{
+    "source": "list",
+    "urls": ["/product/42"],
+    "eagerness": "moderate"
+  }]
+}`,
+  },
+  {
+    id: "prerender",
+    chip: "prerender",
+    tip: {
+      en: "Prerender read-only destinations — never mutate routes.",
+      ar: "Prerender للصفحات اللي للقراءة بس — متلمسش routes بتعدّل.",
+    },
+    next: {
+      en: "Product detail rendered",
+      ar: "تفاصيل المنتج مترسمة",
+    },
+    markup: `{
+  "prerender": [{
+    "source": "list",
+    "urls": ["/product/42"],
+    "eagerness": "moderate"
+  }]
+}`,
+  },
+  {
+    id: "activate",
+    chip: "activate",
+    tip: {
+      en: "Activate — navigation feels instant; next LCP is already warm.",
+      ar: "Activate — التنقّل بيحس فوري؛ الـ LCP الجاي سخن.",
+    },
+    next: { en: "Activated instantly", ar: "اتفعّل فورًا" },
+    markup: `<script type="speculationrules">
+{ "prerender": [{ "urls": ["/product/42"] }] }
+</script>
+<!-- exclude: /logout, checkout, token URLs -->`,
+  },
 ] as const;
 
 export function HtmlSpeculationLabVisualizer() {
   const reduce = useReducedMotion();
   const { playClick } = useSound();
-  const { dir } = useLanguage();
+  const { locale, dir } = useLanguage();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = SPECULATION_STEPS[step];
   const flow = dir === "rtl" ? -1 : 1;
+  const ar = locale === "ar";
 
   useEffect(() => {
-    if (reduce) {
-      setStep(SPECULATION_STEPS.length - 1);
-      return;
-    }
-    if (!playing) return;
+    if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((index) => (index + 1) % SPECULATION_STEPS.length),
       LAB_STEP_MS,
@@ -3385,6 +5058,7 @@ export function HtmlSpeculationLabVisualizer() {
   }, [playing, reduce]);
 
   function goTo(index: number) {
+    if (index === step) return;
     playClick();
     setStep(index);
   }
@@ -3394,85 +5068,139 @@ export function HtmlSpeculationLabVisualizer() {
   const instant = step === 3;
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <div>
-          <p className="text-[11px] font-semibold text-slate-100">{current.title}</p>
-          <p className="text-[9px] text-cyan-200/75">{current.detail}</p>
-        </div>
-        <span className={`rounded-full border px-2 py-0.5 font-mono text-[9px] ${instant ? "border-emerald-300/45 bg-emerald-400/15 text-emerald-100" : "border-cyan-300/35 bg-cyan-400/10 text-cyan-100"}`}>
-          next LCP {instant ? "warm" : "pending"}
-        </span>
-      </div>
-
-      <div className="rounded-xl border border-cyan-400/20 bg-slate-950/60 p-3">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-          <div className="rounded-lg border border-white/10 bg-slate-900/70 p-2">
-            <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">current page</p>
-            <p className="mt-1 text-[10px] font-semibold text-slate-200">Collection</p>
-          </div>
-          <motion.div
-            aria-hidden
-            animate={{
-              x: warmed && !reduce ? [0, 5 * flow, 0] : 0,
-              color: warmed ? "rgb(103 232 249)" : "rgb(100 116 139)",
-            }}
-            transition={{ duration: LAB_LOOP_S, repeat: warmed && !reduce ? Infinity : 0 }}
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={ar ? "قواعد الـ Speculation" : "Speculation rules"}
+      caption={ar ? current.tip.ar : current.tip.en}
+    >
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
+        <div className="flex w-full max-w-md items-center justify-between gap-2">
+          <span className="text-[10px] font-semibold text-slate-300">
+            {ar ? "الصفحة الحالية → الجاية" : "current → next"}
+          </span>
+          <span
+            className={`rounded-full border px-2 py-0.5 font-mono text-[9px] ${
+              instant
+                ? "border-emerald-300/45 bg-emerald-400/15 text-emerald-100"
+                : "border-cyan-300/35 bg-cyan-400/10 text-cyan-100"
+            }`}
           >
-            <ChevronRight size={18} className={RTL_FLIP} />
-          </motion.div>
-          <motion.div
-            animate={{
-              borderColor: rendered ? "rgba(110,231,183,0.5)" : warmed ? "rgba(103,232,249,0.5)" : "rgba(255,255,255,0.1)",
-              backgroundColor: rendered ? "rgba(6,78,59,0.3)" : warmed ? "rgba(8,47,73,0.32)" : "rgba(15,23,42,0.55)",
-              boxShadow: rendered ? "0 0 18px rgba(52,211,153,0.18)" : "0 0 0 transparent",
-            }}
-            className="rounded-lg border p-2"
-          >
-            <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">next document</p>
-            <p className="mt-1 text-[10px] font-semibold text-slate-200">
-              {rendered ? "Product detail rendered" : warmed ? "Response prefetched" : "Not requested"}
-            </p>
-          </motion.div>
+            next LCP {instant ? (ar ? "سخن" : "warm") : ar ? "معلّق" : "pending"}
+          </span>
         </div>
 
-        <div className="mt-3 grid grid-cols-3 gap-1.5">
-          {[
-            { label: "network", active: warmed },
-            { label: "render", active: rendered },
-            { label: "activate", active: instant },
-          ].map(({ label, active }) => (
+        <div className="w-full max-w-md rounded-xl border border-cyan-400/20 bg-slate-950/60 p-3">
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+            <div className="rounded-lg border border-white/10 bg-slate-900/70 p-2">
+              <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">
+                {ar ? "الحالية" : "current"}
+              </p>
+              <p className="mt-1 text-[10px] font-semibold text-slate-200">
+                {ar ? "المجموعة" : "Collection"}
+              </p>
+            </div>
             <motion.div
-              key={label}
+              aria-hidden
               animate={{
-                opacity: active ? 1 : 0.35,
-                borderColor: active ? "rgba(103,232,249,0.45)" : "rgba(255,255,255,0.1)",
+                x: warmed && !reduce ? [0, 5 * flow, 0] : 0,
+                color: warmed ? "rgb(103 232 249)" : "rgb(100 116 139)",
               }}
-              className="rounded-md border bg-white/3 px-1.5 py-1.5 text-center font-mono text-[8px] text-cyan-100"
+              transition={{
+                duration: LAB_LOOP_S,
+                repeat: warmed && !reduce ? Infinity : 0,
+              }}
             >
-              {active ? <Check className="mx-auto mb-0.5" size={10} /> : null}
-              {label}
+              <ChevronRight size={18} className={RTL_FLIP} />
             </motion.div>
+            <motion.div
+              animate={{
+                borderColor: rendered
+                  ? "rgba(110,231,183,0.5)"
+                  : warmed
+                    ? "rgba(103,232,249,0.5)"
+                    : "rgba(255,255,255,0.1)",
+                backgroundColor: rendered
+                  ? "rgba(6,78,59,0.3)"
+                  : warmed
+                    ? "rgba(8,47,73,0.32)"
+                    : "rgba(15,23,42,0.55)",
+                boxShadow: rendered
+                  ? "0 0 18px rgba(52,211,153,0.18)"
+                  : "0 0 0 transparent",
+              }}
+              className="rounded-lg border p-2"
+            >
+              <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">
+                {ar ? "الجاية" : "next"}
+              </p>
+              <p className="mt-1 text-[10px] font-semibold text-slate-200">
+                {ar ? current.next.ar : current.next.en}
+              </p>
+            </motion.div>
+          </div>
+
+          <div className="mt-3 grid grid-cols-3 gap-1.5">
+            {(
+              [
+                { label: ar ? "شبكة" : "network", active: warmed },
+                { label: ar ? "رسم" : "render", active: rendered },
+                { label: ar ? "تفعيل" : "activate", active: instant },
+              ] as const
+            ).map(({ label, active }) => (
+              <motion.div
+                key={label}
+                animate={{
+                  opacity: active ? 1 : 0.35,
+                  borderColor: active
+                    ? "rgba(103,232,249,0.45)"
+                    : "rgba(255,255,255,0.1)",
+                }}
+                className="rounded-md border bg-white/3 px-1.5 py-1.5 text-center font-mono text-[8px] text-cyan-100"
+              >
+                {active ? <Check className="mx-auto mb-0.5" size={10} /> : null}
+                {label}
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-3 rounded-lg border border-rose-300/25 bg-rose-400/6 px-2.5 py-2">
+            <p className="font-mono text-[9px] font-semibold text-rose-200">
+              /logout · excluded
+            </p>
+            <p className="mt-0.5 text-[9px] text-rose-100/70">
+              {ar
+                ? "متعملش prerender لـ routes بتعدّل حالة أو تستهلك tokens."
+                : "Never prerender routes that mutate state or consume tokens."}
+            </p>
+          </div>
+        </div>
+
+        <pre
+          dir="ltr"
+          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[10px] leading-4 text-cyan-100"
+        >
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {SPECULATION_STEPS.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-label={item.chip}
+              aria-current={index === step ? "step" : undefined}
+              onClick={() => goTo(index)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                index === step
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {item.chip}
+            </button>
           ))}
         </div>
-
-        <div className="mt-3 rounded-lg border border-rose-300/25 bg-rose-400/6 px-2.5 py-2">
-          <p className="font-mono text-[9px] font-semibold text-rose-200">/logout · excluded</p>
-          <p className="mt-0.5 text-[9px] text-rose-100/70">Never prerender routes that mutate state or consume tokens.</p>
-        </div>
-      </div>
-
-      <div className="mt-3 flex justify-center gap-1.5">
-        {SPECULATION_STEPS.map((item, index) => (
-          <button
-            key={item.title}
-            type="button"
-            aria-label={`Step ${index + 1}: ${item.title}`}
-            aria-current={index === step ? "step" : undefined}
-            onClick={() => goTo(index)}
-            className={`h-1.5 rounded-full transition-all ${index === step ? "w-5 bg-cyan-300" : "w-1.5 bg-slate-600 hover:bg-slate-400"}`}
-          />
-        ))}
       </div>
     </LabStage>
   );
@@ -3482,6 +5210,7 @@ export function HtmlSpeculationLabVisualizer() {
 const RTL_STEPS = [
   {
     id: "ltr-root",
+    chip: "ltr",
     tip: {
       en: "Default LTR document — fine for English-only chrome.",
       ar: "مستند LTR افتراضي — مناسب لـ chrome إنجليزي بس.",
@@ -3489,46 +5218,57 @@ const RTL_STEPS = [
     rootDir: "ltr" as const,
     isolate: false,
     ltrInputs: false,
+    markup: '<html lang="en" dir="ltr">',
   },
   {
     id: "rtl-root",
+    chip: "rtl",
     tip: {
-      en: "Arabic-first product: lang=ar + dir=rtl on <html>.",
-      ar: "منتج عربي-أولًا: lang=ar + dir=rtl على <html>.",
+      en: "Arabic-first product: `lang=ar` + `dir=rtl` on `<html>`.",
+      ar: "منتج عربي-أولًا: `lang=ar` + `dir=rtl` على `<html>`.",
     },
     rootDir: "rtl" as const,
     isolate: false,
     ltrInputs: false,
+    markup: '<html lang="ar" dir="rtl">',
   },
   {
     id: "isolate",
+    chip: "bdi",
     tip: {
-      en: "Isolate English tokens with <bdi> so Arabic letters stay ordered.",
-      ar: "اعزل tokens إنجليزية بـ <bdi> عشان الحروف العربية تفضل مرتبة.",
+      en: "Isolate English tokens with `<bdi>` so Arabic letters stay ordered.",
+      ar: "اعزل tokens إنجليزية بـ `<bdi>` عشان الحروف العربية تفضل مرتبة.",
     },
     rootDir: "rtl" as const,
     isolate: true,
     ltrInputs: false,
+    markup: 'ابدأ بـ <bdi>&lt;!DOCTYPE html&gt;</bdi> قبل البناء.',
   },
   {
     id: "inputs",
+    chip: "inputs",
     tip: {
-      en: "Email / OTP fields keep dir=ltr inside an RTL form.",
-      ar: "حقول الإيميل / OTP تفضل dir=ltr جوّه فورم RTL.",
+      en: "Email / OTP fields keep `dir=ltr` inside an RTL form.",
+      ar: "حقول الإيميل / OTP تفضل `dir=ltr` جوّه فورم RTL.",
     },
     rootDir: "rtl" as const,
     isolate: true,
     ltrInputs: true,
+    markup: `<label>البريد
+  <input type="email" dir="ltr" autocomplete="email" />
+</label>`,
   },
   {
     id: "portal",
+    chip: "dialog",
     tip: {
-      en: "Teleported dialog carries dir/lang — don’t orphan direction.",
-      ar: "الـ dialog المتنقل بيشيل dir/lang — متسيبش الاتجاه يتيم.",
+      en: "Teleported dialog carries `dir`/`lang` — don’t orphan direction.",
+      ar: "الـ dialog المتنقل بيشيل `dir`/`lang` — متسيبش الاتجاه يتيم.",
     },
     rootDir: "rtl" as const,
     isolate: true,
     ltrInputs: true,
+    markup: '<dialog dir="rtl" lang="ar">…</dialog>',
   },
 ] as const;
 
@@ -3561,10 +5301,12 @@ export function HtmlGlobalRtlLabVisualizer() {
   }
 
   return (
-    <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
-        {current.tip[locale]}
-      </p>
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={locale === "ar" ? "العالمية و RTL" : "Global & RTL"}
+      caption={current.tip[locale]}
+    >
 
       <div className="overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/60">
         <div className="flex items-center justify-between gap-2 border-b border-white/10 bg-slate-900/80 px-2.5 py-1.5">
@@ -3677,25 +5419,411 @@ export function HtmlGlobalRtlLabVisualizer() {
                 </p>
               </motion.div>
             ) : null}
-          </AnimatePresence>
+              </AnimatePresence>
         </div>
       </div>
 
-      <div className="mt-3 flex justify-center gap-1.5">
+      <pre
+        dir="ltr"
+        className="mt-3 overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+      >
+        {current.markup}
+      </pre>
+
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
         {RTL_STEPS.map((s, i) => (
           <button
             key={s.id}
             type="button"
-            aria-label={`Step ${i + 1}`}
+            aria-label={s.chip}
             aria-current={i === step ? "step" : undefined}
             onClick={() => goTo(i)}
-            className={`h-1.5 rounded-full transition-all ${
+            className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
               i === step
-                ? "w-4 bg-cyan-300"
-                : "w-1.5 bg-slate-600 hover:bg-slate-400"
+                ? "bg-cyan-300 text-slate-950"
+                : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
             }`}
-          />
+          >
+            {s.chip}
+          </button>
         ))}
+      </div>
+    </LabStage>
+  );
+}
+
+type PitfallBeat = {
+  id: string;
+  title: { en: string; ar: string };
+  trap: { en: string; ar: string };
+  fix: { en: string; ar: string };
+  wrongTag: string;
+  rightTag: string;
+  wrongPreview: ReactNode;
+  rightPreview: ReactNode;
+};
+
+const HTML_PITFALL_BEATS: PitfallBeat[] = [
+  {
+    id: "document",
+    title: { en: "Basic document", ar: "مستند أساسي" },
+    trap: {
+      en: "Missing `DOCTYPE` / `lang` / `charset` drops you into quirks and weak a11y.",
+      ar: "من غير `DOCTYPE` / `lang` / `charset` تدخل quirks و a11y ضعيفة.",
+    },
+    fix: {
+      en: "Always start from a complete modern document shell.",
+      ar: "دايمًا ابدأ من هيكل مستند حديث مكتمل.",
+    },
+    wrongTag: "<html><body>…",
+    rightTag: "<!DOCTYPE html>",
+    wrongPreview: (
+      <pre className="w-full rounded-lg border border-rose-300/35 bg-rose-400/10 p-2.5 font-mono text-[10px] leading-4 text-rose-100">
+        {`<html>
+  <body>...</body>
+</html>`}
+      </pre>
+    ),
+    rightPreview: (
+      <pre className="w-full rounded-lg border border-emerald-300/35 bg-emerald-400/10 p-2.5 font-mono text-[10px] leading-4 text-emerald-50">
+        {`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+  </head>
+  <body>...</body>
+</html>`}
+      </pre>
+    ),
+  },
+  {
+    id: "semantics",
+    title: { en: "Fake landmarks", ar: "Landmarks مزيفة" },
+    trap: {
+      en: "`div class=\"header\"` looks like a header — AT hears “group”, not banner.",
+      ar: "`div class=\"header\"` شكله هيدر — قارئ الشاشة بيسمع group مش banner.",
+    },
+    fix: {
+      en: "Use `<header>` / `<main>` — the role ships with the tag.",
+      ar: "استخدم `<header>` / `<main>` — الدور جاي مع التاج.",
+    },
+    wrongTag: '<div class="header">',
+    rightTag: "<header>",
+    wrongPreview: (
+      <div className="space-y-1.5">
+        <div className="rounded-lg border border-dashed border-rose-300/40 bg-rose-400/10 px-2.5 py-2 font-mono text-[10px] text-rose-100">
+          &lt;div class=&quot;header&quot;&gt; Site
+        </div>
+        <div className="rounded-lg border border-dashed border-rose-300/30 bg-rose-400/5 px-2.5 py-2 font-mono text-[10px] text-rose-100/80">
+          &lt;div class=&quot;main&quot;&gt; Content
+        </div>
+      </div>
+    ),
+    rightPreview: (
+      <div className="space-y-1.5">
+        <div className="rounded-lg border border-emerald-300/45 bg-emerald-400/15 px-2.5 py-2 font-mono text-[10px] text-emerald-50">
+          &lt;header&gt; Site · role=banner
+        </div>
+        <div className="rounded-lg border border-emerald-300/35 bg-emerald-400/10 px-2.5 py-2 font-mono text-[10px] text-emerald-50/90">
+          &lt;main&gt; Content · role=main
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "lists",
+    title: { en: "Fake bullets", ar: "نقط مزيفة" },
+    trap: {
+      en: "A `div` with “• Item” is just text — no list semantics for AT.",
+      ar: "`div` بنقطة “• Item” نص عادي — مفيش list semantics لقارئ الشاشة.",
+    },
+    fix: {
+      en: "Real `<ul>` / `<ol>` expose list roles and item count.",
+      ar: "`<ul>` / `<ol>` الحقيقيين بيدّوا أدوار القائمة وعدد العناصر.",
+    },
+    wrongTag: "<div>• Item</div>",
+    rightTag: "<ul><li>…</li></ul>",
+    wrongPreview: (
+      <div className="space-y-1 font-mono text-[11px] text-rose-100">
+        <p>• Item one</p>
+        <p>• Item two</p>
+        <p className="text-[9px] text-rose-200/60">not a list to AT</p>
+      </div>
+    ),
+    rightPreview: (
+      <ul className="list-disc space-y-1 ps-4 font-mono text-[11px] text-emerald-50">
+        <li>Item one</li>
+        <li>Item two</li>
+        <li className="list-none text-[9px] text-emerald-200/70">
+          list · 2 items
+        </li>
+      </ul>
+    ),
+  },
+  {
+    id: "forms",
+    title: { en: "Placeholder ≠ label", ar: "Placeholder ≠ label" },
+    trap: {
+      en: "Placeholder vanishes while typing — the field loses its name.",
+      ar: "الـ placeholder بيختفي وأنت بتكتب — الحقل بيفقد اسمه.",
+    },
+    fix: {
+      en: "Keep a visible `<label>` tied with `for` / `id`.",
+      ar: "خلّي `<label>` ظاهر مربوط بـ `for` / `id`.",
+    },
+    wrongTag: 'placeholder="Email"',
+    rightTag: "<label>Email …</label>",
+    wrongPreview: (
+      <div className="rounded-lg border border-rose-300/40 bg-slate-950/60 p-2.5">
+        <input
+          readOnly
+          placeholder="Email"
+          className="w-full rounded-md border border-rose-300/30 bg-slate-900 px-2 py-1.5 text-[11px] text-rose-100/50 outline-none"
+        />
+        <p className="mt-1.5 text-[9px] text-rose-200/60">name disappears on focus</p>
+      </div>
+    ),
+    rightPreview: (
+      <label className="block rounded-lg border border-emerald-300/40 bg-slate-950/60 p-2.5">
+        <span className="mb-1 block text-[10px] font-semibold text-emerald-100">
+          Email
+        </span>
+        <input
+          readOnly
+          value="sam@lab.dev"
+          className="w-full rounded-md border border-emerald-300/30 bg-slate-900 px-2 py-1.5 text-[11px] text-emerald-50 outline-none"
+        />
+      </label>
+    ),
+  },
+  {
+    id: "buttons",
+    title: { en: "Div / link as button", ar: "Div / لينك كأنه زر" },
+    trap: {
+      en: "`div role=button` or `<a href=\"#\" onclick>` skips native keyboard/Enter.",
+      ar: "`div role=button` أو `<a href=\"#\" onclick>` بيتخطى الكيبورد الأصلي.",
+    },
+    fix: {
+      en: "Actions → `<button>`. Navigation → `<a href>` with a real URL.",
+      ar: "الأفعال → `<button>`. التنقّل → `<a href>` بـ URL حقيقي.",
+    },
+    wrongTag: '<div role="button">',
+    rightTag: '<button type="button">',
+    wrongPreview: (
+      <div className="space-y-2">
+        <div className="rounded-full border border-rose-300/45 bg-rose-400/15 px-4 py-2 text-center text-[11px] font-semibold text-rose-100">
+          Save
+        </div>
+        <p className="text-center text-[9px] text-rose-200/65">
+          no Enter · no Space · fragile
+        </p>
+      </div>
+    ),
+    rightPreview: (
+      <div className="space-y-2">
+        <button
+          type="button"
+          className="w-full rounded-full border border-emerald-300/45 bg-emerald-400/20 px-4 py-2 text-[11px] font-semibold text-emerald-50"
+        >
+          Save
+        </button>
+        <p className="text-center text-[9px] text-emerald-200/70">
+          Enter · Space · focus ring included
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "nesting",
+    title: { en: "Invalid nesting", ar: "تداخل غير صالح" },
+    trap: {
+      en: "`<p><div>…</div></p>` is invalid — the browser silently “fixes” the tree.",
+      ar: "`<p><div>…</div></p>` باطل — المتصفح بيصلّح الشجرة في الخلفية.",
+    },
+    fix: {
+      en: "Keep blocks outside paragraphs — use `<section>` / `<div>` wrappers.",
+      ar: "خلّي الـ blocks بره الفقرات — استخدم `<section>` / `<div>`.",
+    },
+    wrongTag: "<p><div>",
+    rightTag: "<div><p>",
+    wrongPreview: (
+      <div className="rounded-lg border border-rose-300/40 bg-rose-400/10 p-3 font-mono text-[10px] leading-5 text-rose-100">
+        <span className="text-rose-200/70">&lt;p&gt;</span>
+        <br />
+        &nbsp;&nbsp;
+        <span className="rounded bg-rose-500/30 px-1">&lt;div&gt;card&lt;/div&gt;</span>
+        <br />
+        <span className="text-rose-200/70">&lt;/p&gt;</span>
+        <p className="mt-2 text-[9px] text-rose-200/60">browser rewrites DOM ✗</p>
+      </div>
+    ),
+    rightPreview: (
+      <div className="rounded-lg border border-emerald-300/40 bg-emerald-400/10 p-3 font-mono text-[10px] leading-5 text-emerald-50">
+        <span className="text-emerald-200/70">&lt;div&gt;</span>
+        <br />
+        &nbsp;&nbsp;
+        <span className="rounded bg-emerald-500/25 px-1">&lt;p&gt;card&lt;/p&gt;</span>
+        <br />
+        <span className="text-emerald-200/70">&lt;/div&gt;</span>
+        <p className="mt-2 text-[9px] text-emerald-200/70">tree stays honest ✓</p>
+      </div>
+    ),
+  },
+];
+
+/** Capstone pitfalls lab — wrong vs right morph with play/pause. */
+export function HtmlPitfallsLabVisualizer() {
+  const { locale } = useLanguage();
+  const { playClick } = useSound();
+  const reduce = useReducedMotion();
+  const { playing, toggle } = useAutoPlay(true);
+  const [beat, setBeat] = useState(0);
+  const [showFix, setShowFix] = useState(false);
+
+  const current = HTML_PITFALL_BEATS[beat];
+  const ar = locale === "ar";
+
+  useEffect(() => {
+    if (reduce || !playing) return;
+    const id = window.setInterval(() => {
+      setShowFix((wasFix) => {
+        if (!wasFix) return true;
+        setBeat((b) => (b + 1) % HTML_PITFALL_BEATS.length);
+        return false;
+      });
+    }, LAB_STEP_MS);
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  function goTo(index: number) {
+    if (index === beat) return;
+    playClick();
+    setBeat(index);
+    setShowFix(false);
+  }
+
+  const caption = showFix
+    ? ar
+      ? `✓ الصح: ${current.fix.ar}`
+      : `✓ Fix: ${current.fix.en}`
+    : ar
+      ? `✗ الغلط: ${current.trap.ar}`
+      : `✗ Mistake: ${current.trap.en}`;
+
+  return (
+    <LabStage
+      playing={playing}
+      onTogglePlay={toggle}
+      title={ar ? "أخطاء HTML الشائعة" : "HTML pitfalls"}
+      caption={caption}
+    >
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="mb-2 flex shrink-0 items-center justify-between gap-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-amber-200/80">
+            {ar ? current.title.ar : current.title.en}
+          </p>
+          <span
+            className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+              showFix
+                ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"
+                : "border-rose-300/40 bg-rose-400/15 text-rose-100"
+            }`}
+          >
+            {showFix ? (ar ? "صح" : "right") : ar ? "غلط" : "wrong"}
+          </span>
+        </div>
+
+        <div className="grid min-h-0 flex-1 grid-cols-1 gap-2 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+          <motion.div
+            key={`${current.id}-wrong`}
+            initial={false}
+            animate={{
+              opacity: showFix ? 0.35 : 1,
+              scale: showFix ? 0.96 : 1,
+              filter: showFix ? "grayscale(0.4)" : "none",
+            }}
+            transition={{ duration: 0.35, ease: labEase }}
+            className="flex h-full min-h-[9rem] flex-col rounded-2xl border border-rose-400/35 bg-gradient-to-br from-rose-400/15 via-slate-950/70 to-slate-950/40 p-3"
+          >
+            <p className="mb-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-rose-200">
+              <X size={12} />
+              {ar ? "غلط" : "Wrong"}
+            </p>
+            <code className="mb-2 rounded-md border border-rose-300/20 bg-rose-400/10 px-1.5 py-0.5 font-mono text-[10px] text-rose-100">
+              {current.wrongTag}
+            </code>
+            <div className="flex flex-1 items-center">{current.wrongPreview}</div>
+          </motion.div>
+
+          <motion.div
+            aria-hidden
+            className="flex items-center justify-center"
+            animate={
+              reduce
+                ? undefined
+                : {
+                    x: showFix ? [0, 4, 0] : 0,
+                    scale: showFix ? [1, 1.12, 1] : 1,
+                  }
+            }
+            transition={{ duration: 0.45 }}
+          >
+            <span
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-full border text-sm font-bold ${
+                showFix
+                  ? "border-emerald-300/45 bg-emerald-400/20 text-emerald-100"
+                  : "border-white/15 bg-slate-950/80 text-slate-300"
+              } ${RTL_FLIP}`}
+            >
+              →
+            </span>
+          </motion.div>
+
+          <motion.div
+            key={`${current.id}-right`}
+            initial={false}
+            animate={{
+              opacity: showFix ? 1 : 0.4,
+              scale: showFix ? 1 : 0.96,
+              boxShadow: showFix
+                ? "0 0 28px rgba(52,211,153,0.18)"
+                : "0 0 0 rgba(0,0,0,0)",
+            }}
+            transition={{ duration: 0.4, ease: labEase }}
+            className="flex h-full min-h-[9rem] flex-col rounded-2xl border border-emerald-400/35 bg-gradient-to-br from-emerald-400/15 via-slate-950/70 to-slate-950/40 p-3"
+          >
+            <p className="mb-2 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-200">
+              <Check size={12} />
+              {ar ? "صح" : "Right"}
+            </p>
+            <code className="mb-2 rounded-md border border-emerald-300/20 bg-emerald-400/10 px-1.5 py-0.5 font-mono text-[10px] text-emerald-100">
+              {current.rightTag}
+            </code>
+            <div className="flex flex-1 items-center">{current.rightPreview}</div>
+          </motion.div>
+        </div>
+
+        <div className="mt-2.5 flex shrink-0 flex-wrap items-center justify-center gap-1.5">
+          {HTML_PITFALL_BEATS.map((b, i) => (
+            <button
+              key={b.id}
+              type="button"
+              aria-label={b.id}
+              aria-current={i === beat ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === beat
+                  ? showFix
+                    ? "bg-emerald-300 text-slate-950"
+                    : "bg-rose-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {b.id}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );

@@ -63,8 +63,8 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Compare the red rule with the green rule, then inspect the computed result.",
-        "قارن القاعدة الحمرا بالخضرا، وبعدين افحص النتيجة المحسوبة في `DevTools`.",
+        "Each mistake flips to the fix — Pause to study wrong vs right side by side.",
+        "كل غلط بيتحول للصح — Pause عشان تدرس الغلط والصح جنب بعض.",
       ),
       pitfalls: [
         pitfall(
@@ -94,6 +94,45 @@ export const extraLessons: LessonDraft[] = [
           `.card--error .title { color: #b91c1c; }`,
           L("Use a clear component state with controlled specificity.", "استخدم `component state` واضحة بـ `specificity` متحكم فيها."),
           L("Specificity escalation", "تصعيد `Specificity`"),
+        ),
+        pitfall(
+          `.panel { width: 420px; }`,
+          L("Fixed pixel widths overflow small phones and zoomed viewports.", "عروض `px` ثابتة بتفيض على الموبايل والشاشات المكبّرة."),
+          `.panel { width: min(100%, 26rem); }`,
+          L("Fluid widths + a max keep layouts honest on every screen.", "عرض سائل + حد أقصى بيخلي الـ layout صادق على كل شاشة."),
+          L("Fixed width overflow", "فيضان العرض الثابت"),
+        ),
+        pitfall(
+          `.row > * { margin-top: 16px; }`,
+          L("Vertical margins collapse between siblings — spacing gets unpredictable.", "الـ `margins` العمودية بتندمج بين العناصر — المسافات بتبقى غير متوقعة."),
+          `.row { display: flex; flex-direction: column; gap: 16px; }`,
+          L("`gap` spaces flex/grid children without margin collapse.", "`gap` بيبعد أبناء flex/grid من غير اندماج margin."),
+          L("Margin collapse", "اندماج الـ margin"),
+        ),
+        pitfall(
+          `.hero { height: 100vh; }`,
+          L("`100vh` on mobile often includes the browser chrome — content gets clipped.", "`100vh` على الموبايل غالبًا بيشمل شريط المتصفح — المحتوى بيتقص."),
+          `.hero { min-height: 100dvh; }`,
+          L("`dvh` tracks the dynamic viewport more reliably on phones.", "`dvh` بيتابع الـ viewport الديناميكي أوثق على الموبايل."),
+          L("Mobile viewport height", "ارتفاع شاشة الموبايل"),
+        ),
+        pitfall(
+          `.sidebar { z-index: 9999; }
+.modal { z-index: 10000; }`,
+          L("Huge `z-index` values start an arms race and hide stacking context bugs.", "قيم `z-index` ضخمة بتعمل حرب أرقام وبتغطي أخطاء stacking context."),
+          `.sidebar { z-index: 1; }
+.modal { z-index: 2; }`,
+          L("Keep small, local stacks inside a clear stacking context.", "خلّي الـ stacks صغيرة ومحلية جوّه stacking context واضح."),
+          L("z-index wars", "حروب z-index"),
+        ),
+        pitfall(
+          `.item { display: flex; }
+.item p { white-space: nowrap; }`,
+          L("Flex children default to `min-width: auto` and refuse to shrink — overflow.", "أبناء flex افتراضيًا `min-width: auto` ومبيرفضوش يصغروا — فيضان."),
+          `.item { display: flex; min-width: 0; }
+.item p { overflow: hidden; text-overflow: ellipsis; }`,
+          L("Allow shrinking with `min-width: 0` (or `min-height: 0` in columns).", "اسمح بالتصغير بـ `min-width: 0` (أو `min-height: 0` في الأعمدة)."),
+          L("Flex overflow", "فيضان Flex"),
         ),
       ],
     },

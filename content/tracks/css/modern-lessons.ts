@@ -36,8 +36,16 @@ function lesson(spec: LessonSpec, index: number): LessonDraft {
       paragraphs: spec.paragraphs.map(([en, ar]) => L(en, ar)),
       keyPoints: spec.points.map(([en, ar]) => L(en, ar)),
       examples: [
-        simpleExample(spec.simple, "Try the focused CSS rule.", "جرّب قاعدة `CSS` المركزة."),
-        realWorldExample(spec.real, "A small UI pattern using the same idea.", "نمط `UI` صغير بنفس الفكرة."),
+        simpleExample(
+          spec.simple,
+          `Simple practice — ${spec.title[0]}`,
+          `تمرين بسيط — ${spec.title[1]}`,
+        ),
+        realWorldExample(
+          spec.real,
+          `Real-world pattern — ${spec.title[0]}`,
+          `نمط واقعي — ${spec.title[1]}`,
+        ),
       ],
       visualHint: L(...spec.visualHint),
     },

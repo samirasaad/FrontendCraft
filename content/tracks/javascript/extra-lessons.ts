@@ -15,7 +15,7 @@ export const extraLessons: LessonDraft[] = [
     tier: "pro",
     readMinutes: 10,
     icon: "Zap",
-    visualizer: "event-loop",
+    visualizer: "debounce-throttle-lab",
     content: {
       title: L("Performance: Debounce & Throttle", "الأداء: Debounce و Throttle"),
       summary: L(
@@ -84,8 +84,8 @@ console.log("done burst");`,
         ),
       ],
       visualHint: L(
-        "Watch tasks queue calmly instead of flooding the loop.",
-        "راقب المهام وهي بتتخش بهدوء بدل ما تغرق الـ loop.",
+        "Flood → debounce (wait for quiet) → throttle (cap the rate).",
+        "فيضان → debounce (استنى الهدوء) → throttle (قيّد المعدل).",
       ),
       pitfalls: pitfall(
         `window.addEventListener("scroll", () => heavyWork());`,
@@ -108,7 +108,7 @@ console.log("done burst");`,
     tier: "pro",
     readMinutes: 11,
     icon: "Cpu",
-    visualizer: "memory-lock",
+    visualizer: "memory-leaks-lab",
     content: {
       title: L("Memory Leaks & Lingering Refs", "Memory Leaks و Refs العالقة"),
       summary: L(
@@ -170,8 +170,8 @@ console.log("listeners", 0);`,
         ),
       ],
       visualHint: L(
-        "Locked boxes that nobody unlocks become leaks.",
-        "الصناديق المقفولة اللي محدش بيفتحها بتتحوّل لـ leaks.",
+        "Live → orphaned listener → cleanup → GC reclaim.",
+        "حي → listener يتيم → cleanup → استرداد GC.",
       ),
       pitfalls: pitfall(
         `setInterval(() => sync(), 1000);

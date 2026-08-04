@@ -58,13 +58,18 @@ export const extraLessons: LessonDraft[] = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Core Web Vitals — LCP</title>
-    <link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
+    <link
+      rel="preload"
+      as="image"
+      href="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=LCP+hero"
+      fetchpriority="high"
+    />
   </head>
   <body>
     <main>
       <h1>Fast hero</h1>
       <img
-        src="/hero.webp"
+        src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=LCP+hero"
         alt="Learner at a code playground"
         width="1200"
         height="630"
@@ -114,7 +119,7 @@ export const extraLessons: LessonDraft[] = [
     tier: "pro",
     readMinutes: 9,
     icon: "Zap",
-    visualizer: "media-stage",
+    visualizer: "media-perf-lab",
     content: {
       title: L("Media & Loading Performance", "أداء الميديا والتحميل"),
       summary: L(
@@ -157,7 +162,7 @@ export const extraLessons: LessonDraft[] = [
     <main>
       <h1>Sized hero</h1>
       <img
-        src="/hero.avif"
+        src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Sized+hero"
         alt="Learner at a code playground"
         width="1200"
         height="630"
@@ -181,7 +186,7 @@ export const extraLessons: LessonDraft[] = [
     <main>
       <h1>Below-the-fold media</h1>
       <img
-        src="/lesson.webp"
+        src="https://placehold.co/640x360/0284c7/fff.jpg?text=Below+fold"
         alt=""
         width="640"
         height="360"
@@ -203,8 +208,8 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Media mounts without shoving the page around.",
-        "الميديا بتظهر من غير ما تزق الصفحة.",
+        "Size → lazy below-fold → LCP priority → lazy iframes.",
+        "مقاس → lazy تحت الشاشة → أولوية LCP → iframes متأخرة.",
       ),
     },
   },
@@ -664,17 +669,17 @@ export const extraLessons: LessonDraft[] = [
     tier: "pro",
     readMinutes: 12,
     icon: "AlertOctagon",
-    visualizer: "document-tree",
+    visualizer: "html-pitfalls-lab",
     content: {
       title: L("Common Pitfalls", "أخطاء شائعة"),
       summary: L(
-        "Capstone — every classic HTML trap in one lesson, wrong vs right side by side.",
-        "خاتمة — كل فخاخ HTML الكلاسيكية في درس واحد، غلط مقابل صح جنب بعض.",
+        "Capstone — every classic HTML mistake in one lesson, wrong vs right side by side.",
+        "خاتمة — كل أخطاء HTML الكلاسيكية في درس واحد، غلط مقابل صح جنب بعض.",
       ),
       paragraphs: [
         L(
-          "Other HTML lessons stay focused on teaching. All the traps live in this single pitfalls lesson at the end of the Pro tier.",
-          "دروس HTML التانية مركزة على الشرح. كل الفخاخ عايشة في درس pitfalls واحد في آخر مستوى Pro.",
+          "Other HTML lessons stay focused on teaching. All the common mistakes live in this single pitfalls lesson at the end of the Pro tier.",
+          "دروس HTML التانية مركزة على الشرح. كل الأخطاء الشائعة عايشة في درس pitfalls واحد في آخر مستوى Pro.",
         ),
         L(
           "Scan each card: skeleton, semantics, headings, links, lists, forms, tables, a11y, SEO, media, buttons vs links, and nesting.",
@@ -697,18 +702,15 @@ export const extraLessons: LessonDraft[] = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Link vs button</title>
+    <title>Document</title>
   </head>
   <body>
-    <main>
-      <h1>Navigation vs actions</h1>
-      <p><a href="/javascript">Open JS track</a></p>
-      <p><button type="button">Mark complete</button></p>
-    </main>
+    <h1>Hello</h1>
+    <p>Basic document template — edit and fix pitfalls here.</p>
   </body>
 </html>`,
-          "Full page: link for nav, button for action",
-          "صفحة كاملة: لينك للتنقّل وزر للفعل",
+          "Basic document template",
+          "قالب مستند أساسي",
         ),
         realWorldExample(
           `<!DOCTYPE html>
@@ -716,27 +718,34 @@ export const extraLessons: LessonDraft[] = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Valid nesting</title>
+    <title>FrontendCraft — pitfalls practice</title>
+    <meta
+      name="description"
+      content="Practice common HTML mistakes in a complete document shell."
+    />
   </head>
   <body>
+    <header>
+      <nav aria-label="Primary">
+        <a href="/html">HTML track</a>
+      </nav>
+    </header>
     <main>
-      <article>
-        <h1>Lesson notes</h1>
-        <section class="note">
-          <h2>Note</h2>
-          <p>Valid nesting beats div soup.</p>
-        </section>
-      </article>
+      <h1>Pitfalls practice</h1>
+      <p>Start from a real document shell, then apply the Prefer side of each card.</p>
     </main>
+    <footer>
+      <p><small>Rebuild one fix at a time.</small></p>
+    </footer>
   </body>
 </html>`,
-          "Full page: section with heading + paragraph",
-          "صفحة كاملة: section بـ heading وفقرة",
+          "Complete document shell to practice fixes",
+          "هيكل مستند كامل للتدريب على الإصلاحات",
         ),
       ],
       visualHint: L(
-        "The tree stays honest when nesting follows the rules.",
-        "الشجرة بتفضل صادقة لما الـ nesting يمشي على القواعد.",
+        "Start from a basic document — then watch each mistake flip to the fix.",
+        "ابدأ من مستند أساسي — وبعدين اتفرّج على كل غلط وهو بيتحول للصح.",
       ),
       pitfalls: collectedHtmlPitfalls,
     },

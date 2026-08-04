@@ -5,44 +5,48 @@ import { motion, useReducedMotion } from "framer-motion";
 import { PlayPauseButton } from "@/components/shared/PlayPauseButton";
 import { LAB_LOOP_S } from "@/lib/motion-pace";
 
-/** Shared stage chrome for HTML Motion labs — atmosphere + consistent framing. */
+/**
+ * Shared stage chrome for Motion labs — atmosphere, play/pause, caption,
+ * and a fixed tall frame that fits the full visualization without scrolling.
+ */
 export function LabStage({
   children,
   className = "",
   /** When set with `onTogglePlay`, shows a Play/Pause control. */
   playing,
   onTogglePlay,
+  /** Super-descriptive status line for the current step. */
+  caption,
+  /** Optional short lab title above the caption. */
+  title,
 }: {
   children: ReactNode;
   className?: string;
   playing?: boolean;
   onTogglePlay?: () => void;
+  caption?: ReactNode;
+  title?: ReactNode;
 }) {
   const reduce = useReducedMotion();
-  const timed = typeof playing === "boolean" && typeof onTogglePlay === "function";
+  const timed =
+    typeof playing === "boolean" && typeof onTogglePlay === "function";
+  const hasChrome = timed || caption != null || title != null;
 
   return (
     <div
-      className={`relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-slate-950 via-slate-950/90 to-cyan-950/40 p-3 sm:p-4 ${
-        timed ? "pt-10 sm:pt-10" : ""
-      } ${className}`}
+      className={`relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-cyan-400/20 bg-gradient-to-br from-slate-950 via-slate-950/90 to-cyan-950/40 p-3 sm:p-4 ${className}`}
     >
-      {timed ? (
-        <div className="absolute end-2.5 top-2.5 z-20">
-          <PlayPauseButton
-            playing={playing}
-            onToggle={onTogglePlay}
-            compact
-          />
-        </div>
-      ) : null}
       {!reduce ? (
         <>
           <motion.div
             aria-hidden
             className="pointer-events-none absolute -start-8 -top-10 h-28 w-28 rounded-full bg-cyan-400/15 blur-2xl"
             animate={{ opacity: [0.35, 0.7, 0.35], scale: [1, 1.15, 1] }}
-            transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
+            transition={{
+              duration: LAB_LOOP_S,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
           />
           <motion.div
             aria-hidden
@@ -56,7 +60,37 @@ export function LabStage({
           />
         </>
       ) : null}
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+
+      {hasChrome ? (
+        <div className="relative z-20 mb-2.5 flex shrink-0 items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            {title ? (
+              <div className="mb-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-cyan-200/80">
+                {title}
+              </div>
+            ) : null}
+            {caption != null ? (
+              <div
+                className="text-sm leading-snug text-slate-200 sm:text-[15px]"
+                role="status"
+                aria-live="polite"
+              >
+                {caption}
+              </div>
+            ) : null}
+          </div>
+          {timed ? (
+            <PlayPauseButton
+              playing={playing}
+              onToggle={onTogglePlay}
+              compact
+              className="shrink-0"
+            />
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col overflow-hidden">
         {children}
       </div>
     </div>
@@ -71,13 +105,15 @@ export const labSpring = {
 
 export const labEase = [0.22, 1, 0.36, 1] as const;
 
-/** Readable step / status hint under lab chrome. */
+/** Readable step / status hint (legacy — prefer LabStage `caption`). */
 export const labTipClass =
-  "mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300";
+  "mb-2 shrink-0 text-sm leading-snug text-slate-200";
 
-export const labTipInlineClass =
-  "text-sm leading-relaxed text-slate-300";
+export const labTipInlineClass = "text-sm leading-snug text-slate-300";
 
-/** Fixed viewport for every motion lab — height does not grow with steps. */
+/**
+ * Tall fixed viewport for every motion lab — holds the complete visualization
+ * without growing or scrolling inside the frame.
+ */
 export const LAB_FRAME_CLASS =
-  "h-[22rem] w-full overflow-hidden sm:h-[26rem]";
+  "h-[min(40rem,calc(100dvh-11rem))] min-h-[30rem] w-full overflow-hidden sm:min-h-[34rem]";

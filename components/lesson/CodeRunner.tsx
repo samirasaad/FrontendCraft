@@ -25,6 +25,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
+import { DEMO_IMG_PATH, STUDENTS_CODING_SVG } from "@/lib/demo-assets";
 import type { CodeExample, TrackId } from "@/lib/types";
 
 interface CodeRunnerProps {
@@ -68,17 +69,61 @@ const sandpackTheme = {
   },
 };
 
-function wrapHtmlSnippet(code: string): string {
-  if (/<!DOCTYPE/i.test(code) || /<html[\s>]/i.test(code)) return code;
+const PREVIEW_BODY_CSS =
+  "body { margin: 1rem; font-family: system-ui, sans-serif; line-height: 1.5; color: #0f172a; } img, video, iframe { max-width: 100%; height: auto; }";
+
+/** Keep source/preview shell LTR; preserve an explicit dir= on lesson demos (e.g. RTL lesson). */
+function ensureLtrHtmlDocument(
+  code: string,
+  headPreview: { title: string; body: string },
+): string {
+  const trimmed = code.trim();
+
+  if (/<!DOCTYPE/i.test(trimmed) || /<html[\s>]/i.test(trimmed)) {
+    let doc = trimmed;
+    if (!/<html[^>]*\bdir\s*=/i.test(doc)) {
+      doc = doc.replace(/<html(\s|>)/i, '<html dir="ltr"$1');
+    }
+    // Keep large lesson images visible inside the narrow preview pane.
+    if (!/img\s*,\s*video\s*,\s*iframe\s*\{[^}]*max-width/i.test(doc)) {
+      const previewStyle = `<style data-fc-preview>${PREVIEW_BODY_CSS}</style>`;
+      if (/<\/head>/i.test(doc)) {
+        doc = doc.replace(/<\/head>/i, `${previewStyle}</head>`);
+      } else if (/<body\b/i.test(doc)) {
+        doc = doc.replace(/<body\b[^>]*>/i, (m) => `${m}${previewStyle}`);
+      }
+    }
+    return doc;
+  }
+
+  // Head-only lesson templates (meta/social) — mount into a readable document.
+  if (/^<head\b/i.test(trimmed) && !/<body\b/i.test(trimmed)) {
+    return `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+${trimmed}
+  <body>
+    <style>${PREVIEW_BODY_CSS}</style>
+    <main>
+      <h1>${headPreview.title}</h1>
+      <p>${headPreview.body}</p>
+    </main>
+  </body>
+</html>`;
+  }
+
+  const bodyOnly = trimmed.match(/^<body\b[^>]*>([\s\S]*)<\/body>\s*$/i);
+  const inner = bodyOnly ? bodyOnly[1].trim() : trimmed;
+
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Document</title>
+    <style>${PREVIEW_BODY_CSS}</style>
   </head>
   <body>
-${code}
+${inner}
   </body>
 </html>`;
 }
@@ -257,8 +302,13 @@ function RunControls({
           <span className="truncate font-medium">{t("playground", locale)}</span>
         </div>
         {expectedHint ? (
-          <p className="mt-0.5 truncate ps-5 font-mono text-[10px] text-slate-500">
-            {expectedHint}
+          <p className="mt-0.5 truncate ps-5 text-[10px] text-slate-500">
+            <span className="font-sans font-semibold text-slate-400">
+              {t("expectedHint", locale)}:
+            </span>{" "}
+            <span className="font-mono" dir="ltr">
+              {expectedHint}
+            </span>
           </p>
         ) : null}
       </div>
@@ -353,10 +403,20 @@ function CodeRunnerInner({
 
   const files = useMemo((): SandpackFiles => {
     if (htmlMode) {
-      return { "/index.html": { code: wrapHtmlSnippet(code), active: true } };
+      return {
+        "/index.html": {
+          code: ensureLtrHtmlDocument(code, {
+            title: t("headPreviewTitle", locale),
+            body: t("headPreviewBody", locale),
+          }),
+          active: true,
+        },
+        // Local demo image so <img src="students-coding.svg"> works offline in preview.
+        [`/${DEMO_IMG_PATH}`]: { code: STUDENTS_CODING_SVG },
+      };
     }
     return { "/index.js": { code, active: true } };
-  }, [code, htmlMode]);
+  }, [code, htmlMode, locale]);
 
   useEffect(() => {
     if (!fullscreen) return;
@@ -386,28 +446,35 @@ function CodeRunnerInner({
       : "grid-rows-2 grid-rows-[minmax(0,1fr)_minmax(0,1fr)]";
 
   const editorPanel = (
-    <PanelChrome label={htmlMode ? "HTML" : "JS"} className="h-full">
-      <SandpackCodeEditor
-        showLineNumbers
-        showInlineErrors
-        showRunButton={false}
-        wrapContent
-        className="!h-full !min-h-0 !rounded-none [&_.cm-editor]:!h-full [&_.cm-scroller]:!h-full"
-        style={{ height: paneHeight }}
-      />
+    <PanelChrome
+      label={htmlMode ? t("editorHtml", locale) : t("editorJs", locale)}
+      className="h-full"
+    >
+      <div dir="ltr" className="h-full min-h-0">
+        <SandpackCodeEditor
+          showLineNumbers
+          showInlineErrors
+          showRunButton={false}
+          wrapContent
+          className="!h-full !min-h-0 !rounded-none [&_.cm-editor]:!h-full [&_.cm-editor]:!text-start [&_.cm-scroller]:!h-full"
+          style={{ height: paneHeight, direction: "ltr" }}
+        />
+      </div>
     </PanelChrome>
   );
 
   const outputPanel = htmlMode ? (
     <PanelChrome label={t("preview", locale)} className="h-full">
-      <SandpackPreview
-        showOpenInCodeSandbox={false}
-        showRefreshButton={false}
-        showRestartButton={false}
-        showNavigator={false}
-        className="!h-full !min-h-0 !rounded-none [&_.sp-preview-container]:!h-full [&_iframe]:!h-full"
-        style={{ height: paneHeight, flex: 1 }}
-      />
+      <div dir="ltr" className="h-full min-h-0">
+        <SandpackPreview
+          showOpenInCodeSandbox={false}
+          showRefreshButton={false}
+          showRestartButton={false}
+          showNavigator={false}
+          className="!h-full !min-h-0 !rounded-none [&_.sp-preview-container]:!h-full [&_iframe]:!h-full"
+          style={{ height: paneHeight, flex: 1, direction: "ltr" }}
+        />
+      </div>
     </PanelChrome>
   ) : (
     <PanelChrome label={t("output", locale)} className="h-full">
@@ -504,7 +571,7 @@ export function CodeRunner({ examples }: CodeRunnerProps) {
       : [
           {
             id: "simple" as const,
-            label: { en: "Simple", ar: "Simple" },
+            label: { en: "Simple", ar: "بسيط" },
             code: "// empty",
             expectedOutput: { en: "", ar: "" },
           },
@@ -515,7 +582,7 @@ export function CodeRunner({ examples }: CodeRunnerProps) {
   const expectedHint = loc(active.expectedOutput, locale).replace(/\\n/g, "\n");
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" dir={locale === "ar" ? "rtl" : "ltr"}>
       <div
         className="flex flex-wrap gap-2"
         role="tablist"
@@ -526,7 +593,9 @@ export function CodeRunner({ examples }: CodeRunnerProps) {
           const label =
             ex.id === "realWorld"
               ? t("exampleRealWorld", locale)
-              : t("exampleSimple", locale);
+              : ex.id === "simple"
+                ? t("exampleSimple", locale)
+                : loc(ex.label, locale);
           return (
             <button
               key={ex.id}

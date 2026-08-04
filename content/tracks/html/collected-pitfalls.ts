@@ -45,12 +45,12 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
     L("Headings", "العناوين"),
   ),
   pitfall(
-    `<a href="/x"><img src="x.png"></a>`,
+    `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X"></a>`,
     L(
       "Missing alt → empty accessible name.",
       "من غير alt → اسم وصول فاضي.",
     ),
-    `<a href="/x"><img src="x.png" alt="Open track X" /></a>`,
+    `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X" alt="Open track X" /></a>`,
     L("Give the link a spoken name.", "ادي للينك اسم يتقال."),
     L("`Links` & `images`", "اللينكات والصور"),
   ),
@@ -144,5 +144,292 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
       "أو استخدم `<section>` / `<article>` للكارت.",
     ),
     L("Invalid nesting", "تداخل غير صالح"),
+  ),
+  pitfall(
+    `<a href="https://example.com" target="_blank">Docs</a>`,
+    L(
+      "`target=\"_blank\"` without `rel` can expose `window.opener` to the new page.",
+      "`target=\"_blank\"` من غير `rel` ممكن يفتح `window.opener` للصفحة الجديدة.",
+    ),
+    `<a href="https://example.com" target="_blank" rel="noopener noreferrer">Docs</a>`,
+    L(
+      "Always pair new tabs with `rel=\"noopener noreferrer\"`.",
+      "دايمًا اربط التاب الجديد بـ `rel=\"noopener noreferrer\"`.",
+    ),
+    L("New-tab links", "لينكات التاب الجديد"),
+  ),
+  pitfall(
+    `<h1>Track</h1>
+<h3>Lesson</h3>`,
+    L(
+      "Skipping heading levels breaks the document outline for AT.",
+      "تخطي مستويات العناوين بيكسر الـ outline لقارئ الشاشة.",
+    ),
+    `<h1>Track</h1>
+<h2>Lesson</h2>`,
+    L(
+      "Step down one level at a time; style size with CSS.",
+      "انزل مستوى واحد كل مرة؛ وحجم الخط من CSS.",
+    ),
+    L("Heading order", "ترتيب العناوين"),
+  ),
+  pitfall(
+    `<img src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero" alt="Hero" />`,
+    L(
+      "No width/height → layout shift (CLS) when the image loads.",
+      "من غير width/height → قفزة layout (CLS) لما الصورة تتحمّل.",
+    ),
+    `<img
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  alt="Learner at a laptop"
+  width="1200"
+  height="630"
+/>`,
+    L(
+      "Reserve space with `width`/`height` (or CSS `aspect-ratio`).",
+      "احجز المساحة بـ `width`/`height` (أو `aspect-ratio`).",
+    ),
+    L("Image dimensions", "مقاسات الصور"),
+  ),
+  pitfall(
+    `<img
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  alt="Hero"
+  loading="lazy"
+/>`,
+    L(
+      "`loading=\"lazy\"` on the LCP/hero image delays the biggest paint.",
+      "`loading=\"lazy\"` على صورة LCP/hero بيأخّر أكبر رسم.",
+    ),
+    `<img
+  src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
+  alt="Learner at a laptop"
+  width="1200"
+  height="630"
+  fetchpriority="high"
+/>`,
+    L(
+      "Eager-load above-the-fold heroes; lazy-load the rest.",
+      "حمّل صور أول شاشة بسرعة؛ والباقي `lazy`.",
+    ),
+    L("Lazy LCP image", "صورة LCP بـ lazy"),
+  ),
+  pitfall(
+    `<iframe src="/embed"></iframe>`,
+    L(
+      "Untitled iframes are unnamed frames for screen readers.",
+      "`iframe` من غير عنوان = إطار من غير اسم لقارئ الشاشة.",
+    ),
+    `<iframe src="/embed" title="Lesson preview"></iframe>`,
+    L(
+      "Give every iframe a short, descriptive `title`.",
+      "ادي لكل `iframe` عنوان قصير وواضح.",
+    ),
+    L("iframe title", "عنوان الـ iframe"),
+  ),
+  pitfall(
+    `<div aria-hidden="true">
+  <button type="button">Close</button>
+</div>`,
+    L(
+      "Focusable controls inside `aria-hidden` trap keyboard/AT users.",
+      "عناصر عليها focus جوّه `aria-hidden` بتحبس مستخدمي الكيبورد/AT.",
+    ),
+    `<div hidden>
+  <button type="button">Close</button>
+</div>`,
+    L(
+      "Hide the whole path (`hidden` / `inert`) — or remove it from the DOM.",
+      "اخفي المسار كله (`hidden` / `inert`) — أو شيّله من الـ DOM.",
+    ),
+    L("Hidden but focusable", "مخفي ولسه عليه focus"),
+  ),
+  pitfall(
+    `<button>Save</button>
+<button>Cancel</button>`,
+    L(
+      "Missing `type` defaults to `submit` inside forms — surprise submits.",
+      "من غير `type` الافتراضي `submit` جوّه الفورم — إرسال مفاجئ.",
+    ),
+    `<button type="submit">Save</button>
+<button type="button">Cancel</button>`,
+    L(
+      "Set `type` explicitly on every button.",
+      "حط `type` صريح على كل زر.",
+    ),
+    L("Button types", "أنواع الأزرار"),
+  ),
+  pitfall(
+    `<a href="#">Open dialog</a>`,
+    L(
+      "`href=\"#\"` is fake navigation and breaks middle-click / open-in-new-tab.",
+      "`href=\"#\"` تنقّل مزيف وبيكسر middle-click / فتح في تاب جديد.",
+    ),
+    `<button type="button">Open dialog</button>`,
+    L(
+      "Use a button for in-page actions; use real URLs for links.",
+      "استخدم زر لأفعال جوّه الصفحة؛ وURL حقيقي للينكات.",
+    ),
+    L("href=\"#\" actions", "أفعال بـ href=\"#\""),
+  ),
+  pitfall(
+    `<br /><br /><br />
+<p>Next section</p>`,
+    L(
+      "Stacking `<br>` for spacing is layout, not content.",
+      "تكديس `<br>` للمسافات = layout مش محتوى.",
+    ),
+    `<section class="stack">
+  <p>Next section</p>
+</section>`,
+    L(
+      "Space with CSS (`margin` / `gap`), not line breaks.",
+      "اعمل المسافات بـ CSS (`margin` / `gap`) مش بكسور سطر.",
+    ),
+    L("Spacing with br", "مسافات بـ br"),
+  ),
+  pitfall(
+    `<img
+  src="https://placehold.co/48x48/e2e8f0/64748b.svg?text=%2A"
+  alt="sparkle icon"
+/>`,
+    L(
+      "Decorative images with text `alt` add noise for screen readers.",
+      "صور ديكور بـ `alt` نصّي بتزوّد ضوضاء لقارئ الشاشة.",
+    ),
+    `<img
+  src="https://placehold.co/48x48/e2e8f0/64748b.svg?text=%2A"
+  alt=""
+/>`,
+    L(
+      "Empty `alt=\"\"` marks decoration; informative images need real `alt`.",
+      "`alt=\"\"` للديكور؛ الصور المفيدة محتاجة `alt` حقيقي.",
+    ),
+    L("Decorative alt", "alt للديكور"),
+  ),
+  pitfall(
+    `<meta name="description" content="Welcome to our website." />`,
+    L(
+      "Generic descriptions waste the SERP snippet under your title.",
+      "وصف عام بيضيّع snippet نتائج البحث تحت العنوان.",
+    ),
+    `<meta name="description" content="Learn HTML with live labs, quizzes, and bilingual tips on FrontendCraft." />`,
+    L(
+      "Write a specific description that matches the page intent.",
+      "اكتب وصف محدد يطابق هدف الصفحة.",
+    ),
+    L("Meta description", "وصف الـ meta"),
+  ),
+  pitfall(
+    `<html>
+  <head><title>App</title></head>
+  <body>...</body>
+</html>`,
+    L(
+      "Missing viewport meta breaks mobile layout and tap targets.",
+      "من غير viewport meta بيتكسّر layout الموبايل وأماكن اللمس.",
+    ),
+    `<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>App</title>
+</head>`,
+    L(
+      "Always ship a responsive viewport meta in `<head>`.",
+      "دايمًا حط viewport meta متجاوب في `<head>`.",
+    ),
+    L("Viewport meta", "ميتـا الـ viewport"),
+  ),
+  pitfall(
+    `<h1>Home</h1>
+...
+<h1>Pricing</h1>`,
+    L(
+      "Multiple `<h1>`s confuse the page’s main topic for AT and SEO.",
+      "أكتر من `<h1>` بيلبّس موضوع الصفحة على AT و SEO.",
+    ),
+    `<h1>Home</h1>
+...
+<h2>Pricing</h2>`,
+    L(
+      "Keep one main `<h1>`; nest the rest under it.",
+      "خلّي `<h1>` واحد رئيسي؛ والباقي تحته.",
+    ),
+    L("Multiple h1", "أكتر من h1"),
+  ),
+  pitfall(
+    `<label>Email</label>
+<input type="email" name="email" />`,
+    L(
+      "A nearby label without `for`/`id` is not programmatically tied.",
+      "`label` قريب من غير `for`/`id` مش مربوط برمجيًا.",
+    ),
+    `<label for="email">Email</label>
+<input id="email" type="email" name="email" />`,
+    L(
+      "Connect labels with matching `for` and `id` (or wrap the input).",
+      "اربط الـ labels بـ `for` و `id` متطابقين (أو لفّ الـ input).",
+    ),
+    L("Label association", "ربط الـ label"),
+  ),
+  pitfall(
+    `<span onclick="toggle()" tabindex="0">Menu</span>`,
+    L(
+      "Custom widgets need roles, keyboard keys, and states — easy to miss.",
+      "ودجت مخصصة محتاجة roles ومفاتيح كيبورد وحالات — سهل تتفوت.",
+    ),
+    `<button type="button" aria-expanded="false">Menu</button>`,
+    L(
+      "Prefer native controls; add ARIA only when you must customize.",
+      "فضّل عناصر أصلية؛ وزوّد ARIA بس لما لازم تخصّص.",
+    ),
+    L("Custom widgets", "ودجت مخصصة"),
+  ),
+  pitfall(
+    `<a href="/js">
+  <h2>JavaScript</h2>
+  <button type="button">Start</button>
+</a>`,
+    L(
+      "Interactive content nested inside links creates nested controls — broken for AT.",
+      "محتوى تفاعلي جوّه لينك = عناصر متداخلة — بايظة لـ AT.",
+    ),
+    `<article>
+  <h2><a href="/js">JavaScript</a></h2>
+  <button type="button">Start</button>
+</article>`,
+    L(
+      "One interactive job per control — link the title, keep the button separate.",
+      "شغل تفاعلي واحد لكل عنصر — لينك العنوان، والزر منفصل.",
+    ),
+    L("Nested interactives", "تفاعل متداخل"),
+  ),
+  pitfall(
+    `<div id="root"></div>`,
+    L(
+      "An empty client root ships no content for the first HTML response / crawlers.",
+      "root فاضي من الكلاينت = مفيش محتوى في أول رد HTML / للزاحف.",
+    ),
+    `<main id="root">
+  <h1>JavaScript track</h1>
+  <p>Start with values and memory.</p>
+</main>`,
+    L(
+      "SSR or prerender real title, text, and links in the first HTML.",
+      "اعمل SSR أو prerender لعنوان ونص ولينكات حقيقية في أول HTML.",
+    ),
+    L("Empty SPA shell", "هيكل SPA فاضي"),
+  ),
+  pitfall(
+    `<input type="text" name="email" />`,
+    L(
+      "Wrong `type` skips mobile keyboards, built-in validation, and autofill hints.",
+      "`type` غلط = كيبورد موبايل غلط، وفحص مدمج ضعيف، وautofill ضعيف.",
+    ),
+    `<input type="email" name="email" autocomplete="email" />`,
+    L(
+      "Pick the matching input type and helpful `autocomplete` values.",
+      "اختار `type` المناسب وقيم `autocomplete` مفيدة.",
+    ),
+    L("Input types", "أنواع الـ input"),
   ),
 ];

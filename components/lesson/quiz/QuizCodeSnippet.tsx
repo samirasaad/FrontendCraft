@@ -135,7 +135,10 @@ export function QuizCodeSnippet({
           {label ?? language}
         </span>
       </div>
-      <pre className="overflow-x-auto p-4 font-mono text-[12.5px] leading-6 sm:text-[13px]">
+      <pre
+        dir="ltr"
+        className="overflow-x-auto p-4 text-start font-mono text-[12.5px] leading-6 sm:text-[13px]"
+      >
         <code>
           {tokens.map((tok, i) => (
             <span key={`${i}-${tok.kind}`} className={KIND_CLASS[tok.kind]}>
