@@ -104,7 +104,11 @@ function ConceptPanel({
             <Lightbulb size={16} />
             {t("explanation", locale)}
           </div>
-          <div className="space-y-4 text-[15px] leading-7 text-slate-300">
+          <div
+            className={`space-y-4 text-[15px] text-slate-300 ${
+              locale === "ar" ? "leading-[1.8]" : "leading-7"
+            }`}
+          >
             {lesson.content.paragraphs.map((p, i) => (
               <p key={i}>
                 <RichText text={loc(p, locale)} />
@@ -119,7 +123,9 @@ function ConceptPanel({
               {lesson.content.keyPoints.map((point, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 rounded-2xl border border-white/5 bg-slate-950/40 px-3 py-2 text-sm text-slate-200"
+                  className={`flex items-start gap-2 rounded-2xl border border-white/5 bg-slate-950/40 px-3 py-2 text-sm text-slate-200 ${
+                    locale === "ar" ? "leading-[1.75]" : "leading-snug"
+                  }`}
                 >
                   <Sparkles
                     size={14}
@@ -159,7 +165,11 @@ function ConceptPanel({
               <Sparkles size={16} />
               {t("visualLab", locale)}
             </div>
-            <p className="mb-3 text-sm leading-snug text-slate-300">
+            <p
+              className={`mb-3 text-sm text-slate-300 ${
+                locale === "ar" ? "leading-relaxed" : "leading-snug"
+              }`}
+            >
               <RichText text={loc(lesson.content.visualHint, locale)} />
             </p>
             <Visualizer trackId={trackId} kind={lesson.visualizer} />
@@ -314,7 +324,11 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
           <RichText text={loc(lesson.content.title, locale)} />
         </h1>
-        <p className="max-w-3xl text-base leading-relaxed text-slate-300 sm:text-[17px]">
+        <p
+          className={`max-w-3xl text-base text-slate-300 sm:text-[17px] ${
+            locale === "ar" ? "leading-[1.8]" : "leading-relaxed"
+          }`}
+        >
           <RichText text={loc(lesson.content.summary, locale)} />
         </p>
       </header>

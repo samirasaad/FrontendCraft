@@ -26,6 +26,12 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
+  line-height: 1.6;
+}
+
+/* Longer Arabic reading sessions need extra leading. */
+html[dir="rtl"] body {
+  line-height: 1.75;
 }
 
 /* Cute EN ↔ AR page swap (View Transitions API) */
