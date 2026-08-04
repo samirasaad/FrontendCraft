@@ -15,12 +15,12 @@ export const modernLessons: LessonDraft[] = [
     slug: "form-ux-attributes",
     tier: "intermediate",
     readMinutes: 9,
-    icon: "Smartphone",
+    icon: "Keyboard",
     visualizer: "form-flow",
     content: {
       title: L(
         "Form UX: inputmode, pattern & autocomplete",
-        "Form UX: inputmode و pattern و autocomplete",
+        "تجربة النماذج: `inputmode` و `pattern` و `autocomplete`",
       ),
       summary: L(
         "Shape mobile keyboards, speed autofill, and validate with attributes — before you reach for JS.",
@@ -37,13 +37,13 @@ export const modernLessons: LessonDraft[] = [
         ),
         L(
           "`pattern` adds a regex check on submit for `text`-like inputs. Pair it with a clear `title` / error message — regex alone is not accessible feedback.",
-          "`pattern` بيضيف فحص regex عند الإرسال. اربطه بـ `title` أو رسالة خطأ واضحة — الـ regex لوحده مش feedback وصول.",
+          "`pattern` بيضيف فحص `regex` عند الإرسال. اربطه بـ `title` أو رسالة خطأ واضحة — الـ `regex` لوحده مش `feedback` وصول.",
         ),
       ],
       keyPoints: [
-        L("Use `type` for meaning; `inputmode` for the keyboard", "استخدم `type` للمعنى؛ `inputmode` للكيبورد"),
-        L("Prefer standard autocomplete tokens", "فضّل رموز autocomplete القياسية"),
-        L("Explain pattern failures in plain language", "اشرح فشل pattern بلغة بسيطة"),
+        L("Use `type` for meaning; `inputmode` for the `keyboard`", "استخدم `type` للمعنى؛ `inputmode` للكيبورد"),
+        L("Prefer standard `autocomplete` `tokens`", "فضّل رموز `autocomplete` القياسية"),
+        L("Explain `pattern` failures in plain language", "اشرح فشل `pattern` بلغة بسيطة"),
       ],
       examples: [
         simpleExample(
@@ -87,7 +87,7 @@ export const modernLessons: LessonDraft[] = [
       ],
       visualHint: L(
         "Same form lab — focus, types, checkbox, then submit.",
-        "نفس معمل الفورم — focus وكتابة و checkbox وبعدين submit.",
+        "نفس معمل الفورم — `focus` وكتابة و `checkbox` وبعدين `submit`.",
       ),
     },
   },
@@ -97,12 +97,12 @@ export const modernLessons: LessonDraft[] = [
     slug: "browser-compatibility",
     tier: "advanced",
     readMinutes: 11,
-    icon: "Globe2",
+    icon: "MonitorCheck",
     visualizer: "baseline-compat",
     content: {
       title: L(
         "Browser Compatibility & Baseline",
-        "Browser Compatibility & Baseline",
+        "التوافق مع المتصفحات و `Baseline`",
       ),
       summary: L(
         "Dedicated compatibility lesson — Chrome, Firefox, Safari, Edge versions, W3C Baseline, and when to ship a fallback.",
@@ -131,10 +131,10 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Use Baseline + caniuse / MDN — not folklore", "استخدم Baseline + caniuse / MDN — مش الإشاعات"),
-        L("Widely = default; Newly = needs a fallback plan", "Widely = افتراضي؛ Newly = محتاج خطة fallback"),
-        L("Feature-detect; progressive-enhance", "Feature-detect؛ بعدين progressive-enhance"),
-        L("Test at least one WebKit (Safari) path", "اختبر مسار WebKit (Safari) واحد على الأقل"),
+        L("Use `Baseline` + caniuse / MDN — not folklore", "استخدم `Baseline` + caniuse / MDN — مش الإشاعات"),
+        L("Widely = default; Newly = needs a fallback plan", "`Widely` = افتراضي؛ `Newly` = محتاج خطة `fallback`"),
+        L("Feature-detect; progressive-enhance", "Feature-`detect`؛ بعدين progressive-enhance"),
+        L("Test at least one WebKit (Safari) path", "اختبر مسار `WebKit` (`Safari`) واحد على الأقل"),
       ],
       examples: [
         simpleExample(
@@ -318,7 +318,7 @@ export const modernLessons: LessonDraft[] = [
           }),
         },
         {
-          label: L("inputmode attribute", "inputmode attribute"),
+          label: L("`inputmode` attribute", "`inputmode` attribute"),
           support: support("66+", "95+", "12.1+", "79+", "widely", {
             notes: L(
               "Hint only — keep a correct type= as the real keyboard fallback.",
@@ -412,7 +412,7 @@ export const modernLessons: LessonDraft[] = [
     icon: "AppWindow",
     visualizer: "native-dialog",
     content: {
-      title: L("Native <dialog> Modals", "Native <dialog> Modals"),
+      title: L("Native <dialog> Modals", "النوافذ الـ `modal` بـ `<dialog>` الأصلي"),
       summary: L(
         "Ship modal dialogs with a native backdrop, focus trap, and Escape-to-close — without a UI library.",
         "اعمل modals بـ backdrop أصلي و focus trap و Escape — من غير مكتبة UI.",
@@ -432,9 +432,9 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Prefer `showModal()` over custom div overlays", "فضّل `showModal()` عن overlays بـ div"),
-        L("Use `method=\"dialog\"` buttons for built-in close", "استخدم أزرار `method=\"dialog\"` للإغلاق المدمج"),
-        L("Name the dialog; manage focus on open/close", "سمّي الـ dialog؛ أدِر الـ focus عند الفتح/القفل"),
+        L("Prefer `showModal()` over custom div `overlays`", "فضّل `showModal()` عن `overlays` بـ div"),
+        L("Use `method=\"dialog\"` `buttons` for built-in close", "استخدم أزرار `method=\"dialog\"` للإغلاق المدمج"),
+        L("Name the dialog; manage `focus` on open/close", "سمّي الـ dialog؛ أدِر الـ `focus` عند الفتح/القفل"),
       ],
       examples: [
         simpleExample(
@@ -485,11 +485,11 @@ export const modernLessons: LessonDraft[] = [
     content: {
       title: L(
         "<details> & <summary> Accordions",
-        "<details> و <summary> Accordions",
+        "أكورديون بـ `<details>` و `<summary>`",
       ),
       summary: L(
         "Native, zero-JS disclosures for FAQs and progressive disclosure — keyboard-friendly by default.",
-        "Disclosure أصلي من غير JS للـ FAQ والكشف التدريجي — ودود للكيبورد افتراضيًا.",
+        "`Disclosure` أصلي من غير `JS` للـ `FAQ` والكشف التدريجي — ودود للكيبورد افتراضيًا.",
       ),
       paragraphs: [
         L(
@@ -506,8 +506,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Summary is the only direct child that acts as the toggle", "summary هو الابن المباشر اللي بيعمل toggle"),
-        L("Use `open` for default-expanded sections sparingly", "استخدم `open` للفتح الافتراضي بحذر"),
+        L("Summary is the only direct child that acts as the `toggle`", "summary هو الابن المباشر اللي بيعمل `toggle`"),
+        L("Use `open` for `default`-`expanded` sections sparingly", "استخدم `open` للفتح الافتراضي بحذر"),
         L("`name` groups exclusive disclosures where supported", "`name` بيجمّع disclosures حصرية حسب الدعم"),
       ],
       examples: [
@@ -549,7 +549,7 @@ export const modernLessons: LessonDraft[] = [
     content: {
       title: L(
         "<picture> & <source> Responsive Images",
-        "<picture> و <source> Responsive Images",
+        "صور متجاوبة بـ `<picture>` و `<source>`",
       ),
       summary: L(
         "Serve the right format and crop per viewport — always with a final `<img>` fallback.",
@@ -570,8 +570,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Always include a trailing `<img>` with alt + dimensions", "دايمًا ختم بـ `<img>` فيه alt وأبعاد"),
-        L("Order sources from most preferred to fallback", "رتّب الـ sources من المفضّل للـ fallback"),
+        L("Always include a trailing `<img>` with alt + `dimensions`", "دايمًا ختم بـ `<img>` فيه alt وأبعاد"),
+        L("Order sources from most preferred to `fallback`", "رتّب الـ sources من المفضّل للـ `fallback`"),
         L("Prefer picture for art direction / modern formats", "فضّل picture للتوجيه البصري والصيغ الحديثة"),
       ],
       examples: [
@@ -621,7 +621,7 @@ export const modernLessons: LessonDraft[] = [
     content: {
       title: L(
         "Head & Social Meta (OG, Twitter, Theme)",
-        "Head و Social Meta (OG و Twitter و Theme)",
+        "وسوم `head` والسوشيال (`OG` و `Twitter` و `theme`)",
       ),
       summary: L(
         "Social share cards, theme-color, and favicon rules — builds on Advanced SEO Insights.",
@@ -646,7 +646,7 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("SSR/SSG the social tags in `<head>`", "طلّع وسوم السوشيال من السيرفر في `<head>`"),
+        L("`SSR`/`SSG` the social `tags` in `<head>`", "طلّع وسوم السوشيال من السيرفر في `<head>`"),
         L("Absolute og:image URLs", "روابط og:image مطلقة"),
         L("SVG + ICO favicon strategy", "استراتيجية favicon: SVG + ICO"),
       ],
@@ -689,12 +689,12 @@ export const modernLessons: LessonDraft[] = [
     slug: "sr-practice",
     tier: "advanced",
     readMinutes: 16,
-    icon: "Accessibility",
+    icon: "Volume2",
     visualizer: "a11y-check",
     content: {
       title: L(
         "Bad vs Screen-Reader Ready",
-        "Bad vs Screen-Reader Ready",
+        "غلط مقابل جاهز لقارئ الشاشة",
       ),
       summary: L(
         "Advanced practice: bad vs screen-reader ready HTML — name, role, value, focus, and live updates.",

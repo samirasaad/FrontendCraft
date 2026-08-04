@@ -1,6 +1,7 @@
 "use client";
 
 import { Globe2 } from "lucide-react";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { baselineLabel, browserNames } from "@/lib/browser-support";
@@ -78,7 +79,7 @@ export function BrowserSupport({
 
       {support.notes ? (
         <p className={`text-xs leading-5 text-slate-400 ${compact ? "mt-2" : "mt-3"}`}>
-          {loc(support.notes, locale)}
+          <RichText text={loc(support.notes, locale)} />
         </p>
       ) : null}
 
@@ -89,7 +90,7 @@ export function BrowserSupport({
           <span className="font-semibold text-emerald-200">
             {t("browserFallback", locale)}:{" "}
           </span>
-          {loc(support.fallback, locale)}
+          <RichText text={loc(support.fallback, locale)} />
         </p>
       ) : null}
     </section>

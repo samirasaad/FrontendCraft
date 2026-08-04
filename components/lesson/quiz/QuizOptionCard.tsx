@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { QuizOptionLetter } from "@/components/lesson/quiz/QuizCodeSnippet";
+import { RichText } from "@/components/shared/RichText";
 
 const LETTERS = ["A", "B", "C", "D"] as const;
 
@@ -57,7 +58,7 @@ export function QuizOptionCard({
     >
       <QuizOptionLetter>{LETTERS[index] ?? index + 1}</QuizOptionLetter>
       <span className="min-w-0 flex-1 pt-0.5 text-sm font-medium leading-relaxed text-slate-100 sm:text-[15px]">
-        {label}
+        <RichText text={label} />
       </span>
       {answered && isCorrectOption ? (
         <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400/20 text-emerald-300">

@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowRight, Check, X } from "lucide-react";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { RTL_FLIP } from "@/lib/rtl";
@@ -27,20 +28,20 @@ export function ComparePractice({ cards }: { cards: ComparePair[] }) {
           >
             {card.title ? (
               <p className="mb-3 text-sm font-semibold text-white">
-                {loc(card.title, locale)}
+                <RichText text={loc(card.title, locale)} />
               </p>
             ) : null}
             <div className="grid items-center gap-3 md:grid-cols-[1fr_auto_1fr]">
               <article className="rounded-2xl border border-rose-400/30 bg-rose-400/5 p-4">
                 <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-rose-200">
                   <X size={14} />
-                  {loc(card.bad.label, locale)}
+                  <RichText text={loc(card.bad.label, locale)} />
                 </p>
                 <pre className="mb-3 overflow-x-auto whitespace-pre-wrap rounded-xl border border-rose-400/15 bg-slate-950/50 p-3 font-mono text-[11px] leading-5 text-rose-100/90">
                   {card.bad.code}
                 </pre>
                 <p className="text-sm leading-6 text-slate-300">
-                  {loc(card.bad.note, locale)}
+                  <RichText text={loc(card.bad.note, locale)} />
                 </p>
               </article>
 
@@ -60,13 +61,13 @@ export function ComparePractice({ cards }: { cards: ComparePair[] }) {
               <article className="rounded-2xl border border-emerald-400/30 bg-emerald-400/5 p-4">
                 <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-200">
                   <Check size={14} />
-                  {loc(card.good.label, locale)}
+                  <RichText text={loc(card.good.label, locale)} />
                 </p>
                 <pre className="mb-3 overflow-x-auto whitespace-pre-wrap rounded-xl border border-emerald-400/15 bg-slate-950/50 p-3 font-mono text-[11px] leading-5 text-emerald-100/90">
                   {card.good.code}
                 </pre>
                 <p className="text-sm leading-6 text-slate-300">
-                  {loc(card.good.note, locale)}
+                  <RichText text={loc(card.good.note, locale)} />
                 </p>
               </article>
             </div>

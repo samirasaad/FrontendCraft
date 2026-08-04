@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Cog } from "lucide-react";
 import { InsightCode } from "@/components/lesson/InsightCode";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -26,7 +27,9 @@ export function UnderTheHood({
   const body = (
     <div className="space-y-3 text-[15px] leading-7 text-slate-300">
       {section.paragraphs.map((p, i) => (
-        <p key={i}>{loc(p, locale)}</p>
+        <p key={i}>
+          <RichText text={loc(p, locale)} />
+        </p>
       ))}
       {section.bullets?.length ? (
         <ul className="space-y-2 pt-1">
@@ -36,7 +39,9 @@ export function UnderTheHood({
               className="flex gap-2 rounded-xl border border-violet-400/15 bg-slate-950/40 px-3 py-2 text-sm"
             >
               <span className="text-violet-300">▸</span>
-              <span>{loc(b, locale)}</span>
+              <span>
+                <RichText text={loc(b, locale)} />
+              </span>
             </li>
           ))}
         </ul>

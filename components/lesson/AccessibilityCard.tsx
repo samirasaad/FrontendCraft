@@ -2,6 +2,7 @@
 
 import { Accessibility } from "lucide-react";
 import { InsightCode } from "@/components/lesson/InsightCode";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import type { InsightSection } from "@/lib/types";
@@ -20,7 +21,9 @@ export function AccessibilityCard({ section }: { section: InsightSection }) {
       <p className="mb-3 text-xs text-slate-400">{t("accessibilityHint", locale)}</p>
       <div className="space-y-3 text-[15px] leading-7 text-slate-300">
         {section.paragraphs.map((p, i) => (
-          <p key={i}>{loc(p, locale)}</p>
+          <p key={i}>
+            <RichText text={loc(p, locale)} />
+          </p>
         ))}
       </div>
       {section.bullets?.length ? (
@@ -31,7 +34,9 @@ export function AccessibilityCard({ section }: { section: InsightSection }) {
               className="flex gap-2 rounded-xl border border-sky-400/15 bg-slate-950/40 px-3 py-2 text-sm text-slate-200"
             >
               <span className="text-sky-300">♿</span>
-              <span>{loc(b, locale)}</span>
+              <span>
+                <RichText text={loc(b, locale)} />
+              </span>
             </li>
           ))}
         </ul>

@@ -30,6 +30,7 @@ import { SeoCallout } from "@/components/lesson/SeoCallout";
 import { StickyLessonBar } from "@/components/lesson/StickyLessonBar";
 import { UnderTheHood } from "@/components/lesson/UnderTheHood";
 import { Visualizer } from "@/components/lesson/Visualizer";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -73,7 +74,7 @@ function ConceptPanel({
           {lesson.content.browserMatrices?.map((matrix, index) => (
             <div key={`${matrix.label.en}-${index}`} className="space-y-2">
               <p className="px-1 text-sm font-semibold text-emerald-100">
-                {loc(matrix.label, locale)}
+                <RichText text={loc(matrix.label, locale)} />
               </p>
               <BrowserSupport support={matrix.support} />
             </div>
@@ -109,7 +110,9 @@ function ConceptPanel({
           </div>
           <div className="space-y-4 text-[15px] leading-7 text-slate-300">
             {lesson.content.paragraphs.map((p, i) => (
-              <p key={i}>{loc(p, locale)}</p>
+              <p key={i}>
+                <RichText text={loc(p, locale)} />
+              </p>
             ))}
           </div>
           <div className="mt-6">
@@ -126,7 +129,9 @@ function ConceptPanel({
                     size={14}
                     className="mt-0.5 shrink-0 text-yellow-300"
                   />
-                  <span>{loc(point, locale)}</span>
+                  <span>
+                    <RichText text={loc(point, locale)} />
+                  </span>
                 </li>
               ))}
             </ul>
@@ -159,7 +164,7 @@ function ConceptPanel({
               {t("visualLab", locale)}
             </div>
             <p className="mb-4 text-sm leading-relaxed text-slate-300">
-              {loc(lesson.content.visualHint, locale)}
+              <RichText text={loc(lesson.content.visualHint, locale)} />
             </p>
             <Visualizer trackId={trackId} kind={lesson.visualizer} />
           </div>
@@ -279,10 +284,10 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
           </span>
         </div>
         <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          {loc(lesson.content.title, locale)}
+          <RichText text={loc(lesson.content.title, locale)} />
         </h1>
         <p className="max-w-3xl text-base leading-relaxed text-slate-300 sm:text-[17px]">
-          {loc(lesson.content.summary, locale)}
+          <RichText text={loc(lesson.content.summary, locale)} />
         </p>
       </header>
 

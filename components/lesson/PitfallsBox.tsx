@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, Check, X } from "lucide-react";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import type { PitfallExample } from "@/lib/types";
@@ -12,7 +13,7 @@ function PitfallCard({ item }: { item: PitfallExample }) {
     <div className="rounded-3xl border border-orange-400/30 bg-gradient-to-br from-orange-400/10 via-slate-950/40 to-emerald-400/5 p-5 sm:p-6">
       {item.title ? (
         <p className="mb-3 text-sm font-semibold text-orange-50">
-          {loc(item.title, locale)}
+          <RichText text={loc(item.title, locale)} />
         </p>
       ) : null}
       <div className="grid gap-4 md:grid-cols-2">
@@ -25,7 +26,7 @@ function PitfallCard({ item }: { item: PitfallExample }) {
             {item.wrong.code}
           </pre>
           <p className="mt-3 text-sm leading-6 text-slate-300">
-            {loc(item.wrong.note, locale)}
+            <RichText text={loc(item.wrong.note, locale)} />
           </p>
         </div>
         <div className="rounded-2xl border border-emerald-400/25 bg-emerald-400/5 p-4">
@@ -37,7 +38,7 @@ function PitfallCard({ item }: { item: PitfallExample }) {
             {item.right.code}
           </pre>
           <p className="mt-3 text-sm leading-6 text-slate-300">
-            {loc(item.right.note, locale)}
+            <RichText text={loc(item.right.note, locale)} />
           </p>
         </div>
       </div>

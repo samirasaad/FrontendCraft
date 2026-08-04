@@ -3,7 +3,7 @@ import type { CheatCard } from "@/lib/types";
 
 export const cssCheatCards: CheatCard[] = [
   cheatCard(
-    L("Flex row", "Flex صف"),
+    L("Flex row", "صف `Flex`"),
     `.row {
   display: flex;
   align-items: center;
@@ -17,21 +17,21 @@ export const cssCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Simple grid", "Grid بسيط"),
+    L("Simple grid", "`Grid` بسيط"),
     `.grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }`,
-    L("Two equal columns with a gap.", "عمودين متساويين مع مسافة."),
+    L("Two equal columns with a gap.", "عمودين متساويين مع `gap`."),
     { id: "display-grid", category: "structure" },
   ),
   cheatCard(
-    L("border-box", "border-box"),
+    L("border-box", "`border-box`"),
     `*, *::before, *::after {
   box-sizing: border-box;
 }`,
-    L("Padding and border count inside width.", "الـ padding والـ border جوه الـ width."),
+    L("Padding and border count inside width.", "الـ `padding` والـ `border` جوه الـ `width`."),
     { id: "box-border", category: "structure" },
   ),
   cheatCard(
@@ -39,30 +39,30 @@ export const cssCheatCards: CheatCard[] = [
     `h1 {
   font-size: clamp(1.5rem, 4vw, 3rem);
 }`,
-    L("Type that scales between min and max.", "خط بيكبر بين حد أدنى وأقصى."),
+    L("Type that scales between min and max.", "خط بيكبر بين حد أدنى وأقصى بـ `clamp()`."),
     { id: "clamp-type", category: "media" },
   ),
   cheatCard(
-    L("Custom property", "Custom property"),
+    L("Custom property", "`Custom property`"),
     `:root {
   --accent: #38bdf8;
 }
 .btn {
   background: var(--accent);
 }`,
-    L("Theme tokens on :root, reuse everywhere.", "توكنات ثيم على :root وتستخدمها في كل حتة."),
+    L("Theme tokens on :root, reuse everywhere.", "`Theme tokens` على `:root` وتستخدمها في كل حتة."),
     { id: "custom-prop", category: "head" },
   ),
   cheatCard(
-    L("Breakpoint", "Breakpoint"),
+    L("Breakpoint", "`Breakpoint`"),
     `@media (min-width: 768px) {
   .sidebar { display: block; }
 }`,
-    L("Enhance layout from a width up.", "حسّن الـ layout من عرض معيّن."),
+    L("Enhance layout from a width up.", "حسّن الـ `layout` من عرض معيّن."),
     { id: "media-md", category: "media" },
   ),
   cheatCard(
-    L("Logical margin", "Margin منطقي"),
+    L("Logical margin", "`Margin` منطقي"),
     `.card {
   margin-inline-start: 1rem;
   padding-block: 1rem;
@@ -71,7 +71,7 @@ export const cssCheatCards: CheatCard[] = [
     { id: "logical-margin", category: "structure" },
   ),
   cheatCard(
-    L("Hover transition", "Transition عند الـ hover"),
+    L("Hover transition", "`Transition` عند الـ `hover`"),
     `.btn {
   transition: background 160ms ease, transform 160ms ease;
 }

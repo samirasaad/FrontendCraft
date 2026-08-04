@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -34,9 +35,11 @@ export function InsightCode({
     <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/70">
       <div className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
         <p className="truncate text-[11px] text-slate-500">
-          {caption
-            ? loc(caption, locale)
-            : t("insightCodeLabel", locale)}
+          {caption ? (
+            <RichText text={loc(caption, locale)} />
+          ) : (
+            t("insightCodeLabel", locale)
+          )}
         </p>
         <button
           type="button"

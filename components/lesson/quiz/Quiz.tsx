@@ -13,6 +13,7 @@ import {
 import { QuizCodeSnippet } from "@/components/lesson/quiz/QuizCodeSnippet";
 import { QuizOptionCard } from "@/components/lesson/quiz/QuizOptionCard";
 import { QuizProgress } from "@/components/lesson/quiz/QuizProgress";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -58,7 +59,7 @@ function QuestionView({
       />
 
       <p className="mb-4 text-base font-semibold leading-relaxed text-white sm:text-lg">
-        {loc(question.prompt, locale)}
+        <RichText text={loc(question.prompt, locale)} />
       </p>
 
       {question.code ? (
@@ -128,7 +129,7 @@ function QuestionView({
                   {t("quizExplanation", locale)}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-slate-200">
-                  {loc(question.explanation, locale)}
+                  <RichText text={loc(question.explanation, locale)} />
                 </p>
               </div>
             </div>
@@ -144,7 +145,7 @@ function QuestionView({
                     {t("quizHint", locale)}
                   </p>
                   <p className="mt-0.5 text-sm leading-relaxed text-slate-300">
-                    {loc(question.hint, locale)}
+                    <RichText text={loc(question.hint, locale)} />
                   </p>
                 </div>
               </div>

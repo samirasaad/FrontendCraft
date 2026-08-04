@@ -11,6 +11,7 @@ import {
   Wind,
 } from "lucide-react";
 import { BrowserSupport } from "@/components/lesson/BrowserSupport";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t, type UiKey } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -196,7 +197,7 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
               <div className="flex flex-1 flex-col gap-3 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <h3 className="text-sm font-semibold text-white">
-                    {loc(card.title, locale)}
+                    <RichText text={loc(card.title, locale)} />
                   </h3>
                   {card.category ? (
                     <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-slate-300">
@@ -210,7 +211,7 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                 </pre>
 
                 <p className="text-xs leading-5 text-slate-400">
-                  {loc(card.note, locale)}
+                  <RichText text={loc(card.note, locale)} />
                 </p>
 
                 <div className="mt-auto flex flex-wrap gap-2">

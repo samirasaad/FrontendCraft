@@ -5,44 +5,66 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   Accessibility,
+  AlertOctagon,
   AlertTriangle,
   AppWindow,
+  ArrowLeftRight,
+  Blocks,
   BookCopy,
   Box,
   CheckCircle2,
   ChevronDown,
   Circle,
   Clapperboard,
+  Columns2,
   Cpu,
+  Ear,
   FileCode,
+  Film,
   Focus,
   FormInput,
   Gauge,
   Gift,
-  Globe2,
+  Heading,
   Highlighter,
   Images,
+  Keyboard,
+  Languages,
   Layers,
+  LayoutGrid,
   LayoutTemplate,
   Link2,
   List,
   ListFilter,
   ListTree,
+  MonitorCheck,
+  Move,
   Network,
+  NotebookTabs,
+  Paintbrush,
+  Palette,
   PanelLeftClose,
+  Radar,
+  Ruler,
   Scale,
   Search,
   Share2,
-  Smartphone,
+  Shield,
+  Sparkles,
+  Square,
   Table,
+  Tablet,
   Target,
   Timer,
   Type,
+  Variable,
+  Volume2,
   Workflow,
   Zap,
   type LucideIcon,
 } from "lucide-react";
 import { loc, t } from "@/content/i18n/ui-strings";
+import { RichText } from "@/components/shared/RichText";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
@@ -74,25 +96,46 @@ const iconMap: Record<string, LucideIcon> = {
   FileCode,
   LayoutTemplate,
   Type,
+  Heading,
   Highlighter,
   Link2,
   List,
   FormInput,
   Table,
   Accessibility,
+  Ear,
   Search,
   Clapperboard,
   Gauge,
   Zap,
   Cpu,
   AlertTriangle,
+  AlertOctagon,
   BookCopy,
-  Smartphone,
+  NotebookTabs,
+  Keyboard,
+  MonitorCheck,
   AppWindow,
   ListTree,
   Images,
   Share2,
-  Globe2,
+  Volume2,
+  Blocks,
+  Shield,
+  Radar,
+  Languages,
+  Ruler,
+  Palette,
+  Square,
+  Paintbrush,
+  Columns2,
+  LayoutGrid,
+  Move,
+  Tablet,
+  Variable,
+  Sparkles,
+  Film,
+  ArrowLeftRight,
 };
 
 interface SidebarProps {
@@ -489,7 +532,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                     <span className="flex items-center gap-2">
                                       <span className="truncate text-sm font-medium text-slate-100">
                                         {lesson.order}.{" "}
-                                        {loc(lesson.content.title, locale)}
+                                        <RichText
+                                          text={loc(lesson.content.title, locale)}
+                                        />
                                       </span>
                                       {done ? (
                                         <CheckCircle2
@@ -505,7 +550,12 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                     </span>
                                     {active ? (
                                       <span className="mt-0.5 line-clamp-1 text-[11px] text-slate-500">
-                                        {loc(lesson.content.summary, locale)}
+                                        <RichText
+                                          text={loc(
+                                            lesson.content.summary,
+                                            locale,
+                                          )}
+                                        />
                                       </span>
                                     ) : null}
                                   </span>

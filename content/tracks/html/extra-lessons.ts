@@ -17,7 +17,7 @@ export const extraLessons: LessonDraft[] = [
     icon: "Gauge",
     visualizer: "cwv-lab",
     content: {
-      title: L("Core Web Vitals", "مؤشرات Core Web Vitals"),
+      title: L("`Core Web Vitals`", "مؤشرات `Core Web Vitals`"),
       summary: L(
         "Dedicated performance lesson — LCP, INP, and CLS as product metrics you ship and measure.",
         "درس أداء مخصص — LCP و INP و CLS كمقاييس منتج بتنشرها وتقيسها.",
@@ -45,9 +45,9 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("LCP < 2.5s · INP < 200ms · CLS < 0.1 (good)", "LCP < 2.5s · INP < 200ms · CLS < 0.1 (جيد)"),
-        L("Never lazy-load the LCP element", "متعَمِلش lazy على عنصر LCP"),
-        L("Reserve space before bytes arrive", "احجز المساحة قبل ما الـ bytes توصل"),
+        L("`LCP` < 2.5s · `INP` < 200ms · `CLS` < 0.1 (good)", "`LCP` < 2.5s · `INP` < 200ms · `CLS` < 0.1 (جيد)"),
+        L("Never `lazy-load` the `LCP` element", "متعَمِلش lazy على عنصر `LCP`"),
+        L("Reserve space before `bytes` arrive", "احجز المساحة قبل ما الـ `bytes` توصل"),
         L("Field data beats a green lab score alone", "Field data أهم من lab score أخضر لوحده"),
       ],
       examples: [
@@ -140,9 +140,9 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Reserve space to avoid CLS", "احجز مساحة عشان تتجنب CLS"),
-        L("Lazy-load non-critical media", "أخّر تحميل الميديا غير الحرجة"),
-        L("Preload LCP carefully", "Preload لـ LCP بحذر"),
+        L("Reserve space to avoid `CLS`", "احجز مساحة عشان تتجنب `CLS`"),
+        L("`Lazy-load` non-critical media", "أخّر تحميل الميديا غير الحرجة"),
+        L("Preload `LCP` carefully", "Preload لـ `LCP` بحذر"),
       ],
       examples: [
         simpleExample(
@@ -214,10 +214,10 @@ export const extraLessons: LessonDraft[] = [
     slug: "html-architecture-partials",
     tier: "advanced",
     readMinutes: 10,
-    icon: "Layers",
+    icon: "Blocks",
     visualizer: "semantic-blocks",
     content: {
-      title: L("Document Architecture", "هندسة الـ Document"),
+      title: L("`Document` Architecture", "هندسة المستند"),
       summary: L(
         "Think in reusable regions — header, main, templates — before you sprinkle divs.",
         "فكّر بمناطق قابلة لإعادة الاستخدام — header و main وقوالب — قبل ما ترش `div`.",
@@ -237,9 +237,9 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Landmarks first", "Landmarks أولًا"),
+        L("`Landmarks` first", "`Landmarks` أولًا"),
         L("One main per page", "main واحد لكل صفحة"),
-        L("Enhance, don't replace, HTML", "عزّز HTML ومتستبدلوش"),
+        L("Enhance, don't replace, `HTML`", "عزّز `HTML` ومتستبدلوش"),
       ],
       examples: [
         simpleExample(
@@ -308,10 +308,10 @@ export const extraLessons: LessonDraft[] = [
     slug: "html-security-hardening",
     tier: "pro",
     readMinutes: 13,
-    icon: "Target",
+    icon: "Shield",
     visualizer: "html-security-lab",
     content: {
-      title: L("HTML Security Hardening", "تقوية أمان HTML"),
+      title: L("`HTML` `Security` Hardening", "تقوية أمان `HTML`"),
       summary: L(
         "Ship-safe markup at trust boundaries: external tabs, embeds, forms, and browser-held data.",
         "Markup آمن للإنتاج عند حدود الثقة: tabs خارجية و embeds و forms وبيانات المتصفح.",
@@ -344,9 +344,9 @@ export const extraLessons: LessonDraft[] = [
       ],
       keyPoints: [
         L("`target=\"_blank\"` → `rel=\"noopener noreferrer\"`", "`target=\"_blank\"` → `rel=\"noopener noreferrer\"`"),
-        L("Sandbox embeds by default; grant the minimum", "اعمل sandbox للـ embeds افتراضيًا؛ وامنح أقل صلاحيات"),
-        L("Autocomplete tokens describe intent, not security", "Autocomplete tokens بتوصف النية، مش security"),
-        L("Secrets never belong in client-visible HTML", "الأسرار عمرها ما مكانها HTML ظاهر للعميل"),
+        L("`Sandbox` embeds by `default`; grant the minimum", "اعمل `sandbox` للـ embeds افتراضيًا؛ وامنح أقل صلاحيات"),
+        L("`Autocomplete` `tokens` describe intent, not `security`", "`Autocomplete` `tokens` بتوصف النية، مش `security`"),
+        L("`Secrets` never belong in `client`-`visible` `HTML`", "الأسرار عمرها ما مكانها `HTML` ظاهر للعميل"),
       ],
       examples: [
         simpleExample(
@@ -420,7 +420,7 @@ export const extraLessons: LessonDraft[] = [
     slug: "html-speculation-rules",
     tier: "pro",
     readMinutes: 12,
-    icon: "Network",
+    icon: "Radar",
     visualizer: "html-speculation-lab",
     content: {
       title: L(
@@ -458,10 +458,10 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Prefetch warms bytes; prerender warms a rendered page", "Prefetch بيسخّن bytes؛ prerender بيسخّن صفحة مترسومة"),
-        L("Start with same-origin, high-confidence read-only URLs", "ابدأ بـ same-origin وURLs read-only عالية الثقة"),
-        L("Never prerender logout or mutating routes", "ماتعملش prerender لـ logout أو routes بتغيّر state"),
-        L("Measure next-navigation LCP against current-page cost", "قارن LCP للتنقل الجاي بتكلفة الصفحة الحالية"),
+        L("`Prefetch` warms `bytes`; `prerender` warms a rendered page", "`Prefetch` بيسخّن `bytes`؛ `prerender` بيسخّن صفحة مترسومة"),
+        L("Start with `same-origin`, high-confidence read-only URLs", "ابدأ بـ `same-origin` وURLs read-only عالية الثقة"),
+        L("Never `prerender` `logout` or mutating routes", "ماتعملش `prerender` لـ `logout` أو routes بتغيّر `state`"),
+        L("Measure next-navigation `LCP` against current-page cost", "قارن `LCP` للتنقل الجاي بتكلفة الصفحة الحالية"),
       ],
       examples: [
         simpleExample(
@@ -533,7 +533,7 @@ export const extraLessons: LessonDraft[] = [
     slug: "html-global-rtl",
     tier: "pro",
     readMinutes: 13,
-    icon: "Globe2",
+    icon: "Languages",
     visualizer: "html-global-rtl-lab",
     content: {
       title: L(
@@ -571,10 +571,10 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Root `lang` + `dir` declare the document default", "Root `lang` + `dir` بيعلنوا افتراضي المستند"),
-        L("Isolate mixed English tokens with `<bdi>` or `dir=\"ltr\"`", "اعزل الرموز الإنجليزية المخلوطة بـ `<bdi>` أو `dir=\"ltr\"`"),
-        L("Force LTR on email/URL/OTP inputs inside RTL pages", "افرض LTR على حقول الإيميل/URL/OTP جوّه صفحات RTL"),
-        L("Teleporting UI must carry `lang`/`dir` with it", "الـ UI المتنقل لازم يشيل `lang`/`dir` معاه"),
+        L("`Root` `lang` + `dir` declare the `document` `default`", "`Root` `lang` + `dir` بيعلنوا افتراضي المستند"),
+        L("`Isolate` `mixed` English `tokens` with `<bdi>` or `dir=\"ltr\"`", "اعزل الرموز الإنجليزية المخلوطة بـ `<bdi>` أو `dir=\"ltr\"`"),
+        L("Force `LTR` on email/`URL`/OTP `inputs` inside `RTL` pages", "افرض `LTR` على حقول الإيميل/`URL`/OTP جوّه صفحات `RTL`"),
+        L("Teleporting `UI` must carry `lang`/`dir` with it", "الـ `UI` المتنقل لازم يشيل `lang`/`dir` معاه"),
       ],
       examples: [
         simpleExample(
@@ -663,7 +663,7 @@ export const extraLessons: LessonDraft[] = [
     slug: "html-common-pitfalls",
     tier: "pro",
     readMinutes: 12,
-    icon: "AlertTriangle",
+    icon: "AlertOctagon",
     visualizer: "document-tree",
     content: {
       title: L("Common Pitfalls", "أخطاء شائعة"),
@@ -686,7 +686,7 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Capstone for the whole HTML track", "خاتمة للـ HTML track كله"),
+        L("Capstone for the whole `HTML` track", "خاتمة للـ `HTML` track كله"),
         L("Wrong vs right on every card", "غلط مقابل صح في كل كارت"),
         L("Revisit the matching lesson after each card", "ارجع للدرس المناسب بعد كل كارت"),
       ],
@@ -747,7 +747,7 @@ export const extraLessons: LessonDraft[] = [
     slug: "html-cheatsheet",
     tier: "cheatsheet",
     readMinutes: 8,
-    icon: "BookCopy",
+    icon: "NotebookTabs",
     visualizer: "cheatsheet-lab",
     content: {
       title: L("Interactive CheatSheet", "CheatSheet تفاعلي"),
@@ -770,9 +770,9 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       keyPoints: [
-        L("Filter → preview → copy → paste in playground", "فلتر → معاينة → نسخ → لصق في الـ playground"),
-        L("Prefer boilerplate for full document fragments", "فضّل boilerplate لمقاطع المستند الكاملة"),
-        L("Check Baseline before shipping bleeding-edge tags", "راجع Baseline قبل ما تنشر tags جديدة"),
+        L("`Filter` → `preview` → `copy` → `paste` in `playground`", "فلتر → معاينة → نسخ → لصق في الـ `playground`"),
+        L("Prefer `boilerplate` for full `document` fragments", "فضّل `boilerplate` لمقاطع المستند الكاملة"),
+        L("Check `Baseline` before shipping bleeding-edge `tags`", "راجع `Baseline` قبل ما تنشر `tags` جديدة"),
       ],
       examples: [
         simpleExample(

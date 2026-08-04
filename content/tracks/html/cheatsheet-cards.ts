@@ -25,7 +25,7 @@ const shellBoilerplate = `<!DOCTYPE html>
 
 export const htmlCheatCards: CheatCard[] = [
   cheatCard(
-    L("Document shell", "Document shell"),
+    L("Document shell", "هيكل المستند"),
     `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -35,7 +35,7 @@ export const htmlCheatCards: CheatCard[] = [
   </head>
   <body></body>
 </html>`,
-    L("Always start here — doctype + lang + charset + viewport.", "دايمًا ابدأ من هنا — doctype + lang + charset + viewport."),
+    L("Always start here — `doctype` + lang + `charset` + `viewport`.", "دايمًا ابدأ من هنا — `doctype` + `lang` + `charset` + `viewport`."),
     {
       id: "shell",
       category: "structure",
@@ -47,12 +47,12 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Landmarks", "Landmarks"),
+    L("`Landmarks`", "`Landmarks`"),
     `<header></header>
 <nav aria-label="Primary"></nav>
 <main id="main"></main>
 <footer></footer>`,
-    L("One main. Name every nav landmark.", "main واحد. سمّي كل nav landmark."),
+    L("One main. Name every `nav` `landmark`.", "`main` واحد. سمّي كل `nav` `landmark`."),
     {
       id: "landmarks",
       category: "structure",
@@ -76,11 +76,11 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Heading outline", "Heading outline"),
+    L("`Heading outline`", "مخطط العناوين"),
     `<h1>Page</h1>
 <h2>Section</h2>
 <h3>Subsection</h3>`,
-    L("Don't skip levels for styling — CSS is for looks.", "متقفزش مستويات عشان الشكل — الشكل بـ CSS."),
+    L("Don't `skip` `levels` for `styling` — `CSS` is for looks.", "متقفزش مستويات عشان الشكل — الشكل بـ `CSS`."),
     {
       id: "headings",
       category: "structure",
@@ -91,12 +91,12 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Label + input", "Label + input"),
+    L("Label + input", "`Label` + `input`"),
     `<label>
   Email
   <input type="email" name="email" required autocomplete="email" />
 </label>`,
-    L("Placeholder ≠ label. Prefer wrapping labels.", "الـ placeholder ≠ label. لفّ الـ label حول الـ input."),
+    L("Placeholder ≠ label. Prefer `wrapping` `labels`.", "الـ `placeholder` ≠ `label`. لفّ الـ `label` حول الـ `input`."),
     {
       id: "label-input",
       category: "forms",
@@ -124,7 +124,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Mobile UX attributes", "Mobile UX attributes"),
+    L("Mobile `UX` `attributes`", "خصائص `UX` للموبايل"),
     `<input
   name="phone"
   type="tel"
@@ -132,7 +132,7 @@ export const htmlCheatCards: CheatCard[] = [
   autocomplete="tel"
   pattern="[0-9+\\-\\s]{8,}"
 />`,
-    L("`inputmode` shapes the keyboard; `autocomplete` speeds fills; `pattern` validates.", "`inputmode` بيشكل الكيبورد؛ `autocomplete` بيسرّع التعبئة؛ `pattern` للتحقق."),
+    L("`inputmode` shapes the `keyboard`; `autocomplete` speeds fills; `pattern` validates.", "`inputmode` بيشكل الكيبورد؛ `autocomplete` بيسرّع التعبئة؛ `pattern` للتحقق."),
     {
       id: "form-ux",
       category: "forms",
@@ -167,7 +167,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Native dialog", "Native dialog"),
+    L("Native dialog", "`<dialog>` الأصلي"),
     `<dialog id="confirm">
   <form method="dialog">
     <p>Delete lesson progress?</p>
@@ -175,7 +175,7 @@ export const htmlCheatCards: CheatCard[] = [
     <button value="ok">Delete</button>
   </form>
 </dialog>`,
-    L("Use `showModal()` for a native backdrop + focus trap.", "استخدم `showModal()` لـ backdrop و focus trap أصلي."),
+    L("Use `showModal()` for a native `backdrop` + `focus` trap.", "استخدم `showModal()` لـ `backdrop` و `focus` trap أصلي."),
     {
       id: "dialog",
       category: "interactive",
@@ -219,12 +219,12 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Details accordion", "Details accordion"),
+    L("Details `accordion`", "أكورديون `<details>`"),
     `<details>
   <summary>What is the Event Loop?</summary>
   <p>It coordinates the call stack and task queues.</p>
 </details>`,
-    L("Zero-JS disclosure — great for FAQs. Mind `name` for exclusive groups.", "Disclosure من غير JS — ممتاز لـ FAQ. استخدم `name` للمجموعات الحصرية."),
+    L("Zero-`JS` `disclosure` — great for FAQs. Mind `name` for exclusive groups.", "`Disclosure` من غير `JS` — ممتاز لـ `FAQ`. استخدم `name` للمجموعات الحصرية."),
     {
       id: "details",
       category: "interactive",
@@ -256,7 +256,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Responsive picture", "Responsive picture"),
+    L("Responsive picture", "`<picture>` متجاوب"),
     `<picture>
   <source type="image/avif" srcset="/hero.avif" />
   <source type="image/webp" srcset="/hero.webp" />
@@ -290,7 +290,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Sized lazy image", "Sized lazy image"),
+    L("Sized lazy image", "صورة `lazy` بمقاس"),
     `<img
   src="/lesson.webp"
   alt="Sandbox preview"
@@ -299,7 +299,7 @@ export const htmlCheatCards: CheatCard[] = [
   loading="lazy"
   decoding="async"
 />`,
-    L("Width/height fights CLS; lazy for below-the-fold only.", "width/height ضد CLS؛ lazy للصور تحت الشاشة بس."),
+    L("Width/height fights `CLS`; lazy for `below-the-fold` only.", "`width`/`height` ضد `CLS`؛ `lazy` للصور تحت الشاشة بس."),
     {
       id: "img-lazy",
       category: "media",
@@ -309,12 +309,12 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Open Graph + Twitter", "Open Graph + Twitter"),
+    L("Open Graph + Twitter", "`Open Graph` + `Twitter`"),
     `<meta property="og:title" content="FrontendCraft" />
 <meta property="og:description" content="Interactive HTML lab" />
 <meta property="og:image" content="https://example.com/og.png" />
 <meta name="twitter:card" content="summary_large_image" />`,
-    L("Social previews read these from the initial HTML `<head>`.", "معاينات السوشيال بتقرأ دول من `<head>` في أول HTML."),
+    L("Social previews read these from the initial `HTML` `<head>`.", "معاينات السوشيال بتقرأ دول من `<head>` في أول `HTML`."),
     {
       id: "og",
       category: "head",
@@ -340,12 +340,12 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Theme color & favicons", "Theme color & favicons"),
+    L("Theme color & favicons", "`theme-color` و `favicons`"),
     `<meta name="theme-color" content="#020617" />
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/icon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />`,
-    L("SVG favicon + ICO fallback covers desktop; apple-touch for iOS home screen.", "SVG + ICO للديسكتوب؛ apple-touch لشاشة iOS."),
+    L("SVG favicon + ICO `fallback` covers desktop; apple-touch for iOS home screen.", "`SVG` + `ICO` للديسكتوب؛ `apple-touch` لشاشة `iOS`."),
     {
       id: "theme-favicon",
       category: "head",
@@ -355,10 +355,10 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Button vs link", "Button vs link"),
+    L("`Button` vs link", "`button` مقابل `link`"),
     `<a href="/javascript">Open JS track</a>
 <button type="button">Mark complete</button>`,
-    L("Links navigate. Buttons trigger actions in-place.", "اللينك للتنقّل. الزر لفعل في نفس الصفحة."),
+    L("`Links` navigate. `Buttons` trigger actions in-place.", "اللينك للتنقّل. الزر لفعل في نفس الصفحة."),
     {
       id: "button-link",
       category: "structure",
@@ -372,13 +372,13 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Skip link", "Skip link"),
+    L("`Skip link`", "`Skip link`"),
     `<body>
   <a href="#main">Skip to content</a>
   <header>…</header>
   <main id="main">…</main>
 </body>`,
-    L("First focusable control — jump past repeated chrome.", "أول عنصر قابل للتركيز — اقفز بعد الـ chrome المتكرر."),
+    L("First focusable control — jump past repeated `chrome`.", "أول عنصر قابل للتركيز — اقفز بعد الـ `chrome` المتكرر."),
     {
       id: "skip-link",
       category: "structure",
@@ -397,7 +397,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Lists", "Lists"),
+    L("Lists", "القوائم"),
     `<ul>
   <li>Unordered item</li>
 </ul>
@@ -408,7 +408,7 @@ export const htmlCheatCards: CheatCard[] = [
   <dt>Term</dt>
   <dd>Definition</dd>
 </dl>`,
-    L("`ul`/`ol` need `<li>` children. Use `dl` for term → definition pairs.", "`ul`/`ol` محتاجين أولاد `<li>`. استخدم `dl` لأزواج مصطلح → تعريف."),
+    L("`ul`/`ol` need `<li>` `children`. Use `dl` for `term` → `definition` pairs.", "`ul`/`ol` محتاجين أولاد `<li>`. استخدم `dl` لأزواج مصطلح → تعريف."),
     {
       id: "lists",
       category: "structure",
@@ -419,7 +419,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Article + section", "Article + section"),
+    L("`Article` + section", "`<article>` + `<section>`"),
     `<main>
   <article>
     <h1>Lesson title</h1>
@@ -429,7 +429,7 @@ export const htmlCheatCards: CheatCard[] = [
     </section>
   </article>
 </main>`,
-    L("`article` can stand alone; `section` needs a heading.", "`article` يقدر يعيش لوحده؛ `section` محتاج heading."),
+    L("`article` can stand alone; `section` needs a `heading`.", "`article` يقدر يعيش لوحده؛ `section` محتاج `heading`."),
     {
       id: "article-section",
       category: "structure",
@@ -441,7 +441,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Text semantics", "Text semantics"),
+    L("Text `semantics`", "`semantics` للنص"),
     `<p>
   Prefer <strong>strong</strong> for importance and
   <em>em</em> for stress — not only for looks.
@@ -456,7 +456,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Fieldset + legend", "Fieldset + legend"),
+    L("Fieldset + legend", "`<fieldset>` + `<legend>`"),
     `<fieldset>
   <legend>Account</legend>
   <label>
@@ -464,7 +464,7 @@ export const htmlCheatCards: CheatCard[] = [
     <input type="email" name="email" autocomplete="email" required />
   </label>
 </fieldset>`,
-    L("Group related controls — legend names the group for AT.", "جمّع الـ controls المرتبطة — الـ legend بيسمّي المجموعة لـ AT."),
+    L("Group related `controls` — legend names the group for `AT`.", "جمّع الـ `controls` المرتبطة — الـ legend بيسمّي المجموعة لـ `AT`."),
     {
       id: "fieldset",
       category: "forms",
@@ -492,7 +492,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Select + options", "Select + options"),
+    L("Select + options", "`<select>` + `options`"),
     `<label>
   Track
   <select name="track" required>
@@ -516,7 +516,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Datalist suggestions", "Datalist suggestions"),
+    L("Datalist suggestions", "اقتراحات `<datalist>`"),
     `<label>
   Framework
   <input name="fw" list="frameworks" />
@@ -526,7 +526,7 @@ export const htmlCheatCards: CheatCard[] = [
   <option value="Vue"></option>
   <option value="Svelte"></option>
 </datalist>`,
-    L("Suggestions only — users can still type free text.", "اقتراحات بس — المستخدم يقدر يكتب نص حر."),
+    L("Suggestions only — `users` can still type free text.", "اقتراحات بس — المستخدم يقدر يكتب نص حر."),
     {
       id: "datalist",
       category: "forms",
@@ -542,13 +542,13 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Button types", "Button types"),
+    L("`Button` types", "أنواع `button`"),
     `<form>
   <button type="submit">Save</button>
   <button type="reset">Reset</button>
   <button type="button">Cancel</button>
 </form>`,
-    L("Default inside a form is `submit` — set `type` explicitly.", "الافتراضي جوّه form هو `submit` — حط `type` صراحة."),
+    L("`Default` inside a form is `submit` — set `type` explicitly.", "الافتراضي جوّه form هو `submit` — حط `type` صراحة."),
     {
       id: "button-types",
       category: "forms",
@@ -559,7 +559,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Search landmark", "Search landmark"),
+    L("Search `landmark`", "`landmark` البحث"),
     `<search>
   <form role="search" action="/search">
     <label>
@@ -569,7 +569,7 @@ export const htmlCheatCards: CheatCard[] = [
     <button type="submit">Search</button>
   </form>
 </search>`,
-    L("Prefer `<search>` — fallback is `<form role=\"search\">`.", "فضّل `<search>` — الـ fallback هو `<form role=\"search\">`."),
+    L("Prefer `<search>` — `fallback` is `<form role=\"search\">`.", "فضّل `<search>` — الـ `fallback` هو `<form role=\"search\">`."),
     {
       id: "search",
       category: "interactive",
@@ -602,7 +602,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Popover", "Popover"),
+    L("Popover", "`Popover`"),
     `<button type="button" popovertarget="tips">Tips</button>
 <div id="tips" popover>
   <p>Native top-layer tip — light dismiss.</p>
@@ -610,7 +610,7 @@ export const htmlCheatCards: CheatCard[] = [
     Close
   </button>
 </div>`,
-    L("Menus/tooltips without a modal dialog — not a full focus trap.", "menus/tooltips من غير dialog modal — مش focus trap كامل."),
+    L("Menus/tooltips without a `modal` dialog — not a full `focus` trap.", "`menus`/`tooltips` من غير `dialog` `modal` — مش `focus trap` كامل."),
     {
       id: "popover",
       category: "interactive",
@@ -642,7 +642,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Table with headers", "Table with headers"),
+    L("`Table` with `headers`", "جدول بـ `headers`"),
     `<table>
   <caption>Track progress</caption>
   <thead>
@@ -658,7 +658,7 @@ export const htmlCheatCards: CheatCard[] = [
     </tr>
   </tbody>
 </table>`,
-    L("Use tables for data — `th` + `scope` + `caption` for AT.", "الجداول للبيانات — `th` + `scope` + `caption` لـ AT."),
+    L("Use `tables` for data — `th` + `scope` + `caption` for `AT`.", "الجداول للبيانات — `th` + `scope` + `caption` لـ `AT`."),
     {
       id: "table",
       category: "structure",
@@ -675,13 +675,13 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Video + captions", "Video + captions"),
+    L("Video + captions", "`<video>` + `captions`"),
     `<video controls width="640" height="360" poster="/poster.jpg">
   <source src="/lesson.webm" type="video/webm" />
   <source src="/lesson.mp4" type="video/mp4" />
   <track kind="captions" srclang="en" src="/captions.vtt" label="English" default />
 </video>`,
-    L("Always offer controls + a caption track when speech matters.", "دايمًا حط controls و track ترجمة لما الكلام يهم."),
+    L("Always offer `controls` + a `caption` track when speech matters.", "دايمًا حط `controls` و track ترجمة لما الكلام يهم."),
     {
       id: "video-track",
       category: "media",
@@ -716,7 +716,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("Lazy iframe embed", "Lazy iframe embed"),
+    L("Lazy iframe embed", "`iframe` `lazy`"),
     `<iframe
   title="Event Loop demo"
   src="https://example.com/embed"
@@ -724,7 +724,7 @@ export const htmlCheatCards: CheatCard[] = [
   width="640"
   height="360"
 ></iframe>`,
-    L("Always set `title`. Lazy-load non-critical embeds.", "حط `title` دايمًا. أخّر الـ embeds غير الحرجة."),
+    L("Always set `title`. `Lazy-load` non-critical embeds.", "حط `title` دايمًا. أخّر الـ embeds غير الحرجة."),
     {
       id: "iframe-lazy",
       category: "media",
@@ -740,7 +740,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("LCP image priority", "LCP image priority"),
+    L("`LCP` image priority", "أولوية صورة `LCP`"),
     `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
 <img
   src="/hero.webp"
@@ -749,7 +749,7 @@ export const htmlCheatCards: CheatCard[] = [
   height="630"
   fetchpriority="high"
 />`,
-    L("Size the hero, preload when known, never `loading=\"lazy\"` above the fold.", "حط مقاس للـ hero، preload لما تعرفه، ومتعملش lazy فوق الشاشة."),
+    L("Size the `hero`, preload when known, never `loading=\"lazy\"` above the fold.", "حط مقاس للـ `hero`، preload لما تعرفه، ومتعملش lazy فوق الشاشة."),
     {
       id: "lcp-priority",
       category: "media",
@@ -768,12 +768,12 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("SEO essentials", "SEO essentials"),
+    L("`SEO` essentials", "أساسيات `SEO`"),
     `<title>FrontendCraft — HTML track</title>
 <meta name="description" content="Interactive HTML learning lab" />
 <link rel="canonical" href="https://example.com/html" />
 <meta name="robots" content="index,follow" />`,
-    L("Unique title + description + canonical in the first HTML response.", "title فريد + description + canonical في أول استجابة HTML."),
+    L("Unique title + `description` + `canonical` in the first `HTML` `response`.", "`title` فريد + `description` + `canonical` في أول استجابة `HTML`."),
     {
       id: "seo-meta",
       category: "head",
@@ -792,7 +792,7 @@ export const htmlCheatCards: CheatCard[] = [
     },
   ),
   cheatCard(
-    L("JSON-LD Article", "JSON-LD Article"),
+    L("`JSON-LD` `Article`", "`JSON-LD` `Article`"),
     `<script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -801,7 +801,7 @@ export const htmlCheatCards: CheatCard[] = [
   "author": { "@type": "Organization", "name": "FrontendCraft" }
 }
 </script>`,
-    L("Must match visible content — fake rich results get ignored.", "لازم يطابق المحتوى الظاهر — النتائج المزيفة بتتتجاهل."),
+    L("Must match `visible` `content` — fake rich results get ignored.", "لازم يطابق المحتوى الظاهر — النتائج المزيفة بتتتجاهل."),
     {
       id: "json-ld",
       category: "head",

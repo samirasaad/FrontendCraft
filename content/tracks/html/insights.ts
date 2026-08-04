@@ -6,24 +6,24 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "Blink and Gecko tokenize HTML into a DOM tree — not a simple string parse. The doctype triggers standards mode; without it, quirks mode applies legacy box model rules that break modern CSS layouts.",
-          "Blink و Gecko بيعملوا tokenize للـ HTML لـ DOM tree — مش parse string بسيط. الـ doctype بيشغّل standards mode؛ من غيره quirks mode بيطبّق box model rules قديمة بتكسر CSS layouts الحديثة.",
+          "Blink and Gecko tokenize HTML into a DOM tree — not a simple string parse. The doctype triggers `standards mode`; without it, quirks mode applies legacy box model rules that break modern CSS layouts.",
+          "Blink و Gecko بيعملوا `tokenize` للـ `HTML` لـ `DOM tree` — مش `parse` `string` بسيط. الـ `doctype` بيشغّل ``standards mode``؛ من غيره `quirks mode` بيطبّق `box model rules` قديمة بتكسر `CSS layouts` الحديثة.",
         ),
         L(
           "Parsing is incremental: the parser yields while scripts/styles block. `<head>` metadata is processed before `<body>` paints — charset and viewport must appear early so decoding and layout viewport are correct from the first byte.",
-          "Parsing incremental: الـ parser بيوقف لما scripts/styles block. metadata في `<head>` بتتprocess قبل ما `<body>` يpaint — charset و viewport لازم بدري عشان decoding و layout viewport صح من أول byte.",
+          "`Parsing` `incremental`: الـ `parser` بيوقف لما `scripts`/`styles` `block`. `metadata` في `<head>` بتتprocess قبل ما `<body>` يpaint — `charset` و `viewport` لازم بدري عشان `decoding` و `layout viewport` صح من أول `byte`.",
         ),
         L(
           "DOM construction pairs with CSSOM for the render tree — HTML structure directly affects which nodes become layout boxes. Invalid nesting (e.g. `<div>` inside `<p>`) gets repaired by the parser, sometimes unpredictably.",
-          "DOM construction بيتزاوج مع CSSOM للـ render tree — HTML structure بيأثر مباشرة على أي nodes تبقى layout boxes. Nesting غلط (مثل `<div>` جوه `<p>`) الـ parser بيصلحه أحيانًا بشكل unpredictable.",
+          "`DOM construction` بيتزاوج مع `CSSOM` للـ `render tree` — `HTML structure` بيأثر مباشرة على أي `nodes` تبقى `layout boxes`. `Nesting` غلط (مثل `<div>` جوه `<p>`) الـ `parser` بيصلحه أحيانًا بشكل `unpredictable`.",
         ),
       ],
       {
         bullets: [
-          L("<!DOCTYPE html> + `<html lang>` on every page", "<!DOCTYPE html> + `<html lang>` على كل صفحة"),
-          L("`<meta charset=\"UTF-8\">` within first 1024 bytes", "`<meta charset=\"UTF-8\">` في أول 1024 bytes"),
-          L("One `<main>`, logical `<header>` / `<footer>` landmarks", "`<main>` واحد و landmarks `<header>` / `<footer>` منطقية"),
-          L("Validate HTML — parser fixes hide structural bugs", "Validate HTML — parser fixes بتخبي structural bugs"),
+          L("<!`DOCTYPE` `html`> + `<html lang>` on every page", "<!`DOCTYPE` `html`> + `<html lang>` على كل صفحة"),
+          L("`<meta charset=\"UTF-8\">` within first 1024 `bytes`", "`<meta charset=\"UTF-8\">` في أول 1024 `bytes`"),
+          L("One `<main>`, logical `<header>` / `<footer>` `landmarks`", "`<main>` واحد و `landmarks` `<header>` / `<footer>` منطقية"),
+          L("Validate `HTML` — `parser` `fixes` hide `structural` `bugs`", "Validate `HTML` — `parser fixes` بتخبي `structural bugs`"),
         ],
         code: `<!DOCTYPE html>
 <html lang="en">
@@ -34,52 +34,52 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   </head>
   <body>...</body>
 </html>`,
-        codeCaption: L("Minimal valid document shell", "Document shell صالح minimal"),
+        codeCaption: L("Minimal valid `document shell`", "`Document shell` صالح minimal"),
       },
     ),
     accessibility: insight(
       [
         L(
           "`lang` on `<html>` sets VoiceOver/NVDA pronunciation and hyphenation — wrong language makes content unreadable. Document title is the first announcement when the page loads.",
-          "`lang` على `<html>` بيحدد نطق VoiceOver/NVDA و hyphenation — language غلط بيخلي المحتوى مش مقروء. Document title أول إعلان لما الصفحة تحمّل.",
+          "`lang` على `<html>` بيحدد نطق `VoiceOver`/`NVDA` و `hyphenation` — `language` غلط بيخلي المحتوى مش مقروء. `Document title` أول إعلان لما الصفحة تحمّل.",
         ),
         L(
           "Skip links belong at the top of `<body>` before chrome — keyboard users Tab once to bypass repeated nav. Without landmarks, screen readers cannot jump to main content efficiently.",
-          "Skip links في أول `<body>` قبل chrome — keyboard users Tab مرة واحدة يتخطوا nav المتكرر. من غير landmarks، screen readers مش هتقدر تقفز للـ main content بسرعة.",
+          "`Skip links` في أول `<body>` قبل `chrome` — `keyboard users` `Tab` مرة واحدة يتخطوا `nav` المتكرر. من غير `landmarks`، `screen readers` مش هتقدر تقفز للـ `main content` بسرعة.",
         ),
       ],
       {
         bullets: [
-          L("Set `lang` to primary content language (ar, en, …)", "حط `lang` للغة المحتوى الأساسية (ar, en, …)"),
-          L("`<title>` unique and descriptive per route", "`<title>` فريد ووصفي لكل route"),
-          L("Skip link → `#main` with visible focus style", "Skip link → `#main` بـ focus style ظاهر"),
-          L("Avoid `title` attribute as substitute for visible text", "متستخدمش `title` attribute بدل visible text"),
+          L("Set `lang` to primary `content` language (ar, en, …)", "حط `lang` للغة المحتوى الأساسية (ar, en, …)"),
+          L("`<title>` unique and `descriptive` per route", "`<title>` فريد ووصفي لكل route"),
+          L("`Skip link` → `#main` with `visible` `focus` style", "`Skip link` → `#main` بـ `focus` style ظاهر"),
+          L("Avoid `title` attribute as substitute for `visible text`", "متستخدمش `title` attribute بدل `visible text`"),
         ],
         code: `<body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header>...</header>
   <main id="main" tabindex="-1">...</main>
 </body>`,
-        codeCaption: L("Skip link and main landmark", "Skip link و main landmark"),
+        codeCaption: L("`Skip link` and main `landmark`", "`Skip link` و main `landmark`"),
       },
     ),
     seo: insight(
       [
         L(
           "Googlebot reads the initial HTML response — `<title>`, canonical, meta description, and body copy in the first payload are indexed reliably. Client-rendered shells delay discovery.",
-          "Googlebot بيقرأ HTML response الأولي — `<title>` و canonical و meta description و body copy في أول payload بتتفهرس بثبات. Shells client-rendered بتأخر discovery.",
+          "`Googlebot` بيقرأ `HTML response` الأولي — `<title>` و `canonical` و `meta description` و `body copy` في أول `payload` بتتفهرس بثبات. `Shells` `client-rendered` بتأخر `discovery`.",
         ),
         L(
           "Viewport meta enables mobile-first indexing — missing viewport can classify pages as non-mobile-friendly. Charset misplacement causes mojibake in snippets.",
-          "Viewport meta بيفعّل mobile-first indexing — viewport ناقص ممكن يصنّف الصفحات non-mobile-friendly. charset في مكان غلط بيسبب mojibake في snippets.",
+          "`Viewport meta` بيفعّل `mobile-first indexing` — `viewport` ناقص ممكن يصنّف الصفحات `non-mobile-friendly`. `charset` في مكان غلط بيسبب `mojibake` في `snippets`.",
         ),
       ],
       {
         bullets: [
-          L("Unique `<title>` per URL — primary ranking signal", "`<title>` فريد لكل URL — ranking signal أساسي"),
+          L("Unique `<title>` per `URL` — primary `ranking` signal", "`<title>` فريد لكل `URL` — `ranking` signal أساسي"),
           L("`<link rel=\"canonical\">` in `<head>`", "`<link rel=\"canonical\">` في `<head>`"),
-          L("SSR/SSG body text — not empty `<div id=\"root\">`", "SSR/SSG body text — مش `<div id=\"root\">` فاضي"),
-          L("Valid HTML reduces parser repair surprises in crawlers", "HTML valid يقلل parser repair surprises للـ crawlers"),
+          L("`SSR`/`SSG` `body` text — not empty `<div id=\"root\">`", "`SSR`/`SSG` `body` text — مش `<div id=\"root\">` فاضي"),
+          L("Valid `HTML` reduces `parser` repair surprises in `crawlers`", "`HTML` valid يقلل `parser` repair surprises للـ `crawlers`"),
         ],
       },
     ),
@@ -90,7 +90,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       [
         L(
           "Semantic elements map to accessibility roles in the accessibility tree — `<nav>`, `<main>`, `<article>` become landmarks without ARIA. The browser builds this parallel tree alongside the DOM for AT.",
-          "Semantic elements بتت map لـ accessibility roles في accessibility tree — `<nav>`, `<main>`, `<article>` landmarks من غير ARIA. المتصفح بيبني tree موازي جنب DOM لـ AT.",
+          "`Semantic elements` بتت map لـ `accessibility roles` في `accessibility tree` — `<nav>`, `<main>`, `<article>` `landmarks` من غير `ARIA`. المتصفح بيبني `tree` موازي جنب `DOM` لـ `AT`.",
         ),
         L(
           "Sectioning content (`article`, `section`, `aside`, `nav`) affects document outline algorithms in spec — while browsers do not expose heading outlines to users consistently, semantics still drive reader mode and search snippet structure.",
@@ -98,15 +98,15 @@ export const htmlInsights: Record<string, ProductionInsights> = {
         ),
         L(
           "Div soup forces the engine to treat everything as generic — no shortcut navigation, heavier heuristic guessing for AT. Native semantics are zero-cost at parse time.",
-          "Div soup بيخلي الـ engine يتعامل مع كل حاجة generic — مفيش shortcut navigation، guessing أثقل لـ AT. Native semantics zero-cost وقت parse.",
+          "`Div soup` بيخلي الـ `engine` يتعامل مع كل حاجة `generic` — مفيش `shortcut navigation`، `guessing` أثقل لـ `AT`. `Native semantics` `zero-cost` وقت `parse`.",
         ),
       ],
       {
         bullets: [
-          L("`<header>` / `<footer>` can repeat per sectioning root", "`<header>` / `<footer>` ممكن يتكرروا per sectioning root"),
-          L("One visible `<h1>` per page in most layouts", "`<h1>` ظاهر واحد لكل صفحة في أغلب layouts"),
+          L("`<header>` / `<footer>` can repeat per sectioning `root`", "`<header>` / `<footer>` ممكن يتكرروا per sectioning `root`"),
+          L("One `visible` `<h1>` per page in most layouts", "`<h1>` ظاهر واحد لكل صفحة في أغلب layouts"),
           L("`<nav>` for major navigation blocks only", "`<nav>` لـ major navigation blocks بس"),
-          L("`<article>` for self-contained syndicatable content", "`<article>` لمحتوى self-contained قابل للـ syndication"),
+          L("`<article>` for self-contained syndicatable `content`", "`<article>` لمحتوى self-contained قابل للـ syndication"),
         ],
         code: `<body>
   <header><h1>Site</h1></header>
@@ -118,7 +118,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     </article>
   </main>
 </body>`,
-        codeCaption: L("Landmark-first page skeleton", "Page skeleton landmarks أولًا"),
+        codeCaption: L("`Landmark`-first page `skeleton`", "Page `skeleton` `landmarks` أولًا"),
       },
     ),
     accessibility: insight(
@@ -135,9 +135,9 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       {
         bullets: [
           L("Label every `<nav>` when more than one", "سمّي كل `<nav>` لما يكون أكتر من واحد"),
-          L("Do not wrap everything in `<div>` — use landmarks", "متلفش كل حاجة في `<div>` — استخدم landmarks"),
-          L("Heading levels reflect structure, not font size", "Heading levels تعكس structure مش font size"),
-          L("ARIA only when native semantics cannot express intent", "ARIA لما native semantics مش قادرة تعبر intent"),
+          L("Do not wrap everything in `<div>` — use `landmarks`", "متلفش كل حاجة في `<div>` — استخدم `landmarks`"),
+          L("`Heading` `levels` reflect `structure`, not font size", "`Heading` `levels` تعكس `structure` مش font size"),
+          L("`ARIA` only when native `semantics` cannot express intent", "`ARIA` لما native `semantics` مش قادرة تعبر intent"),
         ],
         code: `<nav aria-label="Primary">
   <ul>...</ul>
@@ -145,7 +145,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
 <nav aria-label="Footer">
   <ul>...</ul>
 </nav>`,
-        codeCaption: L("Distinguish multiple nav landmarks", "ميّز nav landmarks متعددة"),
+        codeCaption: L("Distinguish multiple `nav` `landmarks`", "ميّز `nav` `landmarks` متعددة"),
       },
     ),
     seo: insight(
@@ -162,9 +162,9 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       {
         bullets: [
           L("`<article>` for blog posts, products, news items", "`<article>` للـ blog posts و products و news"),
-          L("Breadcrumb HTML + JSON-LD alignment", "Breadcrumb HTML + JSON-LD متطابقين"),
-          L("Avoid hiding primary text inside non-semantic divs", "متخبيش primary text في divs non-semantic"),
-          L("Heading hierarchy mirrors content importance", "Heading hierarchy يعكس أهمية المحتوى"),
+          L("Breadcrumb `HTML` + `JSON-LD` alignment", "Breadcrumb `HTML` + `JSON-LD` متطابقين"),
+          L("Avoid hiding `primary text` inside `non-semantic` divs", "متخبيش `primary text` في divs `non-semantic`"),
+          L("`Heading` `hierarchy` mirrors `content` `importance`", "`Heading` `hierarchy` يعكس أهمية المحتوى"),
         ],
       },
     ),
@@ -188,10 +188,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("One `<h1>` per document in typical marketing/docs pages", "`<h1>` واحد per document في marketing/docs"),
-          L("Do not skip levels for styling — adjust CSS instead", "متskip levels للـ styling — عدّل CSS"),
+          L("One `<h1>` per `document` in typical `marketing`/`docs` pages", "`<h1>` واحد per `document` في `marketing`/`docs`"),
+          L("Do not `skip` `levels` for `styling` — adjust `CSS` instead", "مت`skip` `levels` للـ `styling` — عدّل `CSS`"),
           L("`<p>` for paragraphs — not double `<br>`", "`<p>` للفقرات — مش double `<br>`"),
-          L("Use `<address>`, `<time datetime>` for structured text", "استخدم `<address>`, `<time datetime>` لنص structured"),
+          L("Use `<address>`, `<time datetime>` for `structured` text", "استخدم `<address>`, `<time datetime>` لنص `structured`"),
         ],
         code: `<main>
   <h1>Product guide</h1>
@@ -203,7 +203,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     <h6>Checksum tip</h6>
   </section>
 </main>`,
-        codeCaption: L("Logical h1–h6 hierarchy", "Hierarchy منطقي h1–h6"),
+        codeCaption: L("Logical h1–h6 `hierarchy`", "`Hierarchy` منطقي h1–h6"),
       },
     ),
     accessibility: insight(
@@ -219,14 +219,14 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Headings describe sections — not slogans in every `<h3>`", "Headings توصف sections — مش slogans في كل `<h3>`"),
-          L("`<h1>` visible, not only for SEO visually hidden", "`<h1>` ظاهر مش SEO visually hidden بس"),
-          L("Lang on elements for mixed Arabic/English headings", "`lang` على elements للـ headings Arabic/English mixed"),
+          L("`Headings` describe sections — not slogans in every `<h3>`", "`Headings` توصف sections — مش slogans في كل `<h3>`"),
+          L("`<h1>` `visible`, not only for `SEO` visually `hidden`", "`<h1>` ظاهر مش `SEO` visually `hidden` بس"),
+          L("Lang on `elements` for `mixed` Arabic/English `headings`", "`lang` على `elements` للـ `headings` Arabic/English `mixed`"),
           L("Avoid `role=\"heading\"` when native hx exists", "تجنب `role=\"heading\"` لما hx native موجود"),
         ],
         code: `<h2 id="shipping-heading">Shipping options</h2>
 <section aria-labelledby="shipping-heading">...</section>`,
-        codeCaption: L("Label section via heading id", "سمّي section عبر heading id"),
+        codeCaption: L("Label section via `heading` id", "سمّي section عبر `heading` id"),
       },
     ),
     seo: insight(
@@ -243,9 +243,9 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       {
         bullets: [
           L("`<title>` and `<h1>` aligned but not identical spam", "`<title>` و `<h1>` متوافقين مش spam identical"),
-          L("First paragraph after `<h1>` summarizes page intent", "أول paragraph بعد `<h1>` يلخص page intent"),
-          L("Avoid empty headings injected by CMS templates", "تجنب headings فاضية من CMS templates"),
-          L("Table of contents links use fragment ids on headings", "TOC links تستخدم fragment ids على headings"),
+          L("First `paragraph` after `<h1>` summarizes `page intent`", "أول `paragraph` بعد `<h1>` يلخص `page intent`"),
+          L("Avoid empty `headings` injected by `CMS templates`", "تجنب `headings` فاضية من `CMS templates`"),
+          L("`Table` of contents `links` use fragment ids on `headings`", "TOC `links` تستخدم fragment ids على `headings`"),
         ],
       },
     ),
@@ -269,16 +269,16 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Semantic inline tags beat styled spans", "inline tags الـ semantic أحسن من spans مستايلة"),
+          L("`Semantic` inline `tags` beat styled `spans`", "inline `tags` الـ `semantic` أحسن من `spans` مستايلة"),
           L("`code` / `kbd` / `samp` / `var` for tech text", "`code` / `kbd` / `samp` / `var` للنص التقني"),
           L("`mark` highlights relevance — not decoration only", "`mark` بيميّز صلة — مش ديكور بس"),
-          L("`del` / `ins` document edits over time", "`del` / `ins` بيوثّقوا التعديلات مع الوقت"),
+          L("`del` / `ins` `document` edits over time", "`del` / `ins` بيوثّقوا التعديلات مع الوقت"),
         ],
         code: `<p>
   <strong>Note:</strong> press <kbd>Ctrl</kbd>+<kbd>S</kbd>.
   Use <code>npm run build</code>.
 </p>`,
-        codeCaption: L("Importance + keyboard + code", "Importance + keyboard + code"),
+        codeCaption: L("`Importance` + `keyboard` + code", "`Importance` + `keyboard` + code"),
       },
     ),
     accessibility: insight(
@@ -294,7 +294,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Prefer `<strong>` / `<em>` over bold/italic spans", "فضّل `<strong>` / `<em>` عن spans bold/italic"),
+          L("Prefer `<strong>` / `<em>` over `bold`/`italic` `spans`", "فضّل `<strong>` / `<em>` عن `spans` `bold`/`italic`"),
           L("Provide `title` on abbreviations when helpful", "حط `title` على الاختصارات لما يفيد"),
           L("Quotes: `q` inline, `blockquote` for blocks", "اقتباس: `q` inline، `blockquote` للبلوك"),
         ],
@@ -313,8 +313,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Meaningful emphasis > decorative bold", "تشديد له معنى > bold ديكور"),
-          L("`cite` / quotes support article clarity", "`cite` / quotes بيوضّحوا المقال"),
+          L("Meaningful `emphasis` > `decorative` `bold`", "تشديد له معنى > `bold` ديكور"),
+          L("`cite` / quotes support `article` clarity", "`cite` / quotes بيوضّحوا المقال"),
         ],
       },
     ),
@@ -338,10 +338,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Descriptive link text — not \"click here\"", "Link text وصفي — مش \"click here\""),
-          L("width + height on `<img>` to reserve layout space", "width + height على `<img>` لحجز layout space"),
+          L("`Descriptive` link text — not \"click here\"", "Link text وصفي — مش \"click here\""),
+          L("width + height on `<img>` to reserve `layout` space", "width + height على `<img>` لحجز `layout` space"),
           L("`<picture>` / srcset for responsive assets", "`<picture>` / srcset لـ responsive assets"),
-          L("Decorative images: alt=\"\" — omit from accessibility tree", "Decorative images: alt=\"\" — خارج accessibility tree"),
+          L("`Decorative` `images`: alt=\"\" — omit from `accessibility tree`", "`Decorative` `images`: alt=\"\" — خارج `accessibility tree`"),
         ],
         code: `<img
   src="/hero.webp"
@@ -350,7 +350,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   height="630"
   fetchpriority="high"
 />`,
-        codeCaption: L("LCP image with dimensions and alt", "LCP image بـ dimensions و alt"),
+        codeCaption: L("`LCP` image with `dimensions` and alt", "`LCP` image بـ `dimensions` و alt"),
       },
     ),
     accessibility: insight(
@@ -366,16 +366,16 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Unique link text per destination context", "Link text فريد per destination context"),
+          L("Unique link text per `destination` context", "Link text فريد per `destination` context"),
           L("alt describes image function, not filename", "alt يوصف function الصورة مش filename"),
-          L("External links: indicate when policy requires", "External links: وضّح لما policy يطلب"),
-          L("Skip icon-only links without aria-label", "متسيبش icon-only links من غير aria-label"),
+          L("`External` `links`: indicate when policy requires", "`External` `links`: وضّح لما policy يطلب"),
+          L("`Skip` `icon-only` `links` without `aria`-label", "متسيبش `icon-only` `links` من غير `aria`-label"),
         ],
         code: `<a href="/pricing">
   View pricing for FrontendCraft Pro
 </a>
 <a href="/docs" aria-label="Documentation (opens in new tab)">Docs ↗</a>`,
-        codeCaption: L("Descriptive links for AT and SEO", "Links وصفية لـ AT و SEO"),
+        codeCaption: L("`Descriptive` `links` for `AT` and `SEO`", "`Links` وصفية لـ `AT` و `SEO`"),
       },
     ),
     seo: insight(
@@ -391,10 +391,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Crawlable `<a href>` for all indexable destinations", "`<a href>` قابل للزحف لكل destinations قابلة للفهرسة"),
-          L("Descriptive alt on informative images", "alt وصفي على informative images"),
-          L("Reserve image dimensions — protect LCP and CLS", "احجز image dimensions — احمِ LCP و CLS"),
-          L("Avoid lazy-loading above-the-fold hero", "متlazy-load hero above-the-fold"),
+          L("Crawlable `<a href>` for all `indexable` destinations", "`<a href>` قابل للزحف لكل destinations قابلة للفهرسة"),
+          L("`Descriptive` alt on informative `images`", "alt وصفي على informative `images`"),
+          L("Reserve `image dimensions` — protect `LCP` and `CLS`", "احجز `image dimensions` — احمِ `LCP` و `CLS`"),
+          L("Avoid `lazy-loading` `above-the-fold` `hero`", "مت`lazy-load` `hero` `above-the-fold`"),
         ],
       },
     ),
@@ -418,10 +418,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`<ul>` unordered, `<ol>` sequential steps", "`<ul>` unordered، `<ol>` sequential steps"),
-          L("`<dl>` / `<dt>` / `<dd>` for term-definition pairs", "`<dl>` / `<dt>` / `<dd>` لـ term-definition"),
-          L("Do not use lists purely for layout columns", "متستخدمش lists للـ layout columns بس"),
-          L("CSS `list-style: none` still keeps list role if `<ul>`", "CSS `list-style: none` لسه list role لو `<ul>`"),
+          L("`<ul>` `unordered`, `<ol>` sequential steps", "`<ul>` `unordered`، `<ol>` sequential steps"),
+          L("`<dl>` / `<dt>` / `<dd>` for `term`-`definition` pairs", "`<dl>` / `<dt>` / `<dd>` لـ `term`-`definition`"),
+          L("Do not use lists purely for `layout columns`", "متستخدمش lists للـ `layout columns` بس"),
+          L("`CSS` `list-style: none` still keeps list `role` if `<ul>`", "`CSS` `list-style: none` لسه list `role` لو `<ul>`"),
         ],
         code: `<ol>
   <li>Boil water</li>
@@ -432,7 +432,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     </ul>
   </li>
 </ol>`,
-        codeCaption: L("Nested list hierarchy in DOM", "Nested list hierarchy في DOM"),
+        codeCaption: L("Nested list `hierarchy` in `DOM`", "Nested list `hierarchy` في `DOM`"),
       },
     ),
     accessibility: insight(
@@ -448,10 +448,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Native lists for nav, TOC, and step instructions", "Native lists للـ nav و TOC و step instructions"),
-          L("If role=\"list\" on divs, include role=\"listitem\" children", "لو role=\"list\" على divs، ضيف role=\"listitem\" children"),
+          L("Native lists for `nav`, TOC, and step instructions", "Native lists للـ `nav` و TOC و step instructions"),
+          L("If `role`=\"list\" on divs, include `role`=\"`listitem`\" `children`", "لو `role`=\"list\" على divs، ضيف `role`=\"`listitem`\" `children`"),
           L("`<ol start>` and `value` for resumed sequences", "`<ol start>` و `value` لـ resumed sequences"),
-          L("Description lists for FAQ pairs — not fake bullets", "Description lists لـ FAQ pairs — مش fake bullets"),
+          L("`Description` lists for `FAQ` pairs — not fake bullets", "`Description` lists لـ `FAQ` pairs — مش fake bullets"),
         ],
         code: `<nav aria-label="Primary">
   <ul>
@@ -459,7 +459,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     <li><a href="/tracks">Tracks</a></li>
   </ul>
 </nav>`,
-        codeCaption: L("Semantic nav list for AT", "Nav list semantic لـ AT"),
+        codeCaption: L("`Semantic` `nav` list for `AT`", "`Nav` list `semantic` لـ `AT`"),
       },
     ),
     seo: insight(
@@ -475,10 +475,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("HowTo steps: `<ol>` + matching JSON-LD", "HowTo steps: `<ol>` + JSON-LD مطابق"),
+          L("HowTo steps: `<ol>` + matching `JSON-LD`", "HowTo steps: `<ol>` + `JSON-LD` مطابق"),
           L("Feature bullets in `<ul>` near product `<h1>`", "Feature bullets في `<ul>` قريب من product `<h1>`"),
-          L("Avoid empty `<li>` placeholders from CMS", "تجنب `<li>` فاضية placeholders من CMS"),
-          L("TOC lists link to heading ids — crawlable fragments", "TOC lists links لـ heading ids — fragments قابلة للزحف"),
+          L("Avoid empty `<li>` `placeholders` from CMS", "تجنب `<li>` فاضية `placeholders` من CMS"),
+          L("TOC lists link to `heading` ids — crawlable fragments", "TOC lists `links` لـ `heading` ids — fragments قابلة للزحف"),
         ],
       },
     ),
@@ -504,8 +504,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
         bullets: [
           L("`<label for=\"id\">` on every control", "`<label for=\"id\">` على كل control"),
           L("Use native `type=\"email|url|tel|search\"`", "استخدم native `type=\"email|url|tel|search\"`"),
-          L("`<button type=\"submit\">` vs `type=\"button\"` explicit", "`<button type=\"submit\">` vs `type=\"button\"` صريح"),
-          L("Autocomplete attributes for passwords and addresses", "Autocomplete attributes للـ passwords و addresses"),
+          L("`<button type=\"submit\">` vs `type=\"button\"` `explicit`", "`<button type=\"submit\">` vs `type=\"button\"` صريح"),
+          L("`Autocomplete` `attributes` for passwords and addresses", "`Autocomplete` `attributes` للـ passwords و addresses"),
         ],
         code: `<label for="email">Email</label>
 <input
@@ -517,7 +517,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   aria-describedby="email-hint"
 />
 <p id="email-hint">We never share your email.</p>`,
-        codeCaption: L("Label, hint, and autocomplete", "Label و hint و autocomplete"),
+        codeCaption: L("Label, hint, and `autocomplete`", "Label و hint و `autocomplete`"),
       },
     ),
     accessibility: insight(
@@ -533,24 +533,24 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Visible focus ring on all inputs and buttons", "Focus ring ظاهر على inputs و buttons"),
+          L("`Visible` `focus` ring on all `inputs` and `buttons`", "`Focus` ring ظاهر على `inputs` و `buttons`"),
           L("Group radios/checkboxes with `<fieldset>` + `<legend>`", "Group radios/checkboxes بـ `<fieldset>` + `<legend>`"),
-          L("Required fields: aria-required or required attribute", "Required fields: aria-required أو required attribute"),
-          L("Do not disable submit without explaining why", "متعطّلش submit من غير توضيح ليه"),
+          L("Required fields: `aria`-required or required attribute", "Required fields: `aria`-required أو required attribute"),
+          L("Do not disable `submit` without explaining why", "متعطّلش `submit` من غير توضيح ليه"),
         ],
         code: `<input
   aria-invalid="true"
   aria-describedby="err-email"
 />
 <span id="err-email" role="alert">Enter a valid email.</span>`,
-        codeCaption: L("Accessible validation error", "Validation error accessible"),
+        codeCaption: L("`Accessible` `validation` error", "`Validation` error `accessible`"),
       },
     ),
     seo: insight(
       [
         L(
-          "Forms themselves are rarely indexed — but landing pages with forms need indexable headings and copy around the form. Login walls block crawlers unless public marketing content surrounds them.",
-          "Forms نادرًا ما تتفهرس — لكن landing pages فيها forms محتاجة headings و copy قابلة للفهرسة حوالين الـ form. Login walls بتblock crawlers إلا لو marketing content عام حواليهم.",
+          "Forms themselves are rarely indexed — but `landing pages` with forms need indexable headings and copy around the form. Login walls block crawlers unless public marketing content surrounds them.",
+          "Forms نادرًا ما تتفهرس — لكن `landing pages` فيها forms محتاجة headings و copy قابلة للفهرسة حوالين الـ form. Login walls بتblock crawlers إلا لو marketing content عام حواليهم.",
         ),
         L(
           "Search forms with GET and query params can create duplicate URLs — use canonical tags when `?q=` pages should not index separately.",
@@ -559,10 +559,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Indexable content above/below lead forms", "محتوى قابل للفهرسة فوق/تحت lead forms"),
-          L("Canonical on parameterized search result pages", "Canonical على parameterized search result pages"),
-          L("Server-render form labels — not JS-only placeholders", "Server-render form labels — مش placeholders JS-only"),
-          L("noscript fallback for critical contact info", "noscript fallback لمعلومات contact حرجة"),
+          L("`Indexable` `content` above/below `lead forms`", "محتوى قابل للفهرسة فوق/تحت `lead forms`"),
+          L("`Canonical` on parameterized search result pages", "`Canonical` على parameterized search result pages"),
+          L("`Server`-`render` form `labels` — not `JS`-only `placeholders`", "`Server`-`render` form `labels` — مش `placeholders` `JS`-only"),
+          L("noscript `fallback` for critical contact info", "noscript `fallback` لمعلومات contact حرجة"),
         ],
       },
     ),
@@ -586,10 +586,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Tables for data — not page layout grids", "Tables للـ data — مش page layout grids"),
-          L("`<thead>`, `<tbody>`, `<tfoot>` for structure", "`<thead>`, `<tbody>`, `<tfoot>` للـ structure"),
-          L("scope or headers/id for complex tables", "scope أو headers/id للـ complex tables"),
-          L("`<caption>` as first child summarizes the table", "`<caption>` كأول child يلخص الـ table"),
+          L("`Tables` for data — not `page layout` grids", "`Tables` للـ data — مش `page layout` grids"),
+          L("`<thead>`, `<tbody>`, `<tfoot>` for `structure`", "`<thead>`, `<tbody>`, `<tfoot>` للـ `structure`"),
+          L("`scope` or `headers`/id for complex `tables`", "`scope` أو `headers`/id للـ complex `tables`"),
+          L("`<caption>` as first child summarizes the `table`", "`<caption>` كأول child يلخص الـ `table`"),
         ],
         code: `<table>
   <caption>Q3 sales by region</caption>
@@ -598,7 +598,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   </thead>
   <tbody>...</tbody>
 </table>`,
-        codeCaption: L("Data table with caption and scope", "Data table بـ caption و scope"),
+        codeCaption: L("Data `table` with `caption` and `scope`", "Data `table` بـ `caption` و `scope`"),
       },
     ),
     accessibility: insight(
@@ -614,15 +614,15 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Never use tables for multi-column page layout", "متستخدمش tables لـ multi-column page layout"),
-          L("Associate `<td>` with headers via headers attribute when needed", "اربط `<td>` بـ headers عبر headers attribute لو محتاج"),
-          L("Sticky headers: preserve th semantics, not div clones", "Sticky headers: احتفظ th semantics مش div clones"),
-          L("Provide text alternative summary for complex charts-as-tables", "Summary text alternative للـ charts-as-tables المعقدة"),
+          L("Never use `tables` for `multi-column` `page layout`", "متستخدمش `tables` لـ `multi-column` `page layout`"),
+          L("Associate `<td>` with `headers` via `headers` attribute when needed", "اربط `<td>` بـ `headers` عبر `headers` attribute لو محتاج"),
+          L("Sticky `headers`: preserve th `semantics`, not div clones", "Sticky `headers`: احتفظ th `semantics` مش div clones"),
+          L("Provide text alternative summary for complex charts-as-`tables`", "Summary text alternative للـ charts-as-`tables` المعقدة"),
         ],
         code: `<th scope="col" aria-sort="ascending">
   Price
 </th>`,
-        codeCaption: L("Sort state exposed to AT", "Sort state معروض لـ AT"),
+        codeCaption: L("Sort `state` exposed to `AT`", "Sort `state` معروض لـ `AT`"),
       },
     ),
     seo: insight(
@@ -638,10 +638,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Mark up comparable data with real `<table>` elements", "Mark up comparable data بـ `<table>` elements حقيقية"),
-          L("Caption + headings describe dataset for snippets", "Caption + headings توصف dataset للـ snippets"),
-          L("Avoid empty table shells filled only by client JS", "تجنب table shells فاضية filled بـ client JS بس"),
-          L("Structured data Product offers align with visible rows", "Structured data Product offers متوافقة مع visible rows"),
+          L("Mark up comparable data with real `<table>` `elements`", "Mark up comparable data بـ `<table>` `elements` حقيقية"),
+          L("`Caption` + `headings` describe dataset for `snippets`", "`Caption` + `headings` توصف dataset للـ `snippets`"),
+          L("Avoid empty `table` `shells` `filled` only by `client` `JS`", "تجنب `table` `shells` فاضية `filled` بـ `client` `JS` بس"),
+          L("`Structured data` Product offers align with `visible` rows", "`Structured data` Product offers متوافقة مع `visible` rows"),
         ],
       },
     ),
@@ -665,17 +665,17 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Native HTML first — ARIA fills gaps only", "Native HTML الأول — ARIA fills gaps بس"),
-          L("Four principles: perceivable, operable, understandable, robust", "أربع principles: perceivable, operable, understandable, robust"),
-          L("Test with keyboard only + one screen reader", "اختبر keyboard only + screen reader واحد"),
-          L("WCAG 2.2 AA is the common production bar", "WCAG 2.2 AA هو production bar الشائع"),
+          L("Native `HTML` first — `ARIA` fills gaps only", "Native `HTML` الأول — `ARIA` fills gaps بس"),
+          L("Four `principles`: `perceivable`, `operable`, `understandable`, `robust`", "أربع `principles`: `perceivable`, `operable`, `understandable`, `robust`"),
+          L("Test with `keyboard only` + one `screen reader`", "اختبر `keyboard only` + `screen reader` واحد"),
+          L("`WCAG` 2.2 AA is the common production bar", "`WCAG` 2.2 AA هو production bar الشائع"),
         ],
         code: `/* Show focus for keyboard, subtle for mouse */
 :focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }`,
-        codeCaption: L(":focus-visible for keyboard users", ":focus-visible لـ keyboard users"),
+        codeCaption: L(":`focus`-`visible` for `keyboard` `users`", ":`focus`-`visible` لـ `keyboard` `users`"),
       },
     ),
     accessibility: insight(
@@ -695,11 +695,11 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Every interactive control has accessible name", "كل interactive control لها accessible name"),
-          L("Color contrast ≥ 4.5:1 for body text (AA)", "Color contrast ≥ 4.5:1 لـ body text (AA)"),
-          L("aria-live=\"polite|assertive\" for dynamic updates", "aria-live=\"polite|assertive\" للـ dynamic updates"),
-          L("Manage focus on route change and modal open/close", "أدِر focus على route change و modal open/close"),
-          L("Skip link → #main before repeated chrome", "Skip link → #main قبل الـ chrome المتكرر"),
+          L("Every `interactive control` has `accessible name`", "كل `interactive control` لها `accessible name`"),
+          L("Color contrast ≥ 4.5:1 for `body` text (AA)", "Color contrast ≥ 4.5:1 لـ `body` text (AA)"),
+          L("`aria`-live=\"polite|assertive\" for dynamic updates", "`aria`-live=\"polite|assertive\" للـ dynamic updates"),
+          L("Manage `focus` on `route change` and `modal` open/close", "أدِر `focus` على `route change` و `modal` open/close"),
+          L("`Skip link` → #main before repeated `chrome`", "`Skip link` → #main قبل الـ `chrome` المتكرر"),
         ],
         code: `<button type="button" aria-expanded="false" aria-controls="menu">
   Menu
@@ -722,10 +722,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Same HTML improvements help AT and crawlers", "نفس HTML improvements بتساعد AT و crawlers"),
-          L("Visible main content — not only aria labels", "Main content ظاهر — مش aria labels بس"),
-          L("Mobile usability and a11y share tap target sizing", "Mobile usability و a11y بيشاركوا tap target sizing"),
-          L("Avoid cloaking — different content for bots vs users", "تجنب cloaking — content مختلف للـ bots vs users"),
+          L("Same `HTML` `improvements` help `AT` and `crawlers`", "نفس `HTML` `improvements` بتساعد `AT` و `crawlers`"),
+          L("`Visible` main `content` — not only `aria` `labels`", "Main `content` ظاهر — مش `aria` `labels` بس"),
+          L("Mobile usability and a11y share tap `target` sizing", "Mobile usability و a11y بيشاركوا tap `target` sizing"),
+          L("Avoid `cloaking` — different `content` for `bots` vs `users`", "تجنب `cloaking` — `content` مختلف للـ `bots` vs `users`"),
         ],
       },
     ),
@@ -736,7 +736,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       [
         L(
           "Assistive tech reads the accessibility tree (name, role, value/state) — not your CSS paint. Bad markup can “look fine” while the tree is empty, wrong, or out of sync with the UI.",
-          "الـ assistive tech بتقرأ الـ accessibility tree (name و role و value/state) — مش رسم CSS. الـ markup الغلط ممكن “شكله حلو” والشجرة فاضية أو غلط أو مش متزامنة مع الـ UI.",
+          "الـ `assistive tech` بتقرأ الـ accessibility tree (name و role و value/state) — مش رسم CSS. الـ markup الغلط ممكن “شكله حلو” والشجرة فاضية أو غلط أو مش متزامنة مع الـ UI.",
         ),
         L(
           "Accessible name order is usually: associated `<label>`, then `aria-labelledby`, then `aria-label`, then text contents. Fake controls make you rebuild focus, keys, and naming — native elements already do that.",
@@ -853,17 +853,17 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Baseline Widely ≈ safe default for most products", "Baseline Widely ≈ افتراضي آمن لمعظم المنتجات"),
-          L("Newly → document Safari/WebKit floor + fallback", "Newly → وثّق حد Safari/WebKit + fallback"),
-          L("Detect features; never parse navigator.userAgent for UX", "افحص الميزات؛ متفكّش navigator.userAgent للـ UX"),
-          L("This lesson owns compatibility matrices for the track", "الدرس ده مالك مصفوفات التوافق للـ track"),
+          L("`Baseline` `Widely` ≈ safe `default` for most products", "`Baseline` `Widely` ≈ افتراضي آمن لمعظم المنتجات"),
+          L("`Newly` → `document` Safari/WebKit floor + `fallback`", "`Newly` → وثّق حد Safari/WebKit + `fallback`"),
+          L("`Detect` `features`; never `parse` `navigator.userAgent` for `UX`", "افحص الميزات؛ متفكّش `navigator.userAgent` للـ `UX`"),
+          L("This lesson owns `compatibility matrices` for the track", "الدرس ده مالك مصفوفات التوافق للـ track"),
         ],
         code: `if ("showModal" in HTMLDialogElement.prototype) {
   dialog.showModal();
 } else {
   location.assign("/confirm");
 }`,
-        codeCaption: L("Runtime feature detection", "Feature detection وقت التشغيل"),
+        codeCaption: L("Runtime `feature detection`", "`Feature detection` وقت التشغيل"),
       },
     ),
     accessibility: insight(
@@ -879,8 +879,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Fallbacks must remain keyboard accessible", "الـ fallbacks لازم تفضل accessible بالكيبورد"),
-          L("Don't remove focus styles to “match” old browsers", "متشيلش ستايلات الـ focus عشان “تشابه” متصفحات قديمة"),
+          L("`Fallbacks` must remain `keyboard` `accessible`", "الـ `fallbacks` لازم تفضل `accessible` بالكيبورد"),
+          L("Don't remove `focus` `styles` to “match” old browsers", "متشيلش ستايلات الـ `focus` عشان “تشابه” متصفحات قديمة"),
         ],
       },
     ),
@@ -897,8 +897,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Indexable HTML first — enhance after", "HTML قابل للفهرسة أولًا — بعدين enhancement"),
-          L("Avoid shipping multiple heavy polyfill packs by default", "متنشّرش حزم polyfill تقيلة افتراضيًا"),
+          L("`Indexable` `HTML` first — enhance after", "`HTML` قابل للفهرسة أولًا — بعدين enhancement"),
+          L("Avoid shipping multiple heavy `polyfill` `packs` by `default`", "متنشّرش حزم `polyfill` تقيلة افتراضيًا"),
         ],
       },
     ),
@@ -926,11 +926,11 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Unique title + description per indexable URL", "Title + description فريدين لكل URL قابل للفهرسة"),
-          L("One absolute HTTPS canonical per content item", "Canonical HTTPS مطلق واحد لكل content item"),
-          L("Semantic outline + real <a href> links", "Outline semantic + لينكات <a href> حقيقية"),
-          L("JSON-LD only when it matches the page", "JSON-LD بس لما يطابق الصفحة"),
-          L("Monitor coverage in Search Console after deploys", "راقب coverage في Search Console بعد كل deploy"),
+          L("Unique title + `description` per `indexable` `URL`", "Title + `description` فريدين لكل `URL` قابل للفهرسة"),
+          L("One absolute `HTTPS` `canonical` per `content` item", "`Canonical` `HTTPS` مطلق واحد لكل `content` item"),
+          L("`Semantic` `outline` + real <a href> `links`", "`Outline` `semantic` + لينكات <a href> حقيقية"),
+          L("`JSON-LD` only when it matches the page", "`JSON-LD` بس لما يطابق الصفحة"),
+          L("Monitor `coverage` in `Search Console` after deploys", "راقب `coverage` في `Search Console` بعد كل `deploy`"),
         ],
         code: `<head>
   <title>FrontendCraft — HTML Track</title>
@@ -938,7 +938,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   <link rel="canonical" href="https://example.com/html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>`,
-        codeCaption: L("Core SEO head bundle", "حزمة head أساسية للـ SEO"),
+        codeCaption: L("Core `SEO` `head` `bundle`", "حزمة `head` أساسية للـ `SEO`"),
       },
     ),
     accessibility: insight(
@@ -958,14 +958,14 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Update title on route change for SPAs", "حدّث title على route change للـ SPAs"),
-          L("Never disable zoom in viewport meta", "متعطّلش zoom في viewport meta"),
+          L("Update title on `route change` for `SPAs`", "حدّث title على `route change` للـ `SPAs`"),
+          L("Never disable `zoom` in `viewport meta`", "متعطّلش `zoom` في `viewport meta`"),
           L("lang + hreflang match actual page language", "lang + hreflang يطابقوا لغة الصفحة الفعلية"),
-          L("Meta refresh redirects confuse users and AT — use HTTP 301", "Meta refresh بتلخبط users و AT — استخدم HTTP 301"),
-          L("Descriptive link text helps AT and SEO together", "نص اللينك الوصفي بيساعد AT و SEO مع بعض"),
+          L("`Meta` refresh redirects confuse `users` and `AT` — use `HTTP` 301", "`Meta` refresh بتلخبط `users` و `AT` — استخدم `HTTP` 301"),
+          L("`Descriptive` link text helps `AT` and `SEO` together", "نص اللينك الوصفي بيساعد `AT` و `SEO` مع بعض"),
         ],
         code: `<meta name="viewport" content="width=device-width, initial-scale=1" />`,
-        codeCaption: L("Accessible viewport — zoom allowed", "Viewport accessible — zoom مسموح"),
+        codeCaption: L("`Accessible` `viewport` — `zoom` allowed", "`Viewport` `accessible` — `zoom` مسموح"),
       },
     ),
     seo: insight(
@@ -989,11 +989,11 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Indexable HTML in the first response — not an empty mount node", "HTML قابل للفهرسة في أول استجابة — مش mount node فاضي"),
-          L("Unique title, description, canonical per route", "title و description و canonical فريدين لكل route"),
-          L("Descriptive anchors — never “click here” as the only text", "anchors وصفية — متخليش “click here” النص الوحيد"),
-          L("JSON-LD must match visible content", "JSON-LD لازم يطابق المحتوى الظاهر"),
-          L("URL Inspection + coverage after every deploy", "URL Inspection + coverage بعد كل deploy"),
+          L("`Indexable` `HTML` in the first `response` — not an empty `mount node`", "`HTML` قابل للفهرسة في أول استجابة — مش `mount node` فاضي"),
+          L("Unique title, `description`, `canonical` per route", "title و `description` و `canonical` فريدين لكل route"),
+          L("`Descriptive` anchors — never “click here” as the only text", "anchors وصفية — متخليش “click here” النص الوحيد"),
+          L("`JSON-LD` must match `visible` `content`", "`JSON-LD` لازم يطابق المحتوى الظاهر"),
+          L("`URL` `Inspection` + `coverage` after every `deploy`", "`URL` `Inspection` + `coverage` بعد كل `deploy`"),
         ],
         code: `<!-- Anti-pattern: empty CSR shell -->
 <div id="root"></div>
@@ -1002,7 +1002,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   <h1>HTML track</h1>
   <a href="/html/forms-inputs">Learn HTML forms</a>
 </main>`,
-        codeCaption: L("Crawlable content vs empty root", "محتوى قابل للزحف مقابل root فاضي"),
+        codeCaption: L("Crawlable `content` vs empty `root`", "محتوى قابل للزحف مقابل `root` فاضي"),
       },
     ),
   },
@@ -1025,17 +1025,17 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`<video controls>` + poster for preview frame", "`<video controls>` + poster لـ preview frame"),
+          L("`<video controls>` + poster for `preview` frame", "`<video controls>` + poster لـ `preview` frame"),
           L("Captions: `<track kind=\"captions\">` for video", "Captions: `<track kind=\"captions\">` للـ video"),
           L("iframe title attribute required", "iframe title attribute مطلوب"),
-          L("preconnect to embed origins when LCP-adjacent", "preconnect لـ embed origins لما LCP-adjacent"),
+          L("preconnect to embed origins when `LCP`-adjacent", "preconnect لـ embed origins لما `LCP`-adjacent"),
         ],
         code: `<video controls width="640" height="360" poster="/poster.jpg">
   <source src="/clip.webm" type="video/webm" />
   <source src="/clip.mp4" type="video/mp4" />
   <track kind="captions" src="/clip.vtt" srclang="en" label="English" />
 </video>`,
-        codeCaption: L("Accessible video with captions", "Video accessible بـ captions"),
+        codeCaption: L("`Accessible` video with captions", "Video `accessible` بـ captions"),
       },
     ),
     accessibility: insight(
@@ -1051,10 +1051,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("No autoplay audio; captions for speech content", "مفيش autoplay audio؛ captions للـ speech content"),
+          L("No autoplay audio; captions for speech `content`", "مفيش autoplay audio؛ captions للـ speech `content`"),
           L("Transcript link for long audio/video", "Transcript link للـ audio/video الطويل"),
           L("Pause/stop for carousels and animated media", "Pause/stop للـ carousels و animated media"),
-          L("iframe title describes embedded content purpose", "iframe title يوصف embedded content purpose"),
+          L("iframe title describes embedded `content` purpose", "iframe title يوصف embedded `content` purpose"),
         ],
         code: `<iframe
   title="Map: FrontendCraft office in Cairo"
@@ -1063,7 +1063,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   width="600"
   height="450"
 ></iframe>`,
-        codeCaption: L("Descriptive iframe title", "iframe title وصفي"),
+        codeCaption: L("`Descriptive` iframe title", "iframe title وصفي"),
       },
     ),
     seo: insight(
@@ -1079,10 +1079,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Surround embeds with indexable headings and summary", "حط headings و summary قابلة للفهرسة حوالين embeds"),
-          L("VideoObject JSON-LD with name, description, thumbnailUrl", "VideoObject JSON-LD بـ name, description, thumbnailUrl"),
-          L("Lazy-load below-fold iframes and videos", "Lazy-load iframes و videos below-fold"),
-          L("Self-host critical hero media when possible", "Self-host hero media الحرج لو أمكن"),
+          L("Surround embeds with `indexable` `headings` and summary", "حط `headings` و summary قابلة للفهرسة حوالين embeds"),
+          L("VideoObject `JSON-LD` with name, `description`, thumbnailUrl", "VideoObject `JSON-LD` بـ name, `description`, thumbnailUrl"),
+          L("`Lazy-load` below-fold iframes and videos", "`Lazy-load` iframes و videos below-fold"),
+          L("Self-host critical `hero` media when possible", "Self-host `hero` media الحرج لو أمكن"),
         ],
       },
     ),
@@ -1110,14 +1110,14 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Good: LCP < 2.5s · INP < 200ms · CLS < 0.1", "جيد: LCP < 2.5s · INP < 200ms · CLS < 0.1"),
-          L("Never lazy-load the LCP element", "متعَمِلش lazy على عنصر LCP"),
-          L("Reserve space before bytes arrive", "احجز المساحة قبل ما الـ bytes توصل"),
-          L("Keep interaction handlers short on the main thread", "خلّي handlers التفاعل قصيرة على الـ main thread"),
+          L("Good: `LCP` < 2.5s · `INP` < 200ms · `CLS` < 0.1", "جيد: `LCP` < 2.5s · `INP` < 200ms · `CLS` < 0.1"),
+          L("Never `lazy-load` the `LCP` element", "متعَمِلش lazy على عنصر `LCP`"),
+          L("Reserve space before `bytes` arrive", "احجز المساحة قبل ما الـ `bytes` توصل"),
+          L("Keep interaction `handlers` short on the main thread", "خلّي `handlers` التفاعل قصيرة على الـ main thread"),
         ],
         code: `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
 <img src="/hero.webp" alt="…" width="1200" height="630" fetchpriority="high" />`,
-        codeCaption: L("LCP-friendly hero markup", "markup hero مناسب لـ LCP"),
+        codeCaption: L("`LCP`-friendly `hero` `markup`", "`markup` `hero` مناسب لـ `LCP`"),
       },
     ),
     accessibility: insight(
@@ -1127,16 +1127,16 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "الأداء والوصول متداخلين — الـ layout shifts بتلخبط مستخدمي الكيبورد و screen readers وسط القراءة. ترتيب focus ثابت محتاج layout ثابت.",
         ),
         L(
-          "Slow INP feels like a broken control. Users who rely on assistive tech already wait for announcements — do not add multi-hundred-ms input lag on top.",
+          "Slow INP feels like a broken control. Users who rely on `assistive tech` already wait for announcements — do not add multi-hundred-ms input lag on top.",
           "INP البطيء بيحسّس إن الـ control مكسور. مستخدمو التقنيات المساعدة أصلًا بيستنوا إعلانات — متزودش تأخير إدخال بمئات الميلي ثانية.",
         ),
       ],
       {
         bullets: [
-          L("Stable layout protects reading and focus position", "Layout ثابت بيحمي القراءة وموضع الـ focus"),
-          L("Visible focus must not wait on heavy JS", "الـ focus الظاهر ممنوع يستنى JS تقيل"),
-          L("Honor prefers-reduced-motion for decorative motion", "احترم prefers-reduced-motion للحركة التزيينية"),
-          L("Announce async results without blocking the main thread", "أعلن نتائج async من غير ما توقف الـ main thread"),
+          L("Stable `layout` protects reading and `focus` position", "`Layout` ثابت بيحمي القراءة وموضع الـ `focus`"),
+          L("`Visible` `focus` must not wait on heavy `JS`", "الـ `focus` الظاهر ممنوع يستنى `JS` تقيل"),
+          L("Honor prefers-reduced-motion for `decorative` motion", "احترم prefers-reduced-motion للحركة التزيينية"),
+          L("`Announce` async results without blocking the main thread", "أعلن نتائج async من غير ما توقف الـ main thread"),
         ],
       },
     ),
@@ -1153,10 +1153,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Ship CWV fixes like product bugs", "اصلح CWV زي bugs منتج"),
-          L("Watch Search Console Experience report", "راقب تقرير Experience في Search Console"),
+          L("Ship CWV `fixes` like product `bugs`", "اصلح CWV زي `bugs` منتج"),
+          L("Watch `Search Console` Experience report", "راقب تقرير Experience في `Search Console`"),
           L("Mobile field data first", "Field data الموبايل أولًا"),
-          L("Pair with SEO Insights for crawl + metadata", "اربط مع SEO Insights للزحف و metadata"),
+          L("Pair with `SEO` Insights for `crawl` + `metadata`", "اربط مع `SEO` Insights للزحف و `metadata`"),
         ],
       },
     ),
@@ -1180,14 +1180,14 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("width/height on `<img>` — primary CLS fix", "width/height على `<img>` — primary CLS fix"),
-          L("loading=\"lazy\" below fold; fetchpriority=\"high\" on LCP", "loading=\"lazy\" below fold؛ fetchpriority=\"high\" على LCP"),
-          L("Modern formats via `<picture>` — WebP/AVIF + fallback", "Modern formats عبر `<picture>` — WebP/AVIF + fallback"),
-          L("defer/async scripts — avoid render-blocking JS", "defer/async scripts — تجنب render-blocking JS"),
+          L("width/height on `<img>` — primary `CLS` fix", "width/height على `<img>` — primary `CLS` fix"),
+          L("loading=\"lazy\" below fold; fetchpriority=\"high\" on `LCP`", "loading=\"lazy\" below fold؛ fetchpriority=\"high\" على `LCP`"),
+          L("Modern formats via `<picture>` — WebP/AVIF + `fallback`", "Modern formats عبر `<picture>` — WebP/AVIF + `fallback`"),
+          L("defer/async scripts — avoid `render`-blocking `JS`", "defer/async scripts — تجنب `render`-blocking `JS`"),
         ],
         code: `<link rel="preload" as="image" href="/hero.webp" fetchpriority="high" />
 <img src="/hero.webp" alt="..." width="1200" height="630" />`,
-        codeCaption: L("Preload + sized LCP image", "Preload + sized LCP image"),
+        codeCaption: L("Preload + sized `LCP` image", "Preload + sized `LCP` image"),
       },
     ),
     accessibility: insight(
@@ -1203,10 +1203,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("alt present in HTML even when image lazy-loads", "alt موجود في HTML حتى لو image lazy-load"),
+          L("alt present in `HTML` even when image lazy-loads", "alt موجود في `HTML` حتى لو image `lazy-load`"),
           L("No autoplay motion without user control", "مفيش autoplay motion من غير user control"),
           L("Poster frames for video — not blank flash", "Poster frames للـ video — مش blank flash"),
-          L("Focusable controls load before decorative media", "Focusable controls تحمّل قبل decorative media"),
+          L("Focusable `controls` load before `decorative` media", "Focusable `controls` تحمّل قبل `decorative` media"),
         ],
         code: `@media (prefers-reduced-motion: reduce) {
   .carousel { animation: none; }
@@ -1227,10 +1227,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Target LCP < 2.5s on mobile field data", "Target LCP < 2.5s على mobile field data"),
-          L("Reserve space for ads/embeds to prevent CLS", "احجز مساحة للـ ads/embeds عشان تمنع CLS"),
+          L("`Target` `LCP` < 2.5s on mobile field data", "`Target` `LCP` < 2.5s على mobile field data"),
+          L("Reserve space for ads/embeds to prevent `CLS`", "احجز مساحة للـ ads/embeds عشان تمنع `CLS`"),
           L("Preconnect to CDN/font origins in `<head>`", "Preconnect لـ CDN/font origins في `<head>`"),
-          L("Monitor CWV in Search Console Experience report", "راقب CWV في Search Console Experience report"),
+          L("Monitor CWV in `Search Console` Experience report", "راقب CWV في `Search Console` Experience report"),
         ],
       },
     ),
@@ -1255,9 +1255,9 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       {
         bullets: [
           L("One `<main>` per page — partials update inside it", "`<main>` واحد per page — partials update جواه"),
-          L("Server includes for header/footer/nav consistency", "Server includes لـ header/footer/nav consistency"),
-          L("`<template>` for client clones — not hidden div soup", "`<template>` لـ client clones — مش hidden div soup"),
-          L("Validate assembled HTML in CI", "Validate assembled HTML في CI"),
+          L("`Server` includes for header/footer/`nav` consistency", "`Server` includes لـ header/footer/`nav` consistency"),
+          L("`<template>` for `client` clones — not `hidden` `div soup`", "`<template>` لـ `client` clones — مش `hidden` `div soup`"),
+          L("Validate assembled `HTML` in CI", "Validate assembled `HTML` في CI"),
         ],
         code: `<main id="main">
   <!-- server partial: article-body.html -->
@@ -1279,15 +1279,15 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Announce route changes via title + focus management", "اعلن route changes عبر title + focus management"),
-          L("Partial templates include labels and alt in the fragment", "Partial templates تinclude labels و alt في fragment"),
-          L("Do not inject duplicate `#main` or landmark roles", "متinject duplicate `#main` أو landmark roles"),
-          L("aria-live region in layout shell for async partial loads", "aria-live region في layout shell لـ async partial loads"),
+          L("`Announce` route changes via title + `focus` management", "اعلن route changes عبر title + `focus` management"),
+          L("Partial templates include `labels` and alt in the fragment", "Partial templates تinclude `labels` و alt في fragment"),
+          L("Do not inject duplicate `#main` or `landmark` `roles`", "متinject duplicate `#main` أو `landmark` `roles`"),
+          L("`aria`-live region in `layout` `shell` for async partial loads", "`aria`-live region في `layout` `shell` لـ async partial loads"),
         ],
         code: `document.title = nextPage.title;
 main.innerHTML = nextPage.html;
 main.querySelector("h1")?.focus();`,
-        codeCaption: L("SPA partial with focus + title", "SPA partial بـ focus + title"),
+        codeCaption: L("SPA partial with `focus` + title", "SPA partial بـ `focus` + title"),
       },
     ),
     seo: insight(
@@ -1303,10 +1303,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Full HTML document per URL for Googlebot", "Full HTML document per URL لـ Googlebot"),
-          L("Canonical in layout partial — not per-fragment", "Canonical في layout partial — مش per-fragment"),
-          L("href in server-rendered nav partials match sitemap", "href في server-rendered nav partials match sitemap"),
-          L("Avoid infinite scroll partials as only archive index", "تجنب infinite scroll partials كـ archive index الوحيد"),
+          L("Full `HTML` `document` per `URL` for `Googlebot`", "Full `HTML` `document` per `URL` لـ `Googlebot`"),
+          L("`Canonical` in `layout` partial — not per-fragment", "`Canonical` في `layout` partial — مش per-fragment"),
+          L("href in `server`-rendered `nav` partials match sitemap", "href في `server`-rendered `nav` partials match sitemap"),
+          L("Avoid infinite scroll partials as only archive `index`", "تجنب infinite scroll partials كـ archive `index` الوحيد"),
         ],
       },
     ),
@@ -1330,22 +1330,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`noopener` blocks opener control; `noreferrer` trims referrer", "`noopener` بيمنع opener control؛ و`noreferrer` بيقلل referrer"),
-          L("Sandbox first, then add only needed tokens", "Sandbox الأول، وبعدها زوّد tokens المطلوبة بس"),
+          L("`noopener` blocks `opener` control; `noreferrer` trims `referrer`", "`noopener` بيمنع `opener` control؛ و`noreferrer` بيقلل `referrer`"),
+          L("`Sandbox` first, then add only needed `tokens`", "`Sandbox` الأول، وبعدها زوّد `tokens` المطلوبة بس"),
           L("Audit `action` and every `formaction`", "راجع `action` وكل `formaction`"),
-          L("Client-visible markup cannot store secrets", "Markup ظاهر للعميل مينفعش يخزن أسرار"),
+          L("`Client`-`visible` `markup` cannot store `secrets`", "`Markup` ظاهر للعميل مينفعش يخزن أسرار"),
         ],
         code: `<a href="https://docs.example.com" target="_blank"
    rel="noopener noreferrer">Docs</a>
 <iframe src="https://embed.example" sandbox="allow-forms allow-scripts"></iframe>`,
-        codeCaption: L("External tab + least-privilege iframe", "Tab خارجية + iframe بأقل صلاحيات"),
+        codeCaption: L("`External` `tab` + least-privilege iframe", "`Tab` خارجية + iframe بأقل صلاحيات"),
       },
     ),
     accessibility: insight(
       [
         L(
-          "Security hardening must not make forms unusable. Precise `autocomplete` values let password managers and assistive technology identify a username, current password, new password, or one-time code without guessing.",
-          "تقوية الأمان مينفعش تخلي الـ forms غير قابلة للاستخدام. قيم `autocomplete` الدقيقة بتخلي password managers وassistive technology يميّزوا username أو current password أو new password أو one-time code من غير تخمين.",
+          "Security hardening must not make forms unusable. Precise `autocomplete` values let password managers and `assistive tech`nology identify a username, current password, new password, or one-time code without guessing.",
+          "تقوية الأمان مينفعش تخلي الـ forms غير قابلة للاستخدام. قيم `autocomplete` الدقيقة بتخلي password managers و`assistive tech`nology يميّزوا username أو current password أو new password أو one-time code من غير تخمين.",
         ),
         L(
           "A sandboxed iframe still needs a descriptive `title`, and external links that open a new tab should communicate that change in visible context when it could surprise the user.",
@@ -1354,10 +1354,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Keep visible labels alongside autocomplete tokens", "سيب labels ظاهرة جنب autocomplete tokens"),
+          L("Keep `visible` `labels` alongside `autocomplete` `tokens`", "سيب `labels` ظاهرة جنب `autocomplete` `tokens`"),
           L("Give every iframe a useful `title`", "ادّي كل iframe `title` مفيد"),
-          L("Explain new-tab behavior in link context", "اشرح سلوك tab الجديدة في سياق اللينك"),
-          L("Do not disable password managers as a “security” fix", "متقفّليش password managers كحل “أمني”"),
+          L("Explain new-`tab` behavior in link context", "اشرح سلوك `tab` الجديدة في سياق اللينك"),
+          L("Do not disable password managers as a “`security`” fix", "متقفّليش password managers كحل “أمني”"),
         ],
       },
     ),
@@ -1374,10 +1374,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Do not leak query tokens into links or markup", "متسرّبش query tokens في links أو markup"),
-          L("Align referrer policy with analytics needs", "ظبّط referrer policy مع احتياجات analytics"),
+          L("Do not leak query `tokens` into `links` or `markup`", "متسرّبش query `tokens` في `links` أو `markup`"),
+          L("Align `referrer` policy with analytics needs", "ظبّط `referrer` policy مع احتياجات analytics"),
           L("Authorization protects private pages—not `noindex` alone", "Authorization بتحمي الصفحات الخاصة — مش `noindex` لوحده"),
-          L("Use crawlable links only for intended public destinations", "استخدم links قابلة للزحف للوجهات العامة المقصودة بس"),
+          L("Use crawlable `links` only for intended public destinations", "استخدم `links` قابلة للزحف للوجهات العامة المقصودة بس"),
         ],
       },
     ),
@@ -1401,15 +1401,15 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Prefetch warms a response; prerender warms activation", "Prefetch بيسخّن response؛ prerender بيسخّن activation"),
-          L("Same-origin, read-only URLs are the safe starting set", "URLs same-origin وread-only هي نقطة البداية الآمنة"),
-          L("Do not prerender logout, delete, checkout, or token routes", "ماتعملش prerender لـ logout أو delete أو checkout أو token routes"),
-          L("Budget bandwidth against current-page performance", "حط budget للـ bandwidth مقابل أداء الصفحة الحالية"),
+          L("`Prefetch` warms a `response`; `prerender` warms activation", "`Prefetch` بيسخّن `response`؛ `prerender` بيسخّن activation"),
+          L("`Same-origin`, read-only URLs are the safe starting set", "URLs `same-origin` وread-only هي نقطة البداية الآمنة"),
+          L("Do not `prerender` `logout`, delete, `checkout`, or token routes", "ماتعملش `prerender` لـ `logout` أو delete أو `checkout` أو token routes"),
+          L("Budget `bandwidth` against current-page performance", "حط budget للـ `bandwidth` مقابل أداء الصفحة الحالية"),
         ],
         code: `<script type="speculationrules">
 { "prefetch": [{ "urls": ["/products/keyboard"] }] }
 </script>`,
-        codeCaption: L("Conservative same-origin prefetch rule", "قاعدة same-origin prefetch محافظة"),
+        codeCaption: L("Conservative `same-origin` `prefetch` rule", "قاعدة `same-origin` `prefetch` محافظة"),
       },
     ),
     accessibility: insight(
@@ -1425,9 +1425,9 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Real `<a href>` is the baseline", "`<a href>` حقيقي هو الـ baseline"),
-          L("Keep keyboard navigation working without support", "خلّي keyboard navigation شغال من غير دعم"),
-          L("Announce route changes with title + focus", "اعلن route changes بـ title + focus"),
+          L("Real `<a href>` is the `baseline`", "`<a href>` حقيقي هو الـ `baseline`"),
+          L("Keep `keyboard` navigation working without support", "خلّي `keyboard` navigation شغال من غير دعم"),
+          L("`Announce` route changes with title + `focus`", "اعلن route changes بـ title + `focus`"),
           L("Never pre-commit user actions in the background", "متنفذش user actions مسبقًا في الخلفية"),
         ],
       },
@@ -1445,10 +1445,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Speculation does not replace crawlable internal links", "Speculation مش بديل للـ internal links القابلة للزحف"),
-          L("Track next-page LCP in real-user data", "راقب LCP للصفحة الجاية في real-user data"),
-          L("Do not trade current-page LCP for blanket prerendering", "متضحّيش بـ LCP للصفحة الحالية عشان prerender شامل"),
-          L("Keep canonical URLs independent of speculative rules", "خلّي canonical URLs مستقلة عن speculative rules"),
+          L("Speculation does not replace crawlable `internal` `links`", "Speculation مش بديل للـ `internal` `links` القابلة للزحف"),
+          L("Track next-page `LCP` in real-user data", "راقب `LCP` للصفحة الجاية في real-user data"),
+          L("Do not trade current-page `LCP` for blanket prerendering", "متضحّيش بـ `LCP` للصفحة الحالية عشان `prerender` شامل"),
+          L("Keep `canonical` URLs independent of speculative rules", "خلّي `canonical` URLs مستقلة عن speculative rules"),
         ],
       },
     ),
@@ -1472,9 +1472,9 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Root lang + dir are the document defaults", "Root lang + dir هم افتراضي المستند"),
-          L("Isolate opposite-direction tokens — don’t hope CSS fixes bidi", "اعزل الرموز المعاكسة — متستناش CSS يصلح bidi"),
-          L("dir=auto for UGC; explicit dir for product chrome", "dir=auto لـ UGC؛ dir صريح لـ chrome المنتج"),
+          L("`Root` lang + dir are the `document` defaults", "`Root` lang + dir هم افتراضي المستند"),
+          L("`Isolate` opposite-direction `tokens` — don’t hope `CSS` `fixes` `bidi`", "اعزل الرموز المعاكسة — متستناش `CSS` يصلح `bidi`"),
+          L("dir=auto for UGC; `explicit` dir for product `chrome`", "dir=auto لـ UGC؛ dir صريح لـ `chrome` المنتج"),
           L("Carry lang/dir into teleported roots", "انقل lang/dir لجذور العناصر المتنقلة"),
         ],
         code: `<p lang="ar" dir="rtl">
@@ -1482,7 +1482,7 @@ main.querySelector("h1")?.focus();`,
   <bdi dir="ltr">API_KEY_42</bdi>
   قبل النشر.
 </p>`,
-        codeCaption: L("Isolate an LTR token in RTL copy", "اعزل token LTR جوّه نص RTL"),
+        codeCaption: L("`Isolate` an `LTR` token in `RTL` `copy`", "اعزل token `LTR` جوّه نص `RTL`"),
       },
     ),
     accessibility: insight(
@@ -1498,10 +1498,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("lang on root + on language switches", "lang على الـ root وعلى تغيّرات اللغة"),
-          L("Don’t rely on visual CSS mirroring for AT order", "متعتمدش على عكس CSS البصري لترتيب AT"),
-          L("Keep focus order matching reading order after dir flips", "خلّي ترتيب الـ focus يطابق القراءة بعد تقلّب dir"),
-          L("Test with NVDA/VoiceOver in both EN and AR documents", "اختبر بـ NVDA/VoiceOver في مستندات EN و AR"),
+          L("lang on `root` + on language switches", "lang على الـ `root` وعلى تغيّرات اللغة"),
+          L("Don’t rely on visual `CSS` mirroring for `AT` order", "متعتمدش على عكس `CSS` البصري لترتيب `AT`"),
+          L("Keep `focus` order matching reading order after dir flips", "خلّي ترتيب الـ `focus` يطابق القراءة بعد تقلّب dir"),
+          L("Test with `NVDA`/`VoiceOver` in both EN and AR documents", "اختبر بـ `NVDA`/`VoiceOver` في مستندات EN و AR"),
         ],
       },
     ),
@@ -1518,10 +1518,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Match lang to the visible locale content", "طابق lang مع محتوى الـ locale الظاهر"),
-          L("Locale URLs + hreflang for bilingual products", "URLs للـ locale + hreflang للمنتجات bilingual"),
-          L("Separate canonicals per language version", "canonicals منفصلة لكل نسخة لغة"),
-          L("Crawl both RTL and LTR entry pages", "ازحف صفحات الدخول RTL و LTR"),
+          L("Match lang to the `visible` locale `content`", "طابق lang مع محتوى الـ locale الظاهر"),
+          L("Locale URLs + hreflang for `bilingual` products", "URLs للـ locale + hreflang للمنتجات `bilingual`"),
+          L("Separate `canonicals` per language version", "`canonicals` منفصلة لكل نسخة لغة"),
+          L("`Crawl` both `RTL` and `LTR` entry pages", "ازحف صفحات الدخول `RTL` و `LTR`"),
         ],
       },
     ),
@@ -1545,16 +1545,16 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("No block elements inside `<p>`", "مفيش block elements جوه `<p>`"),
-          L("No interactive nesting: a > button, button > a", "مفيش interactive nesting: a > button, button > a"),
+          L("No `block` `elements` inside `<p>`", "مفيش `block` `elements` جوه `<p>`"),
+          L("No interactive `nesting`: a > `button`, `button` > a", "مفيش interactive `nesting`: a > `button`, `button` > a"),
           L("One `<main>`, one logical `<h1>`", "`<main>` واحد، `<h1>` منطقي واحد"),
-          L("Run html-validate or W3C validator in CI", "شغّل html-validate أو W3C validator في CI"),
+          L("Run `html`-validate or W3C validator in CI", "شغّل `html`-validate أو W3C validator في CI"),
         ],
         code: `<!-- Wrong -->
 <p><div>Broken</div></p>
 <!-- Right -->
 <div><p>Valid block wrapper</p></div>`,
-        codeCaption: L("Paragraph cannot contain divs", "Paragraph مايحتويش divs"),
+        codeCaption: L("`Paragraph` cannot contain divs", "`Paragraph` مايحتويش divs"),
       },
     ),
     accessibility: insight(
@@ -1571,15 +1571,15 @@ main.querySelector("h1")?.focus();`,
       {
         bullets: [
           L("`<button type=\"button\">` for actions — not div", "`<button type=\"button\">` للـ actions — مش div"),
-          L("Every `<img>` has alt (empty only if decorative)", "كل `<img>` لها alt (فاضي لو decorative بس)"),
-          L("Labels on every form control", "Labels على كل form control"),
-          L("Do not disable zoom or remove focus outlines globally", "متعطّلش zoom أو تشيل focus outlines globally"),
+          L("Every `<img>` has alt (empty only if `decorative`)", "كل `<img>` لها alt (فاضي لو `decorative` بس)"),
+          L("`Labels` on every form control", "`Labels` على كل form control"),
+          L("Do not disable `zoom` or remove `focus` outlines globally", "متعطّلش `zoom` أو تشيل `focus` outlines globally"),
         ],
         code: `<!-- Wrong -->
 <div class="btn" onclick="save()">Save</div>
 <!-- Right -->
 <button type="button" onclick="save()">Save</button>`,
-        codeCaption: L("Native button vs div click", "Native button vs div click"),
+        codeCaption: L("Native `button` vs div click", "Native `button` vs div click"),
       },
     ),
     seo: insight(
@@ -1595,10 +1595,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("SSR primary content — not empty mount node", "SSR primary content — مش empty mount node"),
-          L("Unique title/description per route", "Title/description فريدين per route"),
-          L("Real hrefs in nav and pagination", "Real hrefs في nav و pagination"),
-          L("Fix broken links — 404s waste crawl budget", "صلّح broken links — 404s بتضيع crawl budget"),
+          L("`SSR` primary `content` — not empty `mount node`", "`SSR` primary `content` — مش empty `mount node`"),
+          L("Unique title/`description` per route", "Title/`description` فريدين per route"),
+          L("Real hrefs in `nav` and pagination", "Real hrefs في `nav` و pagination"),
+          L("Fix broken `links` — 404s waste `crawl` budget", "صلّح broken `links` — 404s بتضيع `crawl` budget"),
         ],
       },
     ),
@@ -1622,10 +1622,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("DOCTYPE + lang + charset + viewport + title", "DOCTYPE + lang + charset + viewport + title"),
-          L("Landmarks: header, nav, main, footer", "Landmarks: header, nav, main, footer"),
-          L("Headings, lists, tables for structure — not divs", "Headings, lists, tables للـ structure — مش divs"),
-          L("ARIA only when native HTML insufficient", "ARIA لما native HTML مش كافي"),
+          L("`DOCTYPE` + lang + `charset` + `viewport` + title", "`DOCTYPE` + lang + `charset` + `viewport` + title"),
+          L("`Landmarks`: header, `nav`, main, footer", "`Landmarks`: header, `nav`, main, footer"),
+          L("`Headings`, lists, `tables` for `structure` — not divs", "`Headings`, lists, `tables` للـ `structure` — مش divs"),
+          L("`ARIA` only when native `HTML` insufficient", "`ARIA` لما native `HTML` مش كافي"),
         ],
         code: `<!DOCTYPE html>
 <html lang="ar">
@@ -1642,7 +1642,7 @@ main.querySelector("h1")?.focus();`,
   <footer>...</footer>
 </body>
 </html>`,
-        codeCaption: L("Production HTML skeleton cheatsheet", "Production HTML skeleton cheatsheet"),
+        codeCaption: L("Production `HTML` `skeleton` cheatsheet", "Production `HTML` `skeleton` cheatsheet"),
       },
     ),
     accessibility: insight(
@@ -1658,15 +1658,15 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Tab, Enter, Space, Escape on every widget", "Tab, Enter, Space, Escape على كل widget"),
-          L(":focus-visible styles on interactive elements", ":focus-visible styles على interactive elements"),
+          L("`Tab`, Enter, Space, Escape on every widget", "`Tab`, Enter, Space, Escape على كل widget"),
+          L(":`focus`-`visible` `styles` on interactive `elements`", ":`focus`-`visible` `styles` على interactive `elements`"),
           L("Contrast 4.5:1 — do not rely on color alone", "Contrast 4.5:1 — متعتمدش على اللون لوحده"),
-          L("WCAG 2.2 AA as ship criteria", "WCAG 2.2 AA كـ ship criteria"),
+          L("`WCAG` 2.2 AA as ship criteria", "`WCAG` 2.2 AA كـ ship criteria"),
         ],
         code: `<label for="q">Search</label>
 <input id="q" type="search" />
 <button type="submit">Search</button>`,
-        codeCaption: L("Minimal accessible search form", "Search form accessible minimal"),
+        codeCaption: L("Minimal `accessible` search form", "Search form `accessible` minimal"),
       },
     ),
     seo: insight(
@@ -1682,10 +1682,10 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Indexable HTML in first response", "HTML قابل للفهرسة في first response"),
-          L("Sitemap + robots + canonical alignment", "Sitemap + robots + canonical alignment"),
-          L("CWV: LCP, INP, CLS from real HTML choices", "CWV: LCP, INP, CLS من HTML choices حقيقية"),
-          L("Rich results: valid structured data", "Rich results: structured data valid"),
+          L("`Indexable` `HTML` in first `response`", "`HTML` قابل للفهرسة في first `response`"),
+          L("Sitemap + robots + `canonical` alignment", "Sitemap + robots + `canonical` alignment"),
+          L("CWV: `LCP`, `INP`, `CLS` from real `HTML` choices", "CWV: `LCP`, `INP`, `CLS` من `HTML` choices حقيقية"),
+          L("Rich results: valid `structured data`", "Rich results: `structured data` valid"),
         ],
       },
     ),
@@ -1705,12 +1705,12 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`type` = semantics + fallback keyboard", "`type` = معنى + كيبورد fallback"),
-          L("`inputmode` never replaces validation", "`inputmode` مش بديل للتحقق"),
-          L("Use standard WHATWG autocomplete tokens", "استخدم رموز autocomplete القياسية من WHATWG"),
+          L("`type` = `semantics` + `fallback` `keyboard`", "`type` = معنى + كيبورد `fallback`"),
+          L("`inputmode` never replaces `validation`", "`inputmode` مش بديل للتحقق"),
+          L("Use standard WHATWG `autocomplete` `tokens`", "استخدم رموز `autocomplete` القياسية من WHATWG"),
         ],
         code: `<input type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9+\\-\\s]{8,}" />`,
-        codeCaption: L("Tel stack for mobile UX", "حزمة tel لتجربة الموبايل"),
+        codeCaption: L("Tel stack for mobile `UX`", "حزمة tel لتجربة الموبايل"),
       },
     ),
     accessibility: insight(
@@ -1726,9 +1726,9 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Visible label always — not placeholder-only", "label ظاهر دايمًا — مش placeholder بس"),
-          L("Describe pattern rules in text", "اشرح قواعد pattern بالنص"),
-          L("Don't trap focus inside custom keyboards", "متحبسش الـ focus جوه كيبوردات مخصصة"),
+          L("`Visible` label always — not placeholder-only", "label ظاهر دايمًا — مش placeholder بس"),
+          L("Describe `pattern` rules in text", "اشرح قواعد `pattern` بالنص"),
+          L("Don't trap `focus` inside custom keyboards", "متحبسش الـ `focus` جوه كيبوردات مخصصة"),
         ],
       },
     ),
@@ -1746,7 +1746,7 @@ main.querySelector("h1")?.focus();`,
       {
         bullets: [
           L("Prefer native constraints over heavy mask libraries", "فضّل قيود أصلية عن مكتبات mask تقيلة"),
-          L("SSR critical checkout fields", "SSR لحقول الـ checkout الحرجة"),
+          L("`SSR` critical `checkout` fields", "`SSR` لحقول الـ `checkout` الحرجة"),
         ],
       },
     ),
@@ -1766,12 +1766,12 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Top layer + backdrop are engine features", "Top layer + backdrop ميزات من الـ engine"),
-          L("Escape closes modal dialogs by default", "Escape بيقفل modal افتراضيًا"),
-          L("Polyfill only for Safari < 15.4 if required", "Polyfill بس لـ Safari < 15.4 لو مطلوب"),
+          L("Top layer + `backdrop` are `engine` `features`", "Top layer + `backdrop` ميزات من الـ `engine`"),
+          L("Escape closes `modal` dialogs by `default`", "Escape بيقفل `modal` افتراضيًا"),
+          L("`Polyfill` only for Safari < 15.4 if required", "`Polyfill` بس لـ Safari < 15.4 لو مطلوب"),
         ],
         code: `dialog.showModal();\ndialog.addEventListener("close", () => {\n  console.log(dialog.returnValue);\n});`,
-        codeCaption: L("Modal open + returnValue", "فتح modal و returnValue"),
+        codeCaption: L("`Modal` open + returnValue", "فتح `modal` و returnValue"),
       },
     ),
     accessibility: insight(
@@ -1787,9 +1787,9 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Prefer native dialog over role=dialog divs", "فضّل dialog أصلي عن div بـ role=dialog"),
-          L("Keep initial focus on the first meaningful control", "حط الـ focus الأول على أول control مهم"),
-          L("Announce async results after destructive confirms", "أعلن النتائج بعد تأكيدات حساسة"),
+          L("Prefer native dialog over `role`=dialog divs", "فضّل dialog أصلي عن div بـ `role`=dialog"),
+          L("Keep initial `focus` on the first meaningful control", "حط الـ `focus` الأول على أول control مهم"),
+          L("`Announce` async results after destructive confirms", "أعلن النتائج بعد تأكيدات حساسة"),
         ],
       },
     ),
@@ -1806,8 +1806,8 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Indexable facts stay outside modals", "المعلومات القابلة للفهرسة برّه الـ modals"),
-          L("Native dialog reduces layout thrash vs overlays", "dialog أصلي بيقلل layout thrash مقابل overlays"),
+          L("`Indexable` facts stay outside `modals`", "المعلومات القابلة للفهرسة برّه الـ `modals`"),
+          L("Native dialog reduces `layout` thrash vs `overlays`", "dialog أصلي بيقلل `layout` thrash مقابل `overlays`"),
         ],
       },
     ),
@@ -1828,11 +1828,11 @@ main.querySelector("h1")?.focus();`,
       {
         bullets: [
           L("Summary is the activation control", "summary هو كنترول التفعيل"),
-          L("`open` attribute reflects state", "صفة `open` بتعكس الحالة"),
+          L("`open` attribute reflects `state`", "صفة `open` بتعكس الحالة"),
           L("Listen to `toggle` for analytics if needed", "اسمع حدث `toggle` للتحليلات لو لزم"),
         ],
         code: `<details name="faq">\n  <summary>…</summary>\n  <p>…</p>\n</details>`,
-        codeCaption: L("Exclusive FAQ group", "مجموعة FAQ حصرية"),
+        codeCaption: L("Exclusive `FAQ` group", "مجموعة `FAQ` حصرية"),
       },
     ),
     accessibility: insight(
@@ -1849,7 +1849,7 @@ main.querySelector("h1")?.focus();`,
       {
         bullets: [
           L("One clear summary label", "تسمية summary واضحة"),
-          L("Don't fake details with display:none divs + no keyboard", "متزوّرش details بـ div و display:none من غير كيبورد"),
+          L("Don't fake details with display:none divs + no `keyboard`", "متزوّرش details بـ div و display:none من غير كيبورد"),
         ],
       },
     ),
@@ -1866,8 +1866,8 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Keep primary SEO copy outside collapsed-only sections", "سيّب نص SEO الأساسي برّه الأقسام المقفولة بس"),
-          L("Align FAQ schema with details content", "طابق FAQ schema مع محتوى details"),
+          L("Keep primary `SEO` `copy` outside collapsed-only sections", "سيّب نص `SEO` الأساسي برّه الأقسام المقفولة بس"),
+          L("Align `FAQ` schema with details `content`", "طابق `FAQ` schema مع محتوى details"),
         ],
       },
     ),
@@ -1889,10 +1889,10 @@ main.querySelector("h1")?.focus();`,
         bullets: [
           L("Order sources most-preferred first", "رتّب المصادر من الأكثر تفضيلًا"),
           L("Always terminate with `<img>`", "دايمًا اختم بـ `<img>`"),
-          L("AVIF/WebP reduce LCP bytes when supported", "AVIF/WebP بيقلّلوا بايتات LCP لما يتدعموا"),
+          L("AVIF/WebP reduce `LCP` `bytes` when supported", "AVIF/WebP بيقلّلوا بايتات `LCP` لما يتدعموا"),
         ],
         code: `<picture>\n  <source type="image/avif" srcset="/h.avif" />\n  <img src="/h.jpg" alt="…" width="1200" height="630" />\n</picture>`,
-        codeCaption: L("Format waterfall", "تسلسل الصيغ"),
+        codeCaption: L("Format `waterfall`", "تسلسل الصيغ"),
       },
     ),
     accessibility: insight(
@@ -1908,7 +1908,7 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Alt on the img fallback only", "alt على img الـ fallback بس"),
+          L("Alt on the img `fallback` only", "alt على img الـ `fallback` بس"),
           L("Don't convey unique info only in a crop that some viewports never see", "متوصلش معلومة فريدة في قصّة بعض الشاشات مش هتشوفها"),
         ],
       },
@@ -1926,9 +1926,9 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Never lazy-load the LCP image", "متعملش lazy لصورة LCP"),
-          L("Reserve space to protect CLS", "احجز مساحة لحماية CLS"),
-          L("Prefer SSR heroes over client-only mounts", "فضّل heroes من السيرفر عن mounts على الـ client بس"),
+          L("Never `lazy-load` the `LCP` image", "متعملش lazy لصورة `LCP`"),
+          L("Reserve space to protect `CLS`", "احجز مساحة لحماية `CLS`"),
+          L("Prefer `SSR` heroes over `client`-only mounts", "فضّل heroes من السيرفر عن mounts على الـ `client` بس"),
         ],
       },
     ),
@@ -1948,12 +1948,12 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Emit OG/Twitter tags in the first response", "طلّع وسوم OG/Twitter في أول استجابة"),
-          L("Absolute HTTPS og:image URLs", "روابط og:image مطلقة بـ HTTPS"),
+          L("Emit OG/Twitter `tags` in the first `response`", "طلّع وسوم OG/Twitter في أول استجابة"),
+          L("Absolute `HTTPS` og:image URLs", "روابط og:image مطلقة بـ `HTTPS`"),
           L("SVG + ICO favicon pair covers most clients", "زوج SVG + ICO بيغطي أغلب العملاء"),
         ],
         code: `<meta property="og:image" content="https://example.com/og.png" />\n<meta name="twitter:card" content="summary_large_image" />`,
-        codeCaption: L("Share preview essentials", "أساسيات معاينة المشاركة"),
+        codeCaption: L("Share `preview` essentials", "أساسيات معاينة المشاركة"),
       },
     ),
     accessibility: insight(
@@ -1965,8 +1965,8 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Unique descriptive titles per route", "عناوين وصفية فريدة لكل route"),
-          L("Don't stuff keywords into title at the cost of clarity", "متحشوّش keywords في العنوان على حساب الوضوح"),
+          L("Unique `descriptive` `titles` per route", "عناوين وصفية فريدة لكل route"),
+          L("Don't stuff keywords into title `at` the cost of clarity", "متحشوّش keywords في العنوان على حساب الوضوح"),
         ],
       },
     ),
@@ -1983,8 +1983,8 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("SSR social tags", "وسوم سوشيال من السيرفر"),
-          L("Unique title + description + canonical", "title + description + canonical فريدين"),
+          L("`SSR` social `tags`", "وسوم سوشيال من السيرفر"),
+          L("Unique title + `description` + `canonical`", "title + `description` + `canonical` فريدين"),
           L("Test with unfurl debuggers before launch", "اختبر بمعالجات unfurl قبل الإطلاق"),
         ],
       },

@@ -10,12 +10,12 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Missing doctype", "من غير doctype"),
+        label: L("Missing `doctype`", "من غير `doctype`"),
         code: `<html><head><title>Hi</title></head><body></body></html>`,
       },
       {
         id: "b",
-        label: L("Modern shell", "هيكل حديث"),
+        label: L("Modern `shell`", "هيكل حديث"),
         code: `<!DOCTYPE html>\n<html lang="en">\n  <head><meta charset="UTF-8" /><title>Hi</title></head>\n  <body></body>\n</html>`,
       },
       {
@@ -26,24 +26,24 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     ],
     correctId: "b",
     explanation: L(
-      "`<!DOCTYPE html>` + `lang` + charset unlock standards mode and accessibility language.",
-      "`<!DOCTYPE html>` + `lang` + charset بيفعّلوا standards mode ولغة الوصول.",
+      "`<!DOCTYPE html>` + `lang` + charset unlock `standards mode` and accessibility language.",
+      "`<!DOCTYPE html>` + `lang` + charset بيفعّلوا `standards mode` ولغة الوصول.",
     ),
   },
   "semantic-structure": {
     prompt: L(
       "Pick the semantic landmark shell:",
-      "اختار هيكل landmarks الـ semantic:",
+      "اختار هيكل `landmarks` الـ semantic:",
     ),
     options: [
       {
         id: "a",
-        label: L("Div soup", "Div soup"),
+        label: L("`Div soup`", "`Div soup`"),
         code: `<div class="header"></div><div class="main"></div>`,
       },
       {
         id: "b",
-        label: L("Landmarks", "Landmarks"),
+        label: L("`Landmarks`", "`Landmarks`"),
         code: `<header></header><nav aria-label="Primary"></nav><main></main><footer></footer>`,
       },
     ],
@@ -55,23 +55,23 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
   },
   "text-formatting": {
     prompt: L(
-      "Which tag marks strong importance for assistive tech?",
-      "أنهي tag بيعلّم أهمية قوية لـ assistive tech؟",
+      "Which tag marks strong importance for `assistive tech`?",
+      "أنهي tag بيعلّم أهمية قوية لـ `assistive tech`؟",
     ),
     options: [
       {
         id: "a",
-        label: L("CSS-only bold", "bold بـ CSS بس"),
+        label: L("`CSS`-only `bold`", "`bold` بـ `CSS` بس"),
         code: `<span style="font-weight:bold">Important</span>`,
       },
       {
         id: "b",
-        label: L("Semantic strong", "strong semantic"),
+        label: L("`Semantic` strong", "strong `semantic`"),
         code: `<strong>Important</strong>`,
       },
       {
         id: "c",
-        label: L("Stylistic b only", "b شكلي بس"),
+        label: L("`Stylistic` b only", "b شكلي بس"),
         code: `<b>Important</b>`,
       },
     ],
@@ -89,12 +89,12 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Div button", "Div button"),
+        label: L("Div `button`", "Div `button`"),
         code: `<div onclick="save()">Save</div>`,
       },
       {
         id: "b",
-        label: L("Native button", "Native button"),
+        label: L("Native `button`", "Native `button`"),
         code: `<button type="button">Save</button>`,
       },
     ],
@@ -112,7 +112,7 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Hidden focusable control", "control مخفي وعليه focus"),
+        label: L("`Hidden` focusable control", "control مخفي وعليه `focus`"),
         code: `<div aria-hidden="true"><button>Next</button></div>`,
       },
       {
@@ -135,12 +135,12 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Empty CSR shell", "CSR shell فاضي"),
+        label: L("Empty `CSR shell`", "`CSR shell` فاضي"),
         code: `<title>Untitled</title>\n<div id="root"></div>`,
       },
       {
         id: "b",
-        label: L("SSR head + main + real link", "SSR head + main + لينك حقيقي"),
+        label: L("`SSR head` + main + real link", "`SSR head` + main + لينك حقيقي"),
         code: `<title>HTML track</title>\n<link rel="canonical" href="https://example.com/html" />\n<main>\n  <h1>HTML track</h1>\n  <a href="/html/forms-inputs">Learn HTML forms</a>\n</main>`,
       },
     ],
@@ -158,12 +158,12 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Lazy hero with no size", "Hero lazy من غير مقاس"),
+        label: L("Lazy `hero` with no size", "`Hero` lazy من غير مقاس"),
         code: `<img src="/hero.jpg" alt="Hero" loading="lazy" />`,
       },
       {
         id: "b",
-        label: L("Sized hero, high priority", "Hero بمقاس وأولوية عالية"),
+        label: L("Sized `hero`, high priority", "`Hero` بمقاس وأولوية عالية"),
         code: `<img src="/hero.jpg" alt="Hero" width="1200" height="630" fetchpriority="high" />`,
       },
     ],
@@ -181,7 +181,7 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Toggle a CSS class on a div", "تبدّل class على div"),
+        label: L("`Toggle` a `CSS` class on a div", "تبدّل class على div"),
         code: `overlay.classList.add("open")`,
       },
       {
@@ -209,7 +209,7 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
       },
       {
         id: "b",
-        label: L("Feature detection", "Feature detection"),
+        label: L("`Feature detection`", "`Feature detection`"),
         code: `if ("showModal" in HTMLDialogElement.prototype) …`,
       },
     ],
@@ -227,11 +227,11 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
     options: [
       {
         id: "a",
-        label: L("Ship it everywhere with no fallback", "تنشره في كل حتة من غير fallback"),
+        label: L("Ship it everywhere with no `fallback`", "تنشره في كل حتة من غير `fallback`"),
       },
       {
         id: "b",
-        label: L("Check Baseline + plan a fallback", "تراجع Baseline وتحط خطة fallback"),
+        label: L("Check `Baseline` + plan a `fallback`", "تراجع `Baseline` وتحط خطة `fallback`"),
       },
     ],
     correctId: "b",
@@ -252,11 +252,11 @@ export function defaultHtmlChallenge(titleEn: string): LessonChallenge {
     options: [
       {
         id: "a",
-        label: L("Skip semantics and fix it later with CSS only", "تخطّي الـ semantics وتصلح بعدين بـ CSS بس"),
+        label: L("`Skip` `semantics` and fix it later with `CSS` only", "تخطّي الـ `semantics` وتصلح بعدين بـ `CSS` بس"),
       },
       {
         id: "b",
-        label: L("Prefer meaningful HTML first, enhance with CSS/JS", "فضّل HTML معنوي أولًا، وعزّز بـ CSS/JS"),
+        label: L("Prefer meaningful `HTML` first, enhance with `CSS`/`JS`", "فضّل `HTML` معنوي أولًا، وعزّز بـ `CSS`/`JS`"),
       },
     ],
     correctId: "b",

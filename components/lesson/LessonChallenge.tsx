@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckCircle2, HelpCircle, XCircle } from "lucide-react";
+import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -28,7 +29,7 @@ export function LessonChallenge({
         {t("challengeTitle", locale)}
       </div>
       <p className="mb-4 text-[15px] leading-7 text-slate-200">
-        {loc(challenge.prompt, locale)}
+        <RichText text={loc(challenge.prompt, locale)} />
       </p>
 
       <div
@@ -66,7 +67,7 @@ export function LessonChallenge({
               className={`w-full rounded-2xl border px-4 py-3 text-start transition disabled:cursor-default ${tone}`}
             >
               <span className="block text-sm font-semibold text-white">
-                {loc(option.label, locale)}
+                <RichText text={loc(option.label, locale)} />
               </span>
               {option.code ? (
                 <pre className="mt-2 overflow-x-auto whitespace-pre-wrap font-mono text-[11px] leading-5 text-cyan-100/85">
@@ -101,7 +102,7 @@ export function LessonChallenge({
                   ? t("challengeCorrect", locale)
                   : t("challengeWrong", locale)}{" "}
               </span>
-              {loc(challenge.explanation, locale)}
+              <RichText text={loc(challenge.explanation, locale)} />
             </span>
           </motion.div>
         ) : null}

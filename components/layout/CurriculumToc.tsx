@@ -18,6 +18,7 @@ import {
 } from "@/components/layout/TrackJobVisual";
 import { Atmosphere } from "@/components/shared/Atmosphere";
 import { BrandLockup } from "@/components/shared/BrandLockup";
+import { RichText } from "@/components/shared/RichText";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
 import { loc, t } from "@/content/i18n/ui-strings";
@@ -138,7 +139,8 @@ function TierBranch({
                       <span className="min-w-0 flex-1">
                         <span className="flex items-center gap-2">
                           <span className="truncate text-sm font-semibold text-slate-100 group-hover:text-white">
-                            {lesson.order}. {loc(lesson.content.title, locale)}
+                            {lesson.order}.{" "}
+                            <RichText text={loc(lesson.content.title, locale)} />
                           </span>
                           {done ? (
                             <CheckCircle2
@@ -153,7 +155,9 @@ function TierBranch({
                           )}
                         </span>
                         <span className="mt-0.5 line-clamp-2 text-xs leading-5 text-slate-500">
-                          {loc(lesson.content.summary, locale)}
+                          <RichText
+                            text={loc(lesson.content.summary, locale)}
+                          />
                         </span>
                         <span className="mt-1 inline-flex items-center gap-1 text-[10px] text-slate-500">
                           <BookOpen size={10} />

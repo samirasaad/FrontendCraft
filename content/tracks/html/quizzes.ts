@@ -94,6 +94,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<html>\n  <head></head>\n  <body></body>\n</html>`,
           language: "html",
+          hint: L(
+            "Compare each option — look for `DOCTYPE`, `lang`, and `charset`.",
+            "قارن كل اختيار — دور على `DOCTYPE` و `lang` و `charset`.",
+          ),
         },
       ),
       q(
@@ -121,6 +125,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<head>\n  <title>FrontendCraft</title>\n  <meta charset="UTF-8" />\n</head>`,
           language: "html",
+          hint: L(
+            "Peek at `<head>` — `charset` belongs near the top.",
+            "بص على `<head>` — الـ `charset` مكانه في الأول.",
+          ),
         },
       ),
       q(
@@ -147,6 +155,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<html lang="ar">`,
           language: "html",
+          hint: L(
+            "The `lang` attribute goes on `<html>`, not `<body>`.",
+            "خاصية `lang` بتتحط على `<html>`، مش `<body>`.",
+          ),
         },
       ),
       q(
@@ -166,6 +178,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<title>` lives in `<head>` — it drives tabs, bookmarks, and search snippets.",
           "`<title>` مكانه في `<head>` — بيخدم التابات والـ bookmarks ونتائج البحث.",
         ),
+        {
+          hint: L(
+            "Browser tab titles live in `<head>`, inside `<title>`.",
+            "عنوان التاب بيعيش في `<head>` جوّه `<title>`.",
+          ),
+        },
       ),
     ],
   },
@@ -193,6 +211,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<div class="header"></div>\n<div class="main"></div>`,
           language: "html",
+          hint: L(
+            "Compare the options — real landmark tags beat `div` classes.",
+            "قارن الاختيارات — وسوم `landmarks` الحقيقية أحسن من `div` بـ `classes`.",
+          ),
         },
       ),
       q(
@@ -209,6 +231,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "One `<main>` marks the primary content region for the page.",
           "`<main>` واحد بيعلّم منطقة المحتوى الأساسية في الصفحة.",
         ),
+        {
+          hint: L(
+            "Think primary content — one `main` region per page.",
+            "فكّر في المحتوى الأساسي — منطقة `main` واحدة لكل صفحة.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -231,6 +259,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<article>` is for self-contained pieces (posts, cards) — choose by meaning, not looks.",
           "`<article>` للمحتوى المستقل (posts و cards) — اختار بالمعنى مش بالشكل.",
         ),
+        {
+          hint: L(
+            "Ask: could this content stand alone as its own page?",
+            "اسأل: المحتوى ده يقدر يعيش لوحده كصفحة؟",
+          ),
+        },
       ),
       q(
         "q4",
@@ -253,6 +287,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<section>` groups related content with a heading; `<article>` is self-contained.",
           "`<section>` بيجمّع محتوى مرتبط بعنوان؛ `<article>` محتوى مستقل.",
         ),
+        {
+          hint: L(
+            "`<section>` groups related chunks; `<article>` is self-contained.",
+            "`<section>` بيجمّع أجزاء مرتبطة؛ `<article>` محتوى مستقل.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -275,6 +315,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<aside>` marks content indirectly related to the main flow — sidebars, ads, tips.",
           "`<aside>` بيعلّم محتوى مرتبط بشكل غير مباشر — sidebars وإعلانات ونصائح.",
         ),
+        {
+          hint: L(
+            "Sidebars and pull quotes usually belong in `<aside>`.",
+            "الـ sidebars والاقتباسات الجانبية غالبًا مكانها `<aside>`.",
+          ),
+        },
       ),
     ],
   },
@@ -296,6 +342,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "One clear `<h1>` is the page’s main title in the document outline.",
           "`<h1>` واضح واحد هو عنوان الصفحة في الـ outline.",
         ),
+        {
+          hint: L(
+            "Count how many `<h1>` tags the page should have.",
+            "عد كام `<h1>` المفروض يكون في الصفحة.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -318,6 +370,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Heading levels communicate hierarchy — don’t skip levels for styling.",
           "مستويات الـ headings بتعبّر عن hierarchy — متتخطّاش levels عشان الشكل.",
         ),
+        {
+          hint: L(
+            "Keep one `<h1>`, then step down with `<h2>`…",
+            "خلّي `<h1>` واحد، وبعدين انزل بـ `<h2>`…",
+          ),
+        },
       ),
       q(
         "q3",
@@ -344,6 +402,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Semantics first: pick the right heading level, then style appearance with CSS.",
           "الـ semantics أولًا: اختار مستوى الـ heading الصح، وبعدين الشكل بـ CSS.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -366,6 +430,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "AT users jump by heading level — a logical outline is a navigation map.",
           "مستخدمي AT بيقفزوا بالـ heading level — outline منطقي خريطة تنقل.",
         ),
+        {
+          hint: L(
+            "Keep one `<h1>`, then step down with `<h2>`…",
+            "خلّي `<h1>` واحد، وبعدين انزل بـ `<h2>`…",
+          ),
+        },
       ),
       q(
         "q5",
@@ -392,6 +462,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Heading levels express structure, not appearance — never pick a level for styling.",
           "مستويات الـ headings بتعبّر عن الـ structure مش الشكل — متختارش level عشان الستايل.",
         ),
+        {
+          hint: L(
+            "Keep one `<h1>`, then step down with `<h2>`…",
+            "خلّي `<h1>` واحد، وبعدين انزل بـ `<h2>`…",
+          ),
+        },
       ),
     ],
   },
@@ -419,6 +495,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<span style="font-weight:bold">Important</span>`,
           language: "html",
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
         },
       ),
       q(
@@ -439,6 +519,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<em>` conveys stress/emphasis. Use CSS for pure visual italics.",
           "`<em>` بيوصل تأكيد/emphasis. استخدم CSS للإمالة الشكلية بس.",
         ),
+        {
+          hint: L(
+            "`<em>` is for stress that changes meaning.",
+            "`<em>` للتأكيد اللي بيغيّر المعنى.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -458,6 +544,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<mark>` highlights text as relevant in the current context (e.g. search hits).",
           "`<mark>` بيظلّل النص كمهم في السياق الحالي (زي نتائج البحث).",
         ),
+        {
+          hint: L(
+            "`<mark>` highlights what's relevant right now.",
+            "`<mark>` بيظلّل اللي مهم في السياق الحالي.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -483,6 +575,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<pre><code>const x = 1;</code></pre>`,
           language: "html",
+          hint: L(
+            "Scan the snippet — focus on `<pre>`.",
+            "راجع الـ snippet — ركّز على `<pre>`.",
+          ),
         },
       ),
       q(
@@ -509,6 +605,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<abbr title="HyperText Markup Language">HTML</abbr>`,
           language: "html",
+          hint: L(
+            "Read the snippet, then match it to the HTML job.",
+            "اقرأ الـ `snippet`، وبعدين اختار التاج اللي بيعمل الشغل ده.",
+          ),
         },
       ),
     ],
@@ -531,6 +631,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Real `<a href>` works with keyboard, middle-click, and crawlers.",
           "`<a href>` الحقيقي بيشتغل مع الكيبورد و middle-click والزواحف.",
         ),
+        {
+          hint: L(
+            "Real links need a working `href`.",
+            "اللينكات الحقيقية محتاجة `href` شغال.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -546,6 +652,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`src` loads the image; meaningful `alt` describes it when it conveys information.",
           "`src` بيحمّل الصورة؛ `alt` معنوي بيوصفها لما توصل معلومة.",
         ),
+        {
+          hint: L(
+            "Decide if the image carries info or is decorative.",
+            "حدّد الصورة فيها معلومة ولا ديكور.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -568,6 +680,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Empty `alt` marks decorative images so screen readers can skip them.",
           "`alt` الفاضي بيعلّم الصور الديكورية عشان قارئات الشاشة تعدّيها.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -590,6 +708,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Link text should describe the destination — avoid vague \"click here\".",
           "نص اللينك يوصف الوجهة — تجنّب \"click here\" الغامض.",
         ),
+        {
+          hint: L(
+            "A real link needs a working `href`.",
+            "اللينك الحقيقي محتاج `href` شغال.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -615,6 +739,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<a href="https://example.com" target="_blank" rel="noopener noreferrer">Docs</a>`,
           language: "html",
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
         },
       ),
       q(
@@ -638,6 +766,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Intrinsic dimensions let the browser paint a placeholder before the image loads.",
           "المقاسات الداخلية بتخلي المتصفح يرسم placeholder قبل تحميل الصورة.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
     ],
   },
@@ -659,6 +793,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<ol>` is for ordered sequences where order matters.",
           "`<ol>` للتسلسل المرتب لما الترتيب يهم.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>` — not fake bullets.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>` — مش نقط مزيفة.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -674,6 +814,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "List children should be `<li>` elements — keep the structure valid.",
           "أولاد الـ list لازم `<li>` — خلّي الـ structure صحيح.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>` — not fake bullets.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>` — مش نقط مزيفة.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -693,6 +839,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<dl>` groups terms (`<dt>`) with definitions (`<dd>`).",
           "`<dl>` بيجمّع المصطلحات (`<dt>`) مع التعريفات (`<dd>`).",
         ),
+        {
+          hint: L(
+            "Data tables need headers that match their cells.",
+            "جداول البيانات محتاجة `headers` تطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -715,6 +867,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Valid nesting: the inner list lives inside a parent `<li>`.",
           "التداخل الصحيح: الـ list الداخلية جوّه `<li>` أب.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -740,6 +898,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<nav aria-label="Main">\n  <ul>\n    <li><a href="/">Home</a></li>\n  </ul>\n</nav>`,
           language: "html",
+          hint: L(
+            "Scan the snippet — focus on `<ul>`.",
+            "راجع الـ snippet — ركّز على `<ul>`.",
+          ),
         },
       ),
     ],
@@ -766,6 +928,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`for` + `id` (or wrapping) associates the accessible name with the control.",
           "`for` + `id` (أو اللف) بيربط الاسم الـ accessible بالـ control.",
         ),
+        {
+          hint: L(
+            "Every input needs a visible `<label>`.",
+            "كل `input` محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -788,6 +956,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Input types improve UX (keyboards) and give the browser useful constraints.",
           "أنواع الـ input بتحسّن UX (الكيبورد) وبتدي المتصفح قيود مفيدة.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -806,6 +980,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Native submit buttons work with Enter in fields and without custom JS.",
           "زرار submit الأصلي بيشتغل مع Enter جوّه الحقول ومن غير JS مخصوص.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -828,6 +1008,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Without `name`, the field is not included in form submission.",
           "من غير `name`، الحقل مش بيتبعت مع الـ form.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -853,6 +1039,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<fieldset>\n  <legend>Shipping address</legend>\n  …\n</fieldset>`,
           language: "html",
+          hint: L(
+            "Scan the snippet — focus on `<fieldset>`.",
+            "راجع الـ snippet — ركّز على `<fieldset>`.",
+          ),
         },
       ),
     ],
@@ -875,6 +1065,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Tables express data relationships — use CSS for layout.",
           "الجداول بتعبّر عن علاقات البيانات — استخدم CSS للـ layout.",
         ),
+        {
+          hint: L(
+            "Data tables need headers that match their cells.",
+            "جداول البيانات محتاجة `headers` تطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -894,6 +1090,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<th>` (often with `scope`) gives screen readers the header context for each cell.",
           "`<th>` (غالبًا مع `scope`) بيدي قارئات الشاشة سياق الرأس لكل خلية.",
         ),
+        {
+          hint: L(
+            "Pick native landmark tags over styled `div`s.",
+            "اختار وسوم `landmarks` الأصلية بدل `div` مزيّنة.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -913,6 +1115,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<caption>` is the accessible title of the table.",
           "`<caption>` هو عنوان الجدول الـ accessible.",
         ),
+        {
+          hint: L(
+            "Playable media needs `controls` and captions when possible.",
+            "الميديا القابلة للتشغيل محتاجة `controls` و `captions` لما تقدر.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -935,6 +1143,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<thead>` / `<tbody>` separate header rows from data rows semantically.",
           "`<thead>` / `<tbody>` بيفصلوا صفوف الرؤوس عن صفوف البيانات semantically.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -957,6 +1171,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`scope` helps screen readers map headers to the correct cells.",
           "`scope` بيساعد قارئات الشاشة تربط الرؤوس بالخلايا الصح.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
     ],
   },
@@ -982,6 +1202,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Native constraint validation can require a value before submit.",
           "الـ validation الأصلي يقدر يفرض قيمة قبل الإرسال.",
         ),
+        {
+          hint: L(
+            "Every input needs a visible `<label>`.",
+            "كل `input` محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1001,6 +1227,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Correct autocomplete tokens improve UX and password-manager support.",
           "tokens الـ autocomplete الصح بتحسّن UX ودعم مدير كلمات المرور.",
         ),
+        {
+          hint: L(
+            "Check which attribute helps keyboards or autofill.",
+            "بص أي `attribute` بيساعد الكيبورد أو الـ `autofill`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1020,6 +1252,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`inputmode` hints which mobile keyboard to show — it is not full validation.",
           "`inputmode` بيلمّح لكيبورد الموبايل — مش validation كامل.",
         ),
+        {
+          hint: L(
+            "Every input needs a visible `<label>`.",
+            "كل `input` محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1045,6 +1283,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<input type="text" pattern="[0-9]{5}" title="5 digits" />`,
           language: "html",
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
         },
       ),
       q(
@@ -1068,6 +1310,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`min` / `max` give browsers built-in range validation for numbers and dates.",
           "`min` / `max` بيدوا المتصفح validation نطاق مدمج للأرقام والتواريخ.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
     ],
   },
@@ -1092,6 +1340,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<details>` / `<summary>` give expand/collapse with built-in keyboard behavior.",
           "`<details>` / `<summary>` بيدي فتح/قفل مع سلوك كيبورد مدمج.",
         ),
+        {
+          hint: L(
+            "Toggle open/close with `<details>` and `<summary>`.",
+            "افتح واقفل بـ `<details>` و `<summary>`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1107,6 +1361,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<summary>` is the disclosure label users activate.",
           "`<summary>` هو عنوان الـ disclosure اللي المستخدم بيفعّله.",
         ),
+        {
+          hint: L(
+            "Every input needs a visible `<label>`.",
+            "كل `input` محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1125,6 +1385,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`open` sets the default expanded state.",
           "`open` بيحدد حالة الفتح الافتراضية.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1147,6 +1413,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<summary>` is the clickable label — without it the widget has no visible toggle.",
           "`<summary>` هو اللابل القابل للضغط — من غيره مفيش toggle ظاهر.",
         ),
+        {
+          hint: L(
+            "Every control needs a visible `<label>`.",
+            "كل حقل محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -1169,6 +1441,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Native `<details>` does not auto-close siblings — exclusive behavior needs script.",
           "`<details>` الأصلي مش بيقفل الإخوة لوحده — السلوك الحصري محتاج script.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
     ],
   },
@@ -1194,6 +1472,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Give users controls; caption spoken content.",
           "ادي المستخدم controls؛ وغطّي الكلام بـ captions.",
         ),
+        {
+          hint: L(
+            "Prefer native HTML — it ships keyboard support for free.",
+            "فضّل `HTML` الأصلي — بيجيب دعم الكيبورد جاهز.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1213,6 +1497,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "A descriptive `title` tells screen reader users what the embed is.",
           "`title` وصفي بيقول لمستخدمي قارئات الشاشة الـ embed ده إيه.",
         ),
+        {
+          hint: L(
+            "Treat embeds as untrusted — start with a strict `sandbox`.",
+            "اعتبر الـ `embeds` غير موثوق — ابدأ بـ `sandbox` مقيّد.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1232,6 +1522,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Unexpected sound fails accessibility expectations — opt-in playback.",
           "الصوت المفاجئ بيكسر توقعات الوصولية — خلّي التشغيل اختياري.",
         ),
+        {
+          hint: L(
+            "Prefer native `<video>`/`<audio>` with captions when you can.",
+            "فضّل `<video>`/`<audio>` الأصلي مع captions لما تقدر.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1257,6 +1553,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<video controls>\n  <track kind="captions" src="subs.vtt" srclang="en" />\n</video>`,
           language: "html",
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
         },
       ),
       q(
@@ -1280,6 +1580,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`poster` shows a still frame so users see content before pressing play.",
           "`poster` بيعرض إطار ثابت عشان المستخدم يشوف محتوى قبل play.",
         ),
+        {
+          hint: L(
+            "Prefer native `<video>`/`<audio>` with captions when you can.",
+            "فضّل `<video>`/`<audio>` الأصلي مع captions لما تقدر.",
+          ),
+        },
       ),
     ],
   },
@@ -1307,6 +1613,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `if ("showModal" in HTMLDialogElement.prototype) { … }`,
           language: "javascript",
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
         },
       ),
       q(
@@ -1327,6 +1637,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Baseline summarizes support so you can plan fallbacks.",
           "Baseline بيلخّص الدعم عشان تخطط للـ fallbacks.",
         ),
+        {
+          hint: L(
+            "Test the API on the object — don't sniff `user-agent` strings.",
+            "اختبر الـ API على الـ object — متشمّش `user-agent`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1349,6 +1665,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Detect support and keep a usable path for older engines.",
           "اكتشف الدعم وخلّي مسار قابل للاستخدام للمحركات الأقدم.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1371,6 +1693,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Core content works everywhere; newer features enhance when available.",
           "المحتوى الأساسي يشتغل في كل حتة؛ الميزات الأحدث بتزود لما متاحة.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -1393,6 +1721,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Test capabilities, not browser brands — UA sniffing breaks on updates and spoofing.",
           "اختبر القدرات مش ماركات المتصفح — UA sniffing بيتكسر مع التحديثات والتزييف.",
         ),
+        {
+          hint: L(
+            "Prefer feature detection over reading the browser name.",
+            "فضّل `feature detection` على قراءة اسم المتصفح.",
+          ),
+        },
       ),
     ],
   },
@@ -1414,6 +1748,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`showModal()` gives top-layer, backdrop, and focus trap from the engine.",
           "`showModal()` بيدي top-layer و backdrop و focus trap من الـ engine.",
         ),
+        {
+          hint: L(
+            "Native modals use `<dialog>` and `showModal()`.",
+            "الـ modals الأصلية بـ `<dialog>` و `showModal()`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1429,6 +1769,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Native modal dialogs handle Escape dismissal by default.",
           "الـ modal الأصلي بيتعامل مع قفل Escape افتراضيًا.",
         ),
+        {
+          hint: L(
+            "Native modals use `<dialog>` and `showModal()`.",
+            "الـ modals الأصلية بـ `<dialog>` و `showModal()`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1451,6 +1797,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "The platform handles focus, backdrop, and layering when you use the native element.",
           "المنصة بتتولى الـ focus والـ backdrop والطبقات لما تستخدم العنصر الأصلي.",
         ),
+        {
+          hint: L(
+            "Native modals use `<dialog>` + `showModal()`.",
+            "المودال الأصلي بـ `<dialog>` و `showModal()`.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1476,6 +1828,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<dialog id="d">\n  <form method="dialog">\n    <button value="ok">Save</button>\n  </form>\n</dialog>`,
           language: "html",
+          hint: L(
+            "Every control needs a visible `<label>`.",
+            "كل حقل محتاج `<label>` ظاهر.",
+          ),
         },
       ),
       q(
@@ -1499,6 +1855,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`showModal()` traps focus so users cannot Tab into the page behind.",
           "`showModal()` بيحبس الـ focus عشان المستخدم ما يقدرش Tab للصفحة ورا.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
     ],
   },
@@ -1524,6 +1886,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`<picture>` lets you pick sources by media, type, or density.",
           "`<picture>` بيخلّيك تختار مصادر حسب media أو type أو density.",
         ),
+        {
+          hint: L(
+            "Check the final `<img>` — it's always the fallback.",
+            "راجع `<img>` في الآخر — هو دايمًا الـ `fallback`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1543,6 +1911,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "The `<img>` is what renders (with alt) when no source matches — and always carries alt.",
           "`<img>` هو اللي بيتعرض (مع alt) لما مفيش source مناسب — ودايمًا شايل alt.",
         ),
+        {
+          hint: L(
+            "Check the final `<img>` — it's always the fallback.",
+            "راجع `<img>` في الآخر — هو دايمًا الـ `fallback`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1565,6 +1939,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`type` helps the browser pick a supported image format.",
           "`type` بيساعد المتصفح يختار فورمات صورة مدعوم.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1590,6 +1970,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<source media="(min-width: 800px)" srcset="wide.jpg" />`,
           language: "html",
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
         },
       ),
       q(
@@ -1613,6 +1997,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Same composition at different resolutions → `srcset` on `<img>`; different crops → `<picture>` + `media`.",
           "نفس التكوين بمقاسات مختلفة → `srcset` على `<img>`؛ crops مختلفة → `<picture>` + `media`.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
     ],
   },
@@ -1640,6 +2030,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<div onclick="save()">Save</div>`,
           language: "html",
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
         },
       ),
       q(
@@ -1660,6 +2054,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Don’t remove focus styles without providing a clear replacement.",
           "متشلّش ستايل الـ focus من غير بديل واضح.",
         ),
+        {
+          hint: L(
+            "Read the snippet, then match it to the HTML job.",
+            "اقرأ الـ `snippet`، وبعدين اختار التاج اللي بيعمل الشغل ده.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1679,6 +2079,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Labels (and names) tell assistive tech what the control is called.",
           "اللابلز (والأسماء) بتقول لـ assistive tech اسم الـ control.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1701,6 +2107,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "First rule of ARIA: use native HTML when it can do the job.",
           "أول قاعدة في ARIA: استخدم HTML الأصلي لما يقدر يعمل المطلوب.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -1723,6 +2135,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Keyboard access is a baseline — Tab, Enter, and Space must work.",
           "الوصول بالكيبورد baseline — Tab و Enter و Space لازم يشتغلوا.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
     ],
   },
@@ -1751,6 +2169,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Ship title, primary copy, and real `<a href>` links in the first HTML.",
           "اطلع title والنص الأساسي ولينكات `<a href>` في أول HTML.",
         ),
+        {
+          hint: L(
+            "Crawlers need real text and links in the first HTML response.",
+            "محركات البحث محتاجة نص ولينكات حقيقية في أول رد `HTML`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1770,6 +2194,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Canonical hints which URL should be treated as the primary version.",
           "الـ canonical بيلمّح أنهي URL هو النسخة الأساسية.",
         ),
+        {
+          hint: L(
+            "Real links need a working `href`.",
+            "اللينكات الحقيقية محتاجة `href` شغال.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1789,6 +2219,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Title is primary metadata for humans and crawlers.",
           "الـ title metadata أساسية للبشر والزواحف.",
         ),
+        {
+          hint: L(
+            "The tab title lives in `<title>` inside `<head>`.",
+            "عنوان التاب في `<title>` جوّه `<head>`.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1814,6 +2250,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<meta name="description" content="Learn semantic HTML…" />`,
           language: "html",
+          hint: L(
+            "Pick the tag that matches the job: `header`, `nav`, `main`, `footer`.",
+            "اختار التاج اللي يناسب الشغل: `header` أو `nav` أو `main` أو `footer`.",
+          ),
         },
       ),
       q(
@@ -1837,6 +2277,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Use `noindex` deliberately for staging, thank-you pages, or duplicates you don’t want indexed.",
           "استخدم `noindex` بقصد لصفحات staging أو thank-you أو duplicates مش عايزها تتفهرس.",
         ),
+        {
+          hint: L(
+            "Social and SEO tags belong in `<head>`.",
+            "تاجات الـ SEO والسوشيال مكانها في `<head>`.",
+          ),
+        },
       ),
     ],
   },
@@ -1862,6 +2308,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "og:title / og:image / og:description shape how shares look.",
           "og:title و og:image و og:description بتحدد شكل المشاركة.",
         ),
+        {
+          hint: L(
+            "Social preview tags belong in `<head>`.",
+            "وسوم معاينة السوشيال مكانها `<head>`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1877,6 +2329,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Metadata for crawlers and apps belongs in `<head>`.",
           "الـ metadata للزواحف والتطبيقات مكانها في `<head>`.",
         ),
+        {
+          hint: L(
+            "Social preview tags belong in `<head>`.",
+            "وسوم معاينة السوشيال مكانها `<head>`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -1899,6 +2357,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Huge share images slow crawlers and look broken when cropped.",
           "صور المشاركة الضخمة بتبطّئ الزواحف وبتنكسر مع القص.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -1921,6 +2385,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Twitter reads its own meta tags — mirror og:* where sensible and add twitter:* specifics.",
           "Twitter بيقرأ meta tags خاصة — زوّد og:* حيث ينفع و twitter:* للتفاصيل.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -1946,6 +2416,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<meta property="og:image" content="https://example.com/share.jpg" />`,
           language: "html",
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
         },
       ),
     ],
@@ -1979,6 +2453,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Never leave Tab stops inside `aria-hidden`. Prefer native controls with honest names/state.",
           "متسيبش Tab جوّه `aria-hidden`. فضّل native controls بأسماء و state صادقة.",
         ),
+        {
+          hint: L(
+            "Check what a keyboard or screen reader would hear/focus.",
+            "فكّر إيه اللي الكيبورد أو قارئ الشاشة هيسمعه.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -1998,6 +2478,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Keep ARIA state in sync with the visible UI.",
           "خلّي حالة ARIA متزامنة مع الـ UI الظاهر.",
         ),
+        {
+          hint: L(
+            "Prefer native HTML — it ships keyboard support for free.",
+            "فضّل `HTML` الأصلي — بيجيب دعم الكيبورد جاهز.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2020,6 +2506,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Hidden from AT but still focusable is a classic trap — hide or inert the whole path.",
           "مخفي من AT ولسه عليه focus فخ كلاسيكي — اخفي أو inert المسار كله.",
         ),
+        {
+          hint: L(
+            "Check what a keyboard or screen reader would hear/focus.",
+            "فكّر إيه اللي الكيبورد أو قارئ الشاشة هيسمعه.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2045,6 +2537,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<a href="#main" class="skip-link">Skip to content</a>`,
           language: "html",
+          hint: L(
+            "A real link needs a working `href`.",
+            "اللينك الحقيقي محتاج `href` شغال.",
+          ),
         },
       ),
       q(
@@ -2068,6 +2564,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Live regions interrupt — use for toasts/errors, not routine UI churn.",
           "الـ live regions بتقطع — استخدمها للـ toasts/errors، مش كل تحديث UI.",
         ),
+        {
+          hint: L(
+            "Check what a keyboard or screen reader would hear/focus.",
+            "فكّر إيه اللي الكيبورد أو قارئ الشاشة هيسمعه.",
+          ),
+        },
       ),
     ],
   },
@@ -2099,6 +2601,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<img src="/hero.jpg" alt="Hero" loading="lazy" />`,
           language: "html",
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
         },
       ),
       q(
@@ -2115,6 +2621,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Reserve space for media and ads so content doesn’t jump.",
           "احجز مساحة للصور والإعلانات عشان المحتوى ميتحركش.",
         ),
+        {
+          hint: L(
+            "Sized images reserve space before they load.",
+            "الصور بمقاس بتحجز مكان قبل ما تتحمّل.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2134,6 +2646,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Lazy-loading the LCP image can delay the largest paint.",
           "lazy على صورة LCP ممكن يأخّر أكبر paint.",
         ),
+        {
+          hint: L(
+            "Hero images load eagerly; below-the-fold can be `lazy`.",
+            "صور الـ hero بتتحمّل فورًا؛ تحت الشاشة ممكن `lazy`.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2156,6 +2674,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "INP tracks how quickly the page responds after taps/clicks — markup choices affect what loads first.",
           "INP بيتتبع سرعة استجابة الصفحة بعد taps/clicks — اختيارات الـ markup بتأثر على اللي بيتحمّل الأول.",
         ),
+        {
+          hint: L(
+            "`INP` is about how fast the page reacts after a tap or click.",
+            "`INP` عن سرعة رد الصفحة بعد tap أو click.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2178,6 +2702,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Unsized media pushes content down when it arrives — always reserve space.",
           "وسائط من غير مقاس بتزق المحتوى لما توصل — احجز مساحة دايمًا.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
     ],
   },
@@ -2206,6 +2736,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Intrinsic size hints let the browser reserve space before bytes arrive.",
           "تلميح المقاس بيخلّي المتصفح يحجز مساحة قبل ما البايتس توصل.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2225,6 +2761,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Async decoding can keep scrolling smoother while images decode.",
           "الـ decoding الـ async ممكن يخلّي السكرول أنعم أثناء فك الصور.",
         ),
+        {
+          hint: L(
+            "Ask which resource is in the first screen — prioritize that.",
+            "اسأل: أنهي ملف في أول شاشة؟ أولويته أعلى.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2243,6 +2785,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Lazy-load offscreen images; keep heroes eager and prioritized.",
           "lazy للصور اللي بره الشاشة؛ خلّي الـ heroes Eager وبأولوية.",
         ),
+        {
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2268,6 +2816,10 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         {
           code: `<img src="hero.jpg" srcset="hero-800.jpg 800w, hero-1600.jpg 1600w" sizes="100vw" alt="Hero" />`,
           language: "html",
+          hint: L(
+            "Ask: does the image carry info? Then it needs useful `alt`.",
+            "اسأل: الصورة فيها معلومة؟ يبقى محتاجة `alt` مفيد.",
+          ),
         },
       ),
       q(
@@ -2291,6 +2843,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "High priority nudges the critical hero image ahead of less important assets.",
           "أولوية عالية بتقدّم صورة الـ hero الحرجة على assets أقل أهمية.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
     ],
   },
@@ -2319,6 +2877,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Shared partials keep structure consistent across pages.",
           "الـ partials المشتركة بتخلي الـ structure ثابت عبر الصفحات.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2341,6 +2905,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Frameworks still emit HTML — keep it semantic and accessible.",
           "الـ frameworks برضه بتطلع HTML — خلّيه semantic و accessible.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2363,6 +2933,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Partials/components give you one place to fix structure.",
           "الـ partials/components بتديك مكان واحد تصلّح فيه الـ structure.",
         ),
+        {
+          hint: L(
+            "Reuse structure with includes — one place to fix, everywhere updates.",
+            "أعد استخدام الهيكل بـ includes — مكان واحد للإصلاح.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2385,6 +2961,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Duplicate ids make `for`/`href`/`getElementById` unreliable — generate once per partial.",
           "ids مكررة بتخلي `for`/`href`/`getElementById` غير موثوق — ولّد id مرة واحدة لكل partial.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2407,6 +2989,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Shared header/nav/footer partials should expose the same landmark structure every time.",
           "partials الـ header/nav/footer المشتركة لازم تطلع نفس هيكل landmarks كل مرة.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
     ],
   },
@@ -2425,6 +3013,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("`noopener` blocks opener access and `noreferrer` suppresses referrer data.", "`noopener` بيمنع opener access و`noreferrer` بيمنع referrer data."),
+        {
+          hint: L(
+            "External tabs need `rel=\"noopener noreferrer\"`.",
+            "التابات الخارجية محتاجة `rel=\"noopener noreferrer\"`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2437,6 +3031,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Sandboxing is least privilege: restore capabilities one at a time only when the embed needs them.", "Sandboxing هو least privilege: رجّع capabilities واحدة واحدة بس لما الـ embed يحتاجها."),
+        {
+          hint: L(
+            "Think what a screen reader needs to navigate.",
+            "فكّر إيه اللي قارئ الشاشة محتاجه للتنقل.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2449,6 +3049,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Anything in client-visible HTML can be inspected. Keep secrets and authorization on the server.", "أي حاجة في HTML ظاهر للعميل ممكن تتفحص. خلّي الأسرار والـ authorization على السيرفر."),
+        {
+          hint: L(
+            "Data tables need headers that match their cells.",
+            "جداول البيانات محتاجة `headers` تطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2461,6 +3067,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Use `current-password` for an existing sign-in credential; tokens express the field’s intent.", "استخدم `current-password` لـ sign-in credential موجود؛ الـ tokens بتوصف نية الحقل."),
+        {
+          hint: L(
+            "Data tables need headers that match their cells.",
+            "جداول البيانات محتاجة `headers` تطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2473,6 +3085,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("A submitter can override the destination with `formaction`, creating a separate data egress path.", "الـ submitter ممكن يغيّر الوجهة بـ `formaction` وده بيعمل مسار خروج بيانات مختلف."),
+        {
+          hint: L(
+            "Every input needs a visible `<label>`.",
+            "كل `input` محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
     ],
   },
@@ -2491,6 +3109,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Supporting browsers parse JSON inside `<script type=\"speculationrules\">`.", "المتصفحات الداعمة بتقرأ JSON جوّه `<script type=\"speculationrules\">`."),
+        {
+          hint: L(
+            "Never prefetch `logout` or `checkout` URLs.",
+            "متعملش `prefetch` لـ `logout` أو `checkout`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2503,6 +3127,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Prefetch warms a response; prerender does more work to make activation fast.", "Prefetch بيسخّن response؛ prerender بيعمل شغل أكتر عشان activation يبقى سريع."),
+        {
+          hint: L(
+            "Never prefetch `logout` or `checkout` URLs.",
+            "متعملش `prefetch` لـ `logout` أو `checkout`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2515,6 +3145,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Logout and other mutating routes can cause side effects before a user commits to navigation.", "Logout وroutes تانية بتغيّر state ممكن تعمل side effects قبل ما المستخدم يقرر يتنقل."),
+        {
+          hint: L(
+            "Data tables need headers that match their cells.",
+            "جداول البيانات محتاجة `headers` تطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2527,6 +3163,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("Small, likely, same-origin destinations limit wasted bandwidth and risk.", "وجهات صغيرة ومحتملة وsame-origin بتقلل bandwidth المهدور والمخاطرة."),
+        {
+          hint: L(
+            "Sized images reserve space before they load.",
+            "الصور بمقاس بتحجز مكان قبل ما تتحمّل.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2539,6 +3181,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
         ],
         "a",
         L("The API is progressive enhancement: ordinary `<a href>` navigation remains the baseline.", "الـ API هي progressive enhancement: navigation عادي بـ `<a href>` يفضل الـ baseline."),
+        {
+          hint: L(
+            "Real links need a working `href`.",
+            "اللينكات الحقيقية محتاجة `href` شغال.",
+          ),
+        },
       ),
     ],
   },
@@ -2563,6 +3211,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Root `lang` and `dir` declare the document default for browsers and AT.",
           "Root `lang` و `dir` بيعلنوا افتراضي المستند للمتصفحات و AT.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2581,6 +3235,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Bidirectional isolation prevents the token from scrambling neighboring Arabic letters.",
           "عزل bidi بيمنع الـ token يبوّظ الحروف العربية اللي حواليه.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2599,6 +3259,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "LTR controls keep caret movement and pasted codes predictable on RTL pages.",
           "كنترولز LTR بتخلي حركة الـ caret واللصق متوقعين في صفحات RTL.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2618,6 +3284,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "`dir=\"auto\"` infers direction from content — great for UGC, less ideal for fixed chrome.",
           "`dir=\"auto\"` بيستنتج الاتجاه من المحتوى — ممتاز لـ UGC، أقل مثالية للـ chrome الثابت.",
         ),
+        {
+          hint: L(
+            "Set `lang` and `dir` on `<html>` first.",
+            "حط `lang` و `dir` على `<html>` الأول.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2640,6 +3312,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Teleported UI can escape page direction — carry `lang`/`dir` with the portal root.",
           "الـ UI المتنقل ممكن يخرج من اتجاه الصفحة — انقل `lang`/`dir` مع جذر الـ portal.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
     ],
   },
@@ -2668,6 +3346,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Fake controls miss focus, Enter/Space, and proper roles — use native elements.",
           "الـ controls المزيفة بتضيع focus و Enter/Space والـ roles — استخدم عناصر أصلية.",
         ),
+        {
+          hint: L(
+            "Data tables need `<th>` headers that match the cells.",
+            "جداول البيانات محتاجة `<th>` يطابق الخلايا.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2690,6 +3374,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Informative images need text alternatives; decorative ones can use empty alt.",
           "الصور المعلوماتية محتاجة بديل نصي؛ الديكورية ينفع alt فاضي.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2712,6 +3402,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Placeholders are not labels — associate a real `<label>`.",
           "الـ placeholders مش labels — اربط `<label>` حقيقي.",
         ),
+        {
+          hint: L(
+            "Every control needs a visible `<label>`.",
+            "كل حقل محتاج `<label>` ظاهر.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2734,6 +3430,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Use `<button type=\"button\">` for actions; `<a href>` for navigation with a real destination.",
           "استخدم `<button type=\"button\">` للأ actions؛ `<a href>` للتنقل لوجهة حقيقية.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2756,6 +3458,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Pick heading levels for hierarchy, not font size — style with CSS instead.",
           "اختار مستويات headings للـ hierarchy مش حجم الخط — وستايل بـ CSS.",
         ),
+        {
+          hint: L(
+            "Heading level = outline meaning; size comes from `CSS`.",
+            "مستوى الـ heading = معنى الـ outline؛ الحجم من `CSS`.",
+          ),
+        },
       ),
     ],
   },
@@ -2784,6 +3492,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Cheat cards include compatibility badges so you can decide before paste.",
           "كروت الـ CheatSheet فيها شارات توافق عشان تقرر قبل اللصق.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q2",
@@ -2806,6 +3520,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Snippets are starting points — keep accessibility intact in your page.",
           "الـ snippets بداية — خلّي الوصولية سليمة في صفحتك.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q3",
@@ -2828,6 +3548,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Recall + practice beats copying blindly.",
           "التذكرة + الممارسة أحسن من النسخ الأعمي.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
       q(
         "q4",
@@ -2850,6 +3576,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Cheat cards show compatibility — verify before shipping to production.",
           "كروت الـ CheatSheet بتعرض التوافق — تأكد قبل الإنتاج.",
         ),
+        {
+          hint: L(
+            "Use meaning tags (`strong`/`em`) not just look tags.",
+            "استخدم تاجات المعنى (`strong`/`em`) مش الشكل بس.",
+          ),
+        },
       ),
       q(
         "q5",
@@ -2872,6 +3604,12 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
           "Snippets are templates — adapt names and copy for your real UI.",
           "الـ snippets قوالب — عدّل الأسماء والنص لـ UI الحقيقي.",
         ),
+        {
+          hint: L(
+            "Real lists use `<ul>`, `<ol>`, or `<dl>`.",
+            "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>`.",
+          ),
+        },
       ),
     ],
   },
