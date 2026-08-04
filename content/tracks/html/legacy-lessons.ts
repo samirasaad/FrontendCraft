@@ -541,7 +541,7 @@ export const legacyLessons: LegacyLesson[] = [
   },
   {
     id: "html-8",
-    order: 15,
+    order: 17,
     slug: "accessibility-basics",
     difficulty: "advanced",
     readMinutes: 12,
@@ -614,7 +614,7 @@ export const legacyLessons: LegacyLesson[] = [
   },
   {
     id: "html-9",
-    order: 16,
+    order: 15,
     slug: "meta-seo",
     difficulty: "advanced",
     readMinutes: 16,
@@ -659,8 +659,8 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "اللينكات الداخلية بنص anchor وصفي بتمرّر مسارات الزحف والسياق (`Learn HTML forms` أحسن من `click here`). `<h1>` منطقي واحد ومراتب headings صادقة و landmarks (`<main>` و `<nav>` و `<article>`) بتساعد المستخدمين والـ crawlers يفهموا الـ outline. Soft 404s (HTTP 200 بنص “not found”) و stubs من نوع `javascript:` / `#` مش بتمرّر equity.",
         },
         {
-          en: "Structured data (JSON-LD) can clarify type — Article, Course, FAQ — but it must match visible content. Fake rich results get ignored or penalized. Social preview tags (Open Graph / Twitter) live in Head & Social Meta; page-experience metrics (LCP, INP, CLS) live in Pro: Core Web Vitals.",
-          ar: "Structured data (JSON-LD) بيوضّح النوع — Article أو Course أو FAQ — لكن لازم يطابق المحتوى الظاهر. النتائج الغنية المزيفة بتتتجاهل أو تتعاقب. وسوم معاينة السوشيال في درس Head & Social Meta؛ مقاييس تجربة الصفحة (LCP و INP و CLS) في درس Pro: Core Web Vitals.",
+          en: "Structured data (JSON-LD) can clarify type — Article, Course, FAQ — but it must match visible content. Fake rich results get ignored or penalized. Social preview tags (Open Graph / Twitter) live in Head & Social Meta; page-experience metrics (LCP, INP, CLS) live in Core Web Vitals.",
+          ar: "Structured data (JSON-LD) بيوضّح النوع — Article أو Course أو FAQ — لكن لازم يطابق المحتوى الظاهر. النتائج الغنية المزيفة بتتتجاهل أو تتعاقب. وسوم معاينة السوشيال في درس Head & Social Meta؛ مقاييس تجربة الصفحة (LCP و INP و CLS) في درس Core Web Vitals.",
         },
         {
           en: "Ops checklist after every deploy: unique titles/descriptions, working canonicals, crawlable nav, no accidental `noindex` on public lessons, and a sanity check in Search Console (coverage + URL inspection). Indexing is not instant — fix the HTML first, then wait for recrawl.",

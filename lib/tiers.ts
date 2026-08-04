@@ -12,7 +12,15 @@ export const TIER_ORDER: Tier[] = [
 
 export type TierFilter = "all" | Tier;
 
-export const TIER_FILTERS: TierFilter[] = ["all", ...TIER_ORDER];
+/** Sidebar lesson filters — omit pitfalls (lessons stay in the curriculum list). */
+export const TIER_FILTERS: TierFilter[] = [
+  "all",
+  "beginner",
+  "intermediate",
+  "advanced",
+  "pro",
+  "cheatsheet",
+];
 
 const TIER_UI_KEY: Record<Tier, UiKey> = {
   beginner: "tierBeginner",

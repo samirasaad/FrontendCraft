@@ -93,7 +93,7 @@ export const modernLessons: LessonDraft[] = [
   },
   {
     id: "html-12",
-    order: 12,
+    order: 14,
     slug: "browser-compatibility",
     tier: "advanced",
     readMinutes: 11,
@@ -125,6 +125,10 @@ export const modernLessons: LessonDraft[] = [
           "Document your matrix once per feature family — don’t paste vague “supported everywhere” notes on every lesson. This lesson is the source of truth; cheat cards link back here with compact badges.",
           "وثّق المصفوفة مرة لكل عائلة ميزات — متلصقش ملاحظات “مدعوم في كل حتة” على كل درس. الدرس ده هو المصدر؛ كروت الـ CheatSheet بترجع له بشارات مختصرة.",
         ),
+        L(
+          "The matrices below cover the HTML track’s high-stakes tags and attributes: dialog, details, picture, lazy/fetchpriority media, forms hints, template, search, popover, inert, and media tracks.",
+          "المصفوفات تحت بتغطي tags و attributes الحساسة في الـ HTML track: dialog و details و picture و lazy/fetchpriority و تلميحات الفورم و template و search و popover و inert و media tracks.",
+        ),
       ],
       keyPoints: [
         L("Use Baseline + caniuse / MDN — not folklore", "استخدم Baseline + caniuse / MDN — مش الإشاعات"),
@@ -134,38 +138,92 @@ export const modernLessons: LessonDraft[] = [
       ],
       examples: [
         simpleExample(
-          `<script>
-  const canModal =
-    typeof HTMLDialogElement !== "undefined" &&
-    typeof HTMLDialogElement.prototype.showModal === "function";
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feature-detect showModal</title>
+  </head>
+  <body>
+    <main>
+      <h1>Baseline check</h1>
+      <p id="status">Click Open to feature-detect <code>showModal</code>.</p>
+      <button type="button" id="open">Open confirm</button>
+      <p id="fallback" hidden>
+        Fallback path: <a href="#confirm-page">Confirm reset page</a>
+      </p>
+    </main>
 
-  if (canModal) {
-    document.getElementById("confirm")?.showModal();
-  } else {
-    // Fallback: navigate to a confirm page or open a custom overlay
-    location.href = "/confirm-reset";
-  }
-</script>`,
+    <dialog id="confirm" aria-labelledby="dlg-title">
+      <h2 id="dlg-title">Confirm</h2>
+      <p>Reset progress?</p>
+      <form method="dialog">
+        <button value="cancel">Cancel</button>
+        <button value="ok">Reset</button>
+      </form>
+    </dialog>
+
+    <script>
+      const dialog = document.getElementById("confirm");
+      const status = document.getElementById("status");
+      const fallback = document.getElementById("fallback");
+      const canModal =
+        typeof HTMLDialogElement !== "undefined" &&
+        typeof HTMLDialogElement.prototype.showModal === "function";
+
+      status.textContent = canModal
+        ? "showModal is available — progressive enhancement path."
+        : "showModal missing — showing HTML fallback link.";
+
+      if (!canModal) {
+        fallback.hidden = false;
+      }
+
+      document.getElementById("open").addEventListener("click", () => {
+        if (canModal) {
+          dialog.showModal();
+        } else {
+          fallback.hidden = false;
+          fallback.querySelector("a")?.focus();
+        }
+      });
+    </script>
+  </body>
+</html>`,
           "Feature-detect showModal before calling it",
           "افحص showModal قبل ما تستدعيه",
         ),
         realWorldExample(
-          `<!-- Progressive enhancement: details works; name grouping is optional -->
-<details>
-  <summary>Shipping checklist</summary>
-  <ul>
-    <li>Baseline status reviewed</li>
-    <li>Safari smoke test</li>
-    <li>Fallback documented</li>
-  </ul>
-</details>`,
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Progressive details</title>
+  </head>
+  <body>
+    <main>
+      <h1>Shipping checklist</h1>
+      <!-- Progressive enhancement: details works; name grouping is optional -->
+      <details>
+        <summary>Open checklist</summary>
+        <ul>
+          <li>Baseline status reviewed</li>
+          <li>Safari smoke test</li>
+          <li>Fallback documented</li>
+        </ul>
+      </details>
+    </main>
+  </body>
+</html>`,
           "Ship the widely-supported core first",
           "انشر النواة المدعومة على نطاق واسع أولًا",
         ),
       ],
       visualHint: L(
-        "Baseline band + engine matrix — then feature-detect and a fallback when Newly or Limited.",
-        "شريط Baseline + مصفوفة الـ engines — وبعدين feature-detect و fallback لما تبقى Newly أو Limited.",
+        "Watch Baseline Widely → Newly → Limited, the engine scan, then detect → fallback.",
+        "اتفرّج على Baseline Widely → Newly → Limited، ومسح الـ engines، وبعدين detect → fallback.",
       ),
       browserSupport: support(
         "90+",
@@ -212,11 +270,50 @@ export const modernLessons: LessonDraft[] = [
           }),
         },
         {
+          label: L('<details name=""> exclusive accordion', '<details name=""> exclusive accordion'),
+          support: support("120+", "130+", "17.2+", "120+", "newly", {
+            notes: L(
+              "Same name groups close siblings when one opens — core <details> still works without it.",
+              "نفس name بيقفل الإخوة لما واحد يتفتح — <details> الأساسي لسه شغال من غيرها.",
+            ),
+            fallback: L(
+              "Leave disclosures independent, or close siblings with a few lines of JS.",
+              "سيّب الـ disclosures مستقلة، أو اقفل الإخوة بـ JS صغير.",
+            ),
+          }),
+        },
+        {
           label: L("<picture> + modern image types", "<picture> + modern image types"),
           support: support("38+", "38+", "9.1+", "79+", "widely", {
             notes: L(
               "Always terminate with <img> — type negotiation fails open to JPEG/PNG.",
               "دايمًا اختم بـ <img> — تفاوض type بيرجع لـ JPEG/PNG.",
+            ),
+          }),
+        },
+        {
+          label: L('<img loading="lazy">', '<img loading="lazy">'),
+          support: support("77+", "75+", "15.4+", "79+", "widely", {
+            notes: L(
+              "Never lazy-load the LCP/hero image — only below-the-fold media.",
+              "متعَمِلش lazy على صورة LCP/hero — للميديا تحت الشاشة بس.",
+            ),
+            fallback: L(
+              "Omit the attribute; eager load is the default and always safe.",
+              "شيل الـ attribute؛ التحميل الفوري هو الافتراضي وآمن دايمًا.",
+            ),
+          }),
+        },
+        {
+          label: L("fetchpriority on <img> / <link>", "fetchpriority على <img> / <link>"),
+          support: support("102+", "132+", "17.2+", "102+", "newly", {
+            notes: L(
+              "Hint only — pair with sized images and careful LCP preload.",
+              "تلميح بس — اربطه بصور بمقاس و preload حذر لـ LCP.",
+            ),
+            fallback: L(
+              "Skip the attribute; browsers still load without the priority hint.",
+              "سيّب الـ attribute؛ المتصفحات بتحمّل من غير تلميح الأولوية.",
             ),
           }),
         },
@@ -229,12 +326,86 @@ export const modernLessons: LessonDraft[] = [
             ),
           }),
         },
+        {
+          label: L("<datalist>", "<datalist>"),
+          support: support("20+", "4+", "12.1+", "12+", "widely", {
+            notes: L(
+              "Suggestions only — users can still type free text unless you validate.",
+              "اقتراحات بس — المستخدم يقدر يكتب نص حر إلا لو عملت validation.",
+            ),
+            fallback: L(
+              "Plain <input> or a <select> when the list must be closed.",
+              "<input> عادي أو <select> لما القائمة لازم تبقى مغلقة.",
+            ),
+          }),
+        },
+        {
+          label: L("<template>", "<template>"),
+          support: support("26+", "22+", "8+", "13+", "widely", {
+            notes: L(
+              "Inert document fragment until cloned — great for client-rendered rows.",
+              "جزء مستند خامل لحد ما يتنسخ — ممتاز لصفوف بتترندر على الـ client.",
+            ),
+          }),
+        },
+        {
+          label: L("<search>", "<search>"),
+          support: support("135+", "136+", "17+", "135+", "newly", {
+            notes: L(
+              "Landmark for site/app search UI — older engines treat unknown tags as generic.",
+              "landmark لواجهة البحث — المحركات الأقدم بتعامل الـ tags المجهولة كعامة.",
+            ),
+            fallback: L(
+              'Use <form role="search"> — same accessible landmark on older browsers.',
+              'استخدم <form role="search"> — نفس الـ landmark على المتصفحات الأقدم.',
+            ),
+          }),
+        },
+        {
+          label: L("popover attribute", "popover attribute"),
+          support: support("114+", "125+", "17+", "114+", "newly", {
+            notes: L(
+              "Top-layer menus/tooltips with light-dismiss — not a modal <dialog>.",
+              "menus/tooltips في الـ top layer مع light-dismiss — مش <dialog> modal.",
+            ),
+            fallback: L(
+              "Custom overlay with focus management, or keep the content in-page.",
+              "overlay مخصص مع إدارة focus، أو سيّب المحتوى في الصفحة.",
+            ),
+          }),
+        },
+        {
+          label: L("inert attribute", "inert attribute"),
+          support: support("102+", "112+", "15.5+", "102+", "widely", {
+            notes: L(
+              "Makes a subtree non-interactive and hidden from AT — pair carefully with dialogs/menus.",
+              "بيخلي subtree غير تفاعلي ومخفي عن AT — استخدمه بحذر مع dialogs/menus.",
+            ),
+            fallback: L(
+              "aria-hidden + tabindex=-1 on focusable children, or a small inert polyfill for forced legacy.",
+              "aria-hidden + tabindex=-1 على العناصر القابلة للتركيز، أو polyfill صغير للـ legacy الإجباري.",
+            ),
+          }),
+        },
+        {
+          label: L("<video> / <audio> + <track>", "<video> / <audio> + <track>"),
+          support: support("3+", "3.5+", "3.1+", "12+", "widely", {
+            notes: L(
+              "Provide multiple <source> types; captions via <track kind=\"captions\">.",
+              "وفّر أكتر من <source>؛ الترجمة عبر <track kind=\"captions\">.",
+            ),
+            fallback: L(
+              "Download link or transcript when media cannot play.",
+              "لينك تحميل أو transcript لما الميديا متعجزش تشتغل.",
+            ),
+          }),
+        },
       ],
     },
   },
   {
     id: "html-13",
-    order: 13,
+    order: 12,
     slug: "native-dialog",
     tier: "advanced",
     readMinutes: 10,
@@ -369,7 +540,7 @@ export const modernLessons: LessonDraft[] = [
   },
   {
     id: "html-15",
-    order: 14,
+    order: 13,
     slug: "picture-source",
     tier: "advanced",
     readMinutes: 10,
@@ -441,7 +612,7 @@ export const modernLessons: LessonDraft[] = [
   },
   {
     id: "html-16",
-    order: 17,
+    order: 16,
     slug: "head-social-meta",
     tier: "advanced",
     readMinutes: 9,
@@ -514,7 +685,7 @@ export const modernLessons: LessonDraft[] = [
   },
   {
     id: "html-17",
-    order: 18,
+    order: 19,
     slug: "sr-practice",
     tier: "advanced",
     readMinutes: 16,
@@ -522,8 +693,8 @@ export const modernLessons: LessonDraft[] = [
     visualizer: "a11y-check",
     content: {
       title: L(
-        "Practice: Bad vs Screen-Reader Ready",
-        "Practice: Bad vs Screen-Reader Ready",
+        "Bad vs Screen-Reader Ready",
+        "Bad vs Screen-Reader Ready",
       ),
       summary: L(
         "Advanced practice: bad vs screen-reader ready HTML — name, role, value, focus, and live updates.",
@@ -559,6 +730,49 @@ export const modernLessons: LessonDraft[] = [
         L(
           "Test keyboard-only + NVDA or VoiceOver",
           "اختبر keyboard-only + NVDA أو VoiceOver",
+        ),
+      ],
+      examples: [
+        simpleExample(
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ready: button vs link</title>
+  </head>
+  <body>
+    <main>
+      <h1>Actions vs navigation</h1>
+      <p><a href="/html">Open HTML track</a></p>
+      <p><button type="button">Mark lesson complete</button></p>
+    </main>
+  </body>
+</html>`,
+          "Full page: link for nav, button for action",
+          "صفحة كاملة: لينك للتنقّل وزر للفعل",
+        ),
+        realWorldExample(
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ready: labeled form</title>
+  </head>
+  <body>
+    <main>
+      <h1>Newsletter</h1>
+      <form>
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" autocomplete="email" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </main>
+  </body>
+</html>`,
+          "Full page: labeled email form",
+          "صفحة كاملة: فورم إيميل بـ label",
         ),
       ],
       visualHint: L(

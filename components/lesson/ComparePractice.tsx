@@ -3,6 +3,7 @@
 import { ArrowDown, ArrowRight, Check, X } from "lucide-react";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
+import { RTL_FLIP } from "@/lib/rtl";
 import type { ComparePair } from "@/lib/types";
 
 export function ComparePractice({ cards }: { cards: ComparePair[] }) {
@@ -49,7 +50,10 @@ export function ComparePractice({ cards }: { cards: ComparePair[] }) {
               >
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-slate-950/70 text-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.12)]">
                   <ArrowDown size={16} className="md:hidden" />
-                  <ArrowRight size={16} className="hidden md:block rtl:rotate-180" />
+                  <ArrowRight
+                    size={16}
+                    className={`hidden md:block ${RTL_FLIP}`}
+                  />
                 </span>
               </div>
 

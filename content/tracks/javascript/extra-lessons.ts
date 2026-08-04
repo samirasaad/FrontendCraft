@@ -17,7 +17,7 @@ export const extraLessons: LessonDraft[] = [
     icon: "Zap",
     visualizer: "event-loop",
     content: {
-      title: L("Performance: Debounce & Throttle", "Performance: Debounce & Throttle"),
+      title: L("Performance: Debounce & Throttle", "الأداء: Debounce و Throttle"),
       summary: L(
         "Stop flooding the main thread — pace expensive handlers on scroll, resize, and search.",
         "متغرقش الـ main thread — نظّم الـ handlers التقيلة على scroll و resize والبحث.",
@@ -110,7 +110,7 @@ console.log("done burst");`,
     icon: "Cpu",
     visualizer: "memory-lock",
     content: {
-      title: L("Memory Leaks & Lingering Refs", "Memory Leaks & Lingering Refs"),
+      title: L("Memory Leaks & Lingering Refs", "Memory Leaks و Refs العالقة"),
       summary: L(
         "The GC frees what nothing points to — accidental refs keep ghosts alive.",
         "الـ GC بيحرّر اللي مفيش حاجة بتشاور عليه — references بالغلط بتخلّي أشباح تعيش.",
@@ -199,7 +199,7 @@ clearInterval(id);`,
     icon: "AlertTriangle",
     visualizer: "equality",
     content: {
-      title: L("Floats, typeof null & NaN Traps", "Floats, typeof null & NaN Traps"),
+      title: L("Floats, typeof null & NaN Traps", "فخاخ Floats و typeof null و NaN"),
       summary: L(
         "Numbers lie, `typeof null` is wrong historically, and `NaN` never equals itself.",
         "الأرقام بتكذب، `typeof null` غلط تاريخيًا، و `NaN` عمره ما بيساوي نفسه.",
@@ -275,7 +275,7 @@ console.log(isPresent(null), isPresent(0));`,
     icon: "AlertTriangle",
     visualizer: "async-await",
     content: {
-      title: L("Async Race Conditions", "Async Race Conditions"),
+      title: L("Async Race Conditions", "سباقات Async (Race Conditions)"),
       summary: L(
         "Slow responses can overwrite newer UI state if you ignore ordering.",
         "الردود البطيئة ممكن تكتب فوق state أحدث لو تجاهلت الترتيب.",
@@ -375,7 +375,7 @@ async function load(url) {
     icon: "BookCopy",
     visualizer: "event-loop",
     content: {
-      title: L("JavaScript Essentials CheatSheet", "JavaScript Essentials CheatSheet"),
+      title: L("JavaScript Essentials CheatSheet", "CheatSheet أساسيات JavaScript"),
       summary: L(
         "One-tap cards for the syntax you reach for every day.",
         "كروت بضغطة واحدة للـ syntax اللي بتحتاجه كل يوم.",

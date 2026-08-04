@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   SandpackCodeEditor,
   SandpackConsole,
@@ -10,7 +10,15 @@ import {
   useSandpack,
   type SandpackFiles,
 } from "@codesandbox/sandpack-react";
-import { Check, Copy, Play, RotateCcw, Terminal } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Maximize2,
+  Minimize2,
+  Play,
+  RotateCcw,
+  Terminal,
+} from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
@@ -63,18 +71,7 @@ function wrapHtmlSnippet(code: string): string {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FrontendCraft Playground</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 1.25rem;
-        font-family: ui-sans-serif, system-ui, sans-serif;
-        background: #0f172a;
-        color: #e2e8f0;
-        line-height: 1.5;
-      }
-      a { color: #67e8f9; }
-    </style>
+    <title>Document</title>
   </head>
   <body>
 ${code}
@@ -89,9 +86,13 @@ function isHtmlTrack(trackId: TrackId) {
 function RunControls({
   sourceCode,
   expectedHint,
+  fullscreen,
+  onToggleFullscreen,
 }: {
   sourceCode: string;
   expectedHint: string;
+  fullscreen: boolean;
+  onToggleFullscreen: () => void;
 }) {
   const { locale } = useLanguage();
   const { playClick } = useSound();
@@ -132,6 +133,20 @@ function RunControls({
         </span>
       </div>
       <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={() => {
+            playClick();
+            onToggleFullscreen();
+          }}
+          aria-pressed={fullscreen}
+          className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-200 transition hover:bg-white/10"
+        >
+          {fullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+          {fullscreen
+            ? t("playgroundExitFullscreen", locale)
+            : t("playgroundFullscreen", locale)}
+        </button>
         <button
           type="button"
           onClick={handleRestore}
@@ -180,6 +195,8 @@ function CodeRunnerInner({
   trackId: TrackId;
 }) {
   const htmlMode = isHtmlTrack(trackId);
+  const { locale } = useLanguage();
+  const [fullscreen, setFullscreen] = useState(false);
 
   const files = useMemo((): SandpackFiles => {
     if (htmlMode) {
@@ -188,8 +205,40 @@ function CodeRunnerInner({
     return { "/index.js": { code, active: true } };
   }, [code, htmlMode]);
 
+  useEffect(() => {
+    if (!fullscreen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setFullscreen(false);
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [fullscreen]);
+
+  const editorHeight = fullscreen ? "min(46vh, 520px)" : 260;
+  const previewHeight = fullscreen ? "min(38vh, 420px)" : 220;
+  const consoleHeight = fullscreen ? "min(28vh, 280px)" : 160;
+
   return (
-    <section className="overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-[0_0_40px_rgba(15,23,42,0.5)]">
+    <section
+      className={
+        fullscreen
+          ? "fixed inset-0 z-[80] flex flex-col overflow-hidden border-0 bg-slate-950 shadow-none"
+          : "overflow-hidden rounded-3xl border border-white/10 bg-slate-950/70 shadow-[0_0_40px_rgba(15,23,42,0.5)]"
+      }
+      aria-modal={fullscreen || undefined}
+      role={fullscreen ? "dialog" : undefined}
+      aria-label={
+        fullscreen ? t("playgroundFullscreen", locale) : undefined
+      }
+    >
       <SandpackProvider
         template={htmlMode ? "static" : "vanilla"}
         theme={sandpackTheme}
@@ -200,7 +249,7 @@ function CodeRunnerInner({
           recompileMode: "delayed",
           recompileDelay: 300,
           classes: {
-            "sp-wrapper": "!bg-transparent !border-0 !rounded-none",
+            "sp-wrapper": "!bg-transparent !border-0 !rounded-none !h-full",
             "sp-layout": "!bg-transparent !border-0 !rounded-none",
             "sp-stack": "!bg-slate-950",
             "sp-editor": "!bg-slate-950",
@@ -210,15 +259,22 @@ function CodeRunnerInner({
           },
         }}
       >
-        <RunControls sourceCode={code} expectedHint={expectedHint} />
-        <SandpackLayout className="!block !rounded-none !border-0">
+        <RunControls
+          sourceCode={code}
+          expectedHint={expectedHint}
+          fullscreen={fullscreen}
+          onToggleFullscreen={() => setFullscreen((value) => !value)}
+        />
+        <SandpackLayout
+          className={`!block !rounded-none !border-0 ${fullscreen ? "min-h-0 flex-1 overflow-auto" : ""}`}
+        >
           <SandpackCodeEditor
             showLineNumbers
             showInlineErrors
             showRunButton={false}
             wrapContent
-            className="min-h-[220px] !rounded-none"
-            style={{ height: 260 }}
+            className={`${fullscreen ? "min-h-[320px]" : "min-h-[220px]"} !rounded-none`}
+            style={{ height: editorHeight }}
           />
           {htmlMode ? (
             <div className="border-t border-white/10">
@@ -230,7 +286,7 @@ function CodeRunnerInner({
                 showRefreshButton={false}
                 showRestartButton={false}
                 showNavigator={false}
-                style={{ height: 220 }}
+                style={{ height: previewHeight }}
               />
             </div>
           ) : (
@@ -241,7 +297,7 @@ function CodeRunnerInner({
               <SandpackConsole
                 showHeader={false}
                 showSyntaxError
-                style={{ height: 160 }}
+                style={{ height: consoleHeight }}
                 className="!bg-transparent font-mono text-sm [&_.sp-console-item]:!text-yellow-200"
               />
             </div>
@@ -307,7 +363,7 @@ export function CodeRunner({ examples }: CodeRunnerProps) {
         })}
       </div>
       <CodeRunnerInner
-        key={`${trackId}-${active.id}-${active.code}-${locale}`}
+        key={`${trackId}-${active.id}-${active.code}`}
         code={active.code}
         expectedHint={expectedHint}
         trackId={trackId}

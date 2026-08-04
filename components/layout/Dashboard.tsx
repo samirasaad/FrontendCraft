@@ -41,6 +41,16 @@ function EmptyTrackState({ track }: { track: TrackDefinition }) {
 function DashboardShell({ track }: { track: TrackDefinition }) {
   const [menuOpen, setMenuOpen] = useState(true);
 
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    function sync() {
+      setMenuOpen(mq.matches);
+    }
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <Suspense fallback={null}>
@@ -60,7 +70,11 @@ function DashboardShell({ track }: { track: TrackDefinition }) {
         />
       </div>
 
-      <Header track={track} />
+      <Header
+        track={track}
+        lessonsOpen={menuOpen}
+        onToggleLessons={() => setMenuOpen((v) => !v)}
+      />
       <div className="flex w-full">
         <Sidebar
           open={menuOpen}

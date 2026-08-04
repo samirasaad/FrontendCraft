@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Accessibility,
@@ -100,6 +101,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ open, onToggle }: SidebarProps) {
+  const router = useRouter();
   const { locale } = useLanguage();
   const {
     lessons,
@@ -109,11 +111,18 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     progressPercent,
     completedCount,
     totalCount,
+    trackId,
   } = useProgress();
   const { playClick } = useSound();
   const [query, setQuery] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [expandedTiers, setExpandedTiers] = useState<Set<Tier>>(() => new Set());
+
+  function selectLesson(lesson: (typeof lessons)[number]) {
+    playClick();
+    setActiveLessonId(lesson.id);
+    router.replace(`/${trackId}/learn?lesson=${lesson.slug}`, { scroll: false });
+  }
 
   const activeTier = useMemo(() => {
     const active = lessons.find((l) => l.id === activeLessonId);
@@ -185,6 +194,14 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     })).filter((group) => group.lessons.length > 0);
   }, [filtered]);
 
+  useEffect(() => {
+    if (!activeLessonId || !open) return;
+    const el = document.querySelector<HTMLElement>(
+      `[data-lesson-id="${activeLessonId}"]`,
+    );
+    el?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [activeLessonId, open]);
+
   const railWidth = "3rem";
 
   return (
@@ -218,7 +235,11 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
           >
             <PanelLeftClose
               size={16}
-              className={`transition-transform duration-300 ${open ? "rotate-0" : "rotate-180"}`}
+              className={`transition-transform duration-300 ${
+                open
+                  ? "rotate-0 rtl:rotate-180"
+                  : "rotate-180 rtl:rotate-0"
+              }`}
             />
           </button>
         </div>
@@ -270,40 +291,14 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
             })}
           </div>
 
-          <div className="mt-2.5 grid grid-cols-2 gap-1.5">
-            {TIER_ORDER.filter((tier) => tierStats[tier].total > 0).map((tier) => {
-              const { done, total } = tierStats[tier];
-              return (
-                <button
-                  key={tier}
-                  type="button"
-                  tabIndex={open ? 0 : -1}
-                  onClick={() => {
-                    playClick();
-                    setTierFilter(tier);
-                  }}
-                  className={`rounded-xl border px-2 py-1.5 text-start transition hover:bg-white/5 ${tierBadgeClass(tier)}`}
-                  title={t("tierProgress", locale)}
-                >
-                  <span className="block truncate text-[10px] font-semibold">
-                    {tierEmoji(tier)} {tierLabel(tier, locale)}
-                  </span>
-                  <span className="text-[10px] opacity-80">
-                    {done}/{total}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
           <div className="mt-3">
             <div className="mb-1 flex justify-between text-[11px] text-slate-400">
               <span>{t("progress", locale)}</span>
-              <span>
+              <span dir="ltr">
                 {completedCount}/{totalCount} · {progressPercent}%
               </span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-slate-800">
+            <div className="h-2 overflow-hidden rounded-full bg-slate-800 rtl:rotate-180">
               <motion.div
                 className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-lime-300 to-cyan-400"
                 initial={false}
@@ -338,7 +333,11 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                 >
                   <ChevronDown
                     size={14}
-                    className={`shrink-0 text-slate-400 transition-transform ${openTier ? "rotate-0" : "-rotate-90"}`}
+                    className={`shrink-0 text-slate-400 transition-transform ${
+                      openTier
+                        ? "rotate-0"
+                        : "ltr:-rotate-90 rtl:rotate-90"
+                    }`}
                   />
                   <span className="min-w-0 flex-1">
                     <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-200">
@@ -350,6 +349,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                   </span>
                   <span
                     className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] ${tierBadgeClass(tier)}`}
+                    dir="ltr"
                   >
                     {tierStats[tier].done}/{tierStats[tier].total}
                   </span>
@@ -373,25 +373,23 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                             <button
                               key={lesson.id}
                               type="button"
+                              data-lesson-id={lesson.id}
                               tabIndex={open ? 0 : -1}
-                              onClick={() => {
-                                playClick();
-                                setActiveLessonId(lesson.id);
-                              }}
-                              className={`group flex w-full items-start gap-3 rounded-2xl border px-3 py-2.5 text-start transition ${
+                              onClick={() => selectLesson(lesson)}
+                              className={`group flex w-full items-center gap-2.5 rounded-xl border px-2.5 py-2 text-start transition ${
                                 active
                                   ? "border-cyan-400/40 bg-cyan-400/10 shadow-[0_0_24px_rgba(34,211,238,0.12)]"
                                   : "border-transparent bg-transparent hover:border-white/10 hover:bg-white/5"
                               }`}
                             >
                               <span
-                                className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${
+                                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ${
                                   active
                                     ? "bg-gradient-to-br from-yellow-300 to-cyan-400 text-slate-950"
                                     : "bg-slate-800 text-slate-300 group-hover:text-yellow-200"
                                 }`}
                               >
-                                <Icon size={15} />
+                                <Icon size={14} />
                               </span>
                               <span className="min-w-0 flex-1">
                                 <span className="flex items-center gap-2">
@@ -411,9 +409,11 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                     />
                                   )}
                                 </span>
-                                <span className="mt-0.5 line-clamp-2 text-xs text-slate-500">
-                                  {loc(lesson.content.summary, locale)}
-                                </span>
+                                {active ? (
+                                  <span className="mt-0.5 line-clamp-1 text-[11px] text-slate-500">
+                                    {loc(lesson.content.summary, locale)}
+                                  </span>
+                                ) : null}
                               </span>
                             </button>
                           );

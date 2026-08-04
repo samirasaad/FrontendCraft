@@ -1,64 +1,35 @@
 import { withProductionInsights } from "@/content/tracks/_insights";
-import {
-  defaultHtmlChallenge,
-  htmlChallenges,
-} from "@/content/tracks/html/challenges";
+import { HTML_CURRICULUM_ORDER } from "@/content/tracks/html/curriculum-order";
 import { enrichLegacyLesson } from "@/content/tracks/html/enrichment";
 import { extraLessons } from "@/content/tracks/html/extra-lessons";
 import { htmlInsights } from "@/content/tracks/html/insights";
 import { legacyLessons } from "@/content/tracks/html/legacy-lessons";
 import { modernLessons } from "@/content/tracks/html/modern-lessons";
+import {
+  assertHtmlQuizCoverage,
+  htmlQuizzes,
+} from "@/content/tracks/html/quizzes";
 import type { Lesson } from "@/lib/types";
 
-/**
- * Canonical HTML curriculum order (1-based numbers in the sidebar).
- * Keep source `order` fields in sync with this list.
- */
-export const HTML_CURRICULUM_ORDER = [
-  // Beginner
-  "document-anatomy",
-  "semantic-structure",
-  "text-headings",
-  "text-formatting",
-  "links-images",
-  "lists",
-  // Intermediate
-  "forms-inputs",
-  "tables",
-  "form-ux-attributes",
-  "details-summary",
-  // Advanced
-  "media-embed",
-  "browser-compatibility",
-  "native-dialog",
-  "picture-source",
-  "accessibility-basics",
-  "meta-seo",
-  "head-social-meta",
-  "sr-practice",
-  // Pro (pitfalls lives here — end of Pro)
-  "html-core-web-vitals",
-  "html-perf-media",
-  "html-architecture-partials",
-  "html-common-pitfalls",
-  // CheatSheet
-  "html-cheatsheet",
-] as const;
+export { HTML_CURRICULUM_ORDER };
+
+assertHtmlQuizCoverage(HTML_CURRICULUM_ORDER);
 
 const coreLessons: Lesson[] = legacyLessons.map((lesson) =>
   enrichLegacyLesson(lesson, lesson.order),
 );
 
 function withLabExtras(lesson: Lesson): Lesson {
-  const challenge =
-    htmlChallenges[lesson.slug] ??
-    defaultHtmlChallenge(lesson.content.title.en);
+  const quiz = htmlQuizzes[lesson.slug];
+  if (!quiz) {
+    throw new Error(`Missing HTML quiz for lesson slug: ${lesson.slug}`);
+  }
 
   return {
     ...lesson,
     content: {
       ...lesson.content,
-      challenge,
+      quiz,
     },
   };
 }

@@ -29,6 +29,7 @@ export type ExampleKind = "simple" | "realWorld";
 export interface CodeExample {
   id: ExampleKind;
   label: LocalizedString;
+  /** Playground source — always English (UI locale does not swap templates). */
   code: string;
   expectedOutput: LocalizedString;
 }
@@ -131,6 +132,32 @@ export interface LessonChallenge {
   explanation: LocalizedString;
 }
 
+/** One option in a multi-question quiz. */
+export interface QuizOption {
+  id: string;
+  label: LocalizedString;
+}
+
+/** One question inside a lesson quiz. */
+export interface QuizQuestion {
+  id: string;
+  prompt: LocalizedString;
+  /** Optional code shown under the prompt. */
+  code?: string;
+  language?: "html" | "css" | "javascript" | "tsx";
+  options: QuizOption[];
+  correctId: string;
+  explanation: LocalizedString;
+  /** Optional softer hint shown with the explanation. */
+  hint?: LocalizedString;
+}
+
+/** Multi-question interactive quiz for a lesson. */
+export interface LessonQuiz {
+  title?: LocalizedString;
+  questions: QuizQuestion[];
+}
+
 export interface LessonContent {
   title: LocalizedString;
   summary: LocalizedString;
@@ -168,6 +195,8 @@ export interface LessonContent {
   pipelineSteps?: PipelineStep[];
   /** One-question interactive challenge before advancing. */
   challenge?: LessonChallenge;
+  /** Multi-question interactive quiz (preferred over challenge when set). */
+  quiz?: LessonQuiz;
 }
 
 export interface Lesson {

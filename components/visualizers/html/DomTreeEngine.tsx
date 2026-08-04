@@ -15,6 +15,7 @@ import { LabStage } from "@/components/visualizers/html/LabStage";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
+import { RTL_FLIP } from "@/lib/rtl";
 
 type NodeKind = "doctype" | "element" | "text";
 
@@ -293,7 +294,7 @@ export function DomTreeEngine() {
             className={controlBtn}
             aria-label={t("simStep", locale)}
           >
-            <SkipForward size={12} />
+            <SkipForward size={12} className={RTL_FLIP} />
             {t("simStep", locale)}
           </button>
           <button

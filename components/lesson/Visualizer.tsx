@@ -21,6 +21,10 @@ import {
   BaselineCompatVisualizer,
   NativeDialogVisualizer,
   PictureSourceVisualizer,
+  CheatSheetLabVisualizer,
+  HtmlSecurityLabVisualizer,
+  HtmlSpeculationLabVisualizer,
+  HtmlGlobalRtlLabVisualizer,
 } from "@/components/visualizers/html";
 
 const htmlVisualizers: Record<string, () => ReactNode> = {
@@ -41,6 +45,10 @@ const htmlVisualizers: Record<string, () => ReactNode> = {
   "baseline-compat": () => <BaselineCompatVisualizer />,
   "native-dialog": () => <NativeDialogVisualizer />,
   "picture-source": () => <PictureSourceVisualizer />,
+  "cheatsheet-lab": () => <CheatSheetLabVisualizer />,
+  "html-security-lab": () => <HtmlSecurityLabVisualizer />,
+  "html-speculation-lab": () => <HtmlSpeculationLabVisualizer />,
+  "html-global-rtl-lab": () => <HtmlGlobalRtlLabVisualizer />,
 };
 
 const registries: Partial<Record<TrackId, Record<string, () => ReactNode>>> = {

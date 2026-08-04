@@ -920,8 +920,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "SSR/SSG مقابل CSR: اطلع document shell والمحتوى الأساسي من السيرفر؛ وبعدين hydrate للتحسينات. `<div id=\"root\">` فاضي على الـ client بيأخّر اكتشاف العناوين والـ headings واللينكات اللي بتمرّر equity.",
         ),
         L(
-          "`rel=\"canonical\"` consolidates duplicates (params, trailing slash, mirrors). JSON-LD clarifies entity type for rich results but must mirror visible content. Page experience (LCP, INP, CLS) lives in Pro: Core Web Vitals.",
-          "`rel=\"canonical\"` بيجمّع النسخ المكررة (params و trailing slash والمرايا). JSON-LD بيوضّح نوع الكيان للنتائج الغنية لكن لازم يطابق المحتوى الظاهر. تجربة الصفحة (LCP و INP و CLS) في درس Pro: Core Web Vitals.",
+          "`rel=\"canonical\"` consolidates duplicates (params, trailing slash, mirrors). JSON-LD clarifies entity type for rich results but must mirror visible content. Page experience (LCP, INP, CLS) lives in Core Web Vitals.",
+          "`rel=\"canonical\"` بيجمّع النسخ المكررة (params و trailing slash والمرايا). JSON-LD بيوضّح نوع الكيان للنتائج الغنية لكن لازم يطابق المحتوى الظاهر. تجربة الصفحة (LCP و INP و CLS) في درس Core Web Vitals.",
         ),
       ],
       {
@@ -983,8 +983,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "SSR/SSG هو الافتراضي للإنتاج للتسويق والـ docs. الـ shells المرسومة على الـ client ممكن تترتب بعد الرندر، بس بتخاطر بـ first paint نحيف واكتشاف متأخر — خصوصًا على شبكات بطيئة.",
         ),
         L(
-          "Structured data is an enhancer, not a substitute for crawlable HTML. Social tags live in Head & Social Meta; LCP/INP/CLS live in Pro: Core Web Vitals.",
-          "Structured data محسّن، مش بديل لـ HTML قابل للزحف. وسوم السوشيال في Head & Social Meta؛ LCP/INP/CLS في Pro: Core Web Vitals.",
+          "Structured data is an enhancer, not a substitute for crawlable HTML. Social tags live in Head & Social Meta; LCP/INP/CLS live in Core Web Vitals.",
+          "Structured data محسّن، مش بديل لـ HTML قابل للزحف. وسوم السوشيال في Head & Social Meta؛ LCP/INP/CLS في Core Web Vitals.",
         ),
       ],
       {
@@ -1147,8 +1147,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "Core Web Vitals بتغذّي Google page experience. الـ meta tags و HTML القابل للزحف (SEO Insights) لسه مهمين — لكن LCP بـ 4 ثواني مش بيتصلح بـ description أحسن.",
         ),
         L(
-          "Prefer CrUX / Search Console field data over a one-off Lighthouse green score. Media-specific tactics continue in Pro: Media & Loading Performance.",
-          "فضّل CrUX / Search Console field data عن Lighthouse أخضر مرة واحدة. تكتيكات الميديا في درس Pro: Media & Loading Performance.",
+          "Prefer CrUX / Search Console field data over a one-off Lighthouse green score. Media-specific tactics continue in Media & Loading Performance.",
+          "فضّل CrUX / Search Console field data عن Lighthouse أخضر مرة واحدة. تكتيكات الميديا في درس Media & Loading Performance.",
         ),
       ],
       {
@@ -1166,8 +1166,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "Builds on Pro: Core Web Vitals. Critical rendering path: HTML → DOM, CSS → CSSOM, combined render tree → layout → paint → composite. Blocking resources in `<head>` delay first paint — defer non-critical CSS/JS and inline only tiny critical CSS.",
-          "بيكمل درس Pro: Core Web Vitals. Critical rendering path: HTML → DOM, CSS → CSSOM, render tree → layout → paint → composite. Blocking resources في `<head>` بتأخر first paint — defer non-critical CSS/JS و inline critical CSS صغير بس.",
+          "Builds on Core Web Vitals. Critical rendering path: HTML → DOM, CSS → CSSOM, combined render tree → layout → paint → composite. Blocking resources in `<head>` delay first paint — defer non-critical CSS/JS and inline only tiny critical CSS.",
+          "بيكمل درس Core Web Vitals. Critical rendering path: HTML → DOM, CSS → CSSOM, render tree → layout → paint → composite. Blocking resources في `<head>` بتأخر first paint — defer non-critical CSS/JS و inline critical CSS صغير بس.",
         ),
         L(
           "Images without width/height cause layout recalculation when bytes arrive — CLS spikes. `aspect-ratio` in CSS plus explicit attributes reserve space in the layout tree before decode completes.",
@@ -1307,6 +1307,221 @@ main.querySelector("h1")?.focus();`,
           L("Canonical in layout partial — not per-fragment", "Canonical في layout partial — مش per-fragment"),
           L("href in server-rendered nav partials match sitemap", "href في server-rendered nav partials match sitemap"),
           L("Avoid infinite scroll partials as only archive index", "تجنب infinite scroll partials كـ archive index الوحيد"),
+        ],
+      },
+    ),
+  },
+
+  "html-security-hardening": {
+    underTheHood: insight(
+      [
+        L(
+          "`target=\"_blank\"` creates a browsing-context relationship. `rel=\"noopener\"` severs `window.opener`; `noreferrer` also omits the Referer header. Use both deliberately—noreferrer can affect analytics and server behavior.",
+          "`target=\"_blank\"` بيعمل علاقة بين browsing contexts. `rel=\"noopener\"` بيفصل `window.opener`؛ و`noreferrer` كمان بيمنع Referer header. استخدم الاتنين بقصد — `noreferrer` ممكن يأثر على analytics وسلوك السيرفر.",
+        ),
+        L(
+          "`sandbox` applies an opaque origin and blocks capabilities until individual tokens restore them. Every token is a permission grant; `allow-scripts` + `allow-same-origin` is especially risky for same-origin content because it may escape the sandbox.",
+          "`sandbox` بيطبّق opaque origin وبيقفل capabilities لحد ما tokens منفردة ترجعها. كل token هو permission grant؛ `allow-scripts` + `allow-same-origin` خطرين خصوصًا لمحتوى same-origin لأنه ممكن يفلت من sandbox.",
+        ),
+        L(
+          "Form `action` and submitter `formaction` determine the final request destination. Hidden inputs are still client-readable, so secrets and authorization decisions must remain server-side.",
+          "`action` للـ form و`formaction` للـ submitter بيحددوا الوجهة النهائية للـ request. الـ hidden inputs لسه قابلة للقراءة عند العميل، فالأسرار وقرارات authorization لازم تفضل server-side.",
+        ),
+      ],
+      {
+        bullets: [
+          L("`noopener` blocks opener control; `noreferrer` trims referrer", "`noopener` بيمنع opener control؛ و`noreferrer` بيقلل referrer"),
+          L("Sandbox first, then add only needed tokens", "Sandbox الأول، وبعدها زوّد tokens المطلوبة بس"),
+          L("Audit `action` and every `formaction`", "راجع `action` وكل `formaction`"),
+          L("Client-visible markup cannot store secrets", "Markup ظاهر للعميل مينفعش يخزن أسرار"),
+        ],
+        code: `<a href="https://docs.example.com" target="_blank"
+   rel="noopener noreferrer">Docs</a>
+<iframe src="https://embed.example" sandbox="allow-forms allow-scripts"></iframe>`,
+        codeCaption: L("External tab + least-privilege iframe", "Tab خارجية + iframe بأقل صلاحيات"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Security hardening must not make forms unusable. Precise `autocomplete` values let password managers and assistive technology identify a username, current password, new password, or one-time code without guessing.",
+          "تقوية الأمان مينفعش تخلي الـ forms غير قابلة للاستخدام. قيم `autocomplete` الدقيقة بتخلي password managers وassistive technology يميّزوا username أو current password أو new password أو one-time code من غير تخمين.",
+        ),
+        L(
+          "A sandboxed iframe still needs a descriptive `title`, and external links that open a new tab should communicate that change in visible context when it could surprise the user.",
+          "iframe معمول له sandbox لسه محتاج `title` وصفي، واللينكات الخارجية اللي بتفتح tab جديدة لازم توضّح التغيير ده في السياق الظاهر لما ممكن يفاجئ المستخدم.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Keep visible labels alongside autocomplete tokens", "سيب labels ظاهرة جنب autocomplete tokens"),
+          L("Give every iframe a useful `title`", "ادّي كل iframe `title` مفيد"),
+          L("Explain new-tab behavior in link context", "اشرح سلوك tab الجديدة في سياق اللينك"),
+          L("Do not disable password managers as a “security” fix", "متقفّليش password managers كحل “أمني”"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Referrer policy is a privacy and measurement trade-off, not an SEO ranking switch. Keep analytics expectations aligned with the policy you set on links, embeds, and pages.",
+          "Referrer policy هو trade-off بين privacy والقياس، مش SEO ranking switch. خلّي توقعات analytics متوافقة مع policy اللي بتحطها على links وembeds والصفحات.",
+        ),
+        L(
+          "Security-sensitive pages should not expose credentials, token-bearing URLs, or private data in crawlable HTML. Use server authorization and deliberate indexing controls for pages that should not appear in search.",
+          "الصفحات الحساسة أمنيًا مينفعش تعرض credentials أو URLs فيها tokens أو بيانات خاصة في HTML قابل للزحف. استخدم server authorization وindexing controls مقصودة للصفحات اللي مش مفروض تظهر في البحث.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Do not leak query tokens into links or markup", "متسرّبش query tokens في links أو markup"),
+          L("Align referrer policy with analytics needs", "ظبّط referrer policy مع احتياجات analytics"),
+          L("Authorization protects private pages—not `noindex` alone", "Authorization بتحمي الصفحات الخاصة — مش `noindex` لوحده"),
+          L("Use crawlable links only for intended public destinations", "استخدم links قابلة للزحف للوجهات العامة المقصودة بس"),
+        ],
+      },
+    ),
+  },
+
+  "html-speculation-rules": {
+    underTheHood: insight(
+      [
+        L(
+          "`<script type=\"speculationrules\">` is parsed as structured JSON by supporting browsers. `prefetch` retrieves a future document; `prerender` prepares a document for activation and may run page lifecycle work before a user navigates.",
+          "`<script type=\"speculationrules\">` بيتقري كـ structured JSON في المتصفحات الداعمة. `prefetch` بيجيب document مستقبلي؛ و`prerender` بيجهز document للتفعيل وممكن يشغّل page lifecycle قبل ما المستخدم يتنقل.",
+        ),
+        L(
+          "Prerender is not a cache toggle: it uses CPU, memory, and network while the current page is active. Limit it to high-confidence, same-origin, read-only destinations and measure whether activation actually helps.",
+          "Prerender مش cache toggle: بيستهلك CPU وmemory وnetwork والصفحة الحالية شغالة. قيّده بوجهات high-confidence وsame-origin وread-only، وقِس هل التفعيل بيساعد فعلًا.",
+        ),
+        L(
+          "Never speculate on routes that mutate state, sign users out, consume tokens, or trigger billing. Side effects must wait for an explicit user gesture and server-side authorization.",
+          "ماتتوقعش routes بتغيّر state أو بتعمل sign out أو بتستهلك tokens أو بتشغّل billing. الـ side effects لازم تستنى user gesture صريح وserver-side authorization.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Prefetch warms a response; prerender warms activation", "Prefetch بيسخّن response؛ prerender بيسخّن activation"),
+          L("Same-origin, read-only URLs are the safe starting set", "URLs same-origin وread-only هي نقطة البداية الآمنة"),
+          L("Do not prerender logout, delete, checkout, or token routes", "ماتعملش prerender لـ logout أو delete أو checkout أو token routes"),
+          L("Budget bandwidth against current-page performance", "حط budget للـ bandwidth مقابل أداء الصفحة الحالية"),
+        ],
+        code: `<script type="speculationrules">
+{ "prefetch": [{ "urls": ["/products/keyboard"] }] }
+</script>`,
+        codeCaption: L("Conservative same-origin prefetch rule", "قاعدة same-origin prefetch محافظة"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Speculation must preserve ordinary navigation: links need meaningful text, keyboard activation, and a fully functional destination when the API is unsupported or disabled by user settings.",
+          "Speculation لازم تحافظ على التنقل العادي: اللينكات محتاجة نص meaningful وkeyboard activation ووجهة شغالة بالكامل لما الـ API مش مدعوم أو متعطّل من user settings.",
+        ),
+        L(
+          "Faster activation is only helpful when route changes remain understandable. Update the document title, move focus appropriately for SPA navigation, and never use prerendering to skip confirmation or consent.",
+          "Activation أسرع مفيد بس لما route changes تفضل مفهومة. حدّث document title وانقل focus بشكل مناسب في SPA navigation، ومتستخدمش prerender عشان تتخطى confirmation أو consent.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Real `<a href>` is the baseline", "`<a href>` حقيقي هو الـ baseline"),
+          L("Keep keyboard navigation working without support", "خلّي keyboard navigation شغال من غير دعم"),
+          L("Announce route changes with title + focus", "اعلن route changes بـ title + focus"),
+          L("Never pre-commit user actions in the background", "متنفذش user actions مسبقًا في الخلفية"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Speculation Rules are a user-navigation optimization, not an indexing directive. Crawlers still need stable, server-rendered URLs, meaningful internal anchors, and correct canonical metadata.",
+          "Speculation Rules هي optimization لتنقل المستخدم، مش indexing directive. الـ crawlers لسه محتاجة URLs ثابتة وserver-rendered وinternal anchors meaningful وcanonical metadata صحيحة.",
+        ),
+        L(
+          "Targeted prerendering can improve next-navigation LCP for real visitors, but aggressive rules can contend with the current page's resources. Evaluate both journeys in field data before expanding coverage.",
+          "Prerender مستهدف ممكن يحسن next-navigation LCP للزوار الحقيقيين، لكن قواعد عدوانية ممكن تنافس موارد الصفحة الحالية. قيّم الرحلتين في field data قبل ما توسع التغطية.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Speculation does not replace crawlable internal links", "Speculation مش بديل للـ internal links القابلة للزحف"),
+          L("Track next-page LCP in real-user data", "راقب LCP للصفحة الجاية في real-user data"),
+          L("Do not trade current-page LCP for blanket prerendering", "متضحّيش بـ LCP للصفحة الحالية عشان prerender شامل"),
+          L("Keep canonical URLs independent of speculative rules", "خلّي canonical URLs مستقلة عن speculative rules"),
+        ],
+      },
+    ),
+  },
+
+  "html-global-rtl": {
+    underTheHood: insight(
+      [
+        L(
+          "Browsers apply the Unicode Bidirectional Algorithm. `dir` on an element creates a new embedding/isolation level so nested opposite-direction runs do not reorder surrounding text unexpectedly.",
+          "المتصفحات بتطبّق Unicode Bidirectional Algorithm. `dir` على عنصر بيعمل مستوى embedding/isolation جديد عشان النصوص المعاكسة المتداخلة متقلّبش النص حوالينها.",
+        ),
+        L(
+          "`<bdi>` is an isolate by default — ideal for usernames, IDs, and code tokens. `<bdo>` overrides ordering and is rarely needed; prefer isolate + explicit `dir` first.",
+          "`<bdi>` isolate افتراضيًا — مثالي لأسماء المستخدمين والـ IDs ورموز الكود. `<bdo>` بيفرض الترتيب ونادرًا ما تحتاجه؛ فضّل isolate + `dir` صريح الأول.",
+        ),
+        L(
+          "Teleporting UI (dialog, popover, portal) can escape the document’s direction context. Set `dir`/`lang` on the teleported root or inherit deliberately from the host page.",
+          "نقل الـ UI (dialog و popover و portal) ممكن يخرج من سياق اتجاه المستند. حط `dir`/`lang` على جذر العنصر المنقول أو ورّث بقصد من صفحة الـ host.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Root lang + dir are the document defaults", "Root lang + dir هم افتراضي المستند"),
+          L("Isolate opposite-direction tokens — don’t hope CSS fixes bidi", "اعزل الرموز المعاكسة — متستناش CSS يصلح bidi"),
+          L("dir=auto for UGC; explicit dir for product chrome", "dir=auto لـ UGC؛ dir صريح لـ chrome المنتج"),
+          L("Carry lang/dir into teleported roots", "انقل lang/dir لجذور العناصر المتنقلة"),
+        ],
+        code: `<p lang="ar" dir="rtl">
+  راجع
+  <bdi dir="ltr">API_KEY_42</bdi>
+  قبل النشر.
+</p>`,
+        codeCaption: L("Isolate an LTR token in RTL copy", "اعزل token LTR جوّه نص RTL"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Screen readers use `lang` for voice and pronunciation. Mark language switches on quotations and embedded English lessons so AT does not Arabic-pronounce English API names.",
+          "قارئات الشاشة بتستخدم `lang` للصوت والنطق. علّم تغيّر اللغة على الاقتباسات ودروس الإنجليزي المضمّنة عشان AT متنطقش أسماء API بالعربي.",
+        ),
+        L(
+          "Caret movement and announcement order follow bidi. LTR inputs for email/OTP inside RTL pages keep digit reading and editing predictable for keyboard and AT users.",
+          "حركة الـ caret وترتيب الإعلان بيتبعوا bidi. حقول LTR للإيميل/OTP جوّه صفحات RTL بتخلي قراءة الأرقام والتعديل متوقعين للكيبورد و AT.",
+        ),
+      ],
+      {
+        bullets: [
+          L("lang on root + on language switches", "lang على الـ root وعلى تغيّرات اللغة"),
+          L("Don’t rely on visual CSS mirroring for AT order", "متعتمدش على عكس CSS البصري لترتيب AT"),
+          L("Keep focus order matching reading order after dir flips", "خلّي ترتيب الـ focus يطابق القراءة بعد تقلّب dir"),
+          L("Test with NVDA/VoiceOver in both EN and AR documents", "اختبر بـ NVDA/VoiceOver في مستندات EN و AR"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Correct `hreflang` and localized URLs pair with on-page `lang`. A page labeled `lang=\"ar\"` that is actually English confuses indexing and snippet generation.",
+          "`hreflang` و URLs المترجمة بتتوافق مع `lang` في الصفحة. صفحة معلّمة `lang=\"ar\"` وهي إنجليزي بتلخبط الفهرسة وتوليد الـ snippets.",
+        ),
+        L(
+          "RTL templates still need unique titles/descriptions per locale. Do not share one canonical across translated URLs unless they are true duplicates.",
+          "قوالب RTL لسه محتاجة titles/descriptions فريدة لكل locale. متشاركش canonical واحد عبر URLs مترجمة إلا لو duplicates حقيقية.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Match lang to the visible locale content", "طابق lang مع محتوى الـ locale الظاهر"),
+          L("Locale URLs + hreflang for bilingual products", "URLs للـ locale + hreflang للمنتجات bilingual"),
+          L("Separate canonicals per language version", "canonicals منفصلة لكل نسخة لغة"),
+          L("Crawl both RTL and LTR entry pages", "ازحف صفحات الدخول RTL و LTR"),
         ],
       },
     ),

@@ -32,7 +32,7 @@ export function ThisContextVisualizer() {
         }}
         transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
       >
-        →
+        <span className="inline-block rtl:rotate-180">→</span>
       </motion.div>
       <p className="absolute bottom-2 text-center text-xs text-slate-400">{label}</p>
     </div>

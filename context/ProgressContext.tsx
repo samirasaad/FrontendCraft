@@ -17,6 +17,8 @@ interface ProgressContextValue {
   activeLessonId: string;
   setActiveLessonId: (id: string) => void;
   toggleComplete: (id: string) => void;
+  /** Mark a lesson complete without toggling off if already done. */
+  markComplete: (id: string) => void;
   isComplete: (id: string) => boolean;
   progressPercent: number;
   completedCount: number;
@@ -133,6 +135,20 @@ export function ProgressProvider({
     [trackId, lessons],
   );
 
+  const markComplete = useCallback(
+    (id: string) => {
+      const current = new Set(readSnapshot(trackId, lessons).completed);
+      if (current.has(id)) return;
+      current.add(id);
+      window.localStorage.setItem(
+        storageKeys(trackId).progress,
+        JSON.stringify([...current]),
+      );
+      emit();
+    },
+    [trackId, lessons],
+  );
+
   const isComplete = useCallback(
     (id: string) => completedIds.has(id),
     [completedIds],
@@ -153,6 +169,7 @@ export function ProgressProvider({
       activeLessonId: snapshot.active || lessons[0]?.id || "",
       setActiveLessonId,
       toggleComplete,
+      markComplete,
       isComplete,
       progressPercent,
       completedCount,
@@ -165,6 +182,7 @@ export function ProgressProvider({
       snapshot.active,
       setActiveLessonId,
       toggleComplete,
+      markComplete,
       isComplete,
       progressPercent,
       completedCount,

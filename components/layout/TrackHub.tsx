@@ -12,6 +12,7 @@ import {
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { SoundProvider, useSound } from "@/context/SoundContext";
 import { t } from "@/content/i18n/ui-strings";
+import { RTL_FLIP } from "@/lib/rtl";
 
 const STEP_MS = 6500;
 
@@ -366,10 +367,7 @@ function StartRoadmap() {
           className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-400 to-amber-300 px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:brightness-110"
         >
           {t("roadmapStartCta", locale)}
-          <Arrow
-            size={16}
-            className={dir === "rtl" ? "rotate-180" : undefined}
-          />
+          <Arrow size={16} className={RTL_FLIP} />
         </Link>
         <Link
           href="/tracks"

@@ -65,7 +65,10 @@ function TrackPickerInner() {
               {t("trackPathLabel", locale)}
             </h2>
             <p className="hidden font-mono text-[11px] text-slate-600 sm:block">
-              HTML → CSS → JS → React
+              HTML{" "}
+              <span className="inline-block rtl:rotate-180">→</span> CSS{" "}
+              <span className="inline-block rtl:rotate-180">→</span> JS{" "}
+              <span className="inline-block rtl:rotate-180">→</span> React
             </p>
           </div>
 

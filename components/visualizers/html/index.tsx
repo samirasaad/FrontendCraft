@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronRight, Volume2 } from "lucide-react";
+import { Check, ChevronRight, Shield, Volume2 } from "lucide-react";
 import { DomTreeEngine } from "@/components/visualizers/html/DomTreeEngine";
 import {
   LabStage,
@@ -10,7 +10,9 @@ import {
   labSpring,
 } from "@/components/visualizers/html/LabStage";
 import { useAutoPlay } from "@/components/shared/PlayPauseButton";
+import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
+import { RTL_FLIP } from "@/lib/rtl";
 
 /** Interactive DOM Tree Graph Engine — live Parent → Child → Text simulation. */
 export function DocumentTreeVisualizer() {
@@ -581,9 +583,11 @@ const DETAILS_STEPS = [
 
 export function DetailsAccordionVisualizer() {
   const reduce = useReducedMotion();
+  const { dir } = useLanguage();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = DETAILS_STEPS[step];
+  const closedRotate = dir === "rtl" ? 180 : 0;
 
   useEffect(() => {
     if (reduce) {
@@ -637,7 +641,7 @@ export function DetailsAccordionVisualizer() {
               >
                 <motion.span
                   aria-hidden
-                  animate={{ rotate: open ? 90 : 0 }}
+                  animate={{ rotate: open ? 90 : closedRotate }}
                   transition={{ duration: 0.28, ease: labEase }}
                   className="flex h-4 w-4 shrink-0 items-center justify-center text-amber-200/80"
                 >
@@ -2143,43 +2147,73 @@ const BASELINE_FEATURES = [
     id: "details",
     feature: "<details> / <summary>",
     baseline: "widely" as const,
-    tip: "Baseline Widely — safe default for most products.",
+    tip: "Baseline Widely — ship as the default path.",
     engines: { chrome: "ok", firefox: "ok", safari: "ok", edge: "ok" },
     detect: false,
     fallback: false,
+    code: "<details><summary>…",
+    verdict: "Safe default",
+  },
+  {
+    id: "lazy",
+    feature: 'loading="lazy"',
+    baseline: "widely" as const,
+    tip: "Widely supported — still never lazy-load the LCP hero.",
+    engines: { chrome: "ok", firefox: "ok", safari: "ok", edge: "ok" },
+    detect: false,
+    fallback: false,
+    code: '<img loading="lazy" …>',
+    verdict: "Safe (below fold)",
   },
   {
     id: "dialog",
     feature: "<dialog> showModal()",
     baseline: "newly" as const,
-    tip: "Baseline Newly — Safari needs 15.4+; plan a fallback.",
+    tip: "Baseline Newly — Safari needs 15.4+; don't assume parity.",
     engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
     detect: false,
     fallback: false,
+    code: "dialog.showModal()",
+    verdict: "Needs a policy",
   },
   {
     id: "detect",
     feature: "<dialog> showModal()",
     baseline: "newly" as const,
-    tip: "Feature-detect — never sniff the user-agent string.",
+    tip: "Feature-detect the API — never sniff the user-agent.",
     engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
     detect: true,
     fallback: false,
+    code: "'showModal' in HTMLDialogElement.prototype",
+    verdict: "Ask the engine",
   },
   {
     id: "fallback",
     feature: "<dialog> showModal()",
     baseline: "newly" as const,
-    tip: "Progressive enhance — usable HTML if the API is missing.",
+    tip: "Progressive enhance — keep usable HTML if the API is missing.",
     engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
     detect: true,
     fallback: true,
+    code: "canModal ? showModal() : fallback()",
+    verdict: "Enhance, don't brick",
+  },
+  {
+    id: "popover",
+    feature: "popover attribute",
+    baseline: "newly" as const,
+    tip: "Newly available menus/tooltips — plan a non-top-layer fallback.",
+    engines: { chrome: "ok", firefox: "ok", safari: "lag", edge: "ok" },
+    detect: true,
+    fallback: true,
+    code: '<div popover>…</div>',
+    verdict: "Detect + fallback",
   },
   {
     id: "limited",
     feature: "bleeding-edge API",
     baseline: "limited" as const,
-    tip: "Baseline Limited — don’t ship as the only path.",
+    tip: "Baseline Limited — never ship as the only path.",
     engines: {
       chrome: "ok",
       firefox: "lag",
@@ -2188,14 +2222,22 @@ const BASELINE_FEATURES = [
     },
     detect: true,
     fallback: true,
+    code: "if (supported) enhance()",
+    verdict: "Gate hard",
   },
 ] as const;
 
 const ENGINES = [
-  { id: "chrome" as const, label: "Chrome", short: "Chr" },
-  { id: "firefox" as const, label: "Firefox", short: "FF" },
-  { id: "safari" as const, label: "Safari", short: "Saf" },
-  { id: "edge" as const, label: "Edge", short: "Edg" },
+  { id: "chrome" as const, label: "Chrome", short: "Chr", tint: "#60a5fa" },
+  { id: "firefox" as const, label: "Firefox", short: "FF", tint: "#fb923c" },
+  { id: "safari" as const, label: "Safari", short: "Saf", tint: "#67e8f9" },
+  { id: "edge" as const, label: "Edge", short: "Edg", tint: "#38bdf8" },
+] as const;
+
+const BASELINE_BANDS = [
+  { id: "widely" as const, label: "Widely", hint: "default" },
+  { id: "newly" as const, label: "Newly", hint: "plan" },
+  { id: "limited" as const, label: "Limited", hint: "gate" },
 ] as const;
 
 function baselineStyle(band: "widely" | "newly" | "limited") {
@@ -2209,37 +2251,55 @@ function baselineStyle(band: "widely" | "newly" | "limited") {
   }
 }
 
+function baselineGlow(band: "widely" | "newly" | "limited") {
+  switch (band) {
+    case "widely":
+      return "rgba(52,211,153,0.55)";
+    case "newly":
+      return "rgba(251,191,36,0.55)";
+    case "limited":
+      return "rgba(251,113,133,0.55)";
+  }
+}
+
 function engineStyle(state: "ok" | "lag" | "no") {
   switch (state) {
     case "ok":
       return {
-        border: "rgba(52,211,153,0.5)",
-        bg: "rgba(52,211,153,0.14)",
+        border: "rgba(52,211,153,0.55)",
+        bg: "rgba(52,211,153,0.16)",
         text: "text-emerald-200",
         label: "ok",
+        pulse: "rgba(52,211,153,0.35)",
       };
     case "lag":
       return {
-        border: "rgba(251,191,36,0.5)",
-        bg: "rgba(251,191,36,0.14)",
+        border: "rgba(251,191,36,0.55)",
+        bg: "rgba(251,191,36,0.16)",
         text: "text-amber-100",
         label: "lag",
+        pulse: "rgba(251,191,36,0.35)",
       };
     case "no":
       return {
-        border: "rgba(251,113,133,0.5)",
-        bg: "rgba(251,113,133,0.12)",
+        border: "rgba(251,113,133,0.55)",
+        bg: "rgba(251,113,133,0.14)",
         text: "text-rose-200",
         label: "no",
+        pulse: "rgba(251,113,133,0.3)",
       };
   }
 }
 
 export function BaselineCompatVisualizer() {
   const reduce = useReducedMotion();
+  const { playClick } = useSound();
+  const { dir } = useLanguage();
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = BASELINE_FEATURES[step];
+  const bandIndex = BASELINE_BANDS.findIndex((b) => b.id === current.baseline);
+  const flow = dir === "rtl" ? -1 : 1;
 
   useEffect(() => {
     if (reduce) {
@@ -2249,117 +2309,264 @@ export function BaselineCompatVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % BASELINE_FEATURES.length),
-      2800,
+      3000,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
+  function goTo(index: number) {
+    playClick();
+    setStep(index);
+  }
+
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
-        {current.tip}
-      </p>
-
-      <div className="rounded-xl border border-cyan-400/25 bg-slate-950/50 p-3">
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={current.feature}
-              initial={reduce ? false : { opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.25, ease: labEase }}
-              className="font-mono text-[12px] font-semibold text-cyan-50"
-            >
-              {current.feature}
-            </motion.p>
-          </AnimatePresence>
-          <span
-            className={`rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${baselineStyle(current.baseline)}`}
+      <div className="mb-2 flex min-h-9 items-start gap-2">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={current.verdict}
+            initial={reduce ? false : { opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.22, ease: labEase }}
+            className={`shrink-0 rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold ${baselineStyle(current.baseline)}`}
           >
-            Baseline {current.baseline}
-          </span>
-        </div>
-
-        {/* Engine matrix — always full height */}
-        <div className="grid grid-cols-4 gap-1.5">
-          {ENGINES.map((engine) => {
-            const state = current.engines[engine.id];
-            const style = engineStyle(state);
-            return (
-              <motion.div
-                key={engine.id}
-                animate={{
-                  borderColor: style.border,
-                  backgroundColor: style.bg,
-                }}
-                transition={{ duration: 0.35, ease: labEase }}
-                className="rounded-lg border px-1.5 py-2 text-center"
-              >
-                <p className="text-[10px] font-semibold text-slate-200">
-                  {engine.short}
-                </p>
-                <p className={`mt-0.5 font-mono text-[9px] ${style.text}`}>
-                  {style.label}
-                </p>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        <p className="mt-1.5 text-center text-[8px] text-slate-500">
-          Chrome · Firefox · Safari · Edge
+            {current.verdict}
+          </motion.span>
+        </AnimatePresence>
+        <p className="text-[11px] leading-relaxed text-slate-400">
+          {current.tip}
         </p>
       </div>
 
-      {/* Detect → fallback pipeline */}
-      <div className="mt-2.5 grid grid-cols-2 gap-1.5">
-        <motion.div
-          animate={{
-            opacity: current.detect ? 1 : 0.4,
-            borderColor: current.detect
-              ? "rgba(34,211,238,0.45)"
-              : "rgba(255,255,255,0.1)",
-            backgroundColor: current.detect
-              ? "rgba(34,211,238,0.1)"
-              : "rgba(15,23,42,0.45)",
-          }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="rounded-lg border px-2.5 py-2"
-        >
-          <p className="font-mono text-[9px] text-cyan-200/80">
-            feature detect
-          </p>
-          <p className="mt-0.5 font-mono text-[10px] leading-snug text-slate-300">
-            {"'showModal' in proto"}
-          </p>
-        </motion.div>
-        <motion.div
-          animate={{
-            opacity: current.fallback ? 1 : 0.4,
-            borderColor: current.fallback
-              ? "rgba(52,211,153,0.45)"
-              : "rgba(255,255,255,0.1)",
-            backgroundColor: current.fallback
-              ? "rgba(52,211,153,0.1)"
-              : "rgba(15,23,42,0.45)",
-          }}
-          transition={{ duration: 0.3, ease: labEase }}
-          className="rounded-lg border px-2.5 py-2"
-        >
-          <p className="font-mono text-[9px] text-emerald-200/80">fallback</p>
-          <p className="mt-0.5 text-[10px] leading-snug text-slate-300">
-            usable HTML without the API
-          </p>
-        </motion.div>
+      {/* Mini browser stage */}
+      <div className="overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/60">
+        <div className="flex items-center gap-1.5 border-b border-white/10 bg-slate-900/80 px-2.5 py-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
+          <span className="ms-2 truncate rounded-md border border-white/10 bg-black/30 px-2 py-0.5 font-mono text-[9px] text-slate-400">
+            caniuse · Baseline · MDN
+          </span>
+        </div>
+
+        <div className="space-y-3 p-3">
+          {/* Feature + Baseline badge */}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={current.feature + current.id}
+                initial={reduce ? false : { opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 6 }}
+                transition={{ duration: 0.25, ease: labEase }}
+                className="font-mono text-[12px] font-semibold text-cyan-50"
+              >
+                {current.feature}
+              </motion.p>
+            </AnimatePresence>
+            <motion.span
+              key={current.baseline}
+              animate={{
+                boxShadow: `0 0 0 1px ${baselineGlow(current.baseline)}, 0 0 18px ${baselineGlow(current.baseline)}`,
+              }}
+              transition={{ duration: 0.35, ease: labEase }}
+              className={`rounded-md border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wide ${baselineStyle(current.baseline)}`}
+            >
+              Baseline {current.baseline}
+            </motion.span>
+          </div>
+
+          {/* Baseline spectrum with traveling marker */}
+          <div className="relative">
+            <div className="grid grid-cols-3 gap-1">
+              {BASELINE_BANDS.map((band) => {
+                const active = band.id === current.baseline;
+                return (
+                  <div
+                    key={band.id}
+                    className={`rounded-lg border px-2 py-1.5 text-center transition-colors ${
+                      active
+                        ? baselineStyle(band.id)
+                        : "border-white/10 bg-white/[0.03] text-slate-500"
+                    }`}
+                  >
+                    <p className="text-[10px] font-semibold">{band.label}</p>
+                    <p className="font-mono text-[8px] opacity-70">{band.hint}</p>
+                  </div>
+                );
+              })}
+            </div>
+            {!reduce ? (
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-1 h-0.5 rounded-full bg-cyan-300"
+                animate={{
+                  left: `${(bandIndex / 3) * 100 + 4}%`,
+                  width: "25%",
+                  backgroundColor: baselineGlow(current.baseline),
+                }}
+                transition={{ ...labSpring }}
+              />
+            ) : null}
+          </div>
+
+          {/* Engine matrix with scan pulse */}
+          <div className="relative">
+            {!reduce ? (
+              <motion.div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-0 w-8 rounded-lg bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent"
+                animate={{ left: ["-10%", "110%"] }}
+                transition={{
+                  duration: 2.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  repeatDelay: 0.6,
+                }}
+              />
+            ) : null}
+            <div className="grid grid-cols-4 gap-1.5">
+              {ENGINES.map((engine, i) => {
+                const state = current.engines[engine.id];
+                const style = engineStyle(state);
+                return (
+                  <motion.div
+                    key={engine.id}
+                    initial={false}
+                    animate={{
+                      borderColor: style.border,
+                      backgroundColor: style.bg,
+                      scale: state === "no" && !reduce ? [1, 0.96, 1] : 1,
+                      boxShadow:
+                        state !== "ok"
+                          ? `0 0 12px ${style.pulse}`
+                          : "0 0 0 transparent",
+                    }}
+                    transition={{
+                      duration: 0.4,
+                      ease: labEase,
+                      delay: reduce ? 0 : i * 0.05,
+                    }}
+                    className="relative overflow-hidden rounded-lg border px-1.5 py-2 text-center"
+                  >
+                    <span
+                      aria-hidden
+                      className="mx-auto mb-1 block h-1.5 w-1.5 rounded-full"
+                      style={{ backgroundColor: engine.tint }}
+                    />
+                    <p className="text-[10px] font-semibold text-slate-100">
+                      {engine.short}
+                    </p>
+                    <p className={`mt-0.5 font-mono text-[9px] font-bold uppercase ${style.text}`}>
+                      {style.label}
+                    </p>
+                  </motion.div>
+                );
+              })}
+            </div>
+            <p className="mt-1.5 text-center text-[8px] text-slate-500">
+              Chrome · Firefox · Safari · Edge
+            </p>
+          </div>
+
+          {/* Live code chip */}
+          <AnimatePresence mode="wait">
+            <motion.pre
+              key={current.code}
+              initial={reduce ? false : { opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.25, ease: labEase }}
+              className="overflow-x-auto rounded-lg border border-white/10 bg-black/35 px-2.5 py-2 font-mono text-[10px] leading-relaxed text-yellow-100/90"
+            >
+              {current.code}
+            </motion.pre>
+          </AnimatePresence>
+
+          {/* Detect → fallback pipeline */}
+          <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-1.5">
+            <motion.div
+              animate={{
+                opacity: current.detect ? 1 : 0.35,
+                borderColor: current.detect
+                  ? "rgba(34,211,238,0.5)"
+                  : "rgba(255,255,255,0.1)",
+                backgroundColor: current.detect
+                  ? "rgba(34,211,238,0.12)"
+                  : "rgba(15,23,42,0.45)",
+                boxShadow: current.detect
+                  ? "0 0 16px rgba(34,211,238,0.2)"
+                  : "0 0 0 transparent",
+              }}
+              transition={{ duration: 0.3, ease: labEase }}
+              className="rounded-lg border px-2.5 py-2"
+            >
+              <p className="font-mono text-[9px] text-cyan-200/80">
+                1 · feature detect
+              </p>
+              <p className="mt-0.5 text-[10px] leading-snug text-slate-300">
+                Ask the engine at runtime
+              </p>
+            </motion.div>
+
+            <motion.div
+              animate={{
+                opacity: current.detect ? 1 : 0.25,
+                x: current.detect && !reduce ? [0, 3 * flow, 0] : 0,
+                color: current.fallback
+                  ? "rgb(110 231 183)"
+                  : "rgb(103 232 249)",
+              }}
+              transition={{
+                duration: 0.9,
+                repeat: current.detect && !reduce ? Infinity : 0,
+                ease: "easeInOut",
+              }}
+              className="flex items-center justify-center"
+            >
+              <ChevronRight size={16} className={RTL_FLIP} />
+            </motion.div>
+
+            <motion.div
+              animate={{
+                opacity: current.fallback ? 1 : 0.35,
+                borderColor: current.fallback
+                  ? "rgba(52,211,153,0.5)"
+                  : "rgba(255,255,255,0.1)",
+                backgroundColor: current.fallback
+                  ? "rgba(52,211,153,0.12)"
+                  : "rgba(15,23,42,0.45)",
+                boxShadow: current.fallback
+                  ? "0 0 16px rgba(52,211,153,0.2)"
+                  : "0 0 0 transparent",
+              }}
+              transition={{ duration: 0.3, ease: labEase }}
+              className="rounded-lg border px-2.5 py-2"
+            >
+              <p className="font-mono text-[9px] text-emerald-200/80">
+                2 · fallback
+              </p>
+              <p className="mt-0.5 text-[10px] leading-snug text-slate-300">
+                Usable HTML without the API
+              </p>
+            </motion.div>
+          </div>
+        </div>
       </div>
 
       <div className="mt-3 flex justify-center gap-1.5">
         {BASELINE_FEATURES.map((s, i) => (
-          <span
+          <button
             key={s.id}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${
-              i === step ? "bg-cyan-300" : "bg-slate-600"
+            type="button"
+            aria-label={`Step ${i + 1}: ${s.feature}`}
+            aria-current={i === step ? "step" : undefined}
+            onClick={() => goTo(i)}
+            className={`h-1.5 rounded-full transition-all ${
+              i === step
+                ? "w-4 bg-cyan-300"
+                : "w-1.5 bg-slate-600 hover:bg-slate-400"
             }`}
           />
         ))}
@@ -2533,7 +2740,16 @@ export function PictureSourceVisualizer() {
                     )}
                   </p>
                   <p className="font-mono text-[8px] text-slate-500">
-                    {active ? "← chosen" : passed ? "skipped" : "candidate"}
+                    {active ? (
+                      <>
+                        <span className="inline-block rtl:rotate-180">←</span>{" "}
+                        chosen
+                      </>
+                    ) : passed ? (
+                      "skipped"
+                    ) : (
+                      "candidate"
+                    )}
                   </p>
                 </motion.div>
               );
@@ -2630,6 +2846,856 @@ export function MediaStageVisualizer() {
       >
         &lt;iframe title=&quot;Demo&quot; loading=&quot;lazy&quot;&gt;
       </motion.div>
+    </LabStage>
+  );
+}
+
+/** Interactive CheatSheet — filter → cards → preview → Baseline → copy → paste. */
+const CHEAT_FILTERS = [
+  { id: "all", label: "All" },
+  { id: "structure", label: "Structure" },
+  { id: "forms", label: "Forms" },
+  { id: "media", label: "Media" },
+  { id: "interactive", label: "Interactive" },
+] as const;
+
+const CHEAT_CARDS = [
+  {
+    id: "shell",
+    title: "Document shell",
+    category: "structure",
+    snippet: "<!DOCTYPE html>…",
+    preview: "html · head · body",
+    baseline: "widely" as const,
+  },
+  {
+    id: "label",
+    title: "Label + input",
+    category: "forms",
+    snippet: "<label>Email…",
+    preview: "label wraps input",
+    baseline: "widely" as const,
+  },
+  {
+    id: "picture",
+    title: "Responsive picture",
+    category: "media",
+    snippet: "<picture><source…",
+    preview: "AVIF → WebP → img",
+    baseline: "widely" as const,
+  },
+  {
+    id: "dialog",
+    title: "Native dialog",
+    category: "interactive",
+    snippet: "dialog.showModal()",
+    preview: "backdrop + focus trap",
+    baseline: "newly" as const,
+  },
+] as const;
+
+const CHEAT_STEPS = [
+  {
+    id: "overview",
+    tip: "CheatSheet cards are filterable — start from All.",
+    filter: "all" as const,
+    focus: null as string | null,
+    showPreview: false,
+    copied: false,
+    pasted: false,
+  },
+  {
+    id: "filter-structure",
+    tip: "Filter by category — Structure patterns only.",
+    filter: "structure" as const,
+    focus: null,
+    showPreview: false,
+    copied: false,
+    pasted: false,
+  },
+  {
+    id: "focus-shell",
+    tip: "Open a card — live preview + snippet side by side.",
+    filter: "structure" as const,
+    focus: "shell",
+    showPreview: true,
+    copied: false,
+    pasted: false,
+  },
+  {
+    id: "baseline",
+    tip: "Check Baseline before you paste Newly features.",
+    filter: "interactive" as const,
+    focus: "dialog",
+    showPreview: true,
+    copied: false,
+    pasted: false,
+  },
+  {
+    id: "copy",
+    tip: "Copy Code (or Boilerplate) in one tap.",
+    filter: "interactive" as const,
+    focus: "dialog",
+    showPreview: true,
+    copied: true,
+    pasted: false,
+  },
+  {
+    id: "paste",
+    tip: "Paste into the playground — tweak live, then ship.",
+    filter: "interactive" as const,
+    focus: "dialog",
+    showPreview: true,
+    copied: true,
+    pasted: true,
+  },
+] as const;
+
+function cheatBaselineStyle(band: "widely" | "newly") {
+  return band === "widely"
+    ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"
+    : "border-amber-300/40 bg-amber-400/15 text-amber-100";
+}
+
+export function CheatSheetLabVisualizer() {
+  const reduce = useReducedMotion();
+  const { playClick } = useSound();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = CHEAT_STEPS[step];
+
+  useEffect(() => {
+    if (reduce) {
+      setStep(CHEAT_STEPS.length - 1);
+      return;
+    }
+    if (!playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % CHEAT_STEPS.length),
+      2800,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  const visibleCards = CHEAT_CARDS.filter(
+    (card) => current.filter === "all" || card.category === current.filter,
+  );
+  const focused =
+    CHEAT_CARDS.find((card) => card.id === current.focus) ?? visibleCards[0];
+
+  function goTo(index: number) {
+    playClick();
+    setStep(index);
+  }
+
+  return (
+    <LabStage playing={playing} onTogglePlay={toggle}>
+      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
+        {current.tip}
+      </p>
+
+      {/* Filter chips */}
+      <div className="mb-2.5 flex flex-wrap gap-1.5">
+        {CHEAT_FILTERS.map((chip) => {
+          const active = current.filter === chip.id;
+          return (
+            <motion.span
+              key={chip.id}
+              animate={{
+                scale: active && !reduce ? [1, 1.04, 1] : 1,
+                borderColor: active
+                  ? "rgba(103,232,249,0.55)"
+                  : "rgba(255,255,255,0.1)",
+                backgroundColor: active
+                  ? "rgba(34,211,238,0.18)"
+                  : "rgba(15,23,42,0.55)",
+                color: active ? "rgb(224 251 252)" : "rgb(148 163 184)",
+              }}
+              transition={{ duration: 0.3, ease: labEase }}
+              className="rounded-full border px-2.5 py-1 text-[10px] font-semibold"
+            >
+              {chip.label}
+            </motion.span>
+          );
+        })}
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-[1.15fr_0.85fr]">
+        {/* Card grid */}
+        <div className="grid grid-cols-2 gap-1.5 rounded-xl border border-white/10 bg-slate-950/50 p-2">
+          <AnimatePresence mode="popLayout">
+            {visibleCards.map((card, i) => {
+              const isFocus = current.focus === card.id;
+              return (
+                <motion.div
+                  key={card.id}
+                  layout
+                  initial={reduce ? false : { opacity: 0, y: 10, scale: 0.96 }}
+                  animate={{
+                    opacity: current.focus && !isFocus ? 0.45 : 1,
+                    y: 0,
+                    scale: isFocus && !reduce ? 1.02 : 1,
+                    borderColor: isFocus
+                      ? "rgba(103,232,249,0.55)"
+                      : "rgba(255,255,255,0.1)",
+                    boxShadow: isFocus
+                      ? "0 0 18px rgba(34,211,238,0.2)"
+                      : "0 0 0 transparent",
+                  }}
+                  exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.15 } }}
+                  transition={{
+                    ...labSpring,
+                    delay: reduce ? 0 : i * 0.04,
+                  }}
+                  className="rounded-lg border bg-gradient-to-br from-slate-900/90 to-cyan-950/20 p-2"
+                >
+                  <div className="mb-1 flex items-start justify-between gap-1">
+                    <p className="text-[10px] font-semibold leading-tight text-cyan-50">
+                      {card.title}
+                    </p>
+                    <span
+                      className={`shrink-0 rounded border px-1 py-px font-mono text-[7px] font-bold uppercase ${cheatBaselineStyle(card.baseline)}`}
+                    >
+                      {card.baseline}
+                    </span>
+                  </div>
+                  <p className="truncate font-mono text-[9px] text-yellow-100/75">
+                    {card.snippet}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+
+        {/* Focus panel: preview → copy → playground */}
+        <div className="relative overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/60 p-2.5">
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <p className="font-mono text-[9px] uppercase tracking-wider text-slate-500">
+              {current.showPreview ? "live preview" : "pick a card"}
+            </p>
+            <AnimatePresence>
+              {current.copied ? (
+                <motion.span
+                  initial={reduce ? false : { opacity: 0, y: -6, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="inline-flex items-center gap-1 rounded-full border border-emerald-300/40 bg-emerald-400/15 px-2 py-0.5 text-[9px] font-semibold text-emerald-100"
+                >
+                  <Check size={10} />
+                  Copied
+                </motion.span>
+              ) : null}
+            </AnimatePresence>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={focused?.id ?? "empty"}
+              initial={reduce ? false : { opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.25, ease: labEase }}
+            >
+              <div
+                className={`mb-2 rounded-lg border px-2.5 py-3 text-center ${
+                  current.showPreview
+                    ? "border-white/15 bg-white text-slate-800"
+                    : "border-dashed border-white/15 bg-slate-900/40 text-slate-500"
+                }`}
+              >
+                <p className="text-[10px] font-semibold">
+                  {current.showPreview
+                    ? focused?.preview
+                    : "Preview appears here"}
+                </p>
+              </div>
+
+              <p className="mb-2 font-mono text-[10px] text-cyan-100">
+                {focused?.title ?? "—"}
+              </p>
+
+              <div className="mb-2 flex gap-1.5">
+                <motion.span
+                  animate={{
+                    borderColor: current.copied
+                      ? "rgba(103,232,249,0.55)"
+                      : "rgba(255,255,255,0.12)",
+                    backgroundColor: current.copied
+                      ? "rgba(34,211,238,0.2)"
+                      : "rgba(255,255,255,0.05)",
+                    scale: current.copied && !reduce ? [1, 1.05, 1] : 1,
+                  }}
+                  transition={{ duration: 0.35, ease: labEase }}
+                  className="rounded-full border px-2.5 py-1 text-[9px] font-semibold text-slate-200"
+                >
+                  Copy Code
+                </motion.span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[9px] font-semibold text-slate-400">
+                  Boilerplate
+                </span>
+              </div>
+
+              <div className="rounded-lg border border-dashed border-amber-300/30 bg-slate-950/50 p-2">
+                <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-amber-200/60">
+                  playground
+                </p>
+                <AnimatePresence mode="wait">
+                  <motion.pre
+                    key={current.pasted ? "pasted" : "empty"}
+                    initial={reduce ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="min-h-10 overflow-x-auto font-mono text-[9px] leading-relaxed text-yellow-100/85"
+                  >
+                    {current.pasted
+                      ? focused?.snippet ?? "// paste here"
+                      : "// paste snippet…"}
+                  </motion.pre>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Pipeline footer */}
+          <div className="mt-2.5 flex items-center justify-center gap-1 font-mono text-[8px] text-slate-500">
+            <span
+              className={
+                current.filter !== "all" ? "text-cyan-300" : undefined
+              }
+            >
+              filter
+            </span>
+            <ChevronRight size={10} className={RTL_FLIP} />
+            <span className={current.showPreview ? "text-cyan-300" : undefined}>
+              preview
+            </span>
+            <ChevronRight size={10} className={RTL_FLIP} />
+            <span className={current.copied ? "text-cyan-300" : undefined}>
+              copy
+            </span>
+            <ChevronRight size={10} className={RTL_FLIP} />
+            <span className={current.pasted ? "text-emerald-300" : undefined}>
+              paste
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-3 flex justify-center gap-1.5">
+        {CHEAT_STEPS.map((s, i) => (
+          <button
+            key={s.id}
+            type="button"
+            aria-label={`Step ${i + 1}`}
+            aria-current={i === step ? "step" : undefined}
+            onClick={() => goTo(i)}
+            className={`h-1.5 rounded-full transition-all ${
+              i === step
+                ? "w-4 bg-cyan-300"
+                : "w-1.5 bg-slate-600 hover:bg-slate-400"
+            }`}
+          />
+        ))}
+      </div>
+    </LabStage>
+  );
+}
+
+const SECURITY_STEPS = [
+  {
+    title: "External tab: unsafe",
+    code: `<a target="_blank">Partner docs</a>`,
+    detail: "New page can reach window.opener",
+    state: "unsafe",
+  },
+  {
+    title: "Close the opener",
+    code: `rel="noopener noreferrer"`,
+    detail: "No opener control · no referrer leak",
+    state: "safe",
+  },
+  {
+    title: "Sandbox the embed",
+    code: `sandbox="allow-forms allow-scripts"`,
+    detail: "Third-party frame gets minimum capability",
+    state: "safe",
+  },
+  {
+    title: "Name sensitive data",
+    code: `autocomplete="one-time-code"`,
+    detail: "Browser and password manager understand intent",
+    state: "safe",
+  },
+] as const;
+
+export function HtmlSecurityLabVisualizer() {
+  const reduce = useReducedMotion();
+  const { playClick } = useSound();
+  const { dir } = useLanguage();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = SECURITY_STEPS[step];
+  const safe = current.state === "safe";
+  const flow = dir === "rtl" ? -1 : 1;
+
+  useEffect(() => {
+    if (reduce) {
+      setStep(SECURITY_STEPS.length - 1);
+      return;
+    }
+    if (!playing) return;
+    const id = window.setInterval(
+      () => setStep((index) => (index + 1) % SECURITY_STEPS.length),
+      3000,
+    );
+    return () => window.clearInterval(id);
+  }, [playing, reduce]);
+
+  function goTo(index: number) {
+    playClick();
+    setStep(index);
+  }
+
+  return (
+    <LabStage playing={playing} onTogglePlay={toggle}>
+      <div className="mb-3 flex items-center gap-2">
+        <motion.div
+          animate={{
+            backgroundColor: safe ? "rgba(16,185,129,0.18)" : "rgba(251,113,133,0.18)",
+            borderColor: safe ? "rgba(110,231,183,0.55)" : "rgba(253,164,175,0.55)",
+          }}
+          className="rounded-lg border p-1.5"
+        >
+          <Shield
+            size={16}
+            className={safe ? "text-emerald-200" : "text-rose-200"}
+          />
+        </motion.div>
+        <div>
+          <p className="text-[11px] font-semibold text-slate-100">{current.title}</p>
+          <p className={`text-[9px] font-semibold ${safe ? "text-emerald-300" : "text-rose-300"}`}>
+            {safe ? "trust boundary protected" : "trust boundary exposed"}
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-xl border border-white/10 bg-slate-950/65">
+        <div className="flex items-center gap-1.5 border-b border-white/10 bg-slate-900/80 px-3 py-1.5">
+          <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
+          <span className="ms-2 font-mono text-[9px] text-slate-500">markup security review</span>
+        </div>
+        <div className="grid gap-2 p-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+          <motion.div
+            animate={{
+              borderColor: safe ? "rgba(110,231,183,0.32)" : "rgba(253,164,175,0.45)",
+              opacity: step < 2 ? 1 : 0.58,
+            }}
+            className="rounded-lg border bg-slate-900/70 p-2.5"
+          >
+            <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-slate-500">your page</p>
+            <p className="font-mono text-[10px] text-yellow-100/90">{step < 2 ? "target=_blank" : "<iframe / form>"}</p>
+          </motion.div>
+          <motion.div
+            aria-hidden
+            animate={{
+              x: safe || reduce ? 0 : [0, 5 * flow, 0],
+              color: safe ? "rgb(110 231 183)" : "rgb(251 113 133)",
+            }}
+            transition={{ duration: 0.8, repeat: safe || reduce ? 0 : Infinity }}
+          >
+            <ChevronRight size={18} className={RTL_FLIP} />
+          </motion.div>
+          <motion.div
+            animate={{
+              borderColor: safe ? "rgba(110,231,183,0.5)" : "rgba(253,164,175,0.45)",
+              backgroundColor: safe ? "rgba(6,78,59,0.28)" : "rgba(76,5,25,0.28)",
+            }}
+            className="rounded-lg border p-2.5"
+          >
+            <p className="mb-1 font-mono text-[8px] uppercase tracking-wider text-slate-400">
+              {step < 2 ? "external origin" : step === 2 ? "embed origin" : "browser-held data"}
+            </p>
+            <p className={`text-[10px] font-semibold ${safe ? "text-emerald-100" : "text-rose-100"}`}>
+              {safe ? "minimum access granted" : "opener access possible"}
+            </p>
+          </motion.div>
+        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.code}
+            initial={reduce ? false : { opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.24, ease: labEase }}
+            className="mx-3 mb-3 rounded-lg border border-white/10 bg-black/30 px-2.5 py-2"
+          >
+            <code className="font-mono text-[10px] text-cyan-100">{current.code}</code>
+            <p className="mt-1 text-[9px] text-slate-400">{current.detail}</p>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <div className="mt-3 flex justify-center gap-1.5">
+        {SECURITY_STEPS.map((item, index) => (
+          <button
+            key={item.title}
+            type="button"
+            aria-label={`Step ${index + 1}: ${item.title}`}
+            aria-current={index === step ? "step" : undefined}
+            onClick={() => goTo(index)}
+            className={`h-1.5 rounded-full transition-all ${index === step ? "w-5 bg-emerald-300" : "w-1.5 bg-slate-600 hover:bg-slate-400"}`}
+          />
+        ))}
+      </div>
+    </LabStage>
+  );
+}
+
+const SPECULATION_STEPS = [
+  { title: "Click and wait", mode: "cold", detail: "Next LCP waits for navigation" },
+  { title: "Prefetch response", mode: "prefetch", detail: "Likely same-origin document is warm" },
+  { title: "Prerender safely", mode: "prerender", detail: "Read-only destination is rendered in background" },
+  { title: "Navigate instant", mode: "instant", detail: "Activation makes the next LCP feel fast" },
+] as const;
+
+export function HtmlSpeculationLabVisualizer() {
+  const reduce = useReducedMotion();
+  const { playClick } = useSound();
+  const { dir } = useLanguage();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = SPECULATION_STEPS[step];
+  const flow = dir === "rtl" ? -1 : 1;
+
+  useEffect(() => {
+    if (reduce) {
+      setStep(SPECULATION_STEPS.length - 1);
+      return;
+    }
+    if (!playing) return;
+    const id = window.setInterval(
+      () => setStep((index) => (index + 1) % SPECULATION_STEPS.length),
+      2800,
+    );
+    return () => window.clearInterval(id);
+  }, [playing, reduce]);
+
+  function goTo(index: number) {
+    playClick();
+    setStep(index);
+  }
+
+  const warmed = step >= 1;
+  const rendered = step >= 2;
+  const instant = step === 3;
+
+  return (
+    <LabStage playing={playing} onTogglePlay={toggle}>
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <div>
+          <p className="text-[11px] font-semibold text-slate-100">{current.title}</p>
+          <p className="text-[9px] text-cyan-200/75">{current.detail}</p>
+        </div>
+        <span className={`rounded-full border px-2 py-0.5 font-mono text-[9px] ${instant ? "border-emerald-300/45 bg-emerald-400/15 text-emerald-100" : "border-cyan-300/35 bg-cyan-400/10 text-cyan-100"}`}>
+          next LCP {instant ? "warm" : "pending"}
+        </span>
+      </div>
+
+      <div className="rounded-xl border border-cyan-400/20 bg-slate-950/60 p-3">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+          <div className="rounded-lg border border-white/10 bg-slate-900/70 p-2">
+            <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">current page</p>
+            <p className="mt-1 text-[10px] font-semibold text-slate-200">Collection</p>
+          </div>
+          <motion.div
+            aria-hidden
+            animate={{
+              x: warmed && !reduce ? [0, 5 * flow, 0] : 0,
+              color: warmed ? "rgb(103 232 249)" : "rgb(100 116 139)",
+            }}
+            transition={{ duration: 0.9, repeat: warmed && !reduce ? Infinity : 0 }}
+          >
+            <ChevronRight size={18} className={RTL_FLIP} />
+          </motion.div>
+          <motion.div
+            animate={{
+              borderColor: rendered ? "rgba(110,231,183,0.5)" : warmed ? "rgba(103,232,249,0.5)" : "rgba(255,255,255,0.1)",
+              backgroundColor: rendered ? "rgba(6,78,59,0.3)" : warmed ? "rgba(8,47,73,0.32)" : "rgba(15,23,42,0.55)",
+              boxShadow: rendered ? "0 0 18px rgba(52,211,153,0.18)" : "0 0 0 transparent",
+            }}
+            className="rounded-lg border p-2"
+          >
+            <p className="font-mono text-[8px] uppercase tracking-wider text-slate-500">next document</p>
+            <p className="mt-1 text-[10px] font-semibold text-slate-200">
+              {rendered ? "Product detail rendered" : warmed ? "Response prefetched" : "Not requested"}
+            </p>
+          </motion.div>
+        </div>
+
+        <div className="mt-3 grid grid-cols-3 gap-1.5">
+          {[
+            { label: "network", active: warmed },
+            { label: "render", active: rendered },
+            { label: "activate", active: instant },
+          ].map(({ label, active }) => (
+            <motion.div
+              key={label}
+              animate={{
+                opacity: active ? 1 : 0.35,
+                borderColor: active ? "rgba(103,232,249,0.45)" : "rgba(255,255,255,0.1)",
+              }}
+              className="rounded-md border bg-white/3 px-1.5 py-1.5 text-center font-mono text-[8px] text-cyan-100"
+            >
+              {active ? <Check className="mx-auto mb-0.5" size={10} /> : null}
+              {label}
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-3 rounded-lg border border-rose-300/25 bg-rose-400/6 px-2.5 py-2">
+          <p className="font-mono text-[9px] font-semibold text-rose-200">/logout · excluded</p>
+          <p className="mt-0.5 text-[9px] text-rose-100/70">Never prerender routes that mutate state or consume tokens.</p>
+        </div>
+      </div>
+
+      <div className="mt-3 flex justify-center gap-1.5">
+        {SPECULATION_STEPS.map((item, index) => (
+          <button
+            key={item.title}
+            type="button"
+            aria-label={`Step ${index + 1}: ${item.title}`}
+            aria-current={index === step ? "step" : undefined}
+            onClick={() => goTo(index)}
+            className={`h-1.5 rounded-full transition-all ${index === step ? "w-5 bg-cyan-300" : "w-1.5 bg-slate-600 hover:bg-slate-400"}`}
+          />
+        ))}
+      </div>
+    </LabStage>
+  );
+}
+
+/** Global & Bidirectional HTML — RTL root → isolate token → LTR inputs. */
+const RTL_STEPS = [
+  {
+    id: "ltr-root",
+    tip: {
+      en: "Default LTR document — fine for English-only chrome.",
+      ar: "مستند LTR افتراضي — مناسب لـ chrome إنجليزي بس.",
+    },
+    rootDir: "ltr" as const,
+    isolate: false,
+    ltrInputs: false,
+  },
+  {
+    id: "rtl-root",
+    tip: {
+      en: "Arabic-first product: lang=ar + dir=rtl on <html>.",
+      ar: "منتج عربي-أولًا: lang=ar + dir=rtl على <html>.",
+    },
+    rootDir: "rtl" as const,
+    isolate: false,
+    ltrInputs: false,
+  },
+  {
+    id: "isolate",
+    tip: {
+      en: "Isolate English tokens with <bdi> so Arabic letters stay ordered.",
+      ar: "اعزل tokens إنجليزية بـ <bdi> عشان الحروف العربية تفضل مرتبة.",
+    },
+    rootDir: "rtl" as const,
+    isolate: true,
+    ltrInputs: false,
+  },
+  {
+    id: "inputs",
+    tip: {
+      en: "Email / OTP fields keep dir=ltr inside an RTL form.",
+      ar: "حقول الإيميل / OTP تفضل dir=ltr جوّه فورم RTL.",
+    },
+    rootDir: "rtl" as const,
+    isolate: true,
+    ltrInputs: true,
+  },
+  {
+    id: "portal",
+    tip: {
+      en: "Teleported dialog carries dir/lang — don’t orphan direction.",
+      ar: "الـ dialog المتنقل بيشيل dir/lang — متسيبش الاتجاه يتيم.",
+    },
+    rootDir: "rtl" as const,
+    isolate: true,
+    ltrInputs: true,
+  },
+] as const;
+
+export function HtmlGlobalRtlLabVisualizer() {
+  const reduce = useReducedMotion();
+  const { playClick } = useSound();
+  const { locale } = useLanguage();
+  const { playing, toggle } = useAutoPlay(true);
+  const [step, setStep] = useState(0);
+  const current = RTL_STEPS[step];
+  const rtl = current.rootDir === "rtl";
+  const arUi = locale === "ar";
+
+  useEffect(() => {
+    if (reduce) {
+      setStep(RTL_STEPS.length - 1);
+      return;
+    }
+    if (!playing) return;
+    const id = window.setInterval(
+      () => setStep((s) => (s + 1) % RTL_STEPS.length),
+      2800,
+    );
+    return () => window.clearInterval(id);
+  }, [reduce, playing]);
+
+  function goTo(index: number) {
+    playClick();
+    setStep(index);
+  }
+
+  return (
+    <LabStage playing={playing} onTogglePlay={toggle}>
+      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
+        {current.tip[locale]}
+      </p>
+
+      <div className="overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/60">
+        <div className="flex items-center justify-between gap-2 border-b border-white/10 bg-slate-900/80 px-2.5 py-1.5">
+          <div className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-rose-400/70" />
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
+          </div>
+          <motion.span
+            key={current.rootDir}
+            initial={reduce ? false : { opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-md border border-cyan-300/30 bg-cyan-400/10 px-2 py-0.5 font-mono text-[9px] text-cyan-100"
+          >
+            {rtl ? 'lang="ar" dir="rtl"' : 'lang="en" dir="ltr"'}
+          </motion.span>
+        </div>
+
+        <div className="space-y-2.5 p-3" style={{ direction: current.rootDir }}>
+          <p className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-2 text-[11px] leading-relaxed text-slate-200">
+            {rtl ? "ابدأ بـ " : arUi ? "ابدأ بـ " : "Start with "}
+            {current.isolate ? (
+              <span
+                className="mx-1 inline-block rounded bg-amber-400/20 px-1.5 py-0.5 font-mono text-[10px] text-amber-100"
+                style={{ direction: "ltr", unicodeBidi: "isolate" }}
+              >
+                &lt;!DOCTYPE html&gt;
+              </span>
+            ) : (
+              <span className="font-mono text-[10px] text-amber-100/80">
+                &lt;!DOCTYPE html&gt;
+              </span>
+            )}
+            {rtl || arUi ? " قبل بناء الصفحة." : " before building the page."}
+          </p>
+
+          <div className="grid gap-2 sm:grid-cols-2">
+            <motion.label
+              animate={{
+                borderColor: current.ltrInputs
+                  ? "rgba(52,211,153,0.45)"
+                  : "rgba(255,255,255,0.1)",
+              }}
+              className="rounded-lg border bg-slate-950/50 px-2.5 py-2"
+            >
+              <span className="text-[10px] text-slate-400">
+                {arUi ? "البريد" : "Email"}
+              </span>
+              <div
+                className="mt-1 rounded-md border border-white/10 bg-black/30 px-2 py-1.5 font-mono text-[10px] text-slate-300"
+                style={{
+                  direction: current.ltrInputs ? "ltr" : current.rootDir,
+                }}
+              >
+                you@frontendcraft.dev
+              </div>
+              {current.ltrInputs ? (
+                <p className="mt-1 font-mono text-[8px] text-emerald-300/90">
+                  dir=&quot;ltr&quot;
+                </p>
+              ) : null}
+            </motion.label>
+
+            <motion.label
+              animate={{
+                borderColor: current.ltrInputs
+                  ? "rgba(52,211,153,0.45)"
+                  : "rgba(255,255,255,0.1)",
+              }}
+              className="rounded-lg border bg-slate-950/50 px-2.5 py-2"
+            >
+              <span className="text-[10px] text-slate-400">
+                {arUi ? "رمز التحقق" : "OTP"}
+              </span>
+              <div
+                className="mt-1 rounded-md border border-white/10 bg-black/30 px-2 py-1.5 font-mono text-[10px] tracking-[0.2em] text-slate-300"
+                style={{
+                  direction: current.ltrInputs ? "ltr" : current.rootDir,
+                }}
+              >
+                8 4 2 1 9 0
+              </div>
+              {current.ltrInputs ? (
+                <p className="mt-1 font-mono text-[8px] text-emerald-300/90">
+                  dir=&quot;ltr&quot; · autocomplete=&quot;one-time-code&quot;
+                </p>
+              ) : null}
+            </motion.label>
+          </div>
+
+          <AnimatePresence>
+            {current.id === "portal" ? (
+              <motion.div
+                initial={reduce ? false : { opacity: 0, y: 8, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6 }}
+                className="rounded-xl border border-orange-300/40 bg-slate-900 p-2.5 shadow-[0_12px_30px_rgba(0,0,0,0.35)]"
+                style={{ direction: "rtl" }}
+              >
+                <p className="font-mono text-[8px] text-orange-200/80">
+                  &lt;dialog dir=&quot;rtl&quot; lang=&quot;ar&quot;&gt;
+                </p>
+                <p className="mt-1 text-[11px] font-semibold text-orange-50">
+                  {arUi ? "تأكيد الاشتراك" : "Confirm subscription"}
+                </p>
+                <p className="mt-0.5 text-[10px] text-slate-300">
+                  {arUi
+                    ? "الاتجاه اتورّث مع الـ portal — مش اتكسر."
+                    : "Direction rides with the portal — not orphaned."}
+                </p>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      <div className="mt-3 flex justify-center gap-1.5">
+        {RTL_STEPS.map((s, i) => (
+          <button
+            key={s.id}
+            type="button"
+            aria-label={`Step ${i + 1}`}
+            aria-current={i === step ? "step" : undefined}
+            onClick={() => goTo(i)}
+            className={`h-1.5 rounded-full transition-all ${
+              i === step
+                ? "w-4 bg-cyan-300"
+                : "w-1.5 bg-slate-600 hover:bg-slate-400"
+            }`}
+          />
+        ))}
+      </div>
     </LabStage>
   );
 }

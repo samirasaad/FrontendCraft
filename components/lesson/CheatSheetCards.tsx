@@ -38,36 +38,50 @@ const categoryLabelKey: Record<CheatCategory, UiKey> = {
 type ToastState = { message: string; id: number };
 
 function previewDocument(html: string): string {
+  if (/<!DOCTYPE/i.test(html) || /<html[\s>]/i.test(html)) {
+    return html;
+  }
   return `<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Preview</title>
 <style>
-  :root { color-scheme: light; }
   * { box-sizing: border-box; }
   body {
-    margin: 0; padding: 12px;
-    font: 13px/1.45 system-ui, sans-serif;
-    color: #0f172a;
-    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    margin: 0;
+    padding: 12px;
+    font: 14px/1.45 system-ui, sans-serif;
+    color: #111;
+    background: #fff;
   }
   button, summary, a { cursor: pointer; }
-  dialog { border: 1px solid #cbd5e1; border-radius: 12px; padding: 12px 14px; max-width: 90%; }
-  dialog::backdrop { background: rgb(15 23 42 / 0.35); }
-  details { border: 1px solid #cbd5e1; border-radius: 10px; padding: 8px 10px; background: #fff; }
-  img, video { max-width: 100%; height: auto; border-radius: 8px; }
-  label { display: grid; gap: 4px; font-size: 12px; }
-  input, select, textarea {
-    border: 1px solid #94a3b8; border-radius: 8px; padding: 6px 8px; font: inherit;
+  dialog {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px 14px;
+    max-width: 90%;
   }
-  .chip {
-    display: inline-block; padding: 4px 8px; border-radius: 999px;
-    background: #dbeafe; color: #1e3a8a; font-size: 11px; font-weight: 600;
+  dialog::backdrop { background: rgb(0 0 0 / 0.35); }
+  details {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+  img, video { max-width: 100%; height: auto; }
+  label { display: grid; gap: 4px; font-size: 13px; }
+  input, select, textarea {
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font: inherit;
   }
 </style>
 </head>
-<body>${html}</body>
+<body>
+${html}
+</body>
 </html>`;
 }
 
@@ -160,7 +174,7 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
               key={cardKey}
               className="flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-950/55 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] backdrop-blur-xl transition hover:border-cyan-400/30"
             >
-              {card.previewHtml ? (
+              {card.previewHtml || card.snippet ? (
                 <div className="border-b border-white/10 bg-slate-900/80 p-2">
                   <p className="mb-1.5 px-1 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
                     {t("livePreview", locale)}
@@ -168,7 +182,12 @@ export function CheatSheetCards({ cards }: { cards: CheatCard[] }) {
                   <iframe
                     title={loc(card.title, locale)}
                     sandbox=""
-                    srcDoc={previewDocument(card.previewHtml)}
+                    srcDoc={previewDocument(
+                      /<!DOCTYPE/i.test(card.snippet) ||
+                        /<html[\s>]/i.test(card.snippet)
+                        ? card.snippet
+                        : (card.previewHtml ?? card.snippet),
+                    )}
                     className="h-32 w-full rounded-xl border border-white/10 bg-white"
                   />
                 </div>

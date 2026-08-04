@@ -497,7 +497,7 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
       underTheHood: pack.underTheHood,
       accessibility: pack.accessibility,
       seo: pack.seo,
-      // Pitfalls cards are collected into Pro: Common Pitfalls only.
+      // Pitfalls cards are collected into Common Pitfalls only.
     },
   };
 }

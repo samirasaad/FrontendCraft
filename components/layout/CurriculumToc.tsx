@@ -93,6 +93,7 @@ function TierBranch({
             </span>
             <span
               className={`rounded-full border px-2 py-0.5 text-[10px] font-semibold ${tierBadgeClass(tier)}`}
+              dir="ltr"
             >
               {doneCount}/{lessons.length}
             </span>
@@ -271,11 +272,11 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
                   <Layers size={12} />
                   {t("progress", locale)}
                 </span>
-                <span className="font-semibold text-cyan-300">
+                <span className="font-semibold text-cyan-300" dir="ltr">
                   {completedCount}/{totalCount} · {progressPercent}%
                 </span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-white/10">
+              <div className="h-2 overflow-hidden rounded-full bg-white/10 rtl:rotate-180">
                 <motion.div
                   className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
                   initial={false}

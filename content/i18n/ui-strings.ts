@@ -337,7 +337,7 @@ export const ui = {
   tierBeginner: { en: "Beginner", ar: "مبتدئ" },
   tierIntermediate: { en: "Intermediate", ar: "متوسط" },
   tierAdvanced: { en: "Advanced", ar: "متقدم" },
-  tierPro: { en: "Pro", ar: "Pro" },
+  tierPro: { en: "Pro", ar: "احترافي" },
   tierPitfalls: { en: "Pitfalls", ar: "أخطاء شائعة" },
   tierCheatsheet: { en: "CheatSheet", ar: "CheatSheet" },
   tierBeginnerBlurb: {
@@ -476,10 +476,86 @@ export const ui = {
   challengeCorrect: { en: "Correct!", ar: "صح!" },
   challengeWrong: { en: "Not quite.", ar: "لسه." },
   challengeHintBar: {
-    en: "Try the challenge below",
-    ar: "جرّب الـ challenge تحت",
+    en: "Optional: check your understanding in Quiz",
+    ar: "اختياري: راجع فهمك من تاب الـ Quiz",
   },
-  nextLessonArrow: { en: "Next lesson ➔", ar: "الدرس اللي بعده ➔" },
+  openInLive: {
+    en: "Open in Live coding",
+    ar: "افتح في Live coding",
+  },
+  deepDive: {
+    en: "Deep dive",
+    ar: "تعمّق أكتر",
+  },
+  deepDiveHint: {
+    en: "Engine details, a11y, SEO, pitfalls & more",
+    ar: "تفاصيل الـ engine و a11y و SEO والأخطاء الشائعة وأكتر",
+  },
+  lessonTablist: {
+    en: "Lesson sections",
+    ar: "أقسام الدرس",
+  },
+  lessonTabConcept: {
+    en: "Concept",
+    ar: "المفهوم",
+  },
+  lessonTabLive: {
+    en: "Live",
+    ar: "تطبيقي",
+  },
+  lessonTabQuiz: {
+    en: "Quiz",
+    ar: "اختبار",
+  },
+  lessonTabLiveEmpty: {
+    en: "No playground for this lesson yet — stay on Concept or jump to Quiz.",
+    ar: "مفيش playground للدرس ده لسه — فضّل على Concept أو روح للـ Quiz.",
+  },
+  lessonTabQuizEmpty: {
+    en: "No quiz on this lesson yet.",
+    ar: "مفيش quiz على الدرس ده لسه.",
+  },
+  quizTitle: {
+    en: "Knowledge check",
+    ar: "اختبار سريع",
+  },
+  quizProgress: {
+    en: "Question {current} of {total}",
+    ar: "سؤال {current} من {total}",
+  },
+  quizNext: {
+    en: "Next question",
+    ar: "السؤال اللي بعده",
+  },
+  quizFinish: {
+    en: "See results",
+    ar: "شوف النتيجة",
+  },
+  quizComplete: {
+    en: "Quiz complete",
+    ar: "خلصت الـ quiz",
+  },
+  quizScore: {
+    en: "You got {score} of {total} right",
+    ar: "جبت {score} من {total}",
+  },
+  quizExplanation: {
+    en: "Explanation",
+    ar: "التفسير",
+  },
+  quizHint: {
+    en: "Hint",
+    ar: "Hint",
+  },
+  quizRetry: {
+    en: "Try again",
+    ar: "حاول تاني",
+  },
+  quizContinue: {
+    en: "Continue learning",
+    ar: "كمّل التعلم",
+  },
+  nextLessonArrow: { en: "Next lesson", ar: "الدرس اللي بعده" },
   browserSupportTitle: {
     en: "Browser Compatibility",
     ar: "توافق المتصفحات",
@@ -498,6 +574,8 @@ export const ui = {
   copy: { en: "Copy", ar: "انسخ" },
   copied: { en: "Copied!", ar: "اتنسخ!" },
   restoreCode: { en: "Restore original", ar: "رجّع الأصلي" },
+  playgroundFullscreen: { en: "Full screen", ar: "شاشة كاملة" },
+  playgroundExitFullscreen: { en: "Exit full screen", ar: "خروج من الشاشة الكاملة" },
   sfxOn: { en: "SFX on", ar: "الصوت شغال" },
   sfxOff: { en: "SFX off", ar: "الصوت مقفول" },
   next: { en: "Next lesson", ar: "الدرس اللي بعده" },
@@ -509,7 +587,7 @@ export const ui = {
   beginner: { en: "Beginner", ar: "مبتدئ" },
   intermediate: { en: "Intermediate", ar: "متوسط" },
   advanced: { en: "Advanced", ar: "متقدم" },
-  pro: { en: "Pro", ar: "Pro" },
+  pro: { en: "Pro", ar: "احترافي" },
   pitfalls: { en: "Pitfalls", ar: "أخطاء شائعة" },
   cheatsheet: { en: "CheatSheet", ar: "CheatSheet" },
   noResults: {
