@@ -17,6 +17,7 @@ import {
   TRACK_JOB_KEYS,
   TrackJobVisual,
 } from "@/components/layout/TrackJobVisual";
+import { Atmosphere } from "@/components/shared/Atmosphere";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
 import { loc, t } from "@/content/i18n/ui-strings";
@@ -212,18 +213,7 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -start-20 top-10 h-80 w-80 rounded-full bg-yellow-300/10 blur-3xl" />
-        <div className="absolute end-0 top-32 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-      </div>
+      <Atmosphere />
 
       <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
         <Link
@@ -244,7 +234,7 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.05] via-slate-950/40 to-cyan-400/5 p-5 backdrop-blur-xl sm:p-7"
+          className="mb-8 rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-950 p-5 sm:p-7"
         >
           <div className="mb-6 flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex min-w-0 items-start gap-3">
@@ -266,8 +256,8 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
               </div>
             </div>
 
-            <div className="w-full shrink-0 sm:max-w-xs">
-              <div className="mb-1.5 flex justify-between text-[11px] text-slate-400">
+            <div className="w-full shrink-0 sm:w-72">
+              <div className="mb-1.5 flex items-center justify-between gap-2 text-[11px] text-slate-400">
                 <span className="inline-flex items-center gap-1">
                   <Layers size={12} />
                   {t("progress", locale)}
@@ -276,26 +266,28 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
                   {completedCount}/{totalCount} · {progressPercent}%
                 </span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-white/10 rtl:rotate-180">
-                <motion.div
-                  className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
-                  initial={false}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ type: "spring", stiffness: 120, damping: 22 }}
-                />
+              <div className="flex items-center gap-2">
+                <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-white/10 rtl:rotate-180">
+                  <motion.div
+                    className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
+                    initial={false}
+                    animate={{ width: `${progressPercent}%` }}
+                    transition={{ type: "spring", stiffness: 120, damping: 22 }}
+                  />
+                </div>
+                {continueLesson ? (
+                  <Link
+                    href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
+                    onClick={() => playClick()}
+                    className="inline-flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-2 py-0.5 text-[10px] font-bold leading-5 text-slate-950 transition hover:brightness-110"
+                  >
+                    {completedCount > 0
+                      ? t("continueLearning", locale)
+                      : t("startCurriculum", locale)}
+                    <ForwardArrow size={11} />
+                  </Link>
+                ) : null}
               </div>
-              {continueLesson ? (
-                <Link
-                  href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
-                  onClick={() => playClick()}
-                  className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-4 py-2.5 text-sm font-bold text-slate-950 transition hover:brightness-110 sm:w-auto"
-                >
-                  {completedCount > 0
-                    ? t("continueLearning", locale)
-                    : t("startCurriculum", locale)}
-                  <ForwardArrow size={16} />
-                </Link>
-              ) : null}
             </div>
           </div>
 

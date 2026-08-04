@@ -13,8 +13,9 @@ import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 import { SoundProvider, useSound } from "@/context/SoundContext";
 import { t } from "@/content/i18n/ui-strings";
 import { RTL_FLIP } from "@/lib/rtl";
+import { LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
 
-const STEP_MS = 6500;
+const STEP_MS = LAB_STEP_MS;
 
 const ROADMAP_LAYERS = [
   {
@@ -124,7 +125,7 @@ function StartRoadmap() {
                   ? undefined
                   : { opacity: [0.3, 0.55, 0.3] }
               }
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+              transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
             />
 
             {/* 4 — no status pills; 5 — list is the only step control */}
@@ -137,14 +138,14 @@ function StartRoadmap() {
                       type="button"
                       onClick={() => selectLayer(i)}
                       aria-current={on ? "step" : undefined}
-                      className={`flex w-full items-start gap-3 rounded-xl px-2.5 py-2 text-start transition ${
+                      className={`flex w-full items-center gap-3 rounded-xl px-2.5 py-2.5 text-start transition ${
                         on
                           ? "bg-orange-400/10"
                           : "hover:bg-white/[0.03]"
                       }`}
                     >
                       <span
-                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-bold ${
+                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[10px] font-bold ${
                           on
                             ? "bg-orange-300 text-slate-950"
                             : "bg-white/10 text-slate-400"
@@ -152,40 +153,35 @@ function StartRoadmap() {
                       >
                         {i + 1}
                       </span>
-                      <span className="min-w-0 flex-1">
-                        <span
-                          className={`block text-[13px] font-semibold leading-tight ${
-                            on ? "text-orange-50" : "text-slate-300"
-                          }`}
-                        >
-                          {t(layer.titleKey, locale)}
-                        </span>
-                        <AnimatePresence initial={false}>
-                          {on ? (
-                            <motion.span
-                              key="body"
-                              initial={
-                                reduce ? false : { opacity: 0, height: 0 }
-                              }
-                              animate={{ opacity: 1, height: "auto" }}
-                              exit={
-                                reduce ? undefined : { opacity: 0, height: 0 }
-                              }
-                              className="mt-1 block overflow-hidden text-[12px] leading-relaxed text-slate-400"
-                            >
-                              {t(layer.bodyKey, locale)}
-                            </motion.span>
-                          ) : null}
-                        </AnimatePresence>
+                      <span
+                        className={`min-w-0 flex-1 text-[13px] font-semibold leading-tight ${
+                          on ? "text-orange-50" : "text-slate-300"
+                        }`}
+                      >
+                        {t(layer.titleKey, locale)}
                       </span>
                     </button>
                   </li>
                 );
               })}
             </ol>
+            <div className="relative mt-3 min-h-[4.5rem]">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.p
+                  key={active.id}
+                  initial={reduce ? false : { opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduce ? undefined : { opacity: 0, y: -4 }}
+                  transition={{ duration: 0.2 }}
+                  className="text-[12px] leading-relaxed text-slate-400"
+                >
+                  {t(active.bodyKey, locale)}
+                </motion.p>
+              </AnimatePresence>
+            </div>
           </div>
 
-          {/* Lead column: live preview */}
+          {/* Lead column: live preview — fixed frame so steps never resize the page */}
           <div className="relative bg-[radial-gradient(ellipse_at_30%_20%,rgba(251,146,60,0.16),transparent_50%),radial-gradient(ellipse_at_80%_80%,rgba(34,211,238,0.1),transparent_45%)] p-4 sm:p-5 lg:p-6">
             <div className="mb-2.5 flex items-center justify-between gap-2">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400">
@@ -211,15 +207,15 @@ function StartRoadmap() {
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-white/15 bg-slate-950/90">
-              <div className="flex items-center gap-1.5 border-b border-white/10 px-3 py-1.5">
+            <div className="flex h-[20rem] flex-col overflow-hidden rounded-xl border border-white/15 bg-slate-950/90 sm:h-[22rem]">
+              <div className="flex shrink-0 items-center gap-1.5 border-b border-white/10 px-3 py-1.5">
                 <span className="h-2 w-2 rounded-full bg-rose-400/70" />
                 <span className="h-2 w-2 rounded-full bg-amber-300/70" />
                 <span className="h-2 w-2 rounded-full bg-emerald-400/70" />
-                <span className="ms-2 font-mono text-[9px] text-slate-500">
+                <span className="ms-2 truncate font-mono text-[9px] text-slate-500">
                   {hasComponents ? "SaveCard.tsx" : "app / save-card"}
                 </span>
-                <span className="ms-auto font-mono text-[9px] text-slate-600">
+                <span className="ms-auto hidden truncate font-mono text-[9px] text-slate-600 sm:inline">
                   {t(active.jobKey, locale)} · {t(active.techKey, locale)}
                 </span>
               </div>
@@ -227,7 +223,7 @@ function StartRoadmap() {
               {playing && !reduce ? (
                 <motion.div
                   key={`progress-${focus}`}
-                  className={`h-0.5 bg-gradient-to-r from-orange-400 to-amber-300 ${
+                  className={`h-0.5 shrink-0 bg-gradient-to-r from-orange-400 to-amber-300 ${
                     dir === "rtl" ? "origin-right" : "origin-left"
                   }`}
                   initial={{ scaleX: 0 }}
@@ -235,15 +231,13 @@ function StartRoadmap() {
                   transition={{ duration: STEP_MS / 1000, ease: "linear" }}
                 />
               ) : (
-                <div className="h-0.5 bg-white/5" />
+                <div className="h-0.5 shrink-0 bg-white/5" />
               )}
 
-              <div className="p-4">
-                {hasComponents ? (
-                  <p className="mb-2 font-mono text-[10px] text-sky-300/80">
-                    {"<SaveCard saved={true} />"}
-                  </p>
-                ) : null}
+              <div className="flex min-h-0 flex-1 flex-col overflow-hidden p-4">
+                <div className="mb-2 min-h-4 shrink-0 font-mono text-[10px] text-sky-300/80">
+                  {hasComponents ? "<SaveCard saved={true} />" : "\u00A0"}
+                </div>
                 <motion.article
                   animate={{
                     borderColor: hasLook
@@ -260,16 +254,14 @@ function StartRoadmap() {
                     borderRadius: hasLook ? 14 : 4,
                   }}
                   transition={{ duration: 0.7 }}
-                  className={`border ${hasLook ? "" : "border-dashed"}`}
+                  className={`flex min-h-0 flex-1 flex-col border ${hasLook ? "" : "border-dashed"}`}
                 >
-                  {!hasLook ? (
-                    <p className="mb-2 font-mono text-[9px] text-orange-200/60">
-                      &lt;h2&gt; &lt;p&gt; &lt;button&gt;
-                    </p>
-                  ) : null}
+                  <div className="min-h-4 shrink-0 font-mono text-[9px] text-orange-200/60">
+                    {!hasLook ? "<h2> <p> <button>" : "\u00A0"}
+                  </div>
 
                   <h3
-                    className={`font-semibold tracking-tight ${
+                    className={`shrink-0 font-semibold tracking-tight ${
                       hasLook
                         ? "font-[family-name:var(--font-display)] text-base text-orange-50"
                         : "font-mono text-sm text-slate-400"
@@ -278,7 +270,7 @@ function StartRoadmap() {
                     {t("roadmapDemoTitle", locale)}
                   </h3>
                   <p
-                    className={`mt-1 leading-snug ${
+                    className={`mt-1 shrink-0 leading-snug ${
                       hasLook
                         ? "text-[12px] text-slate-300"
                         : "font-mono text-[11px] text-slate-500"
@@ -288,7 +280,7 @@ function StartRoadmap() {
                   </p>
 
                   <div
-                    className={`mt-3 flex items-center ${
+                    className={`mt-3 flex min-h-9 shrink-0 items-center ${
                       hasLook
                         ? "justify-between gap-3"
                         : "flex-col items-stretch gap-2"
@@ -303,7 +295,7 @@ function StartRoadmap() {
                           : { scale: 1 }
                       }
                       transition={{
-                        duration: 1.6,
+                        duration: LAB_LOOP_S,
                         repeat:
                           hasBehavior && playing && !reduce ? Infinity : 0,
                         ease: "easeInOut",
@@ -321,18 +313,16 @@ function StartRoadmap() {
                         : t("roadmapDemoBtnIdle", locale)}
                     </motion.button>
 
-                    {hasComponents ? (
-                      <span className="rounded-md bg-sky-300/15 px-2 py-0.5 font-mono text-[9px] text-sky-200">
-                        props · state
-                      </span>
-                    ) : hasBehavior ? (
-                      <span className="font-mono text-[9px] text-cyan-200/70">
-                        onClick → setState
-                      </span>
-                    ) : null}
+                    <span className="min-h-5 font-mono text-[9px] text-cyan-200/70">
+                      {hasComponents
+                        ? "props · state"
+                        : hasBehavior
+                          ? "onClick → setState"
+                          : "\u00A0"}
+                    </span>
                   </div>
 
-                  <p className="mt-2.5 text-[10px] leading-snug text-slate-500">
+                  <p className="mt-auto pt-2.5 text-[10px] leading-snug text-slate-500">
                     {!hasLook
                       ? t("roadmapDemoWaitingCss", locale)
                       : !hasBehavior
@@ -344,16 +334,19 @@ function StartRoadmap() {
                 </motion.article>
               </div>
 
-              <motion.div
-                key={active.id}
-                initial={reduce ? false : { opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="border-t border-white/10 px-3 py-2.5"
-              >
-                <p className="text-[12px] leading-relaxed text-slate-300">
-                  {t(active.previewKey, locale)}
-                </p>
-              </motion.div>
+              <div className="min-h-[3.25rem] shrink-0 border-t border-white/10 px-3 py-2.5">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.p
+                    key={active.id}
+                    initial={reduce ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={reduce ? undefined : { opacity: 0 }}
+                    className="text-[12px] leading-relaxed text-slate-300"
+                  >
+                    {t(active.previewKey, locale)}
+                  </motion.p>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>

@@ -158,7 +158,7 @@ function ConceptPanel({
               <Sparkles size={16} />
               {t("visualLab", locale)}
             </div>
-            <p className="mb-4 text-xs text-slate-400">
+            <p className="mb-4 text-sm leading-relaxed text-slate-300">
               {loc(lesson.content.visualHint, locale)}
             </p>
             <Visualizer trackId={trackId} kind={lesson.visualizer} />

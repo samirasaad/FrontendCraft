@@ -39,7 +39,7 @@ function Frame({
 function HtmlVisual({ muted }: { muted?: boolean }) {
   return (
     <Frame file="index.html" accent="bg-orange-400/20" muted={muted}>
-      <div className="grid min-h-[200px] gap-4 sm:grid-cols-2 sm:items-stretch">
+      <div className="grid h-[200px] gap-4 overflow-hidden sm:grid-cols-2 sm:items-stretch">
         <div className="flex flex-col justify-center gap-2.5 font-mono text-[13px]">
           {[
             { tag: "h2", role: "heading" },
@@ -79,7 +79,7 @@ function HtmlVisual({ muted }: { muted?: boolean }) {
 function CssVisual({ muted }: { muted?: boolean }) {
   return (
     <Frame file="styles.css" accent="bg-sky-400/20" muted={muted}>
-      <div className="grid min-h-[200px] gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+      <div className="grid h-[200px] gap-3 overflow-hidden sm:grid-cols-[1fr_auto_1fr] sm:items-center">
         <div className="rounded-xl border border-dashed border-white/20 bg-slate-900/50 p-4">
           <p className="mb-4 font-mono text-[10px] uppercase tracking-wider text-slate-500">
             Before
@@ -117,7 +117,7 @@ function CssVisual({ muted }: { muted?: boolean }) {
 function JsVisual({ muted }: { muted?: boolean }) {
   return (
     <Frame file="app.js" accent="bg-yellow-300/15" muted={muted}>
-      <div className="flex min-h-[200px] flex-col justify-center gap-4">
+      <div className="flex h-[200px] flex-col justify-center gap-4 overflow-hidden">
         <div className="rounded-xl border border-white/10 bg-gradient-to-b from-slate-800 to-slate-900 p-4">
           <div className="h-3 w-1/2 rounded-full bg-orange-200/90" />
           <div className="mt-3 h-2.5 w-3/4 rounded-full bg-slate-500/50" />
@@ -152,7 +152,7 @@ function JsVisual({ muted }: { muted?: boolean }) {
 function ReactVisual({ muted }: { muted?: boolean }) {
   return (
     <Frame file="SaveCard.tsx" accent="bg-sky-400/20" muted={muted}>
-      <div className="flex min-h-[200px] flex-col justify-center gap-3.5">
+      <div className="flex h-[200px] flex-col justify-center gap-3.5 overflow-hidden">
         <div className="mx-auto w-full max-w-[17rem] rounded-xl border border-sky-300/45 bg-sky-400/10 px-4 py-3.5 text-center shadow-lg shadow-sky-400/10">
           <p className="font-mono text-[11px] text-sky-200/80">define once</p>
           <p className="mt-1 font-mono text-[15px] font-semibold text-sky-50">

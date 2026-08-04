@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 export function AsyncAwaitVisualizer() {
   const { locale } = useLanguage();
@@ -26,14 +27,14 @@ export function AsyncAwaitVisualizer() {
       <motion.div
         className="absolute start-[12%] top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg bg-cyan-400 text-[10px] font-bold text-slate-950 shadow-lg shadow-cyan-400/40"
         animate={{ x: ["0%", "420%", "0%"] }}
-        transition={{ repeat: Infinity, duration: 3.6, ease: "easeInOut" }}
+        transition={{ repeat: Infinity, duration: LAB_LOOP_S, ease: "easeInOut" }}
       >
         {"{}"}
       </motion.div>
       <motion.p
-        className="absolute bottom-1 inset-x-0 text-center text-[11px] text-slate-400"
+        className="absolute bottom-1 inset-x-0 text-center text-sm text-slate-300"
         animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ repeat: Infinity, duration: 2 }}
+        transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
       >
         async / await
       </motion.p>

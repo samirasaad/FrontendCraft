@@ -15,6 +15,7 @@ import { LabStage } from "@/components/visualizers/html/LabStage";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
+import { LAB_STEP_MS } from "@/lib/motion-pace";
 import { RTL_FLIP } from "@/lib/rtl";
 
 type NodeKind = "doctype" | "element" | "text";
@@ -174,7 +175,7 @@ export function DomTreeEngine() {
     const id = window.setTimeout(() => {
       if (playGen.current !== gen) return;
       setStep((s) => Math.min(s + 1, maxStep));
-    }, 650);
+    }, LAB_STEP_MS);
     return () => {
       window.clearTimeout(id);
     };
@@ -317,7 +318,7 @@ export function DomTreeEngine() {
       </div>
 
       <p
-        className="min-h-[2.5rem] text-[11px] leading-relaxed text-slate-400"
+        className="min-h-11 text-sm leading-relaxed text-slate-300"
         aria-live="polite"
       >
         {status}

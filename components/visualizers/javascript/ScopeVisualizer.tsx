@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 export function ScopeVisualizer() {
   const { locale } = useLanguage();
@@ -17,7 +18,7 @@ export function ScopeVisualizer() {
       <motion.span
         className="absolute start-10 top-14 rounded-md bg-yellow-300/20 px-2 py-1 font-mono text-xs text-yellow-200"
         animate={{ opacity: [0.5, 1, 0.5] }}
-        transition={{ repeat: Infinity, duration: 2 }}
+        transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
       >
         globalMsg
       </motion.span>
@@ -31,7 +32,7 @@ export function ScopeVisualizer() {
             "0 0 20px rgba(34,211,238,0.15)",
           ],
         }}
-        transition={{ repeat: Infinity, duration: 2.4 }}
+        transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
       >
         <p className="mb-2 text-[10px] uppercase tracking-wider text-cyan-200">{inner}</p>
         <span className="rounded-md bg-cyan-300/20 px-2 py-1 font-mono text-xs text-cyan-100">
@@ -45,7 +46,7 @@ export function ScopeVisualizer() {
       <motion.div
         className="pointer-events-none absolute h-40 w-40 rounded-full bg-yellow-300/10 blur-2xl"
         animate={{ x: [-30, 30, -30], y: [-10, 15, -10] }}
-        transition={{ repeat: Infinity, duration: 4 }}
+        transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
       />
     </div>
   );

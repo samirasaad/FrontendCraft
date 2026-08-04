@@ -26,6 +26,7 @@ import {
   HtmlSpeculationLabVisualizer,
   HtmlGlobalRtlLabVisualizer,
 } from "@/components/visualizers/html";
+import { LAB_FRAME_CLASS } from "@/components/visualizers/html/LabStage";
 
 const htmlVisualizers: Record<string, () => ReactNode> = {
   "document-tree": () => <DocumentTreeVisualizer />,
@@ -66,10 +67,18 @@ export function Visualizer({
   const render = registries[trackId]?.[kind];
   if (!render) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/15 px-4 py-10 text-center text-sm text-slate-500">
+      <div
+        className={`${LAB_FRAME_CLASS} flex items-center justify-center rounded-2xl border border-dashed border-white/15 px-4 text-center text-sm text-slate-500`}
+      >
         Visualizer unavailable
       </div>
     );
   }
-  return <>{render()}</>;
+  return (
+    <div className={`${LAB_FRAME_CLASS} flex flex-col`}>
+      <div className="flex min-h-0 flex-1 flex-col [&_>_*]:h-full [&_>_*]:min-h-0">
+        {render()}
+      </div>
+    </div>
+  );
 }

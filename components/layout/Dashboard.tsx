@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { LessonContent } from "@/components/lesson/LessonContent";
+import { Atmosphere } from "@/components/shared/Atmosphere";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ProgressProvider, useProgress } from "@/context/ProgressContext";
 import { SoundProvider } from "@/context/SoundContext";
@@ -56,19 +57,7 @@ function DashboardShell({ track }: { track: TrackDefinition }) {
       <Suspense fallback={null}>
         <LessonQuerySync />
       </Suspense>
-      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute -start-24 top-0 h-72 w-72 rounded-full bg-yellow-300/10 blur-3xl" />
-        <div className="absolute -end-16 top-40 h-80 w-80 rounded-full bg-cyan-400/10 blur-3xl" />
-        <div className="absolute bottom-0 start-1/3 h-64 w-64 rounded-full bg-lime-300/5 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-      </div>
+      <Atmosphere fixed extraBloom />
 
       <Header
         track={track}

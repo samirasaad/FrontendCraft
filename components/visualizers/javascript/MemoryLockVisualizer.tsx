@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 export function MemoryLockVisualizer() {
   const { locale } = useLanguage();
@@ -31,7 +32,7 @@ export function MemoryLockVisualizer() {
                 ? { y: [0, -6, 0], boxShadow: ["0 0 0 rgba(250,204,21,0)", "0 0 24px rgba(34,211,238,0.25)", "0 0 0 rgba(250,204,21,0)"] }
                 : { scale: [1, 1.02, 1] }
             }
-            transition={{ repeat: Infinity, duration: box.bounce ? 2.2 : 2.8, delay: i * 0.2 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S, delay: i * 0.2 }}
           >
             <span className="font-mono text-sm font-semibold text-yellow-200">
               {box.key === "const" ? "PI" : box.key === "let" ? "score" : "x"}
@@ -47,7 +48,7 @@ export function MemoryLockVisualizer() {
               </motion.span>
             )}
           </motion.div>
-          <p className="text-center text-[11px] text-slate-300">
+          <p className="text-center text-sm text-slate-300">
             {labels[box.key as keyof typeof labels]}
           </p>
         </motion.div>

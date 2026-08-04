@@ -8,6 +8,7 @@ import {
 } from "@/components/shared/PlayPauseButton";
 import { t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_ENTER_S, LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
 import type { Locale, TrackId } from "@/lib/types";
 
 export const TRACK_JOB_KEYS: Record<
@@ -97,7 +98,7 @@ function Stage({
 }) {
   return (
     <div
-      className={`relative w-full overflow-hidden border border-white/10 bg-slate-950/80 ${
+      className={`relative w-full overflow-hidden border border-white/10 bg-gradient-to-br from-slate-950 via-slate-950 to-orange-950/20 ${
         hero ? "rounded-2xl" : "rounded-xl"
       }`}
     >
@@ -131,7 +132,9 @@ function Stage({
       <div
         aria-hidden
         className={
-          hero ? "min-h-[210px] p-5 sm:min-h-[240px] sm:p-6" : "p-2.5"
+          hero
+            ? "h-[240px] overflow-hidden p-4 sm:h-[280px] sm:p-5"
+            : "h-[148px] overflow-hidden p-2.5"
         }
       >
         {children}
@@ -181,13 +184,38 @@ function HtmlScene({
   controls,
   freezeAt,
 }: SceneProps) {
-  const step = useStep(4, 1600, animate, freezeAt);
+  const step = useStep(4, LAB_STEP_MS, animate, freezeAt);
   const rows = [
-    { tag: "<h2>", text: "Welcome back", role: "heading" },
-    { tag: "<p>", text: "Save your progress…", role: "text" },
-    { tag: "<button>", text: "Save", role: "control" },
+    {
+      tag: "<h2>",
+      close: "</h2>",
+      text: "Welcome back",
+      role: "heading",
+      tint: "text-orange-300",
+      ring: "rgba(251,146,60,0.55)",
+      glow: "0 0 20px rgba(251,146,60,0.18)",
+    },
+    {
+      tag: "<p>",
+      close: "</p>",
+      text: "Save your progress…",
+      role: "text",
+      tint: "text-cyan-300",
+      ring: "rgba(34,211,238,0.4)",
+      glow: "0 0 16px rgba(34,211,238,0.12)",
+    },
+    {
+      tag: "<button>",
+      close: "</button>",
+      text: "Save",
+      role: "control",
+      tint: "text-amber-200",
+      ring: "rgba(251,191,36,0.45)",
+      glow: "0 0 18px rgba(251,191,36,0.16)",
+    },
   ] as const;
   const visible = Math.min(step, 3);
+  const active = step > 0 && step <= 3 ? step - 1 : -1;
   const captions = [
     t("trackCapHtml0", locale),
     t("trackCapHtml1", locale),
@@ -204,66 +232,309 @@ function HtmlScene({
       controls={controls}
     >
       <div
-        className={`mx-auto grid max-w-4xl gap-4 ${
-          hero ? "lg:grid-cols-[1.4fr_0.8fr] lg:items-center" : ""
+        className={`mx-auto grid h-full max-w-4xl gap-3 ${
+          hero
+            ? "sm:grid-cols-[1.15fr_auto_1fr] sm:items-stretch sm:gap-4"
+            : ""
         }`}
       >
-        <div className={`space-y-2 ${hero ? "space-y-3" : "space-y-1.5"}`}>
-          {rows.map((row, i) => {
-            const on = i < visible;
-            return (
-              <motion.div
-                key={row.tag}
-                initial={false}
-                animate={{
-                  opacity: on ? 1 : 0.15,
-                  x: on ? 0 : -8,
-                  borderColor: on
-                    ? i === 0
-                      ? "rgba(251,146,60,0.45)"
-                      : "rgba(255,255,255,0.18)"
-                    : "rgba(255,255,255,0.06)",
-                }}
-                className={`flex items-center gap-2 rounded-xl border border-dashed font-mono ${
-                  hero
-                    ? "px-3.5 py-3 text-[13px]"
-                    : "px-1.5 py-1 text-[9px]"
-                } ${on ? "text-orange-100/90" : "text-slate-600"}`}
-              >
-                <span className={on ? "text-orange-300/70" : "text-slate-700"}>
-                  {row.tag}
-                </span>
-                <span className="truncate">{row.text}</span>
-                {on ? (
-                  <span
-                    className={`ms-auto font-mono uppercase tracking-wide text-slate-500 ${
-                      hero ? "text-[10px]" : "text-[8px]"
-                    }`}
-                  >
-                    {row.role}
-                  </span>
-                ) : null}
-              </motion.div>
-            );
-          })}
-        </div>
-        {hero ? (
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
-              DOM outline
-            </p>
-            <ul className="mt-2 space-y-1.5 font-mono text-[12px] text-slate-400">
-              <li className={visible > 0 ? "text-orange-200/90" : "opacity-30"}>
-                └ heading
-              </li>
-              <li className={visible > 1 ? "text-slate-300" : "opacity-30"}>
-                └ text
-              </li>
-              <li className={visible > 2 ? "text-slate-300" : "opacity-30"}>
-                └ control
-              </li>
-            </ul>
+        {/* Markup source */}
+        <div
+          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950/70 ${
+            hero ? "p-3.5" : "p-2"
+          }`}
+        >
+          <div className="mb-2 flex items-center gap-2">
+            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-500">
+              index.html
+            </span>
+            <motion.span
+              key={step}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="rounded-full bg-orange-400/15 px-1.5 py-0.5 font-mono text-[8px] text-orange-200/90"
+            >
+              {step === 0 ? "empty" : `${visible} node${visible === 1 ? "" : "s"}`}
+            </motion.span>
           </div>
+
+          <AnimatePresence mode="popLayout">
+            {step === 0 ? (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className={`flex flex-1 flex-col justify-center gap-1.5 font-mono text-slate-600 ${
+                  hero ? "text-[12px]" : "text-[9px]"
+                }`}
+              >
+                <p>&lt;!DOCTYPE html&gt;</p>
+                <p>&lt;html&gt;</p>
+                <p className="ps-3 text-slate-700">&lt;body&gt;</p>
+                <motion.p
+                  animate={
+                    animate
+                      ? { opacity: [0.35, 1, 0.35] }
+                      : { opacity: 0.5 }
+                  }
+                  transition={{
+                    duration: LAB_LOOP_S,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="ps-6 text-orange-300/70"
+                >
+                  ▍
+                </motion.p>
+                <p className="ps-3 text-slate-700">&lt;/body&gt;</p>
+                <p>&lt;/html&gt;</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="rows"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className={`flex flex-1 flex-col justify-center ${
+                  hero ? "gap-2" : "gap-1"
+                }`}
+              >
+                {rows.map((row, i) => {
+                  const on = i < visible;
+                  const lit = i === active;
+                  return (
+                    <motion.div
+                      key={row.tag}
+                      initial={false}
+                      animate={{
+                        opacity: on ? 1 : 0.2,
+                        y: on ? 0 : 6,
+                        scale: lit ? 1.02 : 1,
+                        borderColor: lit
+                          ? row.ring
+                          : on
+                            ? "rgba(255,255,255,0.14)"
+                            : "rgba(255,255,255,0.05)",
+                        boxShadow: lit ? row.glow : "0 0 0 transparent",
+                        backgroundColor: lit
+                          ? "rgba(255,255,255,0.04)"
+                          : "rgba(0,0,0,0)",
+                      }}
+                      transition={{
+                        duration: LAB_ENTER_S,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className={`flex items-center gap-1.5 rounded-lg border border-dashed font-mono ${
+                        hero
+                          ? "px-2.5 py-2 text-[12px]"
+                          : "px-1.5 py-1 text-[9px]"
+                      }`}
+                    >
+                      <span className={on ? row.tint : "text-slate-700"}>
+                        {row.tag}
+                      </span>
+                      <span
+                        className={`min-w-0 truncate ${
+                          on ? "text-slate-100" : "text-slate-700"
+                        }`}
+                      >
+                        {row.text}
+                      </span>
+                      <span className={on ? "text-slate-600" : "text-slate-800"}>
+                        {row.close}
+                      </span>
+                      {on ? (
+                        <motion.span
+                          layout
+                          className={`ms-auto rounded px-1 py-0.5 font-mono uppercase tracking-wide ${
+                            lit
+                              ? "bg-white/10 text-slate-200"
+                              : "text-slate-500"
+                          } ${hero ? "text-[9px]" : "text-[7px]"}`}
+                        >
+                          {row.role}
+                        </motion.span>
+                      ) : null}
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {hero ? (
+          <>
+            {/* Flow arrow */}
+            <div className="hidden flex-col items-center justify-center sm:flex">
+              <motion.div
+                animate={
+                  animate
+                    ? {
+                        x: [0, 4, 0],
+                        opacity: [0.4, 1, 0.4],
+                      }
+                    : { opacity: 0.5 }
+                }
+                transition={{
+                  duration: LAB_LOOP_S,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-300/25 bg-orange-400/10 text-orange-200"
+              >
+                <span className="text-sm rtl:rotate-180">→</span>
+              </motion.div>
+              <p className="mt-1.5 font-mono text-[8px] uppercase tracking-wider text-slate-500">
+                parse
+              </p>
+            </div>
+
+            {/* Live page + DOM */}
+            <div className="grid min-h-0 grid-rows-[1fr_auto] gap-2.5">
+              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950">
+                <div className="flex items-center gap-1 border-b border-white/10 px-2.5 py-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-rose-400/50" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-300/50" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/50" />
+                  <span className="ms-1.5 font-mono text-[8px] text-slate-500">
+                    preview
+                  </span>
+                </div>
+                <div className="flex h-[104px] flex-col justify-center gap-2 px-4 sm:h-[118px]">
+                  <AnimatePresence mode="popLayout">
+                    {visible === 0 ? (
+                      <motion.p
+                        key="blank"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="text-center font-mono text-[11px] text-slate-600"
+                      >
+                        blank page
+                      </motion.p>
+                    ) : null}
+                    {visible > 0 ? (
+                      <motion.h2
+                        key="h2"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          color:
+                            active === 0
+                              ? "rgb(254 215 170)"
+                              : "rgb(248 250 252)",
+                        }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: LAB_ENTER_S }}
+                        className="font-[family-name:var(--font-display)] text-base font-bold tracking-tight"
+                      >
+                        Welcome back
+                      </motion.h2>
+                    ) : null}
+                    {visible > 1 ? (
+                      <motion.p
+                        key="p"
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          color:
+                            active === 1
+                              ? "rgb(165 243 252)"
+                              : "rgb(148 163 184)",
+                        }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: LAB_ENTER_S }}
+                        className="text-[12px] leading-snug"
+                      >
+                        Save your progress…
+                      </motion.p>
+                    ) : null}
+                    {visible > 2 ? (
+                      <motion.button
+                        key="btn"
+                        type="button"
+                        tabIndex={-1}
+                        initial={{ opacity: 0, y: 8, scale: 0.94 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          scale: active === 2 ? [1, 1.04, 1] : 1,
+                          boxShadow:
+                            active === 2
+                              ? [
+                                  "0 0 0 rgba(251,146,60,0)",
+                                  "0 0 18px rgba(251,146,60,0.45)",
+                                  "0 0 0 rgba(251,146,60,0)",
+                                ]
+                              : "0 0 0 rgba(0,0,0,0)",
+                        }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{
+                          duration: active === 2 ? LAB_LOOP_S : LAB_ENTER_S,
+                          repeat: active === 2 && animate ? Infinity : 0,
+                          ease: "easeInOut",
+                        }}
+                        className="w-fit rounded-full bg-gradient-to-r from-orange-400 to-amber-300 px-3 py-1 text-[11px] font-bold text-slate-950"
+                      >
+                        Save
+                      </motion.button>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+                <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-slate-500">
+                  DOM outline
+                </p>
+                <ul className="mt-1.5 space-y-1 font-mono text-[11px]">
+                  {rows.map((row, i) => {
+                    const on = i < visible;
+                    const lit = i === active;
+                    return (
+                      <motion.li
+                        key={row.role}
+                        initial={false}
+                        animate={{
+                          opacity: on ? 1 : 0.25,
+                          x: on ? 0 : -4,
+                          color: lit
+                            ? i === 0
+                              ? "rgb(254 215 170)"
+                              : i === 1
+                                ? "rgb(165 243 252)"
+                                : "rgb(253 230 138)"
+                            : on
+                              ? "rgb(203 213 225)"
+                              : "rgb(71 85 105)",
+                        }}
+                        transition={{ duration: LAB_ENTER_S }}
+                        className="flex items-center gap-1.5"
+                      >
+                        <span className="text-slate-600">└</span>
+                        <span>{row.role}</span>
+                        {lit ? (
+                          <motion.span
+                            layoutId="dom-pulse"
+                            className="ms-auto h-1.5 w-1.5 rounded-full bg-orange-300"
+                            animate={{ scale: [1, 1.35, 1], opacity: [0.6, 1, 0.6] }}
+                            transition={{
+                              duration: LAB_LOOP_S,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                            }}
+                          />
+                        ) : null}
+                      </motion.li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+          </>
         ) : null}
       </div>
     </Stage>
@@ -279,7 +550,7 @@ function CssScene({
   controls,
   freezeAt,
 }: SceneProps) {
-  const step = useStep(3, 1800, animate, freezeAt);
+  const step = useStep(3, LAB_STEP_MS, animate, freezeAt);
   const painted = step >= 1;
   const captions = [
     t("trackCapCss0", locale),
@@ -344,7 +615,7 @@ function CssScene({
                   ? { x: ["-40%", "120%"], opacity: [0, 0.7, 0] }
                   : { opacity: 0 }
               }
-              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+              transition={{ duration: LAB_LOOP_S, repeat: Infinity, repeatDelay: 1 }}
             />
           ) : null}
           <p
@@ -376,7 +647,7 @@ function JsScene({
   controls,
   freezeAt,
 }: SceneProps) {
-  const step = useStep(4, 1500, animate, freezeAt);
+  const step = useStep(4, LAB_STEP_MS, animate, freezeAt);
   const clicked = step >= 1;
   const saved = step >= 2;
   const captions = [
@@ -479,7 +750,7 @@ function ReactScene({
   controls,
   freezeAt,
 }: SceneProps) {
-  const step = useStep(3, 1800, animate, freezeAt);
+  const step = useStep(3, LAB_STEP_MS, animate, freezeAt);
   const showSecond = step >= 1;
   const captions = [
     t("trackCapReact0", locale),
@@ -581,7 +852,7 @@ function TwScene({
   freezeAt,
 }: SceneProps) {
   const utilities = ["flex", "gap-2", "rounded-xl", "px-3", "bg-orange-300"];
-  const step = useStep(utilities.length + 2, 1000, animate, freezeAt);
+  const step = useStep(utilities.length + 2, LAB_STEP_MS, animate, freezeAt);
   const shown = Math.min(step, utilities.length);
   const assembled = step > utilities.length;
   const captionList = [

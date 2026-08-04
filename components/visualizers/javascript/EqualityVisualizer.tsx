@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 export function EqualityVisualizer() {
   const { locale } = useLanguage();
@@ -14,7 +15,7 @@ export function EqualityVisualizer() {
         <motion.div
           className="flex flex-1 flex-col items-center gap-2"
           animate={{ rotate: [-4, 4, -4] }}
-          transition={{ repeat: Infinity, duration: 2.4 }}
+          transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
         >
           <div className="flex gap-2">
             <span className="rounded-lg bg-amber-400/20 px-3 py-2 font-mono text-amber-200">0</span>
@@ -30,7 +31,7 @@ export function EqualityVisualizer() {
         <motion.div
           className="flex flex-1 flex-col items-center gap-2"
           animate={{ scale: [1, 1.04, 1] }}
-          transition={{ repeat: Infinity, duration: 1.8 }}
+          transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
         >
           <div className="flex gap-2">
             <span className="rounded-lg bg-cyan-400/20 px-3 py-2 font-mono text-cyan-200">0</span>

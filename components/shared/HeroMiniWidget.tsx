@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/context/LanguageContext";
 import { t } from "@/content/i18n/ui-strings";
+import { LAB_LOOP_S, LAB_ORBIT_S, LAB_STEP_MS } from "@/lib/motion-pace";
 
 const STACK_SEQUENCE = [
   ["script"],
@@ -26,7 +27,7 @@ export function HeroMiniWidget() {
   useEffect(() => {
     const id = window.setInterval(() => {
       setStep((prev) => (prev + 1) % STACK_SEQUENCE.length);
-    }, 1400);
+    }, LAB_STEP_MS);
     return () => window.clearInterval(id);
   }, []);
 
@@ -56,7 +57,7 @@ export function HeroMiniWidget() {
         <motion.div
           className="flex h-9 w-9 items-center justify-center rounded-full border border-yellow-300/40 bg-yellow-300/10 text-[10px] font-bold text-yellow-200"
           animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+          transition={{ repeat: Infinity, duration: LAB_ORBIT_S, ease: "linear" }}
         >
           loop
         </motion.div>
@@ -88,7 +89,7 @@ export function HeroMiniWidget() {
           <motion.span
             className="text-cyan-300"
             animate={{ x: [-3, 3, -3], opacity: [0.5, 1, 0.5] }}
-            transition={{ repeat: Infinity, duration: 1.2 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
           >
             ↔
           </motion.span>

@@ -9,6 +9,7 @@ import {
   labEase,
   labSpring,
 } from "@/components/visualizers/html/LabStage";
+import { LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
 import { useAutoPlay } from "@/components/shared/PlayPauseButton";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -123,7 +124,7 @@ export function HeadingLadderVisualizer() {
     if (reduce || !playing) return;
     const id = window.setInterval(
       () => setActive((i) => (i + 1) % levels.length),
-      1200,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing, levels.length]);
@@ -323,7 +324,7 @@ export function TextFormatVisualizer() {
     if (reduce || !playing) return;
     const id = window.setInterval(
       () => setActive((i) => (i + 1) % FORMAT_TAGS.length),
-      1100,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -332,7 +333,7 @@ export function TextFormatVisualizer() {
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-[2.25rem] text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         &lt;{current.tag}&gt; — {current.hint}
       </p>
       <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
@@ -377,7 +378,7 @@ export function LinkImageVisualizer() {
 
   useEffect(() => {
     if (reduce || !playing) return;
-    const id = window.setInterval(() => setPhase((p) => (p + 1) % 3), 1600);
+    const id = window.setInterval(() => setPhase((p) => (p + 1) % 3), LAB_STEP_MS);
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
@@ -412,13 +413,13 @@ export function LinkImageVisualizer() {
             className="h-px w-full origin-top bg-gradient-to-b from-cyan-300/80 to-orange-300/80"
             style={{ width: 2, height: "100%" }}
             animate={reduce ? undefined : { scaleY: [0.4, 1, 0.4], opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.span
             aria-hidden
             className="absolute text-cyan-200"
             animate={reduce ? undefined : { y: [0, 10, 0], opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
           >
             ↓
           </motion.span>
@@ -439,7 +440,7 @@ export function LinkImageVisualizer() {
             aria-hidden
             className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_55%)]"
             animate={reduce ? undefined : { opacity: [0.4, 0.8, 0.4] }}
-            transition={{ duration: 2.4, repeat: Infinity }}
+            transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
           />
           <span className="relative text-[10px] font-semibold text-orange-50">
             &lt;img&gt;
@@ -475,7 +476,7 @@ export function ListStackVisualizer() {
     if (reduce || !playing) return;
     const id = window.setInterval(
       () => setActive((i) => (i + 1) % kinds.length),
-      1800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing, kinds.length]);
@@ -597,7 +598,7 @@ export function DetailsAccordionVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % DETAILS_STEPS.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -608,7 +609,7 @@ export function DetailsAccordionVisualizer() {
         <span className="shrink-0 rounded-md border border-amber-300/35 bg-amber-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-amber-100">
           {current.showName ? 'name="faq"' : "<details>"}
         </span>
-        <p className="text-[11px] leading-relaxed text-slate-400">
+        <p className="text-sm leading-relaxed text-slate-300">
           {current.tip}
         </p>
       </div>
@@ -770,7 +771,7 @@ export function FormFlowVisualizer() {
     if (reduce || !playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % FORM_STEPS.length),
-      1600,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -801,7 +802,7 @@ export function FormFlowVisualizer() {
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-[2.25rem] text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         {current.status}
       </p>
 
@@ -849,7 +850,7 @@ export function FormFlowVisualizer() {
               <motion.span
                 aria-hidden
                 animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
+                transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
                 className="ms-0.5 inline-block h-3.5 w-0.5 bg-orange-300"
               />
             ) : null}
@@ -894,7 +895,7 @@ export function FormFlowVisualizer() {
               <motion.span
                 aria-hidden
                 animate={{ opacity: [1, 0, 1] }}
-                transition={{ duration: 0.8, repeat: Infinity }}
+                transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
                 className="ms-0.5 inline-block h-3.5 w-0.5 bg-orange-300"
               />
             ) : null}
@@ -943,7 +944,7 @@ export function FormFlowVisualizer() {
               : "0 0 0 rgba(0,0,0,0)",
           }}
           transition={{
-            duration: 0.7,
+            duration: LAB_LOOP_S,
             repeat: submitting && !reduce ? Infinity : 0,
           }}
           className="w-full rounded-full bg-gradient-to-r from-orange-400 to-amber-300 px-4 py-2.5 text-center text-xs font-bold text-slate-950"
@@ -1069,7 +1070,7 @@ export function TableGridVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % TABLE_BUILD.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -1080,7 +1081,7 @@ export function TableGridVisualizer() {
         <span className="shrink-0 rounded-md border border-orange-300/35 bg-orange-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-orange-100">
           {current.tag}
         </span>
-        <p className="text-[11px] leading-relaxed text-slate-400">
+        <p className="text-sm leading-relaxed text-slate-300">
           {current.line}
         </p>
       </div>
@@ -1228,7 +1229,7 @@ export function A11yCheckVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % A11Y_STEPS.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -1245,7 +1246,7 @@ export function A11yCheckVisualizer() {
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         {current.tip}
       </p>
 
@@ -1452,7 +1453,7 @@ export function SeoCrawlVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % SEO_STEPS.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -1469,7 +1470,7 @@ export function SeoCrawlVisualizer() {
         >
           {current.mode === "csr" ? "CSR shell" : "SSR HTML"}
         </span>
-        <p className="text-[11px] leading-relaxed text-slate-400">
+        <p className="text-sm leading-relaxed text-slate-300">
           {current.tip}
         </p>
       </div>
@@ -1522,7 +1523,7 @@ export function SeoCrawlVisualizer() {
         <motion.p
           animate={{ opacity: current.desc ? 1 : 0.25 }}
           transition={{ duration: 0.3, ease: labEase }}
-          className={`min-h-8 text-[11px] leading-relaxed ${
+          className={`min-h-10 text-sm leading-relaxed ${
             current.desc ? "text-slate-300" : "text-slate-600"
           }`}
         >
@@ -1636,7 +1637,7 @@ export function CwvLabVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % CWV_STEPS.length),
-      2600,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -1664,7 +1665,7 @@ export function CwvLabVisualizer() {
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         {current.tip}
       </p>
 
@@ -1752,7 +1753,7 @@ export function CwvLabVisualizer() {
                 : "rgba(255,255,255,0.1)",
           }}
           transition={{
-            duration: current.focus === "cls" && !current.good ? 0.7 : 0.35,
+            duration: current.focus === "cls" && !current.good ? LAB_LOOP_S : 0.35,
             ease: labEase,
             repeat:
               current.focus === "cls" && !current.good && !reduce
@@ -1867,14 +1868,14 @@ export function MetaCardVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % OG_STEPS.length),
-      2600,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-8 text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         {current.tip}
       </p>
 
@@ -1900,7 +1901,7 @@ export function MetaCardVisualizer() {
           </motion.p>
           <motion.p
             animate={{ opacity: current.desc ? 1 : 0.3 }}
-            className="min-h-8 text-[11px] leading-relaxed text-slate-300"
+            className="min-h-10 text-sm leading-relaxed text-slate-300"
           >
             Learn the HTML document shell with interactive labs.
           </motion.p>
@@ -1986,7 +1987,7 @@ export function NativeDialogVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % DIALOG_STEPS.length),
-      2600,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -2003,7 +2004,7 @@ export function NativeDialogVisualizer() {
         <span className="shrink-0 rounded-md border border-orange-300/35 bg-orange-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-orange-100">
           {current.call}
         </span>
-        <p className="text-[11px] leading-relaxed text-slate-400">
+        <p className="text-sm leading-relaxed text-slate-300">
           {current.tip}
         </p>
       </div>
@@ -2309,7 +2310,7 @@ export function BaselineCompatVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % BASELINE_FEATURES.length),
-      3000,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -2334,7 +2335,7 @@ export function BaselineCompatVisualizer() {
             {current.verdict}
           </motion.span>
         </AnimatePresence>
-        <p className="text-[11px] leading-relaxed text-slate-400">
+        <p className="text-sm leading-relaxed text-slate-300">
           {current.tip}
         </p>
       </div>
@@ -2419,7 +2420,7 @@ export function BaselineCompatVisualizer() {
                 className="pointer-events-none absolute inset-y-0 w-8 rounded-lg bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent"
                 animate={{ left: ["-10%", "110%"] }}
                 transition={{
-                  duration: 2.4,
+                  duration: LAB_LOOP_S,
                   repeat: Infinity,
                   ease: "easeInOut",
                   repeatDelay: 0.6,
@@ -2519,7 +2520,7 @@ export function BaselineCompatVisualizer() {
                   : "rgb(103 232 249)",
               }}
               transition={{
-                duration: 0.9,
+                duration: LAB_LOOP_S,
                 repeat: current.detect && !reduce ? Infinity : 0,
                 ease: "easeInOut",
               }}
@@ -2655,7 +2656,7 @@ export function PictureSourceVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % PICTURE_STEPS.length),
-      2600,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -2666,7 +2667,7 @@ export function PictureSourceVisualizer() {
         <span className="shrink-0 rounded-md border border-cyan-300/35 bg-cyan-400/15 px-2 py-0.5 font-mono text-[10px] font-semibold text-cyan-100">
           {current.mode === "format" ? "type=" : "media="}
         </span>
-        <p className="text-[11px] leading-relaxed text-slate-400">
+        <p className="text-sm leading-relaxed text-slate-300">
           {current.tip}
         </p>
       </div>
@@ -2782,7 +2783,7 @@ export function MediaStageVisualizer() {
     if (reduce || !playing) return;
     const id = window.setInterval(
       () => setSource((s) => (s + 1) % sources.length),
-      1600,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing, sources.length]);
@@ -2794,7 +2795,7 @@ export function MediaStageVisualizer() {
           aria-hidden
           className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(251,146,60,0.25),transparent_50%)]"
           animate={reduce ? undefined : { opacity: [0.4, 0.85, 0.4] }}
-          transition={{ duration: 2.8, repeat: Infinity }}
+          transition={{ duration: LAB_LOOP_S, repeat: Infinity }}
         />
         <div className="relative flex h-28 flex-col items-center justify-center gap-2 p-3">
           <AnimatePresence mode="wait">
@@ -2814,7 +2815,7 @@ export function MediaStageVisualizer() {
                 ? { scale: [1, 1.08, 1], boxShadow: ["0 0 0 rgba(251,146,60,0)", "0 0 20px rgba(251,146,60,0.45)", "0 0 0 rgba(251,146,60,0)"] }
                 : { scale: 1 }
             }
-            transition={{ duration: 1.2, repeat: playing && !reduce ? Infinity : 0 }}
+            transition={{ duration: LAB_LOOP_S, repeat: playing && !reduce ? Infinity : 0 }}
             className="rounded-full bg-orange-300 px-3 py-1 text-xs font-bold text-slate-950"
           >
             {playing ? "▶ video" : "❚❚ pause"}
@@ -2832,7 +2833,7 @@ export function MediaStageVisualizer() {
                 : { width: playing ? ["8%", "72%", "8%"] : "35%" }
             }
             transition={{
-              duration: 2.4,
+              duration: LAB_LOOP_S,
               repeat: playing && !reduce ? Infinity : 0,
               ease: "easeInOut",
             }}
@@ -2841,7 +2842,7 @@ export function MediaStageVisualizer() {
       </div>
       <motion.div
         animate={reduce ? undefined : { x: [0, 4, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: LAB_LOOP_S, repeat: Infinity, ease: "easeInOut" }}
         className="mx-auto mt-3 w-full max-w-xs rounded-xl border border-dashed border-amber-300/40 bg-slate-950/40 px-3 py-2 text-center font-mono text-[11px] text-amber-100"
       >
         &lt;iframe title=&quot;Demo&quot; loading=&quot;lazy&quot;&gt;
@@ -2972,7 +2973,7 @@ export function CheatSheetLabVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % CHEAT_STEPS.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -2990,7 +2991,7 @@ export function CheatSheetLabVisualizer() {
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         {current.tip}
       </p>
 
@@ -3247,7 +3248,7 @@ export function HtmlSecurityLabVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((index) => (index + 1) % SECURITY_STEPS.length),
-      3000,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [playing, reduce]);
@@ -3304,7 +3305,7 @@ export function HtmlSecurityLabVisualizer() {
               x: safe || reduce ? 0 : [0, 5 * flow, 0],
               color: safe ? "rgb(110 231 183)" : "rgb(251 113 133)",
             }}
-            transition={{ duration: 0.8, repeat: safe || reduce ? 0 : Infinity }}
+            transition={{ duration: LAB_LOOP_S, repeat: safe || reduce ? 0 : Infinity }}
           >
             <ChevronRight size={18} className={RTL_FLIP} />
           </motion.div>
@@ -3378,7 +3379,7 @@ export function HtmlSpeculationLabVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((index) => (index + 1) % SPECULATION_STEPS.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [playing, reduce]);
@@ -3416,7 +3417,7 @@ export function HtmlSpeculationLabVisualizer() {
               x: warmed && !reduce ? [0, 5 * flow, 0] : 0,
               color: warmed ? "rgb(103 232 249)" : "rgb(100 116 139)",
             }}
-            transition={{ duration: 0.9, repeat: warmed && !reduce ? Infinity : 0 }}
+            transition={{ duration: LAB_LOOP_S, repeat: warmed && !reduce ? Infinity : 0 }}
           >
             <ChevronRight size={18} className={RTL_FLIP} />
           </motion.div>
@@ -3549,7 +3550,7 @@ export function HtmlGlobalRtlLabVisualizer() {
     if (!playing) return;
     const id = window.setInterval(
       () => setStep((s) => (s + 1) % RTL_STEPS.length),
-      2800,
+      LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
@@ -3561,7 +3562,7 @@ export function HtmlGlobalRtlLabVisualizer() {
 
   return (
     <LabStage playing={playing} onTogglePlay={toggle}>
-      <p className="mb-2 min-h-9 text-[11px] leading-relaxed text-slate-400">
+      <p className="mb-2 min-h-11 shrink-0 text-sm leading-relaxed text-slate-300">
         {current.tip[locale]}
       </p>
 

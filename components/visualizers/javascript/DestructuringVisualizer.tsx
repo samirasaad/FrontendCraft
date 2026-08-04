@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 const trays = [
   { key: "name", value: "Nour" },
@@ -19,14 +20,14 @@ export function DestructuringVisualizer() {
       <motion.div
         className="relative flex h-24 w-28 items-center justify-center rounded-2xl border border-yellow-300/40 bg-gradient-to-br from-yellow-300/30 to-amber-500/10"
         animate={{ rotate: [0, -3, 3, 0], y: [0, -4, 0] }}
-        transition={{ repeat: Infinity, duration: 2.5 }}
+        transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
       >
         <span className="text-3xl">🎁</span>
         <span className="absolute -bottom-2 rounded-full bg-slate-900 px-2 text-[10px] text-yellow-200">
           {gift}
         </span>
       </motion.div>
-      <p className="text-xs text-slate-400">{unpack}</p>
+      <p className="text-sm text-slate-300">{unpack}</p>
       <div className="flex flex-wrap justify-center gap-3">
         {trays.map((tray, i) => (
           <motion.div

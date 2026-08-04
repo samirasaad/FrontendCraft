@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 const items = [
   { from: "10", map: "9", keep: false },
@@ -30,7 +31,7 @@ export function ArrayHofVisualizer() {
         <motion.div
           className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent"
           animate={{ opacity: [0.3, 1, 0.3] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
+          transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
         />
         <div className="relative flex justify-between gap-2">
           {items.map((item, i) => (
@@ -47,7 +48,7 @@ export function ArrayHofVisualizer() {
               <motion.span
                 className="rounded-md bg-yellow-300/20 px-2 py-1 font-mono text-[11px] text-yellow-200"
                 animate={{ y: [0, -4, 0] }}
-                transition={{ repeat: Infinity, duration: 1.6, delay: i * 0.1 }}
+                transition={{ repeat: Infinity, duration: LAB_LOOP_S, delay: i * 0.1 }}
               >
                 {item.map}
               </motion.span>
@@ -58,7 +59,7 @@ export function ArrayHofVisualizer() {
                     : "bg-slate-800/80 text-slate-500 line-through"
                 }`}
                 animate={item.keep ? { scale: [1, 1.08, 1] } : { opacity: [1, 0.4, 1] }}
-                transition={{ repeat: Infinity, duration: 2, delay: i * 0.1 }}
+                transition={{ repeat: Infinity, duration: LAB_LOOP_S, delay: i * 0.1 }}
               >
                 {item.keep ? "✓" : "✕"}
               </motion.span>

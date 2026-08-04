@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 export function PrimitiveVsReferenceVisualizer() {
   const { locale } = useLanguage();
@@ -18,24 +19,24 @@ export function PrimitiveVsReferenceVisualizer() {
           <motion.div
             className="flex h-14 w-14 items-center justify-center rounded-xl bg-yellow-300/20 font-mono text-yellow-200"
             animate={{ x: [0, 8, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
           >
             a:5
           </motion.div>
           <motion.div
             className="h-0.5 w-8 bg-yellow-300/60"
             animate={{ scaleX: [0.6, 1, 0.6] }}
-            transition={{ repeat: Infinity, duration: 2 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
           />
           <motion.div
             className="flex h-14 w-14 items-center justify-center rounded-xl bg-yellow-300/20 font-mono text-yellow-200"
             animate={{ x: [0, -8, 0] }}
-            transition={{ repeat: Infinity, duration: 2 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
           >
             b:9
           </motion.div>
         </div>
-        <p className="mt-3 text-center text-xs text-slate-400">{copy}</p>
+        <p className="mt-3 text-center text-sm text-slate-300">{copy}</p>
       </div>
 
       <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
@@ -54,17 +55,17 @@ export function PrimitiveVsReferenceVisualizer() {
           <motion.div
             className="h-8 w-px bg-cyan-400/70"
             animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{ repeat: Infinity, duration: 1.6 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
           />
           <motion.div
             className="rounded-xl border border-cyan-400/40 bg-cyan-400/10 px-4 py-3 font-mono text-sm text-cyan-100"
             animate={{ boxShadow: ["0 0 0 rgba(34,211,238,0)", "0 0 20px rgba(34,211,238,0.35)", "0 0 0 rgba(34,211,238,0)"] }}
-            transition={{ repeat: Infinity, duration: 2 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
           >
             {"{ name: \"Omar\" }"}
           </motion.div>
         </div>
-        <p className="mt-3 text-center text-xs text-slate-400">{shared}</p>
+        <p className="mt-3 text-center text-sm text-slate-300">{shared}</p>
       </div>
     </div>
   );

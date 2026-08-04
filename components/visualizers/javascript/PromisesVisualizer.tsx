@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
+import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 const states = ["pending", "fulfilled", "rejected"] as const;
 
@@ -15,14 +16,14 @@ export function PromisesVisualizer() {
         <motion.div
           className="rounded-full bg-yellow-300/20 px-3 py-1 text-xs text-yellow-200"
           animate={{ x: [-8, 8, -8] }}
-          transition={{ repeat: Infinity, duration: 2 }}
+          transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
         >
           🍽️ {waiter}
         </motion.div>
         <motion.div
           className="h-px w-16 bg-gradient-to-r from-yellow-300/20 via-cyan-300 to-yellow-300/20"
           animate={{ scaleX: [0.5, 1, 0.5] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
+          transition={{ repeat: Infinity, duration: LAB_LOOP_S }}
         />
         <span className="text-2xl">🍕</span>
       </div>
@@ -41,7 +42,7 @@ export function PromisesVisualizer() {
               opacity: state === "rejected" ? [0.4, 0.7, 0.4] : [0.7, 1, 0.7],
               y: [0, -4, 0],
             }}
-            transition={{ repeat: Infinity, duration: 2, delay: i * 0.25 }}
+            transition={{ repeat: Infinity, duration: LAB_LOOP_S, delay: i * 0.25 }}
           >
             <p className="font-mono text-[11px] font-semibold uppercase">{state}</p>
             <p className="mt-1 text-[10px] opacity-70">
