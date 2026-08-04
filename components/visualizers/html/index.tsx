@@ -14,51 +14,161 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
 import { RTL_FLIP } from "@/lib/rtl";
 
-/** Document shell — doctype → html → head → body. */
+/** Document shell — doctype → lang → charset → viewport → title → body. */
 const DOC_STEPS = [
   {
     id: "doctype",
     chip: "doctype",
     tip: {
-      en: "`<!DOCTYPE html>` — modern standards mode, not quirks.",
-      ar: "`<!DOCTYPE html>` — وضع standards الحديث، مش quirks.",
+      en: "`<!DOCTYPE html>` first — standards mode, not quirks.",
+      ar: "`<!DOCTYPE html>` الأول — وضع standards، مش quirks.",
     },
     markup: "<!DOCTYPE html>",
+    show: {
+      doctype: true,
+      html: false,
+      charset: false,
+      viewport: false,
+      title: false,
+      body: false,
+    },
   },
   {
     id: "html",
-    chip: "html",
+    chip: "lang",
     tip: {
-      en: "`<html lang>` — set the page language on the root.",
-      ar: "`<html lang>` — حط لغة الصفحة على الـ root.",
+      en: "`lang` on `<html>` — screen readers pick the right voice.",
+      ar: "`lang` على `<html>` — قارئ الشاشة يختار النطق الصح.",
     },
     markup: '<html lang="en">\n  …\n</html>',
+    show: {
+      doctype: true,
+      html: true,
+      charset: false,
+      viewport: false,
+      title: false,
+      body: false,
+    },
   },
   {
-    id: "head",
-    chip: "head",
+    id: "charset",
+    chip: "charset",
     tip: {
-      en: "`<head>` holds metadata — charset, title, viewport.",
-      ar: "`<head>` للـ metadata — charset و title و viewport.",
+      en: "`charset` early in `<head>` — Arabic, emoji, and Latin decode right.",
+      ar: "`charset` بدري في `<head>` — العربي والإيموجي يتقراوا صح.",
     },
     markup: `<head>
   <meta charset="UTF-8" />
-  <title>Hello HTML</title>
 </head>`,
+    show: {
+      doctype: true,
+      html: true,
+      charset: true,
+      viewport: false,
+      title: false,
+      body: false,
+    },
+  },
+  {
+    id: "viewport",
+    chip: "viewport",
+    tip: {
+      en: "`viewport` meta — phones scale the page instead of zooming out.",
+      ar: "`viewport` — الموبايل يكبّر الصفحة صح بدل ما يصغّرها.",
+    },
+    markup: `<meta name="viewport"
+  content="width=device-width, initial-scale=1" />`,
+    show: {
+      doctype: true,
+      html: true,
+      charset: true,
+      viewport: true,
+      title: false,
+      body: false,
+    },
+  },
+  {
+    id: "title",
+    chip: "title",
+    tip: {
+      en: "`<title>` lives in `<head>` — it names the browser tab.",
+      ar: "`<title>` جوّه `<head>` — اسم تاب المتصفح.",
+    },
+    markup: "<title>Hello HTML</title>",
+    show: {
+      doctype: true,
+      html: true,
+      charset: true,
+      viewport: true,
+      title: true,
+      body: false,
+    },
   },
   {
     id: "body",
     chip: "body",
     tip: {
-      en: "`<body>` is what users see — heading + content.",
-      ar: "`<body>` اللي المستخدم بيشوفه — عنوان + محتوى.",
+      en: "`<body>` is what users see — one `<h1>` plus content.",
+      ar: "`<body>` اللي المستخدم بيشوفه — `<h1>` واحد + محتوى.",
     },
     markup: `<body>
   <h1>Welcome</h1>
   <p>This is the body.</p>
 </body>`,
+    show: {
+      doctype: true,
+      html: true,
+      charset: true,
+      viewport: true,
+      title: true,
+      body: true,
+    },
   },
 ] as const;
+
+function DocNode({
+  label,
+  active,
+  lit,
+  indent = 0,
+  delay = 0,
+  reduce,
+  children,
+}: {
+  label: string;
+  active: boolean;
+  lit: boolean;
+  indent?: number;
+  delay?: number;
+  reduce: boolean | null;
+  children?: ReactNode;
+}) {
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, x: -6 }}
+      animate={{
+        opacity: active ? 1 : 0.22,
+        x: active ? 0 : -4,
+      }}
+      transition={{ delay, duration: 0.28, ease: labEase }}
+      style={{ marginInlineStart: indent * 12 }}
+      className="space-y-1"
+    >
+      <div
+        className={`rounded-lg border px-2.5 py-1.5 font-mono text-[11px] leading-none ${
+          lit
+            ? "border-cyan-300/55 bg-cyan-400/20 text-cyan-50 shadow-[0_0_18px_rgba(34,211,238,0.18)]"
+            : active
+              ? "border-white/12 bg-slate-950/70 text-slate-200"
+              : "border-white/5 bg-slate-950/30 text-slate-500"
+        }`}
+      >
+        {label}
+      </div>
+      {children}
+    </motion.div>
+  );
+}
 
 export function DocumentTreeVisualizer() {
   const { locale } = useLanguage();
@@ -67,11 +177,13 @@ export function DocumentTreeVisualizer() {
   const { playing, toggle } = useAutoPlay(true);
   const [step, setStep] = useState(0);
   const current = DOC_STEPS[step];
+  const ar = locale === "ar";
+  const s = current.show;
 
   useEffect(() => {
     if (reduce || !playing) return;
     const id = window.setInterval(
-      () => setStep((s) => (s + 1) % DOC_STEPS.length),
+      () => setStep((i) => (i + 1) % DOC_STEPS.length),
       LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
@@ -83,70 +195,219 @@ export function DocumentTreeVisualizer() {
     setStep(index);
   }
 
-  const shell = [
-    { id: "doctype", label: "<!DOCTYPE html>" },
-    { id: "html", label: '<html lang="en">' },
-    { id: "head", label: "<head>…" },
-    { id: "body", label: "<body>…" },
-  ] as const;
-  const activeIdx = shell.findIndex((s) => s.id === current.id);
+  const tabLabel = s.title
+    ? "Hello HTML"
+    : ar
+      ? "بدون عنوان"
+      : "untitled";
 
   return (
     <LabStage
       playing={playing}
       onTogglePlay={toggle}
-      title={locale === "ar" ? "تشريح المستند" : "Document anatomy"}
-      caption={locale === "ar" ? current.tip.ar : current.tip.en}
+      title={ar ? "تشريح المستند" : "Document anatomy"}
+      caption={ar ? current.tip.ar : current.tip.en}
     >
-      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-4">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={current.id}
-            initial={reduce ? false : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduce ? undefined : { opacity: 0, y: -6 }}
-            transition={{ duration: 0.3, ease: labEase }}
-            className="w-full max-w-md space-y-2"
-          >
-            {shell.map((row, i) => {
-              const on = i <= activeIdx;
-              const lit = i === activeIdx;
-              return (
-                <motion.div
-                  key={row.id}
-                  animate={{
-                    opacity: on ? 1 : 0.25,
-                    x: on ? 0 : -4,
-                  }}
-                  style={{ marginInlineStart: i * 10 }}
-                  className={`rounded-xl border px-3 py-2 font-mono text-[12px] ${
-                    lit
-                      ? "border-cyan-300/50 bg-cyan-400/15 text-cyan-50"
-                      : on
-                        ? "border-white/10 bg-slate-950/60 text-slate-300"
-                        : "border-white/5 bg-slate-950/30 text-slate-500"
-                  }`}
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
+        <div className="grid w-full max-w-lg gap-3 sm:grid-cols-2">
+          {/* Nested document tree */}
+          <div className="rounded-xl border border-white/10 bg-slate-950/55 p-3">
+            <p className="mb-2 text-[9px] font-semibold uppercase tracking-wider text-cyan-200/65">
+              {ar ? "شجرة المستند" : "document tree"}
+            </p>
+            <div className="space-y-1">
+              <DocNode
+                label="<!DOCTYPE html>"
+                active={s.doctype}
+                lit={current.id === "doctype"}
+                reduce={reduce}
+              />
+              <DocNode
+                label='<html lang="en">'
+                active={s.html}
+                lit={current.id === "html"}
+                indent={1}
+                delay={0.04}
+                reduce={reduce}
+              >
+                <DocNode
+                  label="<head>"
+                  active={s.charset || s.viewport || s.title}
+                  lit={
+                    current.id === "charset" ||
+                    current.id === "viewport" ||
+                    current.id === "title"
+                  }
+                  indent={1}
+                  delay={0.06}
+                  reduce={reduce}
                 >
-                  {row.label}
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </AnimatePresence>
+                  <DocNode
+                    label='<meta charset="UTF-8">'
+                    active={s.charset}
+                    lit={current.id === "charset"}
+                    indent={1}
+                    delay={0.08}
+                    reduce={reduce}
+                  />
+                  <DocNode
+                    label='<meta name="viewport">'
+                    active={s.viewport}
+                    lit={current.id === "viewport"}
+                    indent={1}
+                    delay={0.1}
+                    reduce={reduce}
+                  />
+                  <DocNode
+                    label="<title>Hello HTML</title>"
+                    active={s.title}
+                    lit={current.id === "title"}
+                    indent={1}
+                    delay={0.12}
+                    reduce={reduce}
+                  />
+                </DocNode>
+                <DocNode
+                  label="<body>"
+                  active={s.body}
+                  lit={current.id === "body"}
+                  indent={1}
+                  delay={0.14}
+                  reduce={reduce}
+                >
+                  <DocNode
+                    label="<h1>Welcome</h1>"
+                    active={s.body}
+                    lit={current.id === "body"}
+                    indent={1}
+                    delay={0.16}
+                    reduce={reduce}
+                  />
+                  <DocNode
+                    label="<p>…</p>"
+                    active={s.body}
+                    lit={current.id === "body"}
+                    indent={1}
+                    delay={0.18}
+                    reduce={reduce}
+                  />
+                </DocNode>
+              </DocNode>
+            </div>
+          </div>
+
+          {/* Mini browser preview */}
+          <div className="flex min-h-[220px] flex-col overflow-hidden rounded-xl border border-orange-300/25 bg-slate-950/60">
+            <div className="flex items-center gap-1.5 border-b border-white/10 bg-slate-900/80 px-2.5 py-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-300/80" />
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/80" />
+              <motion.span
+                key={tabLabel}
+                initial={reduce ? false : { opacity: 0, y: -3 }}
+                animate={{ opacity: 1, y: 0 }}
+                className={`ms-1 truncate rounded-md px-2 py-0.5 font-mono text-[10px] ${
+                  s.title
+                    ? "bg-orange-400/15 text-orange-100"
+                    : "bg-white/5 text-slate-500"
+                }`}
+              >
+                {tabLabel}
+              </motion.span>
+            </div>
+
+            <div className="relative flex flex-1 flex-col p-3">
+              <AnimatePresence mode="wait">
+                {current.id === "doctype" ? (
+                  <motion.div
+                    key="mode"
+                    initial={reduce ? false : { opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-1 flex-col items-center justify-center gap-2"
+                  >
+                    <span className="rounded-full border border-emerald-300/40 bg-emerald-400/15 px-3 py-1 font-mono text-[11px] font-semibold text-emerald-100">
+                      standards mode
+                    </span>
+                    <p className="text-center text-[11px] text-slate-400">
+                      {ar ? "من غير doctype → quirks" : "no doctype → quirks"}
+                    </p>
+                  </motion.div>
+                ) : s.body ? (
+                  <motion.div
+                    key="body"
+                    initial={reduce ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    className="flex flex-1 flex-col justify-center"
+                  >
+                    <h1 className="text-lg font-bold text-orange-50">
+                      {ar ? "أهلًا" : "Welcome"}
+                    </h1>
+                    <p className="mt-1 text-sm text-slate-300">
+                      {ar ? "ده محتوى الـ body." : "This is the body."}
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="meta"
+                    initial={reduce ? false : { opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex flex-1 flex-col justify-center gap-1.5"
+                  >
+                    <p className="text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                      {ar ? "ميتا في الـ head" : "head metadata"}
+                    </p>
+                    {(
+                      [
+                        ["lang", s.html, 'lang="en"'],
+                        ["charset", s.charset, "UTF-8"],
+                        ["viewport", s.viewport, "width=device-width"],
+                        ["title", s.title, "Hello HTML"],
+                      ] as const
+                    ).map(([id, on, value]) => (
+                      <motion.div
+                        key={id}
+                        animate={{
+                          opacity: on ? 1 : 0.28,
+                          borderColor: on
+                            ? current.id === id ||
+                              (id === "lang" && current.id === "html")
+                              ? "rgba(34,211,238,0.45)"
+                              : "rgba(255,255,255,0.12)"
+                            : "rgba(255,255,255,0.06)",
+                        }}
+                        className="flex items-center justify-between rounded-lg border bg-slate-900/60 px-2.5 py-1.5"
+                      >
+                        <span className="font-mono text-[10px] text-slate-400">
+                          {id}
+                        </span>
+                        <span className="font-mono text-[10px] text-cyan-100">
+                          {on ? value : "…"}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
 
         <pre
           dir="ltr"
-          className="w-full max-w-md overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
+          className="w-full max-w-lg overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
         >
           {current.markup}
         </pre>
 
         <div className="flex flex-wrap items-center justify-center gap-1.5">
-          {DOC_STEPS.map((s, i) => (
+          {DOC_STEPS.map((beat, i) => (
             <button
-              key={s.id}
+              key={beat.id}
               type="button"
-              aria-label={s.chip}
+              aria-label={beat.chip}
               aria-current={i === step ? "step" : undefined}
               onClick={() => goTo(i)}
               className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
@@ -155,7 +416,7 @@ export function DocumentTreeVisualizer() {
                   : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
               }`}
             >
-              {s.chip}
+              {beat.chip}
             </button>
           ))}
         </div>
@@ -164,128 +425,439 @@ export function DocumentTreeVisualizer() {
   );
 }
 
-const LANDMARKS = [
-  { id: "header", tag: "header", role: "banner", span: "col-span-2" },
-  { id: "nav", tag: "nav", role: "navigation", span: "col-span-2" },
-  { id: "main", tag: "main", role: "main", span: "col-span-2" },
-  { id: "article", tag: "article", role: "article", span: "col-span-2 ms-4" },
-  { id: "footer", tag: "footer", role: "contentinfo", span: "col-span-2" },
+/** Landmark page — header → nav → main → section → article → footer. */
+const SEMANTIC_STEPS = [
+  {
+    id: "header",
+    chip: "header",
+    role: "banner",
+    tip: {
+      en: "`<header>` — page chrome / brand. Maps to landmark role `banner`.",
+      ar: "`<header>` — شريط الصفحة والبراند. بيتحول لـ landmark اسمه `banner`.",
+    },
+    markup: `<header>
+  <p>FrontendCraft</p>
+</header>`,
+    show: {
+      header: true,
+      nav: false,
+      main: false,
+      section: false,
+      article: false,
+      footer: false,
+    },
+  },
+  {
+    id: "nav",
+    chip: "nav",
+    role: "navigation",
+    tip: {
+      en: "`<nav>` — primary links. Screen readers get a free `navigation` jump.",
+      ar: "`<nav>` — اللينكات الأساسية. قارئ الشاشة ياخد قفزة `navigation` ببلاش.",
+    },
+    markup: `<header>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/learn">Learn</a>
+  </nav>
+</header>`,
+    show: {
+      header: true,
+      nav: true,
+      main: false,
+      section: false,
+      article: false,
+      footer: false,
+    },
+  },
+  {
+    id: "main",
+    chip: "main",
+    role: "main",
+    tip: {
+      en: "Exactly one `<main>` per page — the primary content landmark.",
+      ar: "`<main>` واحد بس لكل صفحة — landmark المحتوى الأساسي.",
+    },
+    markup: `<main>
+  <h1>Today’s lesson</h1>
+</main>`,
+    show: {
+      header: true,
+      nav: true,
+      main: true,
+      section: false,
+      article: false,
+      footer: false,
+    },
+  },
+  {
+    id: "section",
+    chip: "section",
+    role: "region",
+    tip: {
+      en: "`<section>` groups related content under a heading — not a random wrapper.",
+      ar: "`<section>` بتجمع محتوى مرتبط تحت عنوان — مش غلاف عشوائي.",
+    },
+    markup: `<main>
+  <section>
+    <h2>Semantic tags</h2>
+  </section>
+</main>`,
+    show: {
+      header: true,
+      nav: true,
+      main: true,
+      section: true,
+      article: false,
+      footer: false,
+    },
+  },
+  {
+    id: "article",
+    chip: "article",
+    role: "article",
+    tip: {
+      en: "`<article>` = self-contained unit (post, card) you could syndicate alone.",
+      ar: "`<article>` = وحدة مستقلة (بوست، كارت) تقدر تنشرها لوحدها.",
+    },
+    markup: `<section>
+  <article>
+    <h3>Why semantics matter</h3>
+    <p>Meaning beats empty divs.</p>
+  </article>
+</section>`,
+    show: {
+      header: true,
+      nav: true,
+      main: true,
+      section: true,
+      article: true,
+      footer: false,
+    },
+  },
+  {
+    id: "footer",
+    chip: "footer",
+    role: "contentinfo",
+    tip: {
+      en: "`<footer>` closes the page — landmark role `contentinfo`.",
+      ar: "`<footer>` بيقفل الصفحة — landmark اسمه `contentinfo`.",
+    },
+    markup: `<footer>
+  <p>© 2026 FrontendCraft</p>
+</footer>`,
+    show: {
+      header: true,
+      nav: true,
+      main: true,
+      section: true,
+      article: true,
+      footer: true,
+    },
+  },
 ] as const;
+
+function LandmarkBlock({
+  tag,
+  role,
+  active,
+  lit,
+  reduce,
+  children,
+  className = "",
+}: {
+  tag: string;
+  role: string;
+  active: boolean;
+  lit: boolean;
+  reduce: boolean | null;
+  children?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, y: 6 }}
+      animate={{
+        opacity: active ? 1 : 0.18,
+        y: active ? 0 : 4,
+        scale: lit ? 1.01 : 1,
+      }}
+      transition={{ duration: 0.32, ease: labEase }}
+      className={`rounded-lg border px-2 py-1.5 ${
+        lit
+          ? "border-cyan-300/55 bg-cyan-400/15 shadow-[0_0_16px_rgba(34,211,238,0.16)]"
+          : active
+            ? "border-amber-300/30 bg-amber-400/10"
+            : "border-white/5 bg-slate-950/40"
+      } ${className}`}
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <span
+          className={`font-mono text-[10px] font-semibold ${
+            lit ? "text-cyan-50" : active ? "text-amber-50" : "text-slate-500"
+          }`}
+        >
+          &lt;{tag}&gt;
+        </span>
+        <span
+          className={`text-[8px] uppercase tracking-wider ${
+            lit ? "text-cyan-200/70" : "text-slate-500"
+          }`}
+        >
+          {role}
+        </span>
+      </div>
+      {children}
+    </motion.div>
+  );
+}
 
 export function SemanticBlocksVisualizer() {
   const { locale } = useLanguage();
   const { playClick } = useSound();
   const reduce = useReducedMotion();
   const { playing, toggle } = useAutoPlay(true);
-  const [focus, setFocus] = useState(0);
-  const [on, setOn] = useState<Record<string, boolean>>({
-    header: true,
-    nav: true,
-    main: true,
-    article: true,
-    footer: true,
-  });
+  const [step, setStep] = useState(0);
+  const current = SEMANTIC_STEPS[step];
+  const ar = locale === "ar";
+  const s = current.show;
 
   useEffect(() => {
     if (reduce || !playing) return;
     const id = window.setInterval(
-      () => setFocus((i) => (i + 1) % LANDMARKS.length),
+      () => setStep((i) => (i + 1) % SEMANTIC_STEPS.length),
       LAB_STEP_MS,
     );
     return () => window.clearInterval(id);
   }, [reduce, playing]);
 
-  const healthy = on.main && on.article;
-  const current = LANDMARKS[focus];
-  const captions = {
-    en: `Highlighting <${current.tag}> — landmark role “${current.role}”. Toggle chips to rebuild the page outline.`,
-    ar: `بنظلّل <${current.tag}> — دور الـ landmark هو “${current.role}”. بدّل الشيبس عشان تعيد بناء هيكل الصفحة.`,
-  };
+  function goTo(index: number) {
+    if (index === step) return;
+    playClick();
+    setStep(index);
+  }
+
+  const landmarks = SEMANTIC_STEPS.filter((beat) => s[beat.id]).map((beat) => ({
+    tag: beat.chip,
+    role: beat.role,
+    lit: beat.id === current.id,
+  }));
 
   return (
     <LabStage
       playing={playing}
       onTogglePlay={toggle}
-      title={locale === "ar" ? "الهيكل الدلالي" : "Semantic structure"}
-      caption={locale === "ar" ? captions.ar : captions.en}
+      title={ar ? "الهيكل الدلالي" : "Semantic structure"}
+      caption={ar ? current.tip.ar : current.tip.en}
     >
-      <div className="flex min-h-0 flex-1 flex-col">
-        <div className="mb-2 flex shrink-0 flex-wrap gap-1.5">
-          {LANDMARKS.map((block, i) => {
-            const active = on[block.id];
-            const lit = i === focus;
-            return (
-              <motion.button
-                key={block.id}
-                type="button"
-                whileTap={reduce ? undefined : { scale: 0.96 }}
-                onClick={() => {
-                  playClick();
-                  setOn((prev) => ({ ...prev, [block.id]: !prev[block.id] }));
-                  setFocus(i);
-                }}
-                className={`rounded-full border px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
-                  lit
-                    ? "border-cyan-300/55 bg-cyan-400/25 text-cyan-50"
-                    : active
-                      ? "border-amber-300/45 bg-amber-400/20 text-amber-50"
-                      : "border-white/10 bg-slate-950/50 text-slate-500"
-                }`}
-                aria-pressed={active}
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
+        <div className="grid w-full max-w-lg gap-3 sm:grid-cols-2">
+          {/* Nested landmark tree */}
+          <div className="rounded-xl border border-white/10 bg-slate-950/55 p-3">
+            <p className="mb-2 text-[9px] font-semibold uppercase tracking-wider text-cyan-200/65">
+              {ar ? "شجرة الـ landmarks" : "landmark tree"}
+            </p>
+            <div className="space-y-1">
+              <DocNode
+                label="<header>"
+                active={s.header}
+                lit={current.id === "header"}
+                reduce={reduce}
               >
-                &lt;{block.tag}&gt;
-              </motion.button>
-            );
-          })}
-        </div>
-
-        <div className="grid min-h-0 flex-1 grid-cols-2 content-start gap-1.5 overflow-hidden rounded-xl border border-white/10 bg-slate-950/60 p-2">
-          <AnimatePresence mode="popLayout">
-            {LANDMARKS.filter((b) => on[b.id]).map((block, i) => {
-              const lit = block.id === current.id;
-              return (
-                <motion.div
-                  key={block.id}
-                  layout
-                  initial={reduce ? false : { opacity: 0, y: 10, scale: 0.96 }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    scale: lit ? 1.02 : 1,
-                  }}
-                  exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.15 } }}
-                  transition={{ ...labSpring, delay: reduce ? 0 : i * 0.04 }}
-                  className={`${block.span} rounded-lg border px-2.5 py-2 ${
-                    lit
-                      ? "border-cyan-300/55 bg-gradient-to-r from-cyan-400/25 to-amber-400/10 shadow-[0_0_18px_rgba(34,211,238,0.15)]"
-                      : "border-amber-300/35 bg-gradient-to-r from-amber-400/20 to-orange-400/5"
-                  }`}
+                <DocNode
+                  label="<nav>"
+                  active={s.nav}
+                  lit={current.id === "nav"}
+                  indent={1}
+                  delay={0.04}
+                  reduce={reduce}
+                />
+              </DocNode>
+              <DocNode
+                label="<main>"
+                active={s.main}
+                lit={current.id === "main"}
+                delay={0.06}
+                reduce={reduce}
+              >
+                <DocNode
+                  label="<section>"
+                  active={s.section}
+                  lit={current.id === "section"}
+                  indent={1}
+                  delay={0.08}
+                  reduce={reduce}
                 >
-                  <p className="font-mono text-[11px] font-semibold text-amber-50">
-                    &lt;{block.tag}&gt;
-                  </p>
-                  <p className="text-[9px] uppercase tracking-wider text-amber-200/60">
-                    role: {block.role}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
+                  <DocNode
+                    label="<article>"
+                    active={s.article}
+                    lit={current.id === "article"}
+                    indent={1}
+                    delay={0.1}
+                    reduce={reduce}
+                  />
+                </DocNode>
+              </DocNode>
+              <DocNode
+                label="<footer>"
+                active={s.footer}
+                lit={current.id === "footer"}
+                delay={0.12}
+                reduce={reduce}
+              />
+            </div>
+          </div>
+
+          {/* Mini page + AT roles */}
+          <div className="flex min-h-[220px] flex-col gap-2">
+            <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-amber-300/25 bg-slate-950/60 p-2">
+              <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-wider text-amber-200/60">
+                {ar ? "معاينة الصفحة" : "page preview"}
+              </p>
+              <div className="flex min-h-0 flex-1 flex-col gap-1">
+                <LandmarkBlock
+                  tag="header"
+                  role="banner"
+                  active={s.header}
+                  lit={current.id === "header"}
+                  reduce={reduce}
+                >
+                  {s.nav ? (
+                    <LandmarkBlock
+                      tag="nav"
+                      role="navigation"
+                      active={s.nav}
+                      lit={current.id === "nav"}
+                      reduce={reduce}
+                      className="mt-1"
+                    >
+                      <p className="mt-0.5 font-mono text-[9px] text-slate-400">
+                        Home · Learn
+                      </p>
+                    </LandmarkBlock>
+                  ) : (
+                    <p className="mt-0.5 text-[9px] text-slate-400">
+                      FrontendCraft
+                    </p>
+                  )}
+                </LandmarkBlock>
+
+                <LandmarkBlock
+                  tag="main"
+                  role="main"
+                  active={s.main}
+                  lit={current.id === "main"}
+                  reduce={reduce}
+                  className="min-h-0 flex-1"
+                >
+                  {s.section ? (
+                    <LandmarkBlock
+                      tag="section"
+                      role="region"
+                      active={s.section}
+                      lit={current.id === "section"}
+                      reduce={reduce}
+                      className="mt-1"
+                    >
+                      <p className="mt-0.5 text-[9px] font-semibold text-slate-300">
+                        {ar ? "الـ tags المعنوية" : "Semantic tags"}
+                      </p>
+                      {s.article ? (
+                        <LandmarkBlock
+                          tag="article"
+                          role="article"
+                          active={s.article}
+                          lit={current.id === "article"}
+                          reduce={reduce}
+                          className="mt-1"
+                        >
+                          <p className="mt-0.5 text-[9px] text-slate-400">
+                            {ar
+                              ? "المعنى أحسن من div فاضي."
+                              : "Meaning beats empty divs."}
+                          </p>
+                        </LandmarkBlock>
+                      ) : null}
+                    </LandmarkBlock>
+                  ) : s.main ? (
+                    <p className="mt-1 text-[10px] font-semibold text-amber-50">
+                      {ar ? "درس النهاردة" : "Today’s lesson"}
+                    </p>
+                  ) : null}
+                </LandmarkBlock>
+
+                <LandmarkBlock
+                  tag="footer"
+                  role="contentinfo"
+                  active={s.footer}
+                  lit={current.id === "footer"}
+                  reduce={reduce}
+                >
+                  {s.footer ? (
+                    <p className="mt-0.5 text-[9px] text-slate-400">
+                      © 2026 FrontendCraft
+                    </p>
+                  ) : null}
+                </LandmarkBlock>
+              </div>
+            </div>
+
+            <div className="rounded-xl border border-white/10 bg-slate-950/55 px-2.5 py-2">
+              <p className="mb-1 text-[9px] font-semibold uppercase tracking-wider text-slate-500">
+                {ar ? "قارئ الشاشة يشوف" : "screen reader sees"}
+              </p>
+              <div className="flex flex-wrap gap-1">
+                <AnimatePresence mode="popLayout">
+                  {landmarks.map((lm) => (
+                    <motion.span
+                      key={lm.role}
+                      layout
+                      initial={reduce ? false : { opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className={`rounded-full border px-2 py-0.5 font-mono text-[9px] ${
+                        lm.lit
+                          ? "border-cyan-300/50 bg-cyan-400/20 text-cyan-50"
+                          : "border-white/10 bg-white/5 text-slate-300"
+                      }`}
+                    >
+                      {lm.role}
+                    </motion.span>
+                  ))}
+                </AnimatePresence>
+                {landmarks.length === 0 ? (
+                  <span className="text-[10px] text-slate-500">…</span>
+                ) : null}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <p
-          className={`mt-2 shrink-0 text-[11px] font-medium ${
-            healthy ? "text-emerald-300" : "text-amber-200/80"
-          }`}
+        <pre
+          dir="ltr"
+          className="w-full max-w-lg overflow-x-auto rounded-xl border border-white/10 bg-slate-950/70 px-3 py-2.5 text-start font-mono text-[11px] leading-5 text-cyan-100"
         >
-          {healthy
-            ? locale === "ar"
-              ? "تعشيش main → article سليم ✓"
-              : "main → article nesting looks healthy ✓"
-            : locale === "ar"
-              ? "فعّل main و article عشان الهيكل يبقى سليم"
-              : "Turn on main + article for a healthy outline"}
-        </p>
+          {current.markup}
+        </pre>
+
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {SEMANTIC_STEPS.map((beat, i) => (
+            <button
+              key={beat.id}
+              type="button"
+              aria-label={beat.chip}
+              aria-current={i === step ? "step" : undefined}
+              onClick={() => goTo(i)}
+              className={`rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold transition ${
+                i === step
+                  ? "bg-cyan-300 text-slate-950"
+                  : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              }`}
+            >
+              {beat.chip}
+            </button>
+          ))}
+        </div>
       </div>
     </LabStage>
   );
