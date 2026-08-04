@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 const CODE_CLASS =
-  "mx-0.5 inline-block rounded-md border border-cyan-300/20 bg-cyan-400/10 px-1.5 py-0.5 font-mono text-[0.9em] font-medium leading-none text-cyan-100";
+  "mx-0.5 inline-block rounded-md border border-cyan-300/20 bg-cyan-400/10 px-1.5 py-0.5 font-mono text-[0.9em] font-medium leading-none text-cyan-100 [unicode-bidi:isolate]";
 
 /**
  * Renders lesson prose with `` `tech terms` `` as LTR <code> chips.
@@ -33,14 +33,19 @@ export function RichText({
   );
 }
 
-/** Keep long Latin / punctuation runs from flipping Arabic punctuation. */
+/** Keep Latin runs and bare HTML tags from flipping Arabic punctuation. */
 function TextChunk({ text }: { text: string }): ReactNode {
   if (!text) return null;
-  const chunks = text.split(/([A-Za-z][A-Za-z0-9+.#/_-]{1,})/g);
+  const chunks = text.split(
+    /(<\/?[A-Za-z][\w:-]*[^>]*>|[A-Za-z][A-Za-z0-9+.#/_-]{1,})/g,
+  );
   return chunks.map((chunk, i) => {
-    if (/^[A-Za-z][A-Za-z0-9+.#/_-]{1,}$/.test(chunk)) {
+    if (
+      /^<\/?[A-Za-z][\w:-]*[^>]*>$/.test(chunk) ||
+      /^[A-Za-z][A-Za-z0-9+.#/_-]{1,}$/.test(chunk)
+    ) {
       return (
-        <bdi key={i} dir="ltr">
+        <bdi key={i} dir="ltr" className="[unicode-bidi:isolate]">
           {chunk}
         </bdi>
       );
