@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   SandpackCodeEditor,
   SandpackConsole,
@@ -67,9 +73,9 @@ const sandpackTheme = {
   },
   font: {
     body: "inherit",
-    mono: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-    size: "13px",
-    lineHeight: "1.65",
+    mono: '"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+    size: "14px",
+    lineHeight: "1.7",
   },
 };
 
@@ -245,6 +251,43 @@ function IconAction({
     >
       {children}
     </button>
+  );
+}
+
+/** Soft flash on the preview frame when live code changes. */
+function PreviewPulse({ children }: { children: ReactNode }) {
+  const { sandpack } = useSandpack();
+  const [pulse, setPulse] = useState(false);
+  const prevCode = useRef<string | null>(null);
+  const codeSignature = useMemo(
+    () =>
+      Object.keys(sandpack.files)
+        .sort()
+        .map((path) => `${path}:${sandpack.files[path]?.code ?? ""}`)
+        .join("\n"),
+    [sandpack.files],
+  );
+
+  useEffect(() => {
+    if (prevCode.current === null) {
+      prevCode.current = codeSignature;
+      return;
+    }
+    if (prevCode.current === codeSignature) return;
+    prevCode.current = codeSignature;
+    setPulse(true);
+    const id = window.setTimeout(() => setPulse(false), 450);
+    return () => window.clearTimeout(id);
+  }, [codeSignature]);
+
+  return (
+    <div
+      className={`h-full min-h-0 transition-shadow duration-300 ${
+        pulse ? "preview-pulse" : ""
+      }`}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -455,16 +498,18 @@ function CodeRunnerInner({
 
   const outputPanel = htmlMode ? (
     <PanelChrome label={t("preview", locale)} className="h-full">
-      <div dir="ltr" className="h-full min-h-0">
-        <SandpackPreview
-          showOpenInCodeSandbox={false}
-          showRefreshButton={false}
-          showRestartButton={false}
-          showNavigator={false}
-          className="!h-full !min-h-0 !rounded-none [&_.sp-preview-container]:!h-full [&_iframe]:!h-full"
-          style={{ height: paneHeight, flex: 1, direction: "ltr" }}
-        />
-      </div>
+      <PreviewPulse>
+        <div dir="ltr" className="h-full min-h-0">
+          <SandpackPreview
+            showOpenInCodeSandbox={false}
+            showRefreshButton={false}
+            showRestartButton={false}
+            showNavigator={false}
+            className="!h-full !min-h-0 !rounded-none [&_.sp-preview-container]:!h-full [&_iframe]:!h-full"
+            style={{ height: paneHeight, flex: 1, direction: "ltr" }}
+          />
+        </div>
+      </PreviewPulse>
     </PanelChrome>
   ) : (
     <PanelChrome label={t("output", locale)} className="h-full">
