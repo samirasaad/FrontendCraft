@@ -81,3 +81,63 @@ export function tierEmoji(tier: Tier): string {
       return "📑";
   }
 }
+
+/** Dot color for filter chips (CSS, not emoji). */
+export function tierDotClass(tier: Tier | "all"): string {
+  switch (tier) {
+    case "all":
+      return "bg-gradient-to-br from-yellow-300 to-cyan-300";
+    case "beginner":
+      return "bg-emerald-400";
+    case "intermediate":
+      return "bg-yellow-300";
+    case "advanced":
+      return "bg-rose-400";
+    case "pro":
+      return "bg-violet-400";
+    case "pitfalls":
+      return "bg-orange-400";
+    case "cheatsheet":
+      return "bg-cyan-400";
+  }
+}
+
+/** Inactive filter chip shell — tier-tinted border/text. */
+export function tierFilterIdleClass(tier: Tier | "all"): string {
+  switch (tier) {
+    case "all":
+      return "border-white/12 bg-white/[0.04] text-slate-300 hover:border-white/20 hover:bg-white/[0.07]";
+    case "beginner":
+      return "border-emerald-400/25 bg-emerald-400/[0.06] text-emerald-100/90 hover:border-emerald-400/40 hover:bg-emerald-400/10";
+    case "intermediate":
+      return "border-yellow-300/25 bg-yellow-300/[0.06] text-yellow-100/90 hover:border-yellow-300/40 hover:bg-yellow-300/10";
+    case "advanced":
+      return "border-rose-400/25 bg-rose-400/[0.06] text-rose-100/90 hover:border-rose-400/40 hover:bg-rose-400/10";
+    case "pro":
+      return "border-violet-400/25 bg-violet-400/[0.06] text-violet-100/90 hover:border-violet-400/40 hover:bg-violet-400/10";
+    case "pitfalls":
+      return "border-orange-400/25 bg-orange-400/[0.06] text-orange-100/90 hover:border-orange-400/40 hover:bg-orange-400/10";
+    case "cheatsheet":
+      return "border-cyan-400/25 bg-cyan-400/[0.06] text-cyan-100/90 hover:border-cyan-400/40 hover:bg-cyan-400/10";
+  }
+}
+
+/** Active filter chip fill. */
+export function tierFilterActiveClass(tier: Tier | "all"): string {
+  switch (tier) {
+    case "all":
+      return "border-transparent bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950 shadow-[0_0_20px_-6px_rgba(34,211,238,0.55)]";
+    case "beginner":
+      return "border-emerald-300/50 bg-emerald-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(52,211,153,0.55)]";
+    case "intermediate":
+      return "border-yellow-200/50 bg-yellow-300 text-slate-950 shadow-[0_0_18px_-6px_rgba(253,224,71,0.5)]";
+    case "advanced":
+      return "border-rose-300/50 bg-rose-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(251,113,133,0.5)]";
+    case "pro":
+      return "border-violet-300/50 bg-violet-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(167,139,250,0.5)]";
+    case "pitfalls":
+      return "border-orange-300/50 bg-orange-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(251,146,60,0.5)]";
+    case "cheatsheet":
+      return "border-cyan-300/50 bg-cyan-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(34,211,238,0.5)]";
+  }
+}

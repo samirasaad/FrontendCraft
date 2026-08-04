@@ -69,7 +69,7 @@ function DashboardShell({ track }: { track: TrackDefinition }) {
           open={menuOpen}
           onToggle={() => setMenuOpen((v) => !v)}
         />
-        <main className="min-w-0 flex-1 px-3 py-4 transition-[width] duration-300 sm:px-4 sm:py-5 lg:px-5 lg:py-6">
+        <main className="min-w-0 flex-1 px-3 py-4 transition-[margin,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-4 sm:py-5 lg:px-5 lg:py-6">
           {track.lessons.length === 0 ? (
             <EmptyTrackState track={track} />
           ) : (

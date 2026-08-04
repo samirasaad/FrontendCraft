@@ -73,14 +73,18 @@ import {
   TIER_ORDER,
   tierBadgeClass,
   tierBlurb,
+  tierDotClass,
   tierEmoji,
+  tierFilterActiveClass,
+  tierFilterIdleClass,
   tierLabel,
   type TierFilter,
 } from "@/lib/tiers";
 import type { Tier } from "@/lib/types";
 
-/** Roughly 1:2–1:3 vs content; grows with the viewport up to 24rem. */
-const SIDEBAR_WIDTH = "clamp(20rem, 32vw, 24rem)";
+/** Inner content width — outer `.lessons-panel` clips while animating. */
+const SIDEBAR_INNER = "22rem";
+const SIDEBAR_INNER_POPOVER = "min(22rem, 90vw)";
 
 const iconMap: Record<string, LucideIcon> = {
   Box,
@@ -270,32 +274,39 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
   }, [open, onToggle]);
 
   const [isPopover, setIsPopover] = useState(false);
+  /** Skip the first paint so mount↔media sync doesn’t flash a fake open animation. */
+  const [panelReady, setPanelReady] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 1023px)");
     const sync = () => setIsPopover(mq.matches);
     sync();
     mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
+    const readyId = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => setPanelReady(true));
+    });
+    return () => {
+      mq.removeEventListener("change", sync);
+      window.cancelAnimationFrame(readyId);
+    };
   }, []);
 
   const reduce = useReducedMotion();
-  const isRtl = locale === "ar";
-  const railWidth = "3rem";
   const panelOpen = open;
-  const popoverWidth = "min(24rem, 90vw)";
-  const closedX = isRtl ? "100%" : "-100%";
 
-  /** Closing is intentionally slower so the slide reads clearly (no opacity flash). */
-  const panelTransition = reduce
-    ? { duration: 0 }
-    : isPopover
-      ? {
-          duration: panelOpen ? 0.42 : 0.58,
-          ease: panelOpen
-            ? ([0.16, 1, 0.3, 1] as const)
-            : ([0.4, 0, 0.2, 1] as const),
-        }
-      : { type: "spring" as const, stiffness: 260, damping: 30, mass: 0.95 };
+  /** Keep body mounted while the CSS width/slide (~820ms) finishes closing. */
+  const [showPanelBody, setShowPanelBody] = useState(panelOpen);
+  useEffect(() => {
+    if (panelOpen) {
+      setShowPanelBody(true);
+      return;
+    }
+    if (reduce) {
+      setShowPanelBody(false);
+      return;
+    }
+    const id = window.setTimeout(() => setShowPanelBody(false), 850);
+    return () => window.clearTimeout(id);
+  }, [panelOpen, reduce]);
 
   return (
     <>
@@ -306,10 +317,13 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
             type="button"
             aria-label={t("closeMenu", locale)}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
+            animate={{
+              opacity: 1,
+              transition: { duration: 0.55, ease: [0.45, 0.05, 0.25, 1] },
+            }}
             exit={{
               opacity: 0,
-              transition: { duration: 0.48, delay: 0.1, ease: [0.4, 0, 0.2, 1] },
+              transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
             }}
             className="fixed inset-0 z-40 bg-slate-950/70 backdrop-blur-md lg:hidden"
             onClick={() => {
@@ -320,51 +334,35 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
         ) : null}
       </AnimatePresence>
 
-      <motion.aside
-        initial={false}
-        animate={
-          isPopover
-            ? {
-                x: panelOpen ? 0 : closedX,
-                width: popoverWidth,
-              }
-            : {
-                x: 0,
-                width: panelOpen ? SIDEBAR_WIDTH : railWidth,
-              }
-        }
-        transition={panelTransition}
-        className={`z-50 shrink-0 overflow-hidden border-e border-white/10 bg-slate-950/95 backdrop-blur-xl will-change-transform max-lg:fixed max-lg:inset-y-0 max-lg:start-0 max-lg:h-dvh max-lg:shadow-[0_24px_80px_rgba(0,0,0,0.55)] lg:sticky lg:top-[57px] lg:h-[calc(100vh-57px)] lg:bg-slate-950/50 ${
-          isPopover && !panelOpen ? "pointer-events-none" : ""
+      <aside
+        className={`lessons-panel ${panelOpen ? "is-open" : "is-closed"}${
+          panelReady && !reduce ? " is-ready" : ""
         }`}
       >
         <div
           className="flex h-full flex-col"
           style={{
-            width: isPopover
-              ? popoverWidth
-              : panelOpen
-                ? SIDEBAR_WIDTH
-                : railWidth,
+            width: isPopover ? SIDEBAR_INNER_POPOVER : SIDEBAR_INNER,
           }}
         >
-          <div
-            className={`flex items-center border-b border-white/10 py-2.5 ${
-              panelOpen ? "justify-between px-3" : "justify-center px-1"
-            }`}
-          >
-            {panelOpen ? (
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300">
-                {t("lessons", locale)}
-              </p>
-            ) : null}
+          <div className="relative flex h-12 shrink-0 items-center border-b border-white/10">
+            <p
+              className={`px-3 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300 transition-opacity duration-500 ease-out ${
+                panelOpen ? "opacity-100" : "pointer-events-none opacity-0"
+              }`}
+              aria-hidden={!panelOpen}
+            >
+              {t("lessons", locale)}
+            </p>
             <button
               type="button"
               onClick={() => {
                 playClick();
                 onToggle();
               }}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-200 transition hover:bg-white/10"
+              className={`absolute top-1/2 inline-flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-slate-200 transition-[inset-inline,background-color] duration-700 ease-[cubic-bezier(0.45,0.05,0.25,1)] hover:bg-white/10 ${
+                panelOpen ? "end-3" : "start-1"
+              }`}
               aria-label={
                 panelOpen ? t("closeMenu", locale) : t("openMenu", locale)
               }
@@ -372,7 +370,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
             >
               <PanelLeftClose
                 size={16}
-                className={`transition-transform duration-300 ${
+                className={`transition-transform duration-700 ease-[cubic-bezier(0.45,0.05,0.25,1)] ${
                   panelOpen
                     ? "rotate-0 rtl:rotate-180"
                     : "rotate-180 rtl:rotate-0"
@@ -382,8 +380,17 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
           </div>
 
           <div
-            className={`min-h-0 flex-1 flex-col ${panelOpen ? "flex" : "hidden"}`}
+            className={`min-h-0 flex-1 flex-col transition-[opacity,transform] duration-500 ease-[cubic-bezier(0.45,0.05,0.25,1)] ${
+              showPanelBody ? "flex" : "hidden"
+            } ${
+              panelOpen
+                ? "translate-x-0 opacity-100"
+                : "pointer-events-none -translate-x-2 opacity-0 rtl:translate-x-2"
+            }`}
             aria-hidden={!panelOpen}
+            style={{
+              transitionDelay: reduce ? "0ms" : panelOpen ? "180ms" : "0ms",
+            }}
           >
             <div className="border-b border-white/10 p-3">
               <div className="relative">
@@ -400,29 +407,54 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                 />
               </div>
 
-              <div className="mt-2.5 flex gap-1.5 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              <div
+                role="toolbar"
+                aria-label={t("lessons", locale)}
+                className="mt-2.5 grid grid-cols-3 gap-1.5"
+              >
                 {TIER_FILTERS.map((filter) => {
                   const active = tierFilter === filter;
                   const label =
                     filter === "all"
                       ? t("filterAll", locale)
-                      : `${tierEmoji(filter)} ${tierLabel(filter, locale)}`;
+                      : tierLabel(filter, locale);
+                  const count =
+                    filter === "all"
+                      ? totalCount
+                      : (tierStats[filter]?.total ?? 0);
                   return (
                     <button
                       key={filter}
                       type="button"
                       tabIndex={panelOpen ? 0 : -1}
+                      aria-pressed={active}
+                      title={label}
                       onClick={() => {
                         if (filter !== tierFilter) playClick();
                         setTierFilter(filter);
                       }}
-                      className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold transition ${
+                      className={`group flex min-w-0 items-center justify-center gap-1 rounded-lg border px-1.5 py-1.5 text-[10px] font-semibold tracking-wide transition duration-200 ${
                         active
-                          ? "bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950"
-                          : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                          ? tierFilterActiveClass(filter)
+                          : tierFilterIdleClass(filter)
                       }`}
                     >
-                      {label}
+                      <span
+                        className={`h-1.5 w-1.5 shrink-0 rounded-full ${
+                          active ? "bg-slate-950/45" : tierDotClass(filter)
+                        }`}
+                        aria-hidden
+                      />
+                      <span className="truncate">{label}</span>
+                      <span
+                        className={`tabular-nums ${
+                          active
+                            ? "text-slate-950/55"
+                            : "text-current opacity-45"
+                        }`}
+                      >
+                        {count}
+                      </span>
                     </button>
                   );
                 })}
@@ -572,7 +604,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
             </nav>
           </div>
         </div>
-      </motion.aside>
+      </aside>
     </>
   );
 }

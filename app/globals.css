@@ -153,6 +153,78 @@ html[data-locale-to="en"][data-locale-anim="out"] body {
   }
 }
 
+/* Lessons sidebar: CSS owns open/close so rem widths + mobile slide always interpolate */
+.lessons-panel {
+  --lessons-open: 22rem;
+  --lessons-rail: 3rem;
+  --lessons-popover: min(22rem, 90vw);
+  --lessons-dur: 820ms;
+  --lessons-ease: cubic-bezier(0.45, 0.05, 0.25, 1);
+  z-index: 50;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-inline-end: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(2 6 23 / 0.95);
+  backdrop-filter: blur(16px);
+  will-change: transform, width;
+}
+
+.lessons-panel.is-ready {
+  transition:
+    width var(--lessons-dur) var(--lessons-ease),
+    transform var(--lessons-dur) var(--lessons-ease);
+}
+
+/* Desktop: width rail ↔ open */
+@media (min-width: 1024px) {
+  .lessons-panel {
+    position: sticky;
+    top: 57px;
+    height: calc(100vh - 57px);
+    background: rgb(2 6 23 / 0.5);
+    transform: none;
+  }
+
+  .lessons-panel.is-open {
+    width: var(--lessons-open);
+  }
+
+  .lessons-panel.is-closed {
+    width: var(--lessons-rail);
+  }
+}
+
+/* Mobile: fixed drawer slides in from the inline-start edge */
+@media (max-width: 1023px) {
+  .lessons-panel {
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    height: 100dvh;
+    width: var(--lessons-popover);
+    box-shadow: 0 24px 80px rgb(0 0 0 / 0.55);
+  }
+
+  .lessons-panel.is-open {
+    transform: translate3d(0, 0, 0);
+  }
+
+  .lessons-panel.is-closed {
+    transform: translate3d(-100%, 0, 0);
+    pointer-events: none;
+  }
+
+  html[dir="rtl"] .lessons-panel.is-closed {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lessons-panel.is-ready {
+    transition: none !important;
+  }
+}
+
 ::selection {
   background: color-mix(in oklab, var(--accent-cyan) 35%, transparent);
   color: white;
