@@ -6,9 +6,9 @@ import {
   ArrowRight,
   CheckCircle2,
   Lightbulb,
+  ListChecks,
   Sparkles,
   XCircle,
-  Zap,
 } from "lucide-react";
 import { QuizCodeSnippet } from "@/components/lesson/quiz/QuizCodeSnippet";
 import { QuizOptionCard } from "@/components/lesson/quiz/QuizOptionCard";
@@ -49,14 +49,7 @@ function QuestionView({
 
   return (
     <div>
-      <QuizProgress
-        current={index + 1}
-        total={total}
-        label={fillTemplate(t("quizProgress", locale), {
-          current: index + 1,
-          total,
-        })}
-      />
+      <QuizProgress current={index + 1} total={total} />
 
       <p className="mb-4 text-base font-semibold leading-relaxed text-white sm:text-lg">
         <RichText text={loc(question.prompt, locale)} />
@@ -271,11 +264,11 @@ export function Quiz({
 
       <div className="relative mb-5 flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
-          <Zap size={16} />
+          <ListChecks size={16} />
         </span>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/90">
-            Quiz
+            {t("lessonTabQuiz", locale)}
           </p>
           <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white">
             {title}

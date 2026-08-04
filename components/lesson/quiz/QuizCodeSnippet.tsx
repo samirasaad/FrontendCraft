@@ -127,11 +127,14 @@ export function QuizCodeSnippet({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-cyan-400/25 bg-slate-950/90 shadow-[0_0_24px_rgba(34,211,238,0.08)]">
-      <div className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2">
+      <div
+        dir="ltr"
+        className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2"
+      >
         <span className="h-2 w-2 rounded-full bg-rose-400/70" />
         <span className="h-2 w-2 rounded-full bg-amber-300/70" />
         <span className="h-2 w-2 rounded-full bg-emerald-400/70" />
-        <span className="ms-2 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+        <span className="ml-2 font-mono text-[11px] uppercase tracking-wider text-slate-500">
           {label ?? language}
         </span>
       </div>

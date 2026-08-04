@@ -26,10 +26,14 @@ import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { DEMO_IMG_PATH, STUDENTS_CODING_SVG } from "@/lib/demo-assets";
+import { RTL_FLIP } from "@/lib/rtl";
 import type { CodeExample, TrackId } from "@/lib/types";
 
 interface CodeRunnerProps {
   examples: CodeExample[];
+  /** When set (e.g. from CheatSheet), overrides the active example code. */
+  seedCode?: string | null;
+  onClearSeed?: () => void;
 }
 
 type SplitOrientation = "side" | "stack";
@@ -246,7 +250,6 @@ function IconAction({
 
 function RunControls({
   sourceCode,
-  expectedHint,
   fullscreen,
   onToggleFullscreen,
   showSplit,
@@ -256,7 +259,6 @@ function RunControls({
   onSwap,
 }: {
   sourceCode: string;
-  expectedHint: string;
   fullscreen: boolean;
   onToggleFullscreen: () => void;
   showSplit: boolean;
@@ -301,16 +303,6 @@ function RunControls({
           <Terminal size={14} className="shrink-0 text-yellow-300" />
           <span className="truncate font-medium">{t("playground", locale)}</span>
         </div>
-        {expectedHint ? (
-          <p className="mt-0.5 truncate ps-5 text-[10px] text-slate-500">
-            <span className="font-sans font-semibold text-slate-400">
-              {t("expectedHint", locale)}:
-            </span>{" "}
-            <span className="font-mono" dir="ltr">
-              {expectedHint}
-            </span>
-          </p>
-        ) : null}
       </div>
 
       <div className="flex shrink-0 items-center gap-0.5 ps-5 lg:ps-0">
@@ -358,7 +350,7 @@ function RunControls({
           disabled={running}
           accent
         >
-          <Play size={14} />
+          <Play size={14} className={RTL_FLIP} />
         </IconAction>
       </div>
     </div>
@@ -388,11 +380,9 @@ function PanelChrome({
 
 function CodeRunnerInner({
   code,
-  expectedHint,
   trackId,
 }: {
   code: string;
-  expectedHint: string;
   trackId: TrackId;
 }) {
   const htmlMode = isHtmlTrack(trackId);
@@ -532,7 +522,6 @@ function CodeRunnerInner({
         <div className="shrink-0">
           <RunControls
             sourceCode={code}
-            expectedHint={expectedHint}
             fullscreen={fullscreen}
             onToggleFullscreen={() => setFullscreen((value) => !value)}
             showSplit
@@ -561,7 +550,11 @@ function CodeRunnerInner({
   );
 }
 
-export function CodeRunner({ examples }: CodeRunnerProps) {
+export function CodeRunner({
+  examples,
+  seedCode,
+  onClearSeed,
+}: CodeRunnerProps) {
   const { locale } = useLanguage();
   const { trackId } = useProgress();
   const { playClick } = useSound();
@@ -579,48 +572,68 @@ export function CodeRunner({ examples }: CodeRunnerProps) {
   const [activeId, setActiveId] = useState(safeExamples[0].id);
   const active =
     safeExamples.find((ex) => ex.id === activeId) ?? safeExamples[0];
-  const expectedHint = loc(active.expectedOutput, locale).replace(/\\n/g, "\n");
+  const seeded = Boolean(seedCode?.trim());
+  const runnerCode = seeded ? seedCode! : active.code;
 
   return (
     <div className="space-y-3" dir={locale === "ar" ? "rtl" : "ltr"}>
-      <div
-        className="flex flex-wrap gap-2"
-        role="tablist"
-        aria-label={t("playground", locale)}
-      >
-        {safeExamples.map((ex) => {
-          const selected = ex.id === active.id;
-          const label =
-            ex.id === "realWorld"
-              ? t("exampleRealWorld", locale)
-              : ex.id === "simple"
-                ? t("exampleSimple", locale)
-                : loc(ex.label, locale);
-          return (
+      {seeded ? (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2.5">
+          <p className="text-xs font-medium text-emerald-100 sm:text-sm">
+            {t("cheatSeedBanner", locale)}
+          </p>
+          {onClearSeed ? (
             <button
-              key={ex.id}
               type="button"
-              role="tab"
-              aria-selected={selected}
               onClick={() => {
-                if (ex.id !== active.id) playClick();
-                setActiveId(ex.id);
+                playClick();
+                onClearSeed();
               }}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
-                selected
-                  ? "bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950"
-                  : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
-              }`}
+              className="shrink-0 rounded-full border border-emerald-300/35 bg-emerald-300/15 px-3 py-1 text-[11px] font-semibold text-emerald-50 hover:bg-emerald-300/25"
             >
-              {label}
+              {t("cheatSeedClear", locale)}
             </button>
-          );
-        })}
-      </div>
+          ) : null}
+        </div>
+      ) : (
+        <div
+          className="flex flex-wrap gap-2"
+          role="tablist"
+          aria-label={t("playground", locale)}
+        >
+          {safeExamples.map((ex) => {
+            const selected = ex.id === active.id;
+            const label =
+              ex.id === "realWorld"
+                ? t("exampleRealWorld", locale)
+                : ex.id === "simple"
+                  ? t("exampleSimple", locale)
+                  : loc(ex.label, locale);
+            return (
+              <button
+                key={ex.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => {
+                  if (ex.id !== active.id) playClick();
+                  setActiveId(ex.id);
+                }}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                  selected
+                    ? "bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950"
+                    : "border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
+                }`}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      )}
       <CodeRunnerInner
-        key={`${trackId}-${active.id}-${active.code}`}
-        code={active.code}
-        expectedHint={expectedHint}
+        key={`${trackId}-${seeded ? "seed" : active.id}-${runnerCode.slice(0, 48)}`}
+        code={runnerCode}
         trackId={trackId}
       />
     </div>

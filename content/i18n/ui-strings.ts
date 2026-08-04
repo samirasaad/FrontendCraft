@@ -449,28 +449,28 @@ export const ui = {
     ar: "تعمّق — الـ engine والذاكرة وسياق الـ call stack",
   },
   underTheHood: {
-    en: "⚙️ Under the Hood (Engine Mechanics)",
-    ar: "⚙️ Under the Hood (ميكانيكا الـ Engine)",
+    en: "Under the Hood (Engine Mechanics)",
+    ar: "Under the Hood (ميكانيكا الـ Engine)",
   },
   underTheHoodHint: {
-    en: "How V8 / Blink / Gecko process this concept — memory, queues, and the render pipeline",
-    ar: "إزاي V8 / Blink / Gecko بيعالجوا المفهوم ده — ذاكرة و queues ومسار الـ render",
+    en: "How the browser builds meaning — DOM, accessibility tree, parse repairs, and the render path",
+    ar: "إزاي المتصفح بيبني المعنى — DOM و accessibility tree وإصلاحات الـ parse ومسار الـ render",
   },
   accessibilityTitle: {
-    en: "♿ Accessibility (a11y) Best Practices",
-    ar: "♿ Accessibility (a11y) Best Practices",
+    en: "Accessibility (a11y) Best Practices",
+    ar: "Accessibility (a11y) Best Practices",
   },
   accessibilityHint: {
-    en: "How NVDA / VoiceOver hear this pattern — ARIA, keyboard, and focus",
-    ar: "إزاي NVDA / VoiceOver بيسمعوا الـ pattern ده — ARIA والكيبورد والـ focus",
+    en: "How NVDA / VoiceOver / TalkBack hear this — landmarks, names, keyboard, and focus",
+    ar: "إزاي NVDA / VoiceOver / TalkBack بيسمعوا ده — landmarks والأسماء والكيبورد والـ focus",
   },
   seoTitle: {
-    en: "🔍 SEO Insights",
-    ar: "🔍 SEO Insights",
+    en: "SEO Insights",
+    ar: "SEO Insights",
   },
   seoHint: {
-    en: "Crawl → render → index, SSR vs CSR, titles, canonicals, links, structured data",
-    ar: "Crawl → render → index و SSR مقابل CSR والعناوين والـ canonicals واللينكات و structured data",
+    en: "How crawlers and reader mode use structure — main content, headings, links, rich results",
+    ar: "إزاي الزواحف و Reader Mode بيستخدموا الهيكل — المحتوى الأساسي والعناوين واللينكات و rich results",
   },
   insightCodeLabel: { en: "Reference snippet", ar: "Snippet مرجعي" },
   commonPitfalls: { en: "Common pitfalls & anti-patterns", ar: "أخطاء شائعة و anti-patterns" },
@@ -484,9 +484,24 @@ export const ui = {
   exampleRealWorld: { en: "Real-world", ar: "واقعي" },
   cheatSheetTitle: { en: "Interactive CheatSheet", ar: "CheatSheet تفاعلي" },
   cheatSheetHint: {
-    en: "Filter by category, preview live, then copy code or a full boilerplate",
-    ar: "فلتر حسب الفئة، اتفرّج على preview مباشر، وبعدين انسخ الكود أو boilerplate كامل",
+    en: "Search, filter, expand a card, copy, or open it in Live",
+    ar: "دور، فلتر، وسّع كارت، انسخ، أو افتحه في Live",
   },
+  cheatSearchPlaceholder: {
+    en: "Search cards, tags, or snippets…",
+    ar: "دور في الكروت أو التاجات أو الـ snippets…",
+  },
+  cheatSearchEmpty: {
+    en: "No cards match that search.",
+    ar: "مفيش كروت مطابقة للبحث ده.",
+  },
+  cheatExpand: { en: "Expand", ar: "وسّع" },
+  cheatClose: { en: "Close", ar: "اقفل" },
+  cheatSeedBanner: {
+    en: "Loaded from CheatSheet — edit freely in the playground",
+    ar: "متحمّل من الـ CheatSheet — عدّل بحرية في الـ playground",
+  },
+  cheatSeedClear: { en: "Back to examples", ar: "ارجع للأمثلة" },
   snippetCopied: { en: "Snippet copied", ar: "الـ snippet اتنسخ" },
   cheatFilterAll: { en: "All", ar: "الكل" },
   cheatFilterStructure: {
@@ -555,7 +570,7 @@ export const ui = {
   challengeWrong: { en: "Not quite.", ar: "لسه." },
   challengeHintBar: {
     en: "Optional: check your understanding in Quiz",
-    ar: "اختياري: راجع فهمك من تاب الـ Quiz",
+    ar: "اختياري: راجع فهمك من تاب الاختبار",
   },
   openInLive: {
     en: "Open in Live coding",
@@ -564,10 +579,6 @@ export const ui = {
   deepDive: {
     en: "Deep dive",
     ar: "تعمّق أكتر",
-  },
-  deepDiveHint: {
-    en: "Engine details, a11y, SEO, pitfalls & more",
-    ar: "تفاصيل الـ engine و a11y و SEO والأخطاء الشائعة وأكتر",
   },
   lessonTablist: {
     en: "Lesson sections",
@@ -587,11 +598,11 @@ export const ui = {
   },
   lessonTabLiveEmpty: {
     en: "No playground for this lesson yet — stay on Concept or jump to Quiz.",
-    ar: "مفيش ملعب كود للدرس ده لسه — فضّل على Concept أو روح للـ Quiz.",
+    ar: "مفيش ملعب كود للدرس ده لسه — فضّل على المفهوم أو روح للاختبار.",
   },
   lessonTabQuizEmpty: {
     en: "No quiz on this lesson yet.",
-    ar: "مفيش quiz على الدرس ده لسه.",
+    ar: "مفيش اختبار على الدرس ده لسه.",
   },
   quizTitle: {
     en: "Knowledge check",
@@ -611,7 +622,7 @@ export const ui = {
   },
   quizComplete: {
     en: "Quiz complete",
-    ar: "خلصت الـ quiz",
+    ar: "خلصت الاختبار",
   },
   quizScore: {
     en: "You got {score} of {total} right",

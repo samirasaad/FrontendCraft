@@ -89,83 +89,148 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "Semantic elements map to accessibility roles in the accessibility tree — `<nav>`, `<main>`, `<article>` become landmarks without ARIA. The browser builds this parallel tree alongside the DOM for AT.",
-          "`Semantic elements` بتت map لـ `accessibility roles` في `accessibility tree` — `<nav>`, `<main>`, `<article>` `landmarks` من غير `ARIA`. المتصفح بيبني `tree` موازي جنب `DOM` لـ `AT`.",
+          "Browsers map HTML elements to accessibility roles via the HTML Accessibility API Mappings (HTML-AAM). `<header>` (scoped to the body) → `banner`, `<nav>` → `navigation`, `<main>` → `main`, `<footer>` → `contentinfo`, `<article>` → `article`. That parallel accessibility tree is what screen readers walk — not your CSS boxes.",
+          "المتصفحات بتربط عناصر HTML بـ accessibility roles عبر HTML-AAM. `<header>` (على مستوى الصفحة) → `banner`، `<nav>` → `navigation`، `<main>` → `main`، `<footer>` → `contentinfo`، `<article>` → `article`. دي الـ accessibility tree الموازية اللي قارئات الشاشة بتمشي عليها — مش صناديق CSS.",
         ),
         L(
-          "Sectioning content (`article`, `section`, `aside`, `nav`) affects document outline algorithms in spec — while browsers do not expose heading outlines to users consistently, semantics still drive reader mode and search snippet structure.",
-          "Sectioning content (`article`, `section`, `aside`, `nav`) بيأثر على document outline algorithms في spec — browsers مش بتعرض heading outlines consistently، لكن semantics لسه بتوجّه reader mode و search snippet structure.",
+          "`<header>` / `<footer>` are landmarks only when they are not nested inside another sectioning element (`article`, `section`, `aside`, `nav`). Nested ones stay ordinary headers/footers for that section — so you can have a post `<header>` inside `<article>` without creating a second page `banner`.",
+          "`<header>` / `<footer>` بيبقوا landmarks بس لما يكونوش جوّه عنصر sectioning تاني (`article`, `section`, `aside`, `nav`). المتداخلين بيفضلوا header/footer عاديين للقسم ده — فتقدر تحط `<header>` جوّه `<article>` من غير ما تعمل `banner` تاني للصفحة.",
         ),
         L(
-          "Div soup forces the engine to treat everything as generic — no shortcut navigation, heavier heuristic guessing for AT. Native semantics are zero-cost at parse time.",
-          "`Div soup` بيخلي الـ `engine` يتعامل مع كل حاجة `generic` — مفيش `shortcut navigation`، `guessing` أثقل لـ `AT`. `Native semantics` `zero-cost` وقت `parse`.",
+          "Do not rely on the old HTML5 “document outline” idea (sections inventing heading ranks). Browsers never shipped a usable outline UI from that algorithm, and the spec retreated. Real structure today = explicit `h1`–`h6` ranks + landmark regions. A bare `<section>` with no accessible name is usually not exposed as a landmark at all.",
+          "متعتمدش على فكرة HTML5 القديمة عن document outline (إن الـ sections تخترع مراتب عناوين). المتصفحات عمرها ما شحنت UI outline يعتمد على الخوارزمية دي، والـ spec تراجع عنها. الهيكل الحقيقي النهاردة = مراتب `h1`–`h6` صريحة + مناطق landmarks. `<section>` فاضي من غير اسم وصول غالبًا مش بيتعرض كـ landmark أصلًا.",
+        ),
+        L(
+          "Native semantics are assigned at parse time with almost no runtime cost. A soup of `<div class=\"header\">` / `<div class=\"nav\">` stays `generic` in the accessibility tree — AT has nothing to jump to, and reader-mode / extraction heuristics must guess harder.",
+          "الـ semantics الأصلية بتتحدد وقت الـ parse وتكلفتها تقريبًا صفر. شوربة `<div class=\"header\">` / `<div class=\"nav\">` بتفضل `generic` في accessibility tree — مفيش حاجة تقفز ليها التقنية المساعدة، وheuristics بتاعة Reader Mode والاستخراج بتتخمّن أصعب.",
         ),
       ],
       {
         bullets: [
-          L("`<header>` / `<footer>` can repeat per sectioning `root`", "`<header>` / `<footer>` ممكن يتكرروا per sectioning `root`"),
-          L("One `visible` `<h1>` per page in most layouts", "`<h1>` ظاهر واحد لكل صفحة في أغلب layouts"),
-          L("`<nav>` for major navigation blocks only", "`<nav>` لـ major navigation blocks بس"),
-          L("`<article>` for self-contained syndicatable `content`", "`<article>` لمحتوى self-contained قابل للـ syndication"),
+          L("One `<main>` per page — never nest `<main>`", "`<main>` واحد لكل صفحة — ومتعشّشش `<main>` جوّه بعض"),
+          L("`<header>` / `<footer>` on the page = banner / contentinfo; inside a section they are local", "`<header>` / `<footer>` على الصفحة = banner / contentinfo؛ جوّه section بيبقوا محليين"),
+          L("`<section>` needs a heading (or accessible name) to mean anything useful", "`<section>` محتاج heading (أو اسم وصول) عشان يبقى له معنى"),
+          L("`<article>` = self-contained unit; `<section>` = thematic group under a heading", "`<article>` = وحدة مستقلة؛ `<section>` = مجموعة موضوعية تحت عنوان"),
+          L("Prefer native tags over `role=\"banner\"` / `role=\"main\"` duplicates", "فضّل الـ tags الأصلية على تكرار `role=\"banner\"` / `role=\"main\"`"),
         ],
         code: `<body>
-  <header><h1>Site</h1></header>
-  <nav aria-label="Primary">...</nav>
+  <header>
+    <p>FrontendCraft</p>
+    <nav aria-label="Primary">…</nav>
+  </header>
   <main>
     <article>
-      <h2>Post title</h2>
-      <p>...</p>
+      <header>
+        <h1>Why semantics matter</h1>
+        <p>Published <time datetime="2026-08-04">Aug 4</time></p>
+      </header>
+      <section>
+        <h2>Landmarks</h2>
+        <p>…</p>
+      </section>
     </article>
   </main>
+  <footer>
+    <nav aria-label="Footer">…</nav>
+    <p>© 2026</p>
+  </footer>
 </body>`,
-        codeCaption: L("`Landmark`-first page `skeleton`", "Page `skeleton` `landmarks` أولًا"),
+        codeCaption: L(
+          "Page landmarks + a local article header (not a second banner)",
+          "Landmarks الصفحة + header محلي للـ article (مش banner تاني)",
+        ),
       },
     ),
     accessibility: insight(
       [
         L(
-          "NVDA and VoiceOver expose landmark lists (D, NVDA+Firefox) — semantic `<main>`, `<nav>`, `<aside>` let users jump instantly. ARIA `role=\"main\"` duplicates native `<main>`; prefer native unless legacy markup forbids it.",
-          "NVDA و VoiceOver بيعرضوا landmark lists — semantic `<main>`, `<nav>`, `<aside>` بتخلي users يقفزوا فورًا. ARIA `role=\"main\"` duplicate لـ native `<main>`؛ فضّل native إلا لو legacy markup يمنع.",
+          "Landmark navigation is a primary SR skill: VoiceOver rotor, NVDA Elements List / landmark key, TalkBack reading controls. With real `<main>`, `<nav>`, `<aside>`, users skip chrome in one jump. `role=\"main\"` on a `<div>` is a last resort for legacy markup — native `<main>` is clearer and harder to get wrong.",
+          "التنقل بالـ landmarks مهارة أساسية لقارئ الشاشة: VoiceOver rotor، و NVDA Elements List / مفتاح landmarks، و TalkBack. مع `<main>` و `<nav>` و `<aside>` حقيقيين، المستخدم يتخطى الـ chrome بقفزة واحدة. `role=\"main\"` على `<div>` حل أخير للـ markup القديم — `<main>` الأصلي أوضح وأصعب تتلخبط فيه.",
         ),
         L(
-          "Multiple `<nav>` elements need `aria-label` or `aria-labelledby` to distinguish — \"Primary\", \"Footer\", \"Breadcrumb\" — otherwise AT announces generic \"navigation\" repeatedly.",
-          "`<nav>` متعددة محتاجة `aria-label` أو `aria-labelledby` للتمييز — \"Primary\", \"Footer\", \"Breadcrumb\" — وإلا AT بتقول \"navigation\" generic باستمرار.",
+          "When a page has more than one `<nav>`, label each with `aria-label` or `aria-labelledby` (“Primary”, “Footer”, “Breadcrumb”). Unlabeled duplicates all announce as generic “navigation”, which wastes the landmark list.",
+          "لما الصفحة فيها أكتر من `<nav>`، سمّي كل واحدة بـ `aria-label` أو `aria-labelledby` (\"Primary\"، \"Footer\"، \"Breadcrumb\"). المتكرر من غير اسم بيتقال كله \"navigation\" generic وبيضيّع فائدة قائمة الـ landmarks.",
+        ),
+        L(
+          "`<section>` becomes a `region` landmark only when it has an accessible name (usually via a visible heading referenced with `aria-labelledby`, or `aria-label`). Unnamed sections are fine as styling hooks — they just will not appear in the landmark list. Do not wrap the whole page in unlabeled sections hoping for free structure.",
+          "`<section>` بيبقى landmark من نوع `region` بس لما يكون ليه accessible name (غالبًا heading ظاهر مربوط بـ `aria-labelledby`، أو `aria-label`). الـ sections من غير اسم مقبولة كغلاف تنسيق — بس مش هتظهر في قائمة landmarks. متلفّش الصفحة كلها في sections من غير اسم وتستنى هيكل ببلاش.",
+        ),
+        L(
+          "Pair landmarks with a skip link as the first focusable control in `<body>`: `Skip to content` → `#main` (on `<main id=\"main\" tabindex=\"-1\">` if you need a focus target). Landmarks help SR users; skip links help sighted keyboard users who Tab through chrome.",
+          "اربط الـ landmarks بـ skip link كأول عنصر قابل للتركيز في `<body>`: `Skip to content` → `#main` (على `<main id=\"main\" tabindex=\"-1\">` لو محتاج هدف focus). الـ landmarks بتساعد مستخدمي قارئ الشاشة؛ الـ skip links بتساعد مستخدمي الكيبورد اللي بيشوفوا الشاشة وبيعدّوا على الـ chrome بـ Tab.",
         ),
       ],
       {
         bullets: [
-          L("Label every `<nav>` when more than one", "سمّي كل `<nav>` لما يكون أكتر من واحد"),
-          L("Do not wrap everything in `<div>` — use `landmarks`", "متلفش كل حاجة في `<div>` — استخدم `landmarks`"),
-          L("`Heading` `levels` reflect `structure`, not font size", "`Heading` `levels` تعكس `structure` مش font size"),
-          L("`ARIA` only when native `semantics` cannot express intent", "`ARIA` لما native `semantics` مش قادرة تعبر intent"),
+          L("Label every `<nav>` (and distinct `<aside>`) when duplicates exist", "سمّي كل `<nav>` (و `<aside>` المميزة) لما يتكرروا"),
+          L("Name a `<section>` if it should appear as a region landmark", "سمّي `<section>` لو المفروض يظهر كـ region landmark"),
+          L("Headings describe sections — never fake a title with styled `<div>`/`<p>`", "العناوين بتوصف الأقسام — متزوّرش عنوان بـ `<div>`/`<p>` مستايل"),
+          L("Skip link + one `<main>` = fastest path past repeated chrome", "Skip link + `<main>` واحد = أسرع طريق بعد الـ chrome المتكرر"),
+          L("Do not re-apply ARIA landmark roles on native landmark elements", "متعيدش أدوار ARIA landmark على عناصر landmark أصلية"),
         ],
-        code: `<nav aria-label="Primary">
-  <ul>...</ul>
-</nav>
-<nav aria-label="Footer">
-  <ul>...</ul>
-</nav>`,
-        codeCaption: L("Distinguish multiple `nav` `landmarks`", "ميّز `nav` `landmarks` متعددة"),
+        code: `<a class="skip-link" href="#main">Skip to content</a>
+<header>
+  <nav aria-label="Primary">…</nav>
+</header>
+<main id="main" tabindex="-1">
+  <section aria-labelledby="semantics-h">
+    <h2 id="semantics-h">Semantic tags</h2>
+    <p>…</p>
+  </section>
+</main>
+<footer>
+  <nav aria-label="Footer">…</nav>
+</footer>`,
+        codeCaption: L(
+          "Skip link + labeled navs + named section region",
+          "Skip link + navs متسمية + section region لها اسم",
+        ),
       },
     ),
     seo: insight(
       [
         L(
-          "Google uses semantic HTML to infer page structure — `<article>` with `<h1>` helps article rich results; breadcrumb `<nav>` with structured data reinforces hierarchy.",
-          "Google بتستخدم semantic HTML عشان تفهم page structure — `<article>` مع `<h1>` بيساعد article rich results؛ breadcrumb `<nav>` مع structured data ي reinforce hierarchy.",
+          "Crawlers and snippet systems still lean on clear HTML structure. Putting primary copy inside `<main>`, self-contained posts/products inside `<article>`, and chrome/legal links in `<header>` / `<footer>` helps extraction separate “the page” from “the template”. Semantics are not a ranking hack — they reduce ambiguity.",
+          "الزواحف وأنظمة الـ snippets لسه بتعتمد على هيكل HTML واضح. حط النسخ الأساسي جوّه `<main>`، والبوستات/المنتجات المستقلة جوّه `<article>`، والـ chrome/اللينكات القانونية في `<header>` / `<footer>` — ده بيساعد الاستخراج يفصل “الصفحة” عن “القالب”. الـ semantics مش حيلة ترتيب — بتقلل الغموض.",
         ),
         L(
-          "Main content in `<main>` separates boilerplate for snippet extraction — sidebars in `<aside>`, unrelated links in `<footer>`, so crawlers weight primary copy higher.",
-          "Main content في `<main>` بيفصل boilerplate لـ snippet extraction — sidebars في `<aside>`، links غير related في `<footer>`، crawlers تدي وزن أعلى للـ copy الأساسي.",
+          "Reader mode (Safari, Firefox, etc.) uses heuristics on headings, articles, and boilerplate density. A clean `<article>` with a real heading hierarchy inside `<main>` is far more likely to extract cleanly than a card grid of anonymous `<div>`s with the same visual design.",
+          "وضع القراءة (Safari و Firefox وغيرهم) بيستخدم heuristics على العناوين والـ articles وكثافة الـ boilerplate. `<article>` نظيف مع hierarchy عناوين حقيقي جوّه `<main>` أقرب يتستخرج صح من شبكة كروت من `<div>`s مجهولة بنفس الشكل البصري.",
+        ),
+        L(
+          "Structured data (`JSON-LD` Article, BreadcrumbList, …) should match the visible HTML — an `<article>` whose `<h1>` disagrees with `headline` in JSON-LD is a trust smell. Breadcrumbs work best as a real `<nav aria-label=\"Breadcrumb\">` list plus matching BreadcrumbList, not as JSON alone.",
+          "الـ structured data (`JSON-LD` Article و BreadcrumbList و…) لازم تطابق الـ HTML الظاهر — `<article>` الـ `<h1>` بتاعه يختلف عن `headline` في JSON-LD علامة ثقة وحشة. الـ breadcrumbs أفضل كـ `<nav aria-label=\"Breadcrumb\">` list حقيقية + BreadcrumbList مطابق، مش JSON لوحده.",
+        ),
+        L(
+          "Do not chase “outline SEO” myths from the abandoned HTML5 outline algorithm. One clear visible `<h1>` that names the page topic, then honest `h2`/`h3` under it, inside landmark regions, is the durable pattern for humans, AT, and crawlers.",
+          "متطاردش خرافات “outline SEO” من خوارزمية HTML5 outline المتخلى عنها. `<h1>` ظاهر واضح بيسمّي موضوع الصفحة، وبعدين `h2`/`h3` صادقين تحته، جوّه مناطق landmarks — ده النمط الثابت للبشر والتقنية المساعدة والزواحف.",
         ),
       ],
       {
         bullets: [
-          L("`<article>` for blog posts, products, news items", "`<article>` للـ blog posts و products و news"),
-          L("Breadcrumb `HTML` + `JSON-LD` alignment", "Breadcrumb `HTML` + `JSON-LD` متطابقين"),
-          L("Avoid hiding `primary text` inside `non-semantic` divs", "متخبيش `primary text` في divs `non-semantic`"),
-          L("`Heading` `hierarchy` mirrors `content` `importance`", "`Heading` `hierarchy` يعكس أهمية المحتوى"),
+          L("Primary copy lives in `<main>` — not only in a hero `<div>`", "النسخ الأساسي جوّه `<main>` — مش في hero `<div>` بس"),
+          L("Use `<article>` for posts, docs pages, products, news items", "استخدم `<article>` للبوستات وصفحات التوثيق والمنتجات والأخبار"),
+          L("Align visible headings with JSON-LD when you ship rich results", "طابق العناوين الظاهرة مع JSON-LD لما تطلع rich results"),
+          L("Breadcrumb: semantic `<nav>` list + matching structured data", "Breadcrumb: قائمة `<nav>` معنوية + structured data مطابق"),
+          L("Semantics clarify meaning — they do not replace fast, crawlable HTML", "الـ semantics بتوضّح المعنى — مش بتستبدل HTML سريع وقابل للزحف"),
         ],
+        code: `<main>
+  <article itemscope itemtype="https://schema.org/Article">
+    <h1 itemprop="headline">Semantic HTML in production</h1>
+    <p itemprop="description">Landmarks and headings beat div soup.</p>
+  </article>
+</main>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Semantic HTML in production"
+}
+</script>`,
+        codeCaption: L(
+          "Visible article + matching JSON-LD headline",
+          "Article ظاهر + headline JSON-LD مطابق",
+        ),
       },
     ),
   },

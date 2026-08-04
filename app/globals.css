@@ -153,6 +153,26 @@ html[data-locale-to="en"][data-locale-anim="out"] body {
   }
 }
 
+/* Quiz progress: fill from reading-start (right in Arabic) */
+.quiz-progress__track {
+  display: flex;
+  justify-content: flex-start;
+  direction: ltr;
+}
+
+html[dir="rtl"] .quiz-progress__track {
+  justify-content: flex-end;
+}
+
+/* Keep "سؤال N من M" on the physical left in Arabic. */
+.quiz-progress__meta {
+  direction: ltr;
+}
+
+html[dir="rtl"] .quiz-progress__count {
+  display: none;
+}
+
 /* Lessons sidebar: CSS owns open/close so rem widths + mobile slide always interpolate */
 .lessons-panel {
   --lessons-open: 22rem;

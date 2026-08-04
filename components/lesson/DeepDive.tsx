@@ -26,17 +26,12 @@ export function DeepDive({ children }: { children: ReactNode }) {
         aria-expanded={open}
         className="flex w-full items-center justify-between gap-3 px-5 py-4 text-start sm:px-6"
       >
-        <span className="flex min-w-0 items-start gap-3">
-          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-slate-300">
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-slate-300">
             <Layers size={16} />
           </span>
-          <span>
-            <span className="block text-sm font-semibold text-slate-100">
-              {t("deepDive", locale)}
-            </span>
-            <span className="mt-0.5 block text-xs text-slate-500">
-              {t("deepDiveHint", locale)}
-            </span>
+          <span className="block text-sm font-semibold text-slate-100">
+            {t("deepDive", locale)}
           </span>
         </span>
         <ChevronDown
