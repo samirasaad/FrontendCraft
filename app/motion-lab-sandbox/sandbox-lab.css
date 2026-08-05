@@ -1,0 +1,169 @@
+/* Motion-lab sandbox — fixed-height capture frame, no growing layout. */
+
+.sandbox-lab-frame,
+[data-record-frame] {
+  height: var(--sandbox-lab-h);
+  max-height: var(--sandbox-lab-h);
+  min-height: var(--sandbox-lab-h);
+  overflow: hidden;
+}
+
+[data-record-frame] {
+  width: var(--sandbox-lab-w);
+  max-width: var(--sandbox-lab-w);
+  min-width: var(--sandbox-lab-w);
+  flex-shrink: 0;
+}
+
+[data-motion-lab-sandbox] {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] > * {
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] {
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] > * {
+  flex: 1 1 0;
+  min-height: 0;
+  max-height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] .items-center {
+  align-items: stretch !important;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] .justify-center {
+  justify-content: flex-start !important;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] [class*="max-w-"] {
+  max-width: none !important;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] .grid {
+  flex: 1 1 0;
+  min-height: 0 !important;
+  max-height: 100%;
+  height: auto !important;
+  width: 100% !important;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] .grid > * {
+  min-height: 0 !important;
+  max-height: 100%;
+  height: auto !important;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] [class*="min-h-["] {
+  flex: 1 1 0;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  height: auto !important;
+  overflow: hidden;
+}
+
+[data-motion-lab-sandbox] [data-lab-stage-body] pre {
+  flex: 0 0 auto !important;
+  max-height: 28%;
+  overflow: auto;
+}
+
+/* Hide all step indicators in sandbox */
+[data-motion-lab-sandbox] [data-beginner-steps],
+[data-motion-lab-sandbox] [data-lab-stage-body] *:has(> button[aria-current="step"]) {
+  display: none !important;
+}
+
+/* Clean capture — hide code snippets */
+.record-mode--clean [data-motion-lab-sandbox] pre,
+.record-mode--clean [data-beginner-code] {
+  display: none !important;
+}
+
+.record-mode--clean [data-motion-lab-sandbox] [data-lab-stage-body] > * {
+  gap: 0 !important;
+}
+
+/* TikTok record overlay */
+.record-mode {
+  color-scheme: dark;
+}
+
+.record-frame {
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 24px 80px rgb(0 0 0 / 0.55);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .record-frame {
+    outline: 1px dashed rgb(244 63 94 / 0.35);
+    outline-offset: 6px;
+  }
+}
+
+/* Slightly larger type inside fixed frame */
+[data-motion-lab-sandbox] [data-lab-stage-body] {
+  font-size: 1.125rem;
+}
+
+[data-motion-lab-sandbox] pre {
+  font-size: 0.95rem !important;
+  line-height: 1.45 !important;
+}
+
+/* Sandbox chrome: one title line, no caption, no internal play */
+[data-motion-lab-sandbox] [role="status"] {
+  display: none !important;
+}
+
+[data-motion-lab-sandbox] .relative.z-20 > .shrink-0:has(button[aria-pressed]) {
+  display: none !important;
+}
+
+[data-motion-lab-sandbox] .relative.z-20 .mb-0\.5 {
+  margin-bottom: 0 !important;
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  letter-spacing: normal !important;
+  line-height: 1.35 !important;
+  text-transform: none !important;
+}
+
+[data-motion-lab-sandbox] .font-mono {
+  font-size: 1.05em;
+}
+
+[data-motion-lab-sandbox] [class*="text-[9px]"] {
+  font-size: 0.7rem !important;
+}
+
+[data-motion-lab-sandbox] [class*="text-[10px]"] {
+  font-size: 0.75rem !important;
+}
+
+[data-motion-lab-sandbox] [class*="text-[11px]"] {
+  font-size: 0.85rem !important;
+}
