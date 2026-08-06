@@ -657,6 +657,42 @@ export const ui = {
     en: "Continue learning",
     ar: "كمّل التعلم",
   },
+  activityCongratsPerfect: {
+    en: "Perfect score!",
+    ar: "درجة كاملة!",
+  },
+  activityCongratsGreat: {
+    en: "Great work!",
+    ar: "شغل ممتاز!",
+  },
+  activityCongratsKeepGoing: {
+    en: "Almost there!",
+    ar: "قربت توصل!",
+  },
+  activityCongratsHighBody: {
+    en: "You’re ready for the next lesson — keep the momentum going.",
+    ar: "إنت جاهز للدرس اللي بعده — كمّل الزخم.",
+  },
+  activityCongratsReviewBody: {
+    en: "A quick review on Concept can lock this in before you move on.",
+    ar: "مراجعة سريعة في المفهوم تثبّت اللي اتعلمته قبل ما تكمل.",
+  },
+  activityCongratsNextLesson: {
+    en: "Go to next lesson",
+    ar: "روح للدرس اللي بعده",
+  },
+  activityCongratsReviewLesson: {
+    en: "Review this lesson",
+    ar: "راجع الدرس ده",
+  },
+  activityCongratsStayOnLesson: {
+    en: "Stay on this lesson",
+    ar: "خليك في الدرس ده",
+  },
+  activityCongratsDismiss: {
+    en: "Close and review this lesson",
+    ar: "اقفل وراجع الدرس ده",
+  },
   nextLessonArrow: { en: "Next lesson", ar: "الدرس اللي بعده" },
   browserSupportTitle: {
     en: "Browser Compatibility",

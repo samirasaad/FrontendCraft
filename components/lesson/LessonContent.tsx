@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -26,6 +20,7 @@ import { ComparePractice } from "@/components/lesson/ComparePractice";
 import { DeepDive } from "@/components/lesson/DeepDive";
 import { LessonChallenge } from "@/components/lesson/LessonChallenge";
 import { LessonActivity } from "@/components/lesson/lesson-activity/LessonActivity";
+import { ActivityCongratsOverlay } from "@/components/lesson/lesson-activity/ActivityCongratsOverlay";
 import { PitfallsBox } from "@/components/lesson/PitfallsBox";
 import { SeoCallout } from "@/components/lesson/SeoCallout";
 import { SeeInBrowser } from "@/components/lesson/SeeInBrowser";
@@ -38,6 +33,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { RTL_FLIP } from "@/lib/rtl";
+import { isHighActivityScore } from "@/lib/lesson-activity";
 import { tierBadgeClass, tierLabel } from "@/lib/tiers";
 import type { Lesson } from "@/lib/types";
 
@@ -223,9 +219,11 @@ ${trimmed}
 }
 
 function LessonBody({ lesson }: { lesson: Lesson }) {
+  const router = useRouter();
   const { locale, dir } = useLanguage();
-  const { lessons, markComplete, isComplete, labId } = useProgress();
-  const { playClick, playSuccess } = useSound();
+  const { lessons, markComplete, isComplete, labId, setActiveLessonId, completedIds } =
+    useProgress();
+  const { playClick } = useSound();
   const hasLive = Boolean(lesson.content.examples?.length);
   const hasActivity = Boolean(lesson.content.activity || lesson.content.challenge);
   const [tab, setTab] = useState<LessonTab>("concept");
@@ -233,7 +231,28 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
   const [challengePassed, setChallengePassed] = useState(
     () => !hasActivity || isComplete(lesson.id),
   );
+  const [activityResult, setActivityResult] = useState<{
+    score: number;
+    total: number;
+  } | null>(null);
+  const [activityRetryKey, setActivityRetryKey] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const lessonIndex = lessons.findIndex((item) => item.id === lesson.id);
+  const nextLesson =
+    lessonIndex >= 0 && lessonIndex < lessons.length - 1
+      ? lessons[lessonIndex + 1]
+      : null;
+
+  const goToLesson = useCallback(
+    (target: Lesson) => {
+      setActivityResult(null);
+      setActiveLessonId(target.id);
+      router.replace(`/${labId}/learn?lesson=${target.slug}`, { scroll: false });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [labId, router, setActiveLessonId],
+  );
 
   const tabs = useMemo(() => {
     const list: {
@@ -263,8 +282,24 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
   useEffect(() => {
     setTab("concept");
     setLiveSeed(null);
-    setChallengePassed(!hasActivity || isComplete(lesson.id));
-  }, [lesson.id, hasActivity, isComplete]);
+    setActivityResult(null);
+    setActivityRetryKey(0);
+  }, [lesson.id]);
+
+  useEffect(() => {
+    setChallengePassed(!hasActivity || completedIds.has(lesson.id));
+  }, [lesson.id, hasActivity, completedIds]);
+
+  const handleActivityComplete = useCallback(
+    (result: { score: number; total: number }) => {
+      setActivityResult(result);
+      if (isHighActivityScore(result.score, result.total)) {
+        setChallengePassed(true);
+        markComplete(lesson.id);
+      }
+    },
+    [lesson.id, markComplete],
+  );
 
   const selectTab = useCallback(
     (next: LessonTab) => {
@@ -426,13 +461,9 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
           {tab === "activity" ? (
             lesson.content.activity ? (
               <LessonActivity
-                key={`activity-${lesson.id}`}
+                key={`activity-${lesson.id}-${activityRetryKey}`}
                 activity={lesson.content.activity}
-                onComplete={() => {
-                  setChallengePassed(true);
-                  markComplete(lesson.id);
-                  playSuccess();
-                }}
+                onComplete={handleActivityComplete}
               />
             ) : lesson.content.challenge ? (
               <LessonChallenge
@@ -455,6 +486,31 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         challengePassed={challengePassed}
         onOpenActivity={hasActivity ? () => selectTab("activity") : undefined}
       />
+
+      {activityResult ? (
+        <ActivityCongratsOverlay
+          open
+          score={activityResult.score}
+          total={activityResult.total}
+          lesson={lesson}
+          nextLesson={nextLesson}
+          onNextLesson={() => {
+            if (!nextLesson) return;
+            playClick();
+            goToLesson(nextLesson);
+          }}
+          onReviewLesson={() => {
+            playClick();
+            setActivityResult(null);
+            selectTab("concept");
+          }}
+          onTryAgain={() => {
+            playClick();
+            setActivityResult(null);
+            setActivityRetryKey((key) => key + 1);
+          }}
+        />
+      ) : null}
     </motion.div>
   );
 }

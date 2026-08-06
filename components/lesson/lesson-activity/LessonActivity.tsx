@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -239,15 +239,17 @@ export function LessonActivity({
     playClick();
     if (isLast) {
       setPhase("results");
-      if (!reported) {
-        setReported(true);
-        onComplete?.({ score, total });
-      }
       return;
     }
     setIndex((i) => i + 1);
     setSelected(null);
   }
+
+  useEffect(() => {
+    if (phase !== "results" || reported) return;
+    setReported(true);
+    onComplete?.({ score, total });
+  }, [phase, reported, score, total, onComplete]);
 
   if (!question && phase !== "results") return null;
 
