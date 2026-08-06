@@ -38,7 +38,7 @@ export function BrandLockup({
           {t("brand", locale)}
         </span>
         {!compact ? (
-          <span className="mt-0.5 block truncate text-[11px] leading-snug text-slate-400 sm:text-xs">
+          <span className="mt-0.5 block text-[11px] leading-snug text-slate-400 sm:text-xs">
             {t("hubTagline", locale)}
           </span>
         ) : null}

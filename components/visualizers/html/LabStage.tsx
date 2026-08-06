@@ -116,4 +116,4 @@ export const labTipInlineClass = "text-sm leading-snug text-slate-300";
  * without growing or scrolling inside the frame.
  */
 export const LAB_FRAME_CLASS =
-  "h-[min(40rem,calc(100dvh-11rem))] min-h-[30rem] w-full overflow-hidden sm:min-h-[34rem]";
+  "h-[min(36rem,calc(100dvh-12rem))] min-h-[18rem] w-full overflow-hidden sm:min-h-[26rem] md:min-h-[32rem]";

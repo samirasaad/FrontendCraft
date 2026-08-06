@@ -234,12 +234,12 @@ export const ui = {
     ar: "البحث يقدر يعرض معاينة — والناس تضغط.",
   },
   trackJobDemoLabel: {
-    en: "What this track teaches",
-    ar: "الـ track ده بيعلّمك إيه",
+    en: "What this lab teaches",
+    ar: "المعمل ده بيعلّمك إيه",
   },
   browseTracks: {
-    en: "Browse all tracks",
-    ar: "شوف كل الـ tracks",
+    en: "Browse all labs",
+    ar: "شوف كل المعامل",
   },
   backHome: {
     en: "Home",
@@ -360,8 +360,8 @@ export const ui = {
     ar: "شوف المنهج",
   },
   backToTracks: {
-    en: "All tracks",
-    ar: "كل الـ tracks",
+    en: "All labs",
+    ar: "كل المعامل",
   },
   backToCurriculum: {
     en: "Curriculum",
@@ -390,8 +390,8 @@ export const ui = {
     ar: "دروس",
   },
   emptyTrack: {
-    en: "Lessons for this track are coming soon.",
-    ar: "دروس الـ track ده هتيجي قريب.",
+    en: "Lessons for this lab are coming soon.",
+    ar: "دروس المعمل ده هتيجي قريب.",
   },
   tagline: {
     en: "Interactive core JavaScript lab",
@@ -442,7 +442,7 @@ export const ui = {
   readTime: { en: "min read", ar: "دقيقة قراءة" },
   explanation: { en: "Simplified explanation", ar: "شرح مبسّط" },
   keyPoints: { en: "Key takeaways", ar: "النقاط المهمة" },
-  visualLab: { en: "Motion lab", ar: "معمل الحركة" },
+  visualLab: { en: "Illustrated explanation", ar: "الشرح التوضيحي" },
   explainMore: { en: "Explain more / Under the hood", ar: "اشرح أكتر / Under the hood" },
   explainMoreHint: {
     en: "Deep dive — engine, memory, and call-stack context",
@@ -455,6 +455,18 @@ export const ui = {
   underTheHoodHint: {
     en: "How the browser builds meaning — DOM, accessibility tree, parse repairs, and the render path",
     ar: "إزاي المتصفح بيبني المعنى — DOM و accessibility tree وإصلاحات الـ parse ومسار الـ render",
+  },
+  seeInBrowser: {
+    en: "See it in the browser",
+    ar: "شوفها في المتصفح",
+  },
+  seeInBrowserHint: {
+    en: "Open DevTools and verify this lesson yourself — step by step",
+    ar: "افتح DevTools واتأكد بنفسك — خطوة بخطوة",
+  },
+  seeInBrowserShortcut: {
+    en: "Shortcut: F12 or right-click → Inspect (Mac: Cmd+Option+I)",
+    ar: "اختصار: F12 أو كليك يمين → Inspect (Mac: Cmd+Option+I)",
   },
   accessibilityTitle: {
     en: "Accessibility (a11y) Best Practices",
@@ -481,7 +493,8 @@ export const ui = {
   wrongWay: { en: "Avoid", ar: "تجنّب" },
   rightWay: { en: "Prefer", ar: "فضّل" },
   exampleSimple: { en: "Simple", ar: "بسيط" },
-  exampleRealWorld: { en: "Real-world", ar: "واقعي" },
+  exampleMedium: { en: "Medium", ar: "متوسط" },
+  exampleHard: { en: "Hard", ar: "صعب" },
   cheatSheetTitle: { en: "Interactive CheatSheet", ar: "CheatSheet تفاعلي" },
   cheatSheetHint: {
     en: "Search, filter, expand a card, copy, or open it in Live",
@@ -569,8 +582,8 @@ export const ui = {
   challengeCorrect: { en: "Correct!", ar: "صح!" },
   challengeWrong: { en: "Not quite.", ar: "لسه." },
   challengeHintBar: {
-    en: "Optional: check your understanding in Quiz",
-    ar: "اختياري: راجع فهمك من تاب الاختبار",
+    en: "Optional: check your understanding in Lesson activity",
+    ar: "اختياري: راجع فهمك في نشاط الدرس",
   },
   openInLive: {
     en: "Open in Live coding",
@@ -592,55 +605,55 @@ export const ui = {
     en: "Live",
     ar: "تطبيقي",
   },
-  lessonTabQuiz: {
-    en: "Quiz",
-    ar: "اختبار",
+  lessonTabActivity: {
+    en: "Lesson activity",
+    ar: "نشاط الدرس",
   },
   lessonTabLiveEmpty: {
-    en: "No playground for this lesson yet — stay on Concept or jump to Quiz.",
-    ar: "مفيش ملعب كود للدرس ده لسه — فضّل على المفهوم أو روح للاختبار.",
+    en: "No playground for this lesson yet — stay on Concept or jump to Lesson activity.",
+    ar: "مفيش ملعب كود للدرس ده لسه — فضّل على المفهوم أو روح لنشاط الدرس.",
   },
-  lessonTabQuizEmpty: {
-    en: "No quiz on this lesson yet.",
-    ar: "مفيش اختبار على الدرس ده لسه.",
+  lessonTabActivityEmpty: {
+    en: "No lesson activity on this lesson yet.",
+    ar: "مفيش نشاط للدرس ده لسه.",
   },
-  quizTitle: {
+  activityTitle: {
     en: "Knowledge check",
-    ar: "اختبار سريع",
+    ar: "مراجعة سريعة",
   },
-  quizProgress: {
+  activityProgress: {
     en: "Question {current} of {total}",
     ar: "سؤال {current} من {total}",
   },
-  quizNext: {
+  activityNext: {
     en: "Next question",
     ar: "السؤال اللي بعده",
   },
-  quizFinish: {
+  activityFinish: {
     en: "See results",
     ar: "شوف النتيجة",
   },
-  quizComplete: {
-    en: "Quiz complete",
-    ar: "خلصت الاختبار",
+  activityComplete: {
+    en: "Activity complete",
+    ar: "خلصت النشاط",
   },
-  quizScore: {
+  activityScore: {
     en: "You got {score} of {total} right",
     ar: "جبت {score} من {total}",
   },
-  quizExplanation: {
+  activityExplanation: {
     en: "Explanation",
     ar: "التفسير",
   },
-  quizHint: {
+  activityHint: {
     en: "Hint",
     ar: "نصيحة",
   },
-  quizRetry: {
+  activityRetry: {
     en: "Try again",
     ar: "حاول تاني",
   },
-  quizContinue: {
+  activityContinue: {
     en: "Continue learning",
     ar: "كمّل التعلم",
   },
@@ -659,6 +672,8 @@ export const ui = {
   expectedHint: { en: "Expected", ar: "المتوقع" },
   output: { en: "Console", ar: "الكونسول" },
   editorHtml: { en: "HTML", ar: "HTML" },
+  editorCss: { en: "CSS", ar: "CSS" },
+  editor: { en: "Editor", ar: "المحرر" },
   editorJs: { en: "JavaScript", ar: "JavaScript" },
   run: { en: "Run code", ar: "شغّل الكود" },
   running: { en: "Running…", ar: "بيشتغل…" },
@@ -698,6 +713,22 @@ export const ui = {
   selectLesson: {
     en: "Pick a lesson from the sidebar to begin.",
     ar: "اختار درس من القائمة عشان تبدأ.",
+  },
+  notFoundTitle: {
+    en: "Page not found",
+    ar: "الصفحة مش موجودة",
+  },
+  notFoundBody: {
+    en: "That link may be old or mistyped. Head home or pick a lab to keep learning.",
+    ar: "اللينك ده ممكن يكون قديم أو فيه غلطة. ارجع للرئيسية أو اختار معمل عشان تكمّل.",
+  },
+  notFoundHome: {
+    en: "Back home",
+    ar: "الرئيسية",
+  },
+  notFoundLabs: {
+    en: "Browse labs",
+    ar: "شوف المعامل",
   },
 } as const satisfies Record<string, LocalizedString>;
 

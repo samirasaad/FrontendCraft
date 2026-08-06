@@ -2996,8 +2996,8 @@ const SR_READY_STEPS = [
       hear: { en: "(no link role)", ar: "(مفيش role رابط)" },
     },
     good: {
-      code: `<a href="/javascript">Open JS track</a>`,
-      hear: { en: "Open JS track, link", ar: "افتح مسار JS، رابط" },
+      code: `<a href="/javascript">Open JS lab</a>`,
+      hear: { en: "Open JS lab, link", ar: "افتح معمل JS، رابط" },
     },
   },
   {
@@ -3209,7 +3209,7 @@ const SEO_STEPS = [
     serpDesc: true,
     serpUrl: true,
     serpBody: true,
-    markup: "<main>\n  <h1>HTML track</h1>\n  <p>…</p>\n</main>",
+    markup: "<main>\n  <h1>HTML lab</h1>\n  <p>…</p>\n</main>",
   },
 ] as const;
 
@@ -3262,7 +3262,7 @@ export function SeoCrawlVisualizer() {
                   current.serpTitle ? "text-sky-300" : "text-slate-600"
                 }`}
               >
-                FrontendCraft — HTML track
+                FrontendCraft — HTML lab
               </p>
               <p
                 className={`truncate font-mono text-[10px] ${
@@ -3294,7 +3294,7 @@ export function SeoCrawlVisualizer() {
                   {current.serpBody ? (
                     <>
                       <span className="text-orange-200/80">&lt;h1&gt;</span>{" "}
-                      {locale === "ar" ? "مسار HTML" : "HTML track"}
+                      {locale === "ar" ? "معمل HTML" : "HTML lab"}
                     </>
                   ) : (
                     <span className="text-slate-600">…</span>
@@ -4505,8 +4505,8 @@ const MEDIA_STEPS = [
     id: "captions",
     chip: "track",
     tip: {
-      en: "`<track kind=\"captions\">` — captions are part of accessibility.",
-      ar: "`<track kind=\"captions\">` — الترجمة جزء من الـ accessibility.",
+      en: "`<lab kind=\"captions\">` — captions are part of accessibility.",
+      ar: "`<lab kind=\"captions\">` — الترجمة جزء من الـ accessibility.",
     },
     markup: `<track
   kind="captions"

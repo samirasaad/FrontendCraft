@@ -582,7 +582,7 @@ export function GridLabVisualizer() {
       steps={[
         {
           caption: {
-            en: "`grid-template-columns` defines track sizes across the row.",
+            en: "`grid-template-columns` defines lab sizes across the row.",
             ar: "`grid-template-columns` بتحدد مقاسات الأعمدة.",
           },
           visual: (

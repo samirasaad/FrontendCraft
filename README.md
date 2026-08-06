@@ -1,6 +1,6 @@
 # FrontendCraft
 
-Interactive bilingual learning lab for frontend fundamentals — HTML, CSS, JavaScript, and Tailwind.
+Interactive bilingual learning platform for frontend fundamentals — HTML, CSS, JavaScript, and Tailwind.
 
 ## Getting Started
 
@@ -11,9 +11,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Tracks
+## Labs
 
-- `/` — track hub
+- `/` — lab hub
+- `/labs` — browse all labs
 - `/javascript` — JavaScript curriculum
 - `/html` — HTML curriculum
 - `/css` — coming soon
