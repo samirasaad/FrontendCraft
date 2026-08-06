@@ -9,20 +9,20 @@ const jiti = createJiti(root, {
   alias: { "@": root },
 });
 
-const html = jiti(resolve(root, "content/tracks/html/lessons.ts")).lessons;
-const css = jiti(resolve(root, "content/tracks/css/lessons.ts")).lessons;
+const html = jiti(resolve(root, "content/labs/html/lessons.ts")).lessons;
+const css = jiti(resolve(root, "content/labs/css/lessons.ts")).lessons;
 const jsLegacy = jiti(
-  resolve(root, "content/tracks/javascript/legacy-lessons.ts"),
+  resolve(root, "content/labs/javascript/legacy-lessons.ts"),
 ).legacyLessons;
 const jsExtra = jiti(
-  resolve(root, "content/tracks/javascript/extra-lessons.ts"),
+  resolve(root, "content/labs/javascript/extra-lessons.ts"),
 ).extraLessons;
 const jsInsights =
-  jiti(resolve(root, "content/tracks/javascript/insights.ts"))
+  jiti(resolve(root, "content/labs/javascript/insights.ts"))
     .javascriptInsights ?? {};
 const htmlInsights =
-  jiti(resolve(root, "content/tracks/html/insights.ts")).htmlInsights ?? {};
-const { defaultInsights } = jiti(resolve(root, "content/tracks/_insights.ts"));
+  jiti(resolve(root, "content/labs/html/insights.ts")).htmlInsights ?? {};
+const { defaultInsights } = jiti(resolve(root, "content/labs/_insights.ts"));
 
 function words(s) {
   return (String(s).match(/[A-Za-z0-9_]+|[\u0600-\u06FF]+/g) || []).length;
@@ -60,9 +60,9 @@ function estimateAssembled(lesson, track) {
     w += enWords(ex.label);
     if (ex.code) w += Math.round(words(ex.code) * 0.25);
   }
-  const quizCount = c.quiz?.questions?.length ?? 0;
-  if (c.quiz?.questions) {
-    for (const q of c.quiz.questions) {
+  const quizCount = c.activity?.questions?.length ?? 0;
+  if (c.activity?.questions) {
+    for (const q of c.activity.questions) {
       w += enWords(q.prompt || q.question || q.stem);
       for (const opt of q.options || []) {
         w += Math.round(enWords(opt.label || opt.text || opt) * 0.5);
@@ -114,7 +114,7 @@ function estimateAssembled(lesson, track) {
   };
 }
 
-/** Estimate paused JS drafts (no quiz wiring in export). */
+/** Estimate paused JS drafts (no activity wiring in export). */
 function estimateJsDraft(draft, legacy) {
   const c = draft.content;
   const titleEn = c.title?.en || draft.slug;
@@ -129,7 +129,7 @@ function estimateJsDraft(draft, legacy) {
   w += sectionWords(pack.underTheHood);
   w += sectionWords(pack.accessibility);
   w += sectionWords(pack.seo);
-  // examples / quiz not attached on paused export — budget typical extras
+  // examples / activity not attached on paused export — budget typical extras
   const extras = legacy ? 120 : 180;
   w += extras;
   const read = w / 150;
@@ -157,7 +157,7 @@ const rows = [
     const r = estimateAssembled(l, "html");
     // HTML legacy goes through enrichment (+2). Detect via insights/source.
     const isLegacy = Boolean(
-      jiti(resolve(root, "content/tracks/html/legacy-lessons.ts")).legacyLessons.find(
+      jiti(resolve(root, "content/labs/html/legacy-lessons.ts")).legacyLessons.find(
         (x) => x.slug === l.slug,
       ),
     );

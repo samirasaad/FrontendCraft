@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { TrackId } from "@/lib/types";
+import type { LabId } from "@/lib/types";
 import { cssVisualizers } from "@/components/visualizers/css";
 import { javascriptVisualizers } from "@/components/visualizers/javascript";
 import {
@@ -59,20 +59,20 @@ const htmlVisualizers: Record<string, () => ReactNode> = {
   "html-pitfalls-lab": () => <HtmlPitfallsLabVisualizer />,
 };
 
-const registries: Partial<Record<TrackId, Record<string, () => ReactNode>>> = {
+const registries: Partial<Record<LabId, Record<string, () => ReactNode>>> = {
   javascript: javascriptVisualizers,
   html: htmlVisualizers,
   css: cssVisualizers,
 };
 
 export function Visualizer({
-  trackId,
+  labId,
   kind,
 }: {
-  trackId: TrackId;
+  labId: LabId;
   kind: string;
 }) {
-  const render = registries[trackId]?.[kind];
+  const render = registries[labId]?.[kind];
   if (!render) {
     return (
       <div

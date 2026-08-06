@@ -17,12 +17,12 @@ import type { Lesson } from "@/lib/types";
 export function StickyLessonBar({
   lesson,
   challengePassed,
-  onOpenQuiz,
+  onOpenActivity,
 }: {
   lesson: Lesson;
-  /** Quiz is optional enrichment — nudge only, never blocks Next. */
+  /** Lesson activity is optional enrichment — nudge only, never blocks Next. */
   challengePassed?: boolean;
-  onOpenQuiz?: () => void;
+  onOpenActivity?: () => void;
 }) {
   const router = useRouter();
   const { locale } = useLanguage();
@@ -31,7 +31,7 @@ export function StickyLessonBar({
     isComplete,
     toggleComplete,
     setActiveLessonId,
-    trackId,
+    labId,
   } = useProgress();
   const { playClick, playSuccess } = useSound();
 
@@ -39,13 +39,13 @@ export function StickyLessonBar({
   const index = lessons.findIndex((l) => l.id === lesson.id);
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const prev = index > 0 ? lessons[index - 1] : null;
-  const showQuizHint =
+  const showActivityHint =
     !challengePassed &&
-    Boolean(lesson.content.challenge || lesson.content.quiz);
+    Boolean(lesson.content.challenge || lesson.content.activity);
 
   function goToLesson(target: Lesson) {
     setActiveLessonId(target.id);
-    router.replace(`/${trackId}/learn?lesson=${target.slug}`, {
+    router.replace(`/${labId}/learn?lesson=${target.slug}`, {
       scroll: false,
     });
   }
@@ -57,12 +57,12 @@ export function StickyLessonBar({
         animate={{ y: 0, opacity: 1 }}
         className="pointer-events-auto mx-auto flex max-w-4xl items-center gap-2 rounded-2xl border border-white/15 bg-slate-950/92 px-2.5 py-2 shadow-[0_-8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:gap-3 sm:p-3"
       >
-        {showQuizHint ? (
+        {showActivityHint ? (
           <button
             type="button"
             onClick={() => {
               playClick();
-              onOpenQuiz?.();
+              onOpenActivity?.();
             }}
             className="hidden min-w-0 flex-1 text-start text-[11px] text-slate-400 transition hover:text-slate-200 sm:block sm:me-auto"
           >

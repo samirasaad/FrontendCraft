@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, PanelLeft } from "lucide-react";
+import { LayoutList, PanelLeft } from "lucide-react";
 import { BrandLockup } from "@/components/shared/BrandLockup";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
@@ -11,28 +10,18 @@ import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { t } from "@/content/i18n/ui-strings";
 import { RTL_FLIP } from "@/lib/rtl";
-import type { TrackDefinition } from "@/lib/types";
+import type { LabDefinition } from "@/lib/types";
 
 interface HeaderProps {
-  track: TrackDefinition;
+  lab: LabDefinition;
   onToggleLessons?: () => void;
   lessonsOpen?: boolean;
 }
 
-export function Header({ track, onToggleLessons, lessonsOpen }: HeaderProps) {
+export function Header({ lab, onToggleLessons, lessonsOpen }: HeaderProps) {
   const { locale } = useLanguage();
   const { playClick } = useSound();
   const { progressPercent, completedCount, totalCount } = useProgress();
-  const [compact, setCompact] = useState(false);
-
-  useEffect(() => {
-    function onScroll() {
-      setCompact(window.scrollY > 24);
-    }
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/90 backdrop-blur-xl">
@@ -57,22 +46,22 @@ export function Header({ track, onToggleLessons, lessonsOpen }: HeaderProps) {
 
           <BrandLockup
             href="/"
-            compact={compact}
             onClick={() => playClick()}
             className="min-w-0"
           />
-
-          <Link
-            href={`/${track.id}`}
-            onClick={() => playClick()}
-            className="hidden shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-slate-300 transition hover:bg-white/10 lg:inline-flex"
-          >
-            <ArrowLeft size={12} className={RTL_FLIP} />
-            {t("backToCurriculum", locale)}
-          </Link>
         </div>
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <Link
+            href={`/${lab.id}`}
+            onClick={() => playClick()}
+            title={t("backToCurriculum", locale)}
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-slate-300 transition hover:bg-white/10 sm:px-2.5"
+          >
+            <LayoutList size={13} className="shrink-0 text-cyan-300/90" />
+            <span className="hidden sm:inline">{t("backToCurriculum", locale)}</span>
+          </Link>
+
           <div
             className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2 py-1 sm:gap-2 sm:px-2.5 sm:py-1.5"
             title={`${t("progress", locale)} ${completedCount}/${totalCount}`}
@@ -82,7 +71,7 @@ export function Header({ track, onToggleLessons, lessonsOpen }: HeaderProps) {
               aria-hidden
             >
               <span
-                className={`absolute inset-y-0 start-0 rounded-full bg-gradient-to-r ${track.accent} transition-all duration-500`}
+                className={`absolute inset-y-0 start-0 rounded-full bg-gradient-to-r ${lab.accent} transition-all duration-500`}
                 style={{ width: `${progressPercent}%` }}
               />
             </span>

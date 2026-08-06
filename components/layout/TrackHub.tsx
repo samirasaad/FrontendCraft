@@ -363,7 +363,7 @@ function StartRoadmap() {
           <Arrow size={16} className={RTL_FLIP} />
         </Link>
         <Link
-          href="/tracks"
+          href="/labs"
           onClick={() => playClick()}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-300 transition hover:text-cyan-200"
         >

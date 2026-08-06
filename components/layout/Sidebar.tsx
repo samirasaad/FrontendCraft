@@ -166,7 +166,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     progressPercent,
     completedCount,
     totalCount,
-    trackId,
+    labId,
   } = useProgress();
   const { playClick } = useSound();
   const [query, setQuery] = useState("");
@@ -176,7 +176,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
   function selectLesson(lesson: (typeof lessons)[number]) {
     playClick();
     setActiveLessonId(lesson.id);
-    router.replace(`/${trackId}/learn?lesson=${lesson.slug}`, { scroll: false });
+    router.replace(`/${labId}/learn?lesson=${lesson.slug}`, { scroll: false });
     if (
       open &&
       typeof window !== "undefined" &&

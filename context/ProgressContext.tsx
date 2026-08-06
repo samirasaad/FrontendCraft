@@ -8,10 +8,10 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
-import type { Lesson, TrackId } from "@/lib/types";
+import type { Lesson, LabId } from "@/lib/types";
 
 interface ProgressContextValue {
-  trackId: TrackId;
+  labId: LabId;
   lessons: Lesson[];
   completedIds: Set<string>;
   activeLessonId: string;
@@ -39,10 +39,10 @@ function subscribe(listener: () => void) {
   };
 }
 
-function storageKeys(trackId: TrackId) {
+function storageKeys(labId: LabId) {
   return {
-    progress: `frontendcraft:${trackId}:progress`,
-    active: `frontendcraft:${trackId}:active-lesson`,
+    progress: `frontendcraft:${labId}:progress`,
+    active: `frontendcraft:${labId}:active-lesson`,
   };
 }
 
@@ -51,8 +51,8 @@ interface ProgressSnapshot {
   active: string;
 }
 
-function readSnapshot(trackId: TrackId, lessons: Lesson[]): ProgressSnapshot {
-  const keys = storageKeys(trackId);
+function readSnapshot(labId: LabId, lessons: Lesson[]): ProgressSnapshot {
+  const keys = storageKeys(labId);
   let completed: string[] = [];
   let active = lessons[0]?.id ?? "";
   try {
@@ -72,9 +72,9 @@ const EMPTY_COMPLETED: string[] = [];
 const serverCache = new Map<string, ProgressSnapshot>();
 
 /** Must return a stable reference — React loops if this allocates every call. */
-function getServerSnapshot(trackId: TrackId, lessons: Lesson[]): ProgressSnapshot {
+function getServerSnapshot(labId: LabId, lessons: Lesson[]): ProgressSnapshot {
   const active = lessons[0]?.id ?? "";
-  const key = `${trackId}:${active}`;
+  const key = `${labId}:${active}`;
   const cached = serverCache.get(key);
   if (cached) return cached;
   const snapshot: ProgressSnapshot = { completed: EMPTY_COMPLETED, active };
@@ -84,28 +84,28 @@ function getServerSnapshot(trackId: TrackId, lessons: Lesson[]): ProgressSnapsho
 
 const cache = new Map<string, { json: string; snapshot: ProgressSnapshot }>();
 
-function getSnapshot(trackId: TrackId, lessons: Lesson[]): ProgressSnapshot {
-  const next = readSnapshot(trackId, lessons);
+function getSnapshot(labId: LabId, lessons: Lesson[]): ProgressSnapshot {
+  const next = readSnapshot(labId, lessons);
   const json = JSON.stringify(next);
-  const cached = cache.get(trackId);
+  const cached = cache.get(labId);
   if (cached && cached.json === json) return cached.snapshot;
-  cache.set(trackId, { json, snapshot: next });
+  cache.set(labId, { json, snapshot: next });
   return next;
 }
 
 export function ProgressProvider({
-  trackId,
+  labId,
   lessons,
   children,
 }: {
-  trackId: TrackId;
+  labId: LabId;
   lessons: Lesson[];
   children: ReactNode;
 }) {
   const snapshot = useSyncExternalStore(
     subscribe,
-    () => getSnapshot(trackId, lessons),
-    () => getServerSnapshot(trackId, lessons),
+    () => getSnapshot(labId, lessons),
+    () => getServerSnapshot(labId, lessons),
   );
 
   const completedIds = useMemo(
@@ -115,38 +115,38 @@ export function ProgressProvider({
 
   const setActiveLessonId = useCallback(
     (id: string) => {
-      window.localStorage.setItem(storageKeys(trackId).active, id);
+      window.localStorage.setItem(storageKeys(labId).active, id);
       emit();
     },
-    [trackId],
+    [labId],
   );
 
   const toggleComplete = useCallback(
     (id: string) => {
-      const current = new Set(readSnapshot(trackId, lessons).completed);
+      const current = new Set(readSnapshot(labId, lessons).completed);
       if (current.has(id)) current.delete(id);
       else current.add(id);
       window.localStorage.setItem(
-        storageKeys(trackId).progress,
+        storageKeys(labId).progress,
         JSON.stringify([...current]),
       );
       emit();
     },
-    [trackId, lessons],
+    [labId, lessons],
   );
 
   const markComplete = useCallback(
     (id: string) => {
-      const current = new Set(readSnapshot(trackId, lessons).completed);
+      const current = new Set(readSnapshot(labId, lessons).completed);
       if (current.has(id)) return;
       current.add(id);
       window.localStorage.setItem(
-        storageKeys(trackId).progress,
+        storageKeys(labId).progress,
         JSON.stringify([...current]),
       );
       emit();
     },
-    [trackId, lessons],
+    [labId, lessons],
   );
 
   const isComplete = useCallback(
@@ -163,7 +163,7 @@ export function ProgressProvider({
 
   const value = useMemo(
     () => ({
-      trackId,
+      labId,
       lessons,
       completedIds,
       activeLessonId: snapshot.active || lessons[0]?.id || "",
@@ -176,7 +176,7 @@ export function ProgressProvider({
       totalCount,
     }),
     [
-      trackId,
+      labId,
       lessons,
       completedIds,
       snapshot.active,

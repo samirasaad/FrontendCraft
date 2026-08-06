@@ -8,12 +8,12 @@ const rows = JSON.parse(
 );
 
 const files = [
-  "content/tracks/html/legacy-lessons.ts",
-  "content/tracks/html/modern-lessons.ts",
-  "content/tracks/html/extra-lessons.ts",
-  "content/tracks/javascript/legacy-lessons.ts",
-  "content/tracks/javascript/extra-lessons.ts",
-  "content/tracks/css/extra-lessons.ts",
+  "content/labs/html/legacy-lessons.ts",
+  "content/labs/html/modern-lessons.ts",
+  "content/labs/html/extra-lessons.ts",
+  "content/labs/javascript/legacy-lessons.ts",
+  "content/labs/javascript/extra-lessons.ts",
+  "content/labs/css/extra-lessons.ts",
 ];
 
 const bySlug = Object.fromEntries(rows.map((r) => [r.slug, r]));
@@ -46,7 +46,7 @@ for (const rel of files) {
 }
 
 // CSS modern specs: inject / replace readMinutes on each slug line block.
-const cssModernPath = resolve(root, "content/tracks/css/modern-lessons.ts");
+const cssModernPath = resolve(root, "content/labs/css/modern-lessons.ts");
 let cssText = readFileSync(cssModernPath, "utf8");
 let cssUpdates = 0;
 

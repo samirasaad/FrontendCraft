@@ -15,6 +15,7 @@ import {
   Code2,
   Lightbulb,
   ListChecks,
+  Presentation,
   Sparkles,
 } from "lucide-react";
 import { AccessibilityCard } from "@/components/lesson/AccessibilityCard";
@@ -24,9 +25,10 @@ import { CodeRunner } from "@/components/lesson/CodeRunner";
 import { ComparePractice } from "@/components/lesson/ComparePractice";
 import { DeepDive } from "@/components/lesson/DeepDive";
 import { LessonChallenge } from "@/components/lesson/LessonChallenge";
-import { Quiz } from "@/components/lesson/quiz/Quiz";
+import { LessonActivity } from "@/components/lesson/lesson-activity/LessonActivity";
 import { PitfallsBox } from "@/components/lesson/PitfallsBox";
 import { SeoCallout } from "@/components/lesson/SeoCallout";
+import { SeeInBrowser } from "@/components/lesson/SeeInBrowser";
 import { StickyLessonBar } from "@/components/lesson/StickyLessonBar";
 import { UnderTheHood } from "@/components/lesson/UnderTheHood";
 import { Visualizer } from "@/components/lesson/Visualizer";
@@ -39,7 +41,7 @@ import { RTL_FLIP } from "@/lib/rtl";
 import { tierBadgeClass, tierLabel } from "@/lib/tiers";
 import type { Lesson } from "@/lib/types";
 
-type LessonTab = "concept" | "live" | "quiz";
+type LessonTab = "concept" | "live" | "activity";
 
 function ConceptPanel({
   lesson,
@@ -51,7 +53,7 @@ function ConceptPanel({
   onOpenLiveWithCode?: (code: string) => void;
 }) {
   const { locale } = useLanguage();
-  const { trackId } = useProgress();
+  const { labId } = useProgress();
   const { playClick } = useSound();
   const isCheatsheet = lesson.tier === "cheatsheet";
   const hasLive = Boolean(lesson.content.examples?.length);
@@ -59,6 +61,9 @@ function ConceptPanel({
   const deepDive = (
     <>
       <UnderTheHood section={lesson.content.underTheHood} embedded />
+      {lesson.content.browserWalkthrough ? (
+        <SeeInBrowser walkthrough={lesson.content.browserWalkthrough} embedded />
+      ) : null}
       <AccessibilityCard section={lesson.content.accessibility} />
       <SeoCallout section={lesson.content.seo} />
 
@@ -92,6 +97,7 @@ function ConceptPanel({
     lesson.content.underTheHood.paragraphs.length > 0 ||
     lesson.content.accessibility.paragraphs.length > 0 ||
     lesson.content.seo.paragraphs.length > 0 ||
+    Boolean(lesson.content.browserWalkthrough?.steps.length) ||
     lesson.slug === "browser-compatibility" ||
     Boolean(lesson.content.compareCards?.length) ||
     Boolean(lesson.content.pitfalls);
@@ -158,11 +164,11 @@ function ConceptPanel({
 
         <motion.section
           layout
-          className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-slate-900/60 p-4 backdrop-blur-xl sm:p-5 xl:col-span-2 xl:sticky xl:top-20 xl:self-start"
+          className="relative min-h-[18rem] overflow-hidden rounded-3xl border border-cyan-400/25 bg-slate-900/60 p-3 backdrop-blur-xl sm:min-h-0 sm:p-5 xl:col-span-2 xl:sticky xl:top-20 xl:self-start"
         >
           <div className="relative z-10 flex flex-col">
             <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-cyan-200">
-              <Sparkles size={16} />
+              <Presentation size={16} />
               {t("visualLab", locale)}
             </div>
             <p
@@ -172,7 +178,7 @@ function ConceptPanel({
             >
               <RichText text={loc(lesson.content.visualHint, locale)} />
             </p>
-            <Visualizer trackId={trackId} kind={lesson.visualizer} />
+            <Visualizer labId={labId} kind={lesson.visualizer} />
           </div>
         </motion.section>
       </div>
@@ -191,11 +197,11 @@ function ConceptPanel({
   );
 }
 
-/** Make CheatSheet snippets runnable in the track playground. */
-function prepareCheatLiveCode(code: string, trackId: string): string {
+/** Make CheatSheet snippets runnable in the lab playground. */
+function prepareCheatLiveCode(code: string, labId: string): string {
   const trimmed = code.trim();
   if (
-    trackId === "css" &&
+    labId === "css" &&
     trimmed.length > 0 &&
     !/<\/?[a-zA-Z!]/.test(trimmed)
   ) {
@@ -218,14 +224,14 @@ ${trimmed}
 
 function LessonBody({ lesson }: { lesson: Lesson }) {
   const { locale, dir } = useLanguage();
-  const { lessons, markComplete, isComplete, trackId } = useProgress();
+  const { lessons, markComplete, isComplete, labId } = useProgress();
   const { playClick, playSuccess } = useSound();
   const hasLive = Boolean(lesson.content.examples?.length);
-  const hasQuiz = Boolean(lesson.content.quiz || lesson.content.challenge);
+  const hasActivity = Boolean(lesson.content.activity || lesson.content.challenge);
   const [tab, setTab] = useState<LessonTab>("concept");
   const [liveSeed, setLiveSeed] = useState<string | null>(null);
   const [challengePassed, setChallengePassed] = useState(
-    () => !hasQuiz || isComplete(lesson.id),
+    () => !hasActivity || isComplete(lesson.id),
   );
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
@@ -246,19 +252,19 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         icon: Code2,
       },
       {
-        id: "quiz",
-        label: t("lessonTabQuiz", locale),
+        id: "activity",
+        label: t("lessonTabActivity", locale),
         icon: ListChecks,
       },
     ];
-    return hasQuiz ? list : list.filter((item) => item.id !== "quiz");
-  }, [locale, hasQuiz]);
+    return hasActivity ? list : list.filter((item) => item.id !== "activity");
+  }, [locale, hasActivity]);
 
   useEffect(() => {
     setTab("concept");
     setLiveSeed(null);
-    setChallengePassed(!hasQuiz || isComplete(lesson.id));
-  }, [lesson.id, hasQuiz, isComplete]);
+    setChallengePassed(!hasActivity || isComplete(lesson.id));
+  }, [lesson.id, hasActivity, isComplete]);
 
   const selectTab = useCallback(
     (next: LessonTab) => {
@@ -394,7 +400,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
               onOpenLiveWithCode={
                 hasLive
                   ? (code) => {
-                      setLiveSeed(prepareCheatLiveCode(code, trackId));
+                      setLiveSeed(prepareCheatLiveCode(code, labId));
                       selectTab("live");
                     }
                   : undefined
@@ -417,11 +423,11 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
             )
           ) : null}
 
-          {tab === "quiz" ? (
-            lesson.content.quiz ? (
-              <Quiz
-                key={`quiz-${lesson.id}`}
-                quiz={lesson.content.quiz}
+          {tab === "activity" ? (
+            lesson.content.activity ? (
+              <LessonActivity
+                key={`activity-${lesson.id}`}
+                activity={lesson.content.activity}
                 onComplete={() => {
                   setChallengePassed(true);
                   markComplete(lesson.id);
@@ -447,7 +453,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
       <StickyLessonBar
         lesson={lesson}
         challengePassed={challengePassed}
-        onOpenQuiz={hasQuiz ? () => selectTab("quiz") : undefined}
+        onOpenActivity={hasActivity ? () => selectTab("activity") : undefined}
       />
     </motion.div>
   );
