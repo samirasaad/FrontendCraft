@@ -42,17 +42,47 @@ export function simpleExample(
   };
 }
 
-export function realWorldExample(
+export function mediumExample(
   code: string,
   expectedEn: string,
   expectedAr = expectedEn,
 ): CodeExample {
   return {
-    id: "realWorld",
-    label: L("Real-world", "واقعي"),
+    id: "medium",
+    label: L("Medium", "متوسط"),
     code,
     expectedOutput: L(expectedEn, expectedAr),
   };
+}
+
+export function hardExample(
+  code: string,
+  expectedEn: string,
+  expectedAr = expectedEn,
+): CodeExample {
+  return {
+    id: "hard",
+    label: L("Hard", "صعب"),
+    code,
+    expectedOutput: L(expectedEn, expectedAr),
+  };
+}
+
+/** @deprecated Use hardExample */
+export function realWorldExample(
+  code: string,
+  expectedEn: string,
+  expectedAr = expectedEn,
+): CodeExample {
+  return hardExample(code, expectedEn, expectedAr);
+}
+
+export function lessonExamples(
+  simple: CodeExample,
+  medium: CodeExample,
+  hard: CodeExample,
+): CodeExample[] {
+  return [simple, medium, hard];
 }
 
 export function pitfall(

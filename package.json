@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:examples": "node scripts/validate-playground-examples.mjs"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
