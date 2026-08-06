@@ -9,20 +9,20 @@ const jiti = createJiti(root, {
   alias: { "@": root },
 });
 
-const html = jiti(resolve(root, "content/labs/html/lessons.ts")).lessons;
-const css = jiti(resolve(root, "content/labs/css/lessons.ts")).lessons;
+const html = jiti(resolve(root, "content/tracks/html/lessons.ts")).lessons;
+const css = jiti(resolve(root, "content/tracks/css/lessons.ts")).lessons;
 const jsLegacy = jiti(
-  resolve(root, "content/labs/javascript/legacy-lessons.ts"),
+  resolve(root, "content/tracks/javascript/legacy-lessons.ts"),
 ).legacyLessons;
 const jsExtra = jiti(
-  resolve(root, "content/labs/javascript/extra-lessons.ts"),
+  resolve(root, "content/tracks/javascript/extra-lessons.ts"),
 ).extraLessons;
 const jsInsights =
-  jiti(resolve(root, "content/labs/javascript/insights.ts"))
+  jiti(resolve(root, "content/tracks/javascript/insights.ts"))
     .javascriptInsights ?? {};
 const htmlInsights =
-  jiti(resolve(root, "content/labs/html/insights.ts")).htmlInsights ?? {};
-const { defaultInsights } = jiti(resolve(root, "content/labs/_insights.ts"));
+  jiti(resolve(root, "content/tracks/html/insights.ts")).htmlInsights ?? {};
+const { defaultInsights } = jiti(resolve(root, "content/tracks/_insights.ts"));
 
 function words(s) {
   return (String(s).match(/[A-Za-z0-9_]+|[\u0600-\u06FF]+/g) || []).length;
@@ -157,7 +157,7 @@ const rows = [
     const r = estimateAssembled(l, "html");
     // HTML legacy goes through enrichment (+2). Detect via insights/source.
     const isLegacy = Boolean(
-      jiti(resolve(root, "content/labs/html/legacy-lessons.ts")).legacyLessons.find(
+      jiti(resolve(root, "content/tracks/html/legacy-lessons.ts")).legacyLessons.find(
         (x) => x.slug === l.slug,
       ),
     );

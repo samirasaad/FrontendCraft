@@ -31,7 +31,7 @@ export function StickyLessonBar({
     isComplete,
     toggleComplete,
     setActiveLessonId,
-    labId,
+    trackId,
   } = useProgress();
   const { playClick, playSuccess } = useSound();
 
@@ -45,7 +45,7 @@ export function StickyLessonBar({
 
   function goToLesson(target: Lesson) {
     setActiveLessonId(target.id);
-    router.replace(`/${labId}/learn?lesson=${target.slug}`, {
+    router.replace(`/${trackId}/learn?lesson=${target.slug}`, {
       scroll: false,
     });
   }

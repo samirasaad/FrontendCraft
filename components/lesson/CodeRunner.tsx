@@ -38,7 +38,7 @@ import {
   splitPlaygroundEditorSource,
 } from "@/lib/playground-files";
 import { RTL_FLIP } from "@/lib/rtl";
-import type { CodeExample, ExampleKind, LabId } from "@/lib/types";
+import type { CodeExample, ExampleKind, TrackId } from "@/lib/types";
 
 const EXAMPLE_ORDER: Record<ExampleKind, number> = {
   simple: 0,
@@ -96,13 +96,13 @@ const sandpackTheme = {
   },
 };
 
-function isHtmlTrack(labId: LabId) {
+function isHtmlTrack(trackId: TrackId) {
   return (
-    labId === "html" ||
-    labId === "css" ||
-    labId === "tailwind" ||
-    labId === "accessibility" ||
-    labId === "seo"
+    trackId === "html" ||
+    trackId === "css" ||
+    trackId === "tailwind" ||
+    trackId === "accessibility" ||
+    trackId === "seo"
   );
 }
 
@@ -411,12 +411,12 @@ function sandpackFileCode(
 
 function CodeRunnerInner({
   code,
-  labId,
+  trackId,
 }: {
   code: string;
-  labId: LabId;
+  trackId: TrackId;
 }) {
-  const htmlMode = isHtmlTrack(labId);
+  const htmlMode = isHtmlTrack(trackId);
   const { locale } = useLanguage();
   const [fullscreen, setFullscreen] = useState(false);
   const [orientation, setOrientation] = useState<SplitOrientation>("side");
@@ -531,6 +531,7 @@ function CodeRunnerInner({
 
   return (
     <section
+      dir="ltr"
       className={
         fullscreen
           ? "fixed inset-0 z-[80] flex h-dvh max-h-dvh flex-col overflow-hidden border-0 bg-slate-950 shadow-none"
@@ -606,7 +607,7 @@ export function CodeRunner({
   onClearSeed,
 }: CodeRunnerProps) {
   const { locale } = useLanguage();
-  const { labId } = useProgress();
+  const { trackId } = useProgress();
   const { playClick } = useSound();
   const safeExamples = sortExamples(
     examples.length > 0
@@ -627,7 +628,7 @@ export function CodeRunner({
   const runnerCode = seeded ? seedCode! : active.code;
 
   return (
-    <div className="space-y-3" dir={locale === "ar" ? "rtl" : "ltr"}>
+    <div className="space-y-3">
       {seeded ? (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-400/10 px-3 py-2.5">
           <p className="text-xs font-medium text-emerald-100 sm:text-sm">
@@ -649,6 +650,7 @@ export function CodeRunner({
       ) : (
         <div
           className="flex flex-wrap gap-2"
+          dir={locale === "ar" ? "rtl" : "ltr"}
           role="tablist"
           aria-label={t("playground", locale)}
         >
@@ -685,9 +687,9 @@ export function CodeRunner({
         </div>
       )}
       <CodeRunnerInner
-        key={`${labId}-${seeded ? "seed" : active.id}-${runnerCode.slice(0, 48)}`}
+        key={`${trackId}-${seeded ? "seed" : active.id}-${runnerCode.slice(0, 48)}`}
         code={runnerCode}
-        labId={labId}
+        trackId={trackId}
       />
     </div>
   );

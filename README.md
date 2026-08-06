@@ -14,7 +14,7 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Labs
 
 - `/` — lab hub
-- `/labs` — browse all labs
+- `/tracks` — browse all labs
 - `/javascript` — JavaScript curriculum
 - `/html` — HTML curriculum
 - `/css` — coming soon

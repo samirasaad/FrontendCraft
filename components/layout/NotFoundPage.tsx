@@ -35,11 +35,11 @@ function NotFoundInner() {
           <ArrowRight size={16} className={RTL_FLIP} />
         </Link>
         <Link
-          href="/labs"
+          href="/tracks"
           onClick={() => playClick()}
           className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
         >
-          {t("notFoundLabs", locale)}
+          {t("notFoundTracks", locale)}
         </Link>
       </div>
     </div>

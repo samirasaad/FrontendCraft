@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import type { LabId } from "@/lib/types";
+import type { TrackId } from "@/lib/types";
 import { cssVisualizers } from "@/components/visualizers/css";
 import { javascriptVisualizers } from "@/components/visualizers/javascript";
 import {
@@ -30,7 +30,7 @@ import {
   HtmlGlobalRtlLabVisualizer,
   HtmlPitfallsLabVisualizer,
 } from "@/components/visualizers/html";
-import { LAB_FRAME_CLASS } from "@/components/visualizers/html/LabStage";
+import { LAB_FRAME_CLASS } from "@/components/visualizers/html/TrackStage";
 
 const htmlVisualizers: Record<string, () => ReactNode> = {
   "document-tree": () => <DocumentTreeVisualizer />,
@@ -59,20 +59,20 @@ const htmlVisualizers: Record<string, () => ReactNode> = {
   "html-pitfalls-lab": () => <HtmlPitfallsLabVisualizer />,
 };
 
-const registries: Partial<Record<LabId, Record<string, () => ReactNode>>> = {
+const registries: Partial<Record<TrackId, Record<string, () => ReactNode>>> = {
   javascript: javascriptVisualizers,
   html: htmlVisualizers,
   css: cssVisualizers,
 };
 
 export function Visualizer({
-  labId,
+  trackId,
   kind,
 }: {
-  labId: LabId;
+  trackId: TrackId;
   kind: string;
 }) {
-  const render = registries[labId]?.[kind];
+  const render = registries[trackId]?.[kind];
   if (!render) {
     return (
       <div

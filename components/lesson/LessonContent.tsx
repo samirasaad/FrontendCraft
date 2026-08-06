@@ -49,7 +49,7 @@ function ConceptPanel({
   onOpenLiveWithCode?: (code: string) => void;
 }) {
   const { locale } = useLanguage();
-  const { labId } = useProgress();
+  const { trackId } = useProgress();
   const { playClick } = useSound();
   const isCheatsheet = lesson.tier === "cheatsheet";
   const hasLive = Boolean(lesson.content.examples?.length);
@@ -165,7 +165,7 @@ function ConceptPanel({
           <div className="relative z-10 flex flex-col">
             <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-cyan-200">
               <Presentation size={16} />
-              {t("visualLab", locale)}
+              {t("visualExperiments", locale)}
             </div>
             <p
               className={`mb-3 text-sm text-slate-300 ${
@@ -174,7 +174,7 @@ function ConceptPanel({
             >
               <RichText text={loc(lesson.content.visualHint, locale)} />
             </p>
-            <Visualizer labId={labId} kind={lesson.visualizer} />
+            <Visualizer trackId={trackId} kind={lesson.visualizer} />
           </div>
         </motion.section>
       </div>
@@ -193,11 +193,11 @@ function ConceptPanel({
   );
 }
 
-/** Make CheatSheet snippets runnable in the lab playground. */
-function prepareCheatLiveCode(code: string, labId: string): string {
+/** Make CheatSheet snippets runnable in the track playground. */
+function prepareCheatLiveCode(code: string, trackId: string): string {
   const trimmed = code.trim();
   if (
-    labId === "css" &&
+    trackId === "css" &&
     trimmed.length > 0 &&
     !/<\/?[a-zA-Z!]/.test(trimmed)
   ) {
@@ -221,7 +221,7 @@ ${trimmed}
 function LessonBody({ lesson }: { lesson: Lesson }) {
   const router = useRouter();
   const { locale, dir } = useLanguage();
-  const { lessons, markComplete, isComplete, labId, setActiveLessonId, completedIds } =
+  const { lessons, markComplete, isComplete, trackId, setActiveLessonId, completedIds } =
     useProgress();
   const { playClick } = useSound();
   const hasLive = Boolean(lesson.content.examples?.length);
@@ -248,10 +248,10 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
     (target: Lesson) => {
       setActivityResult(null);
       setActiveLessonId(target.id);
-      router.replace(`/${labId}/learn?lesson=${target.slug}`, { scroll: false });
+      router.replace(`/${trackId}/learn?lesson=${target.slug}`, { scroll: false });
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
-    [labId, router, setActiveLessonId],
+    [trackId, router, setActiveLessonId],
   );
 
   const tabs = useMemo(() => {
@@ -435,7 +435,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
               onOpenLiveWithCode={
                 hasLive
                   ? (code) => {
-                      setLiveSeed(prepareCheatLiveCode(code, labId));
+                      setLiveSeed(prepareCheatLiveCode(code, trackId));
                       selectTab("live");
                     }
                   : undefined

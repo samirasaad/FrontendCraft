@@ -1,6 +1,6 @@
 export type Locale = "en" | "ar";
 
-/** Six-tier curriculum used across every lab. */
+/** Six-tier curriculum used across every track. */
 export type Tier =
   | "beginner"
   | "intermediate"
@@ -12,7 +12,7 @@ export type Tier =
 /** @deprecated Use Tier — kept as alias during migration reads. */
 export type Difficulty = Tier;
 
-export type LabId =
+export type TrackId =
   | "javascript"
   | "html"
   | "css"
@@ -21,14 +21,14 @@ export type LabId =
   | "accessibility"
   | "seo";
 
-export type LabStatus = "available" | "coming-soon";
+export type TrackStatus = "available" | "coming-soon";
 
 export interface LocalizedString {
   en: string;
   ar: string;
 }
 
-/** Visualizer ids are plain strings per lab. */
+/** Visualizer ids are plain strings per track. */
 export type VisualizerId = string;
 
 export type ExampleKind = "simple" | "medium" | "hard";
@@ -208,7 +208,7 @@ export interface LessonContent {
     label: LocalizedString;
     support: BrowserSupportInfo;
   }[];
-  /** Visual ❌/✅ comparison cards (HTML lab scannability). */
+  /** Visual ❌/✅ comparison cards (HTML track scannability). */
   compareCards?: ComparePair[];
   /** DevTools walkthrough — open Elements, Network, Console, etc. */
   browserWalkthrough?: BrowserWalkthrough;
@@ -231,9 +231,9 @@ export interface Lesson {
   content: LessonContent;
 }
 
-export interface LabMeta {
-  id: LabId;
-  status: LabStatus;
+export interface TrackMeta {
+  id: TrackId;
+  status: TrackStatus;
   order: number;
   accent: string;
   icon: string;
@@ -242,6 +242,6 @@ export interface LabMeta {
   tagline: LocalizedString;
 }
 
-export interface LabDefinition extends LabMeta {
+export interface TrackDefinition extends TrackMeta {
   lessons: Lesson[];
 }

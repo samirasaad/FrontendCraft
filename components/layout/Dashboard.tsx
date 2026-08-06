@@ -11,7 +11,7 @@ import { ProgressProvider, useProgress } from "@/context/ProgressContext";
 import { SoundProvider } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
-import type { LabDefinition } from "@/lib/types";
+import type { TrackDefinition } from "@/lib/types";
 
 function LessonQuerySync() {
   const searchParams = useSearchParams();
@@ -27,19 +27,19 @@ function LessonQuerySync() {
   return null;
 }
 
-function EmptyLabState({ lab }: { lab: LabDefinition }) {
+function EmptyTrackState({ track }: { track: TrackDefinition }) {
   const { locale } = useLanguage();
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-3 px-6 text-center">
       <p className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">
-        {loc(lab.title, locale)}
+        {loc(track.title, locale)}
       </p>
       <p className="max-w-md text-slate-400">{t("emptyTrack", locale)}</p>
     </div>
   );
 }
 
-function DashboardShell({ lab }: { lab: LabDefinition }) {
+function DashboardShell({ track }: { track: TrackDefinition }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ function DashboardShell({ lab }: { lab: LabDefinition }) {
       <Atmosphere fixed extraBloom />
 
       <Header
-        lab={lab}
+        track={track}
         lessonsOpen={menuOpen}
         onToggleLessons={() => setMenuOpen((v) => !v)}
       />
@@ -70,8 +70,8 @@ function DashboardShell({ lab }: { lab: LabDefinition }) {
           onToggle={() => setMenuOpen((v) => !v)}
         />
         <main className="min-w-0 flex-1 px-3 py-4 transition-[margin,padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] sm:px-4 sm:py-5 lg:px-5 lg:py-6">
-          {lab.lessons.length === 0 ? (
-            <EmptyLabState lab={lab} />
+          {track.lessons.length === 0 ? (
+            <EmptyTrackState track={track} />
           ) : (
             <LessonContent />
           )}
@@ -81,12 +81,12 @@ function DashboardShell({ lab }: { lab: LabDefinition }) {
   );
 }
 
-export function Dashboard({ lab }: { lab: LabDefinition }) {
+export function Dashboard({ track }: { track: TrackDefinition }) {
   return (
     <LanguageProvider>
       <SoundProvider>
-        <ProgressProvider labId={lab.id} lessons={lab.lessons}>
-          <DashboardShell lab={lab} />
+        <ProgressProvider trackId={track.id} lessons={track.lessons}>
+          <DashboardShell track={track} />
         </ProgressProvider>
       </SoundProvider>
     </LanguageProvider>

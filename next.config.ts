@@ -4,28 +4,43 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: "/tracks",
-        destination: "/labs",
+        source: "/labs",
+        destination: "/tracks",
         permanent: true,
       },
       {
-        source: "/tracks/:lab/learn",
-        destination: "/:lab/learn",
+        source: "/crafts",
+        destination: "/tracks",
         permanent: true,
       },
       {
-        source: "/tracks/:lab",
-        destination: "/:lab",
+        source: "/labs/:track/learn",
+        destination: "/:track/learn",
         permanent: true,
       },
       {
-        source: "/labs/:lab/learn",
-        destination: "/:lab/learn",
+        source: "/labs/:track",
+        destination: "/:track",
         permanent: true,
       },
       {
-        source: "/labs/:lab",
-        destination: "/:lab",
+        source: "/crafts/:track/learn",
+        destination: "/:track/learn",
+        permanent: true,
+      },
+      {
+        source: "/crafts/:track",
+        destination: "/:track",
+        permanent: true,
+      },
+      {
+        source: "/tracks/:track/learn",
+        destination: "/:track/learn",
+        permanent: true,
+      },
+      {
+        source: "/tracks/:track",
+        destination: "/:track",
         permanent: true,
       },
       {

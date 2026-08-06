@@ -9,7 +9,7 @@ import { SfxToggle } from "@/components/shared/SfxToggle";
 import { t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 
-/** Shared atmosphere + chrome for home and lab picker. */
+/** Shared atmosphere + chrome for home and track picker. */
 export function HubShell({
   children,
   showHomeLink = false,

@@ -13,9 +13,9 @@ import {
   Layers,
 } from "lucide-react";
 import {
-  LAB_JOB_KEYS,
-  LabJobVisual,
-} from "@/components/layout/LabJobVisual";
+  TRACK_JOB_KEYS,
+  TrackJobVisual,
+} from "@/components/layout/TrackJobVisual";
 import { Atmosphere } from "@/components/shared/Atmosphere";
 import { BrandLockup } from "@/components/shared/BrandLockup";
 import { RichText } from "@/components/shared/RichText";
@@ -33,7 +33,7 @@ import {
   tierEmoji,
   tierLabel,
 } from "@/lib/tiers";
-import type { Lesson, Tier, LabDefinition } from "@/lib/types";
+import type { Lesson, Tier, TrackDefinition } from "@/lib/types";
 
 function groupByTier(lessons: Lesson[]): Record<Tier, Lesson[]> {
   const groups = Object.fromEntries(
@@ -53,13 +53,13 @@ function TierBranch({
   lessons,
   open,
   onToggle,
-  labId,
+  trackId,
 }: {
   tier: Tier;
   lessons: Lesson[];
   open: boolean;
   onToggle: () => void;
-  labId: string;
+  trackId: string;
 }) {
   const { locale } = useLanguage();
   const { isComplete } = useProgress();
@@ -129,7 +129,7 @@ function TierBranch({
                       className="absolute -start-[1.35rem] top-5 h-px w-3 bg-white/15 sm:-start-[1.6rem] sm:w-4"
                     />
                     <Link
-                      href={`/${labId}/learn?lesson=${lesson.slug}`}
+                      href={`/${trackId}/learn?lesson=${lesson.slug}`}
                       onClick={() => playClick()}
                       className="group flex items-start gap-3 rounded-2xl border border-transparent bg-slate-950/40 px-3 py-2.5 transition hover:border-cyan-400/30 hover:bg-cyan-400/5 sm:px-4"
                     >
@@ -180,7 +180,7 @@ function TierBranch({
   );
 }
 
-function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
+function CurriculumTocInner({ track }: { track: TrackDefinition }) {
   const { locale } = useLanguage();
   const { playClick } = useSound();
   const {
@@ -220,7 +220,7 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
         <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
           <BrandLockup href="/" onClick={() => playClick()} />
           <Link
-            href="/labs"
+            href="/tracks"
             onClick={() => playClick()}
             className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-white/10"
           >
@@ -246,10 +246,13 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
                 {t("curriculumToc", locale)}
               </p>
               <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                {loc(lab.title, locale)}
+                {loc(track.title, locale)}
               </h1>
+              <p className="mt-2 max-w-2xl text-base font-medium leading-relaxed text-slate-200">
+                {loc(track.tagline, locale)}
+              </p>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
-                {loc(lab.description, locale)}
+                {loc(track.description, locale)}
               </p>
             </div>
 
@@ -266,7 +269,7 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
               <div className="flex items-center gap-2">
                 <div className="h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-white/10 rtl:rotate-180">
                   <motion.div
-                    className={`h-full rounded-full bg-gradient-to-r ${lab.accent}`}
+                    className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
                     initial={false}
                     animate={{ width: `${progressPercent}%` }}
                     transition={{ type: "spring", stiffness: 120, damping: 22 }}
@@ -274,7 +277,7 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
                 </div>
                 {continueLesson ? (
                   <Link
-                    href={`/${lab.id}/learn?lesson=${continueLesson.slug}`}
+                    href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
                     onClick={() => playClick()}
                     className="inline-flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-2 py-0.5 text-[10px] font-bold leading-5 text-slate-950 transition hover:brightness-110"
                   >
@@ -294,14 +297,14 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
                 {t("trackJobDemoLabel", locale)}
                 <span className="mx-1.5 text-slate-600">·</span>
                 <span className="tracking-normal text-slate-400">
-                  {t(LAB_JOB_KEYS[lab.id].job, locale)}
+                  {t(TRACK_JOB_KEYS[track.id].job, locale)}
                 </span>
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-slate-300 sm:text-[15px]">
-                {t(LAB_JOB_KEYS[lab.id].body, locale)}
+                {t(TRACK_JOB_KEYS[track.id].body, locale)}
               </p>
             </div>
-            <LabJobVisual labId={lab.id} variant="hero" />
+            <TrackJobVisual trackId={track.id} variant="hero" />
           </aside>
         </motion.section>
 
@@ -338,7 +341,7 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
                 key={tier}
                 tier={tier}
                 lessons={groups[tier]}
-                labId={lab.id}
+                trackId={track.id}
                 open={openTiers.has(tier)}
                 onToggle={() => {
                   setOpenTiers((prev) => {
@@ -357,12 +360,12 @@ function CurriculumTocInner({ lab }: { lab: LabDefinition }) {
   );
 }
 
-export function CurriculumToc({ lab }: { lab: LabDefinition }) {
+export function CurriculumToc({ track }: { track: TrackDefinition }) {
   return (
     <LanguageProvider>
       <SoundProvider>
-        <ProgressProvider labId={lab.id} lessons={lab.lessons}>
-          <CurriculumTocInner lab={lab} />
+        <ProgressProvider trackId={track.id} lessons={track.lessons}>
+          <CurriculumTocInner track={track} />
         </ProgressProvider>
       </SoundProvider>
     </LanguageProvider>

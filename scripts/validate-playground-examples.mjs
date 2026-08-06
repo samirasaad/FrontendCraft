@@ -35,13 +35,13 @@ const HEAD_PREVIEW = {
 };
 
 const LESSON_FILES = [
-  "content/labs/html/modern-lessons.ts",
-  "content/labs/html/extra-lessons.ts",
-  "content/labs/html/legacy-lessons.ts",
-  "content/labs/html/legacy-example-tiers.ts",
-  "content/labs/html/enrichment.ts",
-  "content/labs/css/modern-lessons.ts",
-  "content/labs/css/extra-lessons.ts",
+  "content/tracks/html/modern-lessons.ts",
+  "content/tracks/html/extra-lessons.ts",
+  "content/tracks/html/legacy-lessons.ts",
+  "content/tracks/html/legacy-example-tiers.ts",
+  "content/tracks/html/enrichment.ts",
+  "content/tracks/css/modern-lessons.ts",
+  "content/tracks/css/extra-lessons.ts",
 ];
 
 function extractFromHelpers(source, file) {

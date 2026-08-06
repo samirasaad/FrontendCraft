@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  LabStage,
+  TrackStage,
   labEase,
-} from "@/components/visualizers/html/LabStage";
+} from "@/components/visualizers/html/TrackStage";
 import { LAB_STEP_MS } from "@/lib/motion-pace";
 import { useAutoPlay } from "@/components/shared/PlayPauseButton";
 import { useLanguage } from "@/context/LanguageContext";
@@ -86,7 +86,7 @@ export function DebounceThrottleVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "Debounce و Throttle" : "Debounce & throttle"}
@@ -159,6 +159,6 @@ export function DebounceThrottleVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }

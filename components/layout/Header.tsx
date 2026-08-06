@@ -10,15 +10,15 @@ import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { t } from "@/content/i18n/ui-strings";
 import { RTL_FLIP } from "@/lib/rtl";
-import type { LabDefinition } from "@/lib/types";
+import type { TrackDefinition } from "@/lib/types";
 
 interface HeaderProps {
-  lab: LabDefinition;
+  track: TrackDefinition;
   onToggleLessons?: () => void;
   lessonsOpen?: boolean;
 }
 
-export function Header({ lab, onToggleLessons, lessonsOpen }: HeaderProps) {
+export function Header({ track, onToggleLessons, lessonsOpen }: HeaderProps) {
   const { locale } = useLanguage();
   const { playClick } = useSound();
   const { progressPercent, completedCount, totalCount } = useProgress();
@@ -53,7 +53,7 @@ export function Header({ lab, onToggleLessons, lessonsOpen }: HeaderProps) {
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <Link
-            href={`/${lab.id}`}
+            href={`/${track.id}`}
             onClick={() => playClick()}
             title={t("backToCurriculum", locale)}
             className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-slate-300 transition hover:bg-white/10 sm:px-2.5"
@@ -71,7 +71,7 @@ export function Header({ lab, onToggleLessons, lessonsOpen }: HeaderProps) {
               aria-hidden
             >
               <span
-                className={`absolute inset-y-0 start-0 rounded-full bg-gradient-to-r ${lab.accent} transition-all duration-500`}
+                className={`absolute inset-y-0 start-0 rounded-full bg-gradient-to-r ${track.accent} transition-all duration-500`}
                 style={{ width: `${progressPercent}%` }}
               />
             </span>

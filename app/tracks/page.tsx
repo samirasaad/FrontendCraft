@@ -1,3 +1,5 @@
-import LabsPage from "../labs/page";
+import { TrackPicker } from "@/components/layout/TrackPicker";
 
-export default LabsPage;
+export default function TracksPage() {
+  return <TrackPicker />;
+}

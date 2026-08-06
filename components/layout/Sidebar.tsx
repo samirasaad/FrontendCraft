@@ -68,7 +68,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { loc, t } from "@/content/i18n/ui-strings";
-import { getLab } from "@/content/labs";
+import { getTrack } from "@/content/tracks";
 import { RichText } from "@/components/shared/RichText";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -167,10 +167,10 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     progressPercent,
     completedCount,
     totalCount,
-    labId,
+    trackId,
   } = useProgress();
   const { playClick } = useSound();
-  const lab = useMemo(() => getLab(labId), [labId]);
+  const track = useMemo(() => getTrack(trackId), [trackId]);
   const [query, setQuery] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [expandedTiers, setExpandedTiers] = useState<Set<Tier>>(() => new Set());
@@ -178,7 +178,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
   function selectLesson(lesson: (typeof lessons)[number]) {
     playClick();
     setActiveLessonId(lesson.id);
-    router.replace(`/${labId}/learn?lesson=${lesson.slug}`, { scroll: false });
+    router.replace(`/${trackId}/learn?lesson=${lesson.slug}`, { scroll: false });
     if (
       open &&
       typeof window !== "undefined" &&
@@ -362,7 +362,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
               }`}
               aria-hidden={!panelOpen}
             >
-              <span className="text-white">{loc(lab.title, locale)}</span>
+              <span className="text-white">{loc(track.title, locale)}</span>
               <span className="text-slate-600"> · </span>
               <span className="text-cyan-300">{t("lessons", locale)}</span>
             </p>
