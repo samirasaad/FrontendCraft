@@ -256,7 +256,7 @@ export const legacyLessons: LegacyLesson[] = [
       code: `<p>
   Learn <strong>HTML</strong> with <em>clarity</em>.
   Press <kbd>Ctrl</kbd>+<kbd>S</kbd> to save.
-  Use <code>npm run dev</code> — output <samp>ready</samp>.
+  Use <code>&lt;section&gt;</code> — output <samp>block</samp>.
 </p>
 <p>
   H<sub>2</sub>O · E=mc<sup>2</sup> ·
@@ -269,7 +269,7 @@ export const legacyLessons: LegacyLesson[] = [
 </p>
 <blockquote>
   <p>Longer quoted passage for articles and docs.</p>
-  <footer>— <cite>FrontendCraft</cite></footer>
+  <footer>— <cite>MDN Web Docs</cite></footer>
 </blockquote>
 <p><small>Fine print and side notes.</small></p>`,
       expectedOutput: {

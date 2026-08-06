@@ -110,10 +110,16 @@ export const htmlMediumExamples: Record<string, CodeExample> = {
     "جدول بيانات برؤوس أعمدة (من غير caption لسه)",
   ),
   "accessibility-basics": mediumExample(
-    `<button type="button">Toggle theme</button>
-<img src="https://placehold.co/120x120/0ea5e9/fff.jpg?text=Logo" alt="FrontendCraft logo" width="120" height="120" />`,
-    "Named button + informative image alt text",
-    "زر مسمّى + alt وصفي لصورة",
+    `<a href="#content">Skip to main content</a>
+<main id="content">
+  <h1>Contact</h1>
+  <label>
+    Email
+    <input name="email" type="email" autocomplete="email" required />
+  </label>
+</main>`,
+    "Skip link + labeled form control",
+    "رابط تخطي + حقل فورم بـ label",
   ),
   "meta-seo": mediumExample(
     `<head>

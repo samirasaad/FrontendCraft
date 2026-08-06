@@ -1,6 +1,7 @@
 import {
   L,
   hardExample,
+  hardHtmlDoc,
   mediumExample,
   simpleExample,
 } from "@/content/helpers";
@@ -124,7 +125,7 @@ export const extraLessons: LessonDraft[] = [
       <aside class="ad-slot" aria-label="Sponsored">
         <!-- late-loaded creative cannot shove main content -->
       </aside>
-      <button type="button">Save progress</button>
+      <p>Content stays put while the ad slot reserves space.</p>
     </main>
   </body>
 </html>`,
@@ -228,26 +229,30 @@ export const extraLessons: LessonDraft[] = [
           "صفحة كاملة: صورة معرض lazy تحت الشاشة",
         ),
         hardExample(
-          `<main>
-  <h1>Below-the-fold media</h1>
+          hardHtmlDoc(
+            `<main>
+  <h1>Gallery</h1>
+  <p>Hero loads eagerly above the fold.</p>
   <img
     src="https://placehold.co/640x360/0284c7/fff.jpg?text=Below+fold"
-    alt="Gallery thumbnail"
+    alt="Gallery thumbnail from the HTML lesson"
     width="640"
     height="360"
     loading="lazy"
     decoding="async"
   />
   <iframe
-    title="Lesson walkthrough"
+    title="Lesson walkthrough embed"
     src="about:blank"
     loading="lazy"
     width="640"
     height="200"
   ></iframe>
 </main>`,
-          "Lazy image + lazy iframe below the fold",
-          "صورة و iframe متأخرين تحت الشاشة",
+            { title: "Below-the-fold media" },
+          ),
+          "Full page: lazy image + lazy iframe with dimensions",
+          "صفحة كاملة: صورة و iframe متأخرين بمقاسات",
         ),
       ],
       visualHint: L(
@@ -348,33 +353,31 @@ export const extraLessons: LessonDraft[] = [
           "صفحة كاملة: landmarks + nav أساسي مسمّى",
         ),
         hardExample(
-          `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HTML Forms</title>
-  </head>
-  <body>
-    <header>
-      <p>FrontendCraft</p>
-      <nav aria-label="Labs">
-        <a href="/html">HTML</a>
-      </nav>
-    </header>
-    <main id="content">
-      <article>
-        <h1>HTML Forms</h1>
-        <section aria-labelledby="tips">
-          <h2 id="tips">Tips</h2>
-          <p>Keep one main landmark.</p>
-        </section>
-      </article>
-    </main>
-  </body>
-</html>`,
-          "Full page: article inside main",
-          "صفحة كاملة: article جوّه main",
+          hardHtmlDoc(
+            `<a href="#content">Skip to main content</a>
+<header>
+  <p>Learning hub</p>
+  <nav aria-label="Labs">
+    <a href="/html">HTML</a>
+    <a href="/css">CSS</a>
+  </nav>
+</header>
+<main id="content">
+  <article>
+    <h1>Document architecture</h1>
+    <section aria-labelledby="tips-heading">
+      <h2 id="tips-heading">Landmark tips</h2>
+      <p>One <code>&lt;main&gt;</code>, labeled <code>&lt;nav&gt;</code>, and a skip link.</p>
+    </section>
+  </article>
+</main>
+<footer>
+  <p><small>© 2026 Learning hub</small></p>
+</footer>`,
+            { title: "Document architecture" },
+          ),
+          "Full page: skip link, landmarks, article, and footer",
+          "صفحة كاملة: skip link و landmarks و article و footer",
         ),
       ],
       visualHint: L(
@@ -621,12 +624,12 @@ export const extraLessons: LessonDraft[] = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Product collection</title>
+    <title>Lesson hub</title>
     <script type="speculationrules">
       {
         "prerender": [
           {
-            "urls": ["/products/keyboard"],
+            "urls": ["/html/forms"],
             "eagerness": "moderate"
           }
         ]
@@ -635,8 +638,8 @@ export const extraLessons: LessonDraft[] = [
   </head>
   <body>
     <main>
-      <h1>Popular today</h1>
-      <a href="/products/keyboard">Mechanical keyboard</a>
+      <h1>Next lesson</h1>
+      <a href="/html/forms">HTML forms</a>
       <a href="/logout">Sign out</a>
       <!-- Never add /logout, checkout, delete, or token URLs to prerender rules. -->
     </main>
@@ -704,11 +707,11 @@ export const extraLessons: LessonDraft[] = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>RTL demo — Document anatomy</title>
+    <title>RTL demo — هيكل المستند</title>
   </head>
   <body>
     <main>
-      <h1>Document anatomy</h1>
+      <h1>هيكل المستند</h1>
       <p>
         English chrome on an RTL root. Isolate technical tokens so they stay LTR:
         <bdi dir="ltr">&lt;!DOCTYPE html&gt;</bdi>
@@ -994,23 +997,27 @@ export const extraLessons: LessonDraft[] = [
           "صفحة كاملة بفورم إيميل بـ label",
         ),
         hardExample(
-          `<main>
-  <h1>Native dialog</h1>
-  <button type="button" id="open">Open dialog</button>
-  <dialog id="confirm" aria-labelledby="dlg-title">
-    <h2 id="dlg-title">Confirm</h2>
-    <p>Native dialog preview</p>
-    <form method="dialog">
-      <button value="cancel">Close</button>
-    </form>
-  </dialog>
-  <script>
-    document.getElementById("open").onclick = () =>
-      document.getElementById("confirm").showModal();
-  </script>
+          hardHtmlDoc(
+            `<main>
+  <h1>HTML cheatsheet</h1>
+  <p>Semantic landmarks you reach for on most pages.</p>
+  <dl>
+    <dt><code>&lt;main&gt;</code></dt>
+    <dd>Primary page content — one per document.</dd>
+    <dt><code>&lt;nav&gt;</code></dt>
+    <dd>Major navigation links.</dd>
+    <dt><code>&lt;section&gt;</code></dt>
+    <dd>Thematic grouping with a heading.</dd>
+    <dt><code>&lt;article&gt;</code></dt>
+    <dd>Self-contained content such as a post or card.</dd>
+    <dt><code>&lt;aside&gt;</code></dt>
+    <dd>Related content tangential to the main flow.</dd>
+  </dl>
 </main>`,
-          "Native dialog opened from a button",
-          "native dialog يتفتح من زر",
+            { title: "HTML cheatsheet" },
+          ),
+          "Full page: semantic landmarks reference",
+          "صفحة كاملة: مرجع معالم semantic",
         ),
       ],
       visualHint: L(

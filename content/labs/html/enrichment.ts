@@ -2,6 +2,7 @@ import {
   L,
   pitfall,
   hardExample,
+  hardHtmlDoc,
   mediumExample,
   simpleExample,
 } from "@/content/helpers";
@@ -26,20 +27,14 @@ interface Overlay {
 const overlays: Record<string, Overlay> = {
   "document-anatomy": {
     hard: hardExample(
-      `<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FrontendCraft — Labs</title>
-  </head>
-  <body>
-    <header><h1>FrontendCraft</h1></header>
-    <main><p>Choose a lab to start.</p></main>
-  </body>
-</html>`,
-      "Valid shell with lang, charset, viewport, header/main",
-      "هيكل سليم: lang و charset و viewport و header/main",
+      hardHtmlDoc(
+        `<header><h1>My site</h1></header>
+<main><p>Valid document shell with lang, charset, and viewport.</p></main>
+<footer><p><small>Built with semantic HTML.</small></p></footer>`,
+        { title: "Lesson page" },
+      ),
+      "Valid shell with lang, charset, viewport, header/main/footer",
+      "هيكل سليم: lang و charset و viewport و header/main/footer",
     ),
     deepDive: [
       L(
@@ -72,21 +67,22 @@ const overlays: Record<string, Overlay> = {
   },
   "semantic-structure": {
     hard: hardExample(
-      `<body>
-  <header>
-    <p>FrontendCraft</p>
-    <nav aria-label="Primary"><a href="/js">JS</a></nav>
-  </header>
-  <main>
-    <article>
-      <h1>HTML basics</h1>
-      <p>Landmarks split chrome from the primary lesson content.</p>
-    </article>
-  </main>
-  <footer><small>© FrontendCraft</small></footer>
-</body>`,
-      "Landmark regions: header, nav, main, article, footer",
-      "مناطق landmarks: header و nav و main و article و footer",
+      hardHtmlDoc(
+        `<header>
+  <p>Learning hub</p>
+  <nav aria-label="Primary"><a href="/javascript">JavaScript</a></nav>
+</header>
+<main>
+  <article>
+    <h1>HTML basics</h1>
+    <p>Landmarks split chrome from the primary lesson content.</p>
+  </article>
+</main>
+<footer><small>© Learning hub</small></footer>`,
+        { title: "HTML basics" },
+      ),
+      "Full page: header, nav, main, article, footer",
+      "صفحة كاملة: header و nav و main و article و footer",
     ),
     deepDive: [
       L(
@@ -152,17 +148,22 @@ function fallbackOverlay(lesson: LegacyLesson): Overlay {
 const specific: Record<string, Partial<Overlay>> = {
   "text-headings": {
     hard: hardExample(
-      `<article>
-  <h1>Ship your first page</h1>
-  <h2>Structure</h2>
-  <h3>Document outline</h3>
-  <h4>Ranks in order</h4>
-  <h5>Rare deep nesting</h5>
-  <h6>Finest label</h6>
-  <p>Use h1–h6 as an outline — CSS handles size.</p>
-</article>`,
-      "Full outline: h1 → h2 → h3 → h4 → h5 → h6",
-      "Outline كامل: h1 → h2 → h3 → h4 → h5 → h6",
+      hardHtmlDoc(
+        `<main>
+  <article>
+    <h1>Ship your first page</h1>
+    <h2>Structure</h2>
+    <h3>Document outline</h3>
+    <h4>Ranks in order</h4>
+    <h5>Rare deep nesting</h5>
+    <h6>Finest label</h6>
+    <p>Use h1–h6 as an outline — CSS handles size.</p>
+  </article>
+</main>`,
+        { title: "Heading outline" },
+      ),
+      "Full page: h1 → h6 document outline",
+      "صفحة كاملة: outline من h1 لـ h6",
     ),
     deepDive: [
       L(
@@ -185,22 +186,27 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   "text-formatting": {
     hard: hardExample(
-      `<article>
-  <h1>Release notes</h1>
-  <p>
-    Fixed <code>focus</code> trap. Press <kbd>Esc</kbd> to close.
-    <mark>Breaking:</mark> <del>v1 API</del> <ins>v2 API</ins>.
-  </p>
-  <p>
-    Shipped <time datetime="2026-08-02">Aug 2, 2026</time>.
-    See <cite>HTML Living Standard</cite>.
-  </p>
-  <blockquote>
-    <p>Prefer native semantics over CSS-only emphasis.</p>
-  </blockquote>
-</article>`,
-      "Docs-style formatting: code, kbd, mark, del/ins, time, cite",
-      "تنسيق docs: code و kbd و mark و del/ins و time و cite",
+      hardHtmlDoc(
+        `<main>
+  <article>
+    <h1>Release notes</h1>
+    <p>
+      Fixed <code>focus</code> trap. Press <kbd>Esc</kbd> to close.
+      <mark>Breaking:</mark> <del>v1 API</del> <ins>v2 API</ins>.
+    </p>
+    <p>
+      Shipped <time datetime="2026-08-02">Aug 2, 2026</time>.
+      See <cite>HTML Living Standard</cite>.
+    </p>
+    <blockquote>
+      <p>Prefer native semantics over CSS-only emphasis.</p>
+    </blockquote>
+  </article>
+</main>`,
+        { title: "Release notes" },
+      ),
+      "Full page: code, kbd, mark, del/ins, time, cite",
+      "صفحة كاملة: code و kbd و mark و del/ins و time و cite",
     ),
     deepDive: [
       L(
@@ -227,17 +233,23 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   "links-images": {
     hard: hardExample(
-      `<a href="/javascript">
-  <img
-    src="https://placehold.co/80x80/64748b/fff.jpg?text=JS"
-    alt=""
-    width="80"
-    height="80"
-  />
-  <span>Start JavaScript lab</span>
-</a>`,
-      "Link with decorative image (empty alt) + text",
-      "لينك مع صورة ديكور (alt فاضي) + نص",
+      hardHtmlDoc(
+        `<main>
+  <h1>Choose a lab</h1>
+  <a href="/javascript">
+    <img
+      src="https://placehold.co/80x80/64748b/fff.jpg?text=JS"
+      alt=""
+      width="80"
+      height="80"
+    />
+    <span>Start JavaScript lab</span>
+  </a>
+</main>`,
+        { title: "Lab picker" },
+      ),
+      "Full page: link with decorative image (empty alt) + text",
+      "صفحة كاملة: لينك مع صورة ديكور (alt فاضي) + نص",
     ),
     deepDive: [
       L(
@@ -260,14 +272,23 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   lists: {
     hard: hardExample(
-      `<nav aria-label="Lessons">
-  <ol>
-    <li><a href="#b1">Beginner</a></li>
-    <li><a href="#p1">Pro tips</a></li>
-  </ol>
-</nav>`,
-      "Ordered lesson nav list",
-      "قائمة دروس مرتبة",
+      hardHtmlDoc(
+        `<header>
+  <nav aria-label="Lessons">
+    <ol>
+      <li><a href="#b1">Beginner</a></li>
+      <li><a href="#p1">Pro tips</a></li>
+    </ol>
+  </nav>
+</header>
+<main>
+  <h1>Curriculum</h1>
+  <p>Ordered lesson links inside a labeled navigation landmark.</p>
+</main>`,
+        { title: "Lesson navigation" },
+      ),
+      "Full page: ordered nav list inside header",
+      "صفحة كاملة: قائمة nav مرتبة جوّه header",
     ),
     deepDive: [
       L(
@@ -290,15 +311,19 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   "forms-inputs": {
     hard: hardExample(
-      `<form action="/api/subscribe" method="post">
-  <label>
-    Email
-    <input type="email" name="email" required autocomplete="email" />
-  </label>
-  <button type="submit">Join waitlist</button>
-</form>`,
-      "Labeled email field + submit",
-      "حقل إيميل بـ label + submit",
+      hardHtmlDoc(
+        `<main>
+  <h1>Join the waitlist</h1>
+  <form action="/api/subscribe" method="post">
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required autocomplete="email" />
+    <button type="submit">Join waitlist</button>
+  </form>
+</main>`,
+        { title: "Waitlist signup" },
+      ),
+      "Full page: labeled email field with autocomplete",
+      "صفحة كاملة: حقل إيميل بـ label و autocomplete",
     ),
     deepDive: [
       L(
@@ -321,17 +346,24 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   tables: {
     hard: hardExample(
-      `<table>
-  <caption>Lab progress</caption>
-  <thead>
-    <tr><th scope="col">Tier</th><th scope="col">Done</th></tr>
-  </thead>
-  <tbody>
-    <tr><th scope="row">Beginner</th><td>3/3</td></tr>
-  </tbody>
-</table>`,
-      "Captioned table with scoped headers",
-      "جدول بـ caption و headers محددة النطاق",
+      hardHtmlDoc(
+        `<main>
+  <h1>Your progress</h1>
+  <table>
+    <caption>Lab progress</caption>
+    <thead>
+      <tr><th scope="col">Tier</th><th scope="col">Done</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Beginner</th><td>3/3</td></tr>
+      <tr><th scope="row">Pro</th><td>1/4</td></tr>
+    </tbody>
+  </table>
+</main>`,
+        { title: "Progress table" },
+      ),
+      "Full page: captioned table with scoped headers",
+      "صفحة كاملة: جدول بـ caption و headers محددة النطاق",
     ),
     deepDive: [
       L(
@@ -354,13 +386,17 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   "accessibility-basics": {
     hard: hardExample(
-      `<button type="button" aria-pressed="false">SFX off</button>
-<a href="#main">Skip to content</a>
+      hardHtmlDoc(
+        `<a href="#main">Skip to content</a>
+<button type="button" aria-pressed="false">SFX off</button>
 <main id="main" tabindex="-1">
   <h1>Lessons</h1>
+  <p>Skip link, named control, and a focusable main landmark.</p>
 </main>`,
-      "Named control + skip link + main target",
-      "زر مسمّى + skip link + هدف main",
+        { title: "Accessibility basics" },
+      ),
+      "Full page: skip link, toggle button, and main target",
+      "صفحة كاملة: skip link وزر toggle وهدف main",
     ),
     deepDive: [
       L(
@@ -383,22 +419,27 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   "meta-seo": {
     hard: hardExample(
-      `<head>
-  <title>FrontendCraft — Learn HTML in the browser</title>
-  <meta name="description" content="Interactive HTML labs with live sandboxes and bilingual lessons." />
-  <link rel="canonical" href="https://example.com/html" />
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Course","name":"HTML lab"}
-  </script>
-</head>
-<body>
-  <main>
-    <h1>HTML lab</h1>
-    <a href="/html/forms-inputs">Learn HTML forms</a>
-  </main>
-</body>`,
-      "SSR-ready head + main + descriptive link",
-      "head جاهز لـ SSR + main + لينك وصفي",
+      `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Learn HTML in the browser</title>
+    <meta name="description" content="Interactive HTML labs with live sandboxes and bilingual lessons." />
+    <link rel="canonical" href="https://example.com/html" />
+    <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Course","name":"HTML lab"}
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>HTML lab</h1>
+      <a href="/html/forms-inputs">Learn HTML forms</a>
+    </main>
+  </body>
+</html>`,
+      "Full page: SEO head + crawlable main + internal link",
+      "صفحة كاملة: head للـ SEO + main قابل للزحف + لينك داخلي",
     ),
     deepDive: [
       L(
@@ -434,19 +475,25 @@ const specific: Record<string, Partial<Overlay>> = {
   },
   "media-embed": {
     hard: hardExample(
-      `<figure>
-  <video
-    controls
-    playsinline
-    poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
-  >
-    <source src="${DEMO_VIDEO_MP4}" type="video/mp4" />
-    <track kind="captions" srclang="en" src="/captions.vtt" default />
-  </video>
-  <figcaption>HTML lesson intro with captions</figcaption>
-</figure>`,
-      "Video with captions + figcaption",
-      "فيديو بكابشنز و figcaption",
+      hardHtmlDoc(
+        `<main>
+  <h1>Lesson intro</h1>
+  <figure>
+    <video
+      controls
+      playsinline
+      poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
+    >
+      <source src="${DEMO_VIDEO_MP4}" type="video/mp4" />
+      <track kind="captions" srclang="en" src="/captions.vtt" default />
+    </video>
+    <figcaption>HTML lesson intro with captions and a poster frame.</figcaption>
+  </figure>
+</main>`,
+        { title: "Lesson video" },
+      ),
+      "Full page: video with captions, poster, and figcaption",
+      "صفحة كاملة: فيديو بكابشنز و poster و figcaption",
     ),
     deepDive: [
       L(

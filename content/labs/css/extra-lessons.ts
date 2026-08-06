@@ -1,6 +1,7 @@
 import {
   L,
   pitfall,
+  hardCssFromFragment,
   hardExample,
   mediumExample,
   simpleExample,
@@ -64,14 +65,30 @@ export const extraLessons: LessonDraft[] = [
           "Badge مربوطة بالكارت",
         ),
         hardExample(
-          `<style>
-.menu { display: flex; gap: .75rem; flex-wrap: wrap; }
-.menu a { padding: .5rem .75rem; border-radius: .5rem; }
+          hardCssFromFragment(
+            `<style>
+* { box-sizing: border-box; }
+.menu { display: flex; gap: .75rem; flex-wrap: wrap; padding: 0; list-style: none; }
+.menu a { padding: .5rem .75rem; border-radius: .5rem; text-decoration: none; }
 .menu a:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
 </style>
-<nav class="menu"><a href="#learn">Learn</a><a href="#practice">Practice</a></nav>`,
-          "Normal-flow navigation with a visible keyboard state",
-          "تنقل في `normal flow` بحالة كيبورد ظاهرة",
+<header>
+  <nav aria-label="Primary">
+    <ul class="menu">
+      <li><a href="#learn">Learn</a></li>
+      <li><a href="#practice">Practice</a></li>
+      <li><a href="#pitfalls">Pitfalls</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="learn">
+  <h1>CSS pitfalls lab</h1>
+  <p>Keyboard focus stays visible while layout stays in normal flow.</p>
+</main>`,
+            "CSS pitfalls navigation",
+          ),
+          "Full page: flex nav, focus-visible, and main landmark",
+          "صفحة كاملة: nav مرن و focus-visible و landmark main",
         ),
       ],
       visualHint: L(
@@ -176,7 +193,30 @@ export const extraLessons: LessonDraft[] = [
       examples: [
         simpleExample(`<style>.row { display: flex; gap: .75rem; }</style><div class="row"><span>One</span><span>Two</span></div>`, "A compact flex row", "صف `flex` مختصر"),
         mediumExample(`<style>.stack { display: flex; flex-direction: column; gap: .5rem; }</style><div class="stack"><span>Top</span><span>Bottom</span></div>`, "A vertical flex stack", "عمود `flex` عمودي"),
-        hardExample(`<style>.card { padding: 1rem; border-radius: .75rem; background: #f8fafc; }</style><article class="card">Paste and adapt a card pattern.</article>`, "A reusable surface", "`Surface` قابلة لإعادة الاستخدام"),
+        hardExample(
+          hardCssFromFragment(
+            `<style>
+.card {
+  padding: 1rem 1.25rem;
+  border-radius: .75rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  max-width: 28rem;
+}
+.card h2 { margin: 0 0 .5rem; font-size: 1.125rem; }
+.card p { margin: 0; color: #475569; }
+</style>
+<main>
+  <article class="card">
+    <h2>Reusable surface</h2>
+    <p>Paste this card pattern, then swap tokens for your design system.</p>
+  </article>
+</main>`,
+            "CSS card pattern",
+          ),
+          "Full page: reusable card surface with typography",
+          "صفحة كاملة: سطح card قابل لإعادة الاستخدام مع typography",
+        ),
       ],
       visualHint: L("Choose a card, preview it, and make it yours.", "اختار كارت، عاينه، وخليه بتاعك."),
       cheatCards: cssCheatCards,

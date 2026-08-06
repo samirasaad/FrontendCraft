@@ -1,4 +1,4 @@
-import { L, hardExample, mediumExample, simpleExample } from "@/content/helpers";
+import { L, hardCssFromFragment, hardExample, mediumExample, simpleExample } from "@/content/helpers";
 import type { LessonDraft } from "@/content/labs/_insights";
 import type { Tier } from "@/lib/types";
 
@@ -50,7 +50,7 @@ function lesson(spec: LessonSpec, index: number): LessonDraft {
           `سيناريو متوسط — ${spec.title[1]}`,
         ),
         hardExample(
-          spec.hard,
+          hardCssFromFragment(spec.hard, spec.title[0]),
           `Hard challenge — ${spec.title[0]}`,
           `تحدي صعب — ${spec.title[1]}`,
         ),
