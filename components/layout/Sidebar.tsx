@@ -68,6 +68,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { loc, t } from "@/content/i18n/ui-strings";
+import { getLab } from "@/content/labs";
 import { RichText } from "@/components/shared/RichText";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -169,6 +170,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     labId,
   } = useProgress();
   const { playClick } = useSound();
+  const lab = useMemo(() => getLab(labId), [labId]);
   const [query, setQuery] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [expandedTiers, setExpandedTiers] = useState<Set<Tier>>(() => new Set());
@@ -355,12 +357,14 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
         >
           <div className="relative flex h-12 shrink-0 items-center border-b border-white/10">
             <p
-              className={`px-3 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300 transition-opacity duration-500 ease-out ${
+              className={`min-w-0 px-3 text-xs font-semibold uppercase tracking-[0.2em] transition-opacity duration-500 ease-out ${
                 panelOpen ? "opacity-100" : "pointer-events-none opacity-0"
               }`}
               aria-hidden={!panelOpen}
             >
-              {t("lessons", locale)}
+              <span className="text-white">{loc(lab.title, locale)}</span>
+              <span className="text-slate-600"> · </span>
+              <span className="text-cyan-300">{t("lessons", locale)}</span>
             </p>
             <button
               type="button"
