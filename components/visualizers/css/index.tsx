@@ -8,10 +8,10 @@ import {
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  LabStage,
+  TrackStage,
   labEase,
   labSpring,
-} from "@/components/visualizers/html/LabStage";
+} from "@/components/visualizers/html/TrackStage";
 import { useAutoPlay } from "@/components/shared/PlayPauseButton";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
@@ -77,7 +77,7 @@ function CssLab({
   const current = steps[step] ?? steps[0];
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={pick(title, locale)}
@@ -100,7 +100,7 @@ function CssLab({
         </div>
         <StepDots count={steps.length} active={step} />
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -742,7 +742,7 @@ export function ResponsiveLabVisualizer() {
   const cols = step === 0 ? 3 : step === 1 ? 2 : 1;
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={pick({ en: "Responsive media", ar: "التجاوب والـ Media" }, locale)}
@@ -772,7 +772,7 @@ export function ResponsiveLabVisualizer() {
         </p>
         <StepDots count={3} active={step} />
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -970,7 +970,7 @@ export function LogicalLayoutLabVisualizer() {
   }, [reduce, playing]);
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={pick(
@@ -1009,7 +1009,7 @@ export function LogicalLayoutLabVisualizer() {
         </p>
         <StepDots count={2} active={rtl ? 1 : 0} />
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -1190,7 +1190,7 @@ export function CssPitfallsLabVisualizer() {
       : `✗ Mistake: ${current.trap.en}`;
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "أخطاء CSS الشائعة" : "CSS pitfalls"}
@@ -1298,7 +1298,7 @@ export function CssPitfallsLabVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -1306,7 +1306,7 @@ export function CssPitfallsLabVisualizer() {
 export function CssCheatsheetLabVisualizer() {
   return (
     <CssLab
-      title={{ en: "CSS cheatsheet lab", ar: "معمل مرجع CSS" }}
+      title={{ en: "CSS cheatsheet", ar: "مرجع CSS" }}
       steps={[
         {
           caption: {

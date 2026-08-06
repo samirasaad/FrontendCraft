@@ -4,10 +4,10 @@ import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Check, ChevronRight, Shield, Volume2, X } from "lucide-react";
 import {
-  LabStage,
+  TrackStage,
   labEase,
   labSpring,
-} from "@/components/visualizers/html/LabStage";
+} from "@/components/visualizers/html/TrackStage";
 import { LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
 import { useAutoPlay } from "@/components/shared/PlayPauseButton";
 import { useLanguage } from "@/context/LanguageContext";
@@ -202,16 +202,22 @@ export function DocumentTreeVisualizer() {
       : "untitled";
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "تشريح المستند" : "Document anatomy"}
       caption={ar ? current.tip.ar : current.tip.en}
     >
       <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3">
-        <div className="grid w-full max-w-lg gap-3 sm:grid-cols-2">
+        <div
+          dir="ltr"
+          className="grid w-full max-w-lg gap-3 sm:grid-cols-2"
+        >
           {/* Nested document tree */}
-          <div className="rounded-xl border border-white/10 bg-slate-950/55 p-3">
+          <div
+            dir="ltr"
+            className="rounded-xl border border-white/10 bg-slate-950/55 p-3"
+          >
             <p className="mb-2 text-[9px] font-semibold uppercase tracking-wider text-cyan-200/65">
               {ar ? "شجرة المستند" : "document tree"}
             </p>
@@ -297,7 +303,10 @@ export function DocumentTreeVisualizer() {
           </div>
 
           {/* Mini browser preview */}
-          <div className="flex min-h-[220px] flex-col overflow-hidden rounded-xl border border-orange-300/25 bg-slate-950/60">
+          <div
+            dir="ltr"
+            className="flex min-h-[220px] flex-col overflow-hidden rounded-xl border border-orange-300/25 bg-slate-950/60"
+          >
             <div className="flex items-center gap-1.5 border-b border-white/10 bg-slate-900/80 px-2.5 py-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-rose-400/80" />
               <span className="h-1.5 w-1.5 rounded-full bg-amber-300/80" />
@@ -421,7 +430,7 @@ export function DocumentTreeVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -644,7 +653,7 @@ export function SemanticBlocksVisualizer() {
   }));
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "الهيكل الدلالي" : "Semantic structure"}
@@ -859,7 +868,7 @@ export function SemanticBlocksVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -1011,7 +1020,7 @@ export function HeadingLadderVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "النص والعناوين" : "Text & headings"}
@@ -1223,7 +1232,7 @@ export function HeadingLadderVisualizer() {
           })}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -1540,7 +1549,7 @@ export function TextFormatVisualizer() {
   })();
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "تنسيق النص" : "Text formatting"}
@@ -1612,7 +1621,7 @@ export function TextFormatVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -1670,7 +1679,7 @@ export function LinkImageVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "اللينكات والصور" : "Links & images"}
@@ -1761,7 +1770,7 @@ export function LinkImageVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -1870,7 +1879,7 @@ export function ListStackVisualizer() {
   const items = locale === "ar" ? itemsAr : itemsEn;
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "القوائم" : "Lists"}
@@ -2014,7 +2023,7 @@ export function ListStackVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -2097,7 +2106,7 @@ export function DetailsAccordionVisualizer() {
   }, [reduce, playing]);
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "Details و Summary" : "Details & summary"}
@@ -2214,7 +2223,7 @@ export function DetailsAccordionVisualizer() {
           />
         ))}
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -2300,7 +2309,7 @@ export function FormFlowVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "تدفّق الفورم" : "Form flow"}
@@ -2479,7 +2488,7 @@ export function FormFlowVisualizer() {
           })}
         </div>
       </form>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -2635,7 +2644,7 @@ export function TableGridVisualizer() {
   const captionLabel = locale === "ar" ? "لوحة النتائج" : "Scoreboard";
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "الجداول" : "Tables"}
@@ -2806,7 +2815,7 @@ export function TableGridVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -2900,7 +2909,7 @@ export function A11yCheckVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "فحص الوصولية" : "Accessibility check"}
@@ -2962,7 +2971,7 @@ export function A11yCheckVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -2996,8 +3005,8 @@ const SR_READY_STEPS = [
       hear: { en: "(no link role)", ar: "(مفيش role رابط)" },
     },
     good: {
-      code: `<a href="/javascript">Open JS lab</a>`,
-      hear: { en: "Open JS lab, link", ar: "افتح معمل JS، رابط" },
+      code: `<a href="/javascript">Start JavaScript Core</a>`,
+      hear: { en: "Start JavaScript Core, link", ar: "ابدأ أساسيات JavaScript، رابط" },
     },
   },
   {
@@ -3079,7 +3088,7 @@ export function SrReadyVisualizer() {
   const ar = locale === "ar";
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "غلط مقابل جاهز للـ SR" : "Bad vs SR ready"}
@@ -3152,7 +3161,7 @@ export function SrReadyVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -3183,7 +3192,7 @@ const SEO_STEPS = [
     serpUrl: false,
     serpBody: false,
     markup:
-      '<meta name="description" content="Learn HTML with interactive labs." />',
+      '<meta name="description" content="Learn HTML with interactive lessons." />',
   },
   {
     id: "canonical",
@@ -3209,7 +3218,7 @@ const SEO_STEPS = [
     serpDesc: true,
     serpUrl: true,
     serpBody: true,
-    markup: "<main>\n  <h1>HTML lab</h1>\n  <p>…</p>\n</main>",
+    markup: "<main>\n  <h1>HTML Fundamentals</h1>\n  <p>…</p>\n</main>",
   },
 ] as const;
 
@@ -3237,7 +3246,7 @@ export function SeoCrawlVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "زحف الـ SEO" : "SEO crawl"}
@@ -3262,7 +3271,7 @@ export function SeoCrawlVisualizer() {
                   current.serpTitle ? "text-sky-300" : "text-slate-600"
                 }`}
               >
-                FrontendCraft — HTML lab
+                FrontendCraft — HTML Fundamentals
               </p>
               <p
                 className={`truncate font-mono text-[10px] ${
@@ -3279,8 +3288,8 @@ export function SeoCrawlVisualizer() {
                 }`}
               >
                 {locale === "ar"
-                  ? "اتعلم HTML بمعامل تفاعلية وصناديق حية."
-                  : "Learn HTML with interactive labs and live sandboxes."}
+                  ? "اتعلّم HTML ببناء مشاريع حقيقية ودروس تفاعلية."
+                  : "Learn HTML by building real projects with interactive lessons."}
               </p>
               <div
                 className={`rounded-lg border border-dashed px-2.5 py-2 ${
@@ -3294,7 +3303,7 @@ export function SeoCrawlVisualizer() {
                   {current.serpBody ? (
                     <>
                       <span className="text-orange-200/80">&lt;h1&gt;</span>{" "}
-                      {locale === "ar" ? "معمل HTML" : "HTML lab"}
+                      {locale === "ar" ? "أساسيات HTML" : "HTML Fundamentals"}
                     </>
                   ) : (
                     <span className="text-slate-600">…</span>
@@ -3331,7 +3340,7 @@ export function SeoCrawlVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -3521,7 +3530,7 @@ export function CwvLabVisualizer() {
   ];
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title="Core Web Vitals"
@@ -3703,7 +3712,7 @@ export function CwvLabVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -3789,7 +3798,7 @@ export function MetaCardVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "ميتـا السوشيال" : "Social meta"}
@@ -3848,7 +3857,7 @@ export function MetaCardVisualizer() {
                 >
                   {locale === "ar"
                     ? "اتعلم هيكل مستند HTML بمعامل تفاعلية."
-                    : "Learn the HTML document shell with interactive labs."}
+                    : "Learn the HTML document shell with hands-on lessons."}
                 </p>
               </div>
             </div>
@@ -3881,7 +3890,7 @@ export function MetaCardVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -3951,7 +3960,7 @@ export function NativeDialogVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "Dialog الأصلي" : "Native dialog"}
@@ -4099,7 +4108,7 @@ export function NativeDialogVisualizer() {
           />
         ))}
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -4195,7 +4204,7 @@ export function BaselineCompatVisualizer() {
   ];
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "التوافق و Baseline" : "Browser & Baseline"}
@@ -4268,7 +4277,7 @@ export function BaselineCompatVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -4359,7 +4368,7 @@ export function PictureSourceVisualizer() {
   }, [reduce, playing]);
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "Picture و Source" : "Picture & source"}
@@ -4475,7 +4484,7 @@ export function PictureSourceVisualizer() {
           />
         ))}
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -4569,7 +4578,7 @@ export function MediaStageVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "الوسائط والـ embeds" : "Media & embeds"}
@@ -4769,7 +4778,7 @@ export function MediaStageVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -4874,7 +4883,7 @@ export function MediaPerfVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "أداء الميديا" : "Media performance"}
@@ -4961,7 +4970,7 @@ export function MediaPerfVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -5105,7 +5114,7 @@ export function CheatSheetLabVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "مرجع HTML" : "HTML cheatsheet"}
@@ -5316,7 +5325,7 @@ export function CheatSheetLabVisualizer() {
           />
         ))}
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -5431,7 +5440,7 @@ export function HtmlSecurityLabVisualizer() {
         : "<input>";
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "أمن HTML" : "HTML security"}
@@ -5545,7 +5554,7 @@ export function HtmlSecurityLabVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -5640,7 +5649,7 @@ export function HtmlSpeculationLabVisualizer() {
   const instant = step === 3;
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "قواعد الـ Speculation" : "Speculation rules"}
@@ -5774,7 +5783,7 @@ export function HtmlSpeculationLabVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -5873,7 +5882,7 @@ export function HtmlGlobalRtlLabVisualizer() {
   }
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={locale === "ar" ? "العالمية و RTL" : "Global & RTL"}
@@ -6020,7 +6029,7 @@ export function HtmlGlobalRtlLabVisualizer() {
           </button>
         ))}
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
@@ -6284,7 +6293,7 @@ export function HtmlPitfallsLabVisualizer() {
       : `✗ Mistake: ${current.trap.en}`;
 
   return (
-    <LabStage
+    <TrackStage
       playing={playing}
       onTogglePlay={toggle}
       title={ar ? "أخطاء HTML الشائعة" : "HTML pitfalls"}
@@ -6397,6 +6406,6 @@ export function HtmlPitfallsLabVisualizer() {
           ))}
         </div>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
