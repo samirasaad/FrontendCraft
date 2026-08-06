@@ -10,7 +10,6 @@ import {
 import {
   SandpackCodeEditor,
   SandpackConsole,
-  SandpackPreview,
   SandpackProvider,
   useSandpack,
   type SandpackFiles,
@@ -32,17 +31,11 @@ import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { loc, t } from "@/content/i18n/ui-strings";
 import {
-  DEMO_CAPTIONS_VTT_PATH,
-  DEMO_IMG_PATH,
-  DEMO_INTRO_VTT_PATH,
-  DEMO_VIDEO_VTT,
-  STUDENTS_CODING_SVG,
-} from "@/lib/demo-assets";
-import {
   PLAYGROUND_CSS_FILE,
   PLAYGROUND_HTML_FILE,
-  buildHtmlPlaygroundFiles,
+  buildPlaygroundPreviewSrcDoc,
   formatPlaygroundCopy,
+  splitPlaygroundEditorSource,
 } from "@/lib/playground-files";
 import { RTL_FLIP } from "@/lib/rtl";
 import type { CodeExample, ExampleKind, LabId } from "@/lib/types";
@@ -220,30 +213,27 @@ function IconAction({
 }
 
 /** Soft flash on the preview frame when live code changes. */
-function PreviewPulse({ children }: { children: ReactNode }) {
-  const { sandpack } = useSandpack();
+function PreviewPulse({
+  signature,
+  children,
+}: {
+  signature: string;
+  children: ReactNode;
+}) {
   const [pulse, setPulse] = useState(false);
   const prevCode = useRef<string | null>(null);
-  const codeSignature = useMemo(
-    () =>
-      Object.keys(sandpack.files)
-        .sort()
-        .map((path) => `${path}:${sandpack.files[path]?.code ?? ""}`)
-        .join("\n"),
-    [sandpack.files],
-  );
 
   useEffect(() => {
     if (prevCode.current === null) {
-      prevCode.current = codeSignature;
+      prevCode.current = signature;
       return;
     }
-    if (prevCode.current === codeSignature) return;
-    prevCode.current = codeSignature;
+    if (prevCode.current === signature) return;
+    prevCode.current = signature;
     setPulse(true);
     const id = window.setTimeout(() => setPulse(false), 450);
     return () => window.clearTimeout(id);
-  }, [codeSignature]);
+  }, [signature]);
 
   return (
     <div
@@ -253,6 +243,32 @@ function PreviewPulse({ children }: { children: ReactNode }) {
     >
       {children}
     </div>
+  );
+}
+
+function HtmlLivePreview({
+  headPreview,
+}: {
+  headPreview: { title: string; body: string };
+}) {
+  const { sandpack } = useSandpack();
+  const editorHtml = sandpackFileCode(sandpack.files[PLAYGROUND_HTML_FILE]);
+  const editorCss = sandpackFileCode(sandpack.files[PLAYGROUND_CSS_FILE]);
+
+  const srcDoc = useMemo(
+    () => buildPlaygroundPreviewSrcDoc(editorHtml, editorCss, headPreview),
+    [editorCss, editorHtml, headPreview],
+  );
+
+  return (
+    <PreviewPulse signature={`${editorHtml}\n---\n${editorCss}`}>
+      <iframe
+        title="preview"
+        sandbox="allow-scripts allow-forms allow-modals allow-popups"
+        srcDoc={srcDoc}
+        className="h-full w-full border-0 bg-white"
+      />
+    </PreviewPulse>
   );
 }
 
@@ -386,6 +402,13 @@ function PanelChrome({
   );
 }
 
+function sandpackFileCode(
+  file: SandpackFiles[string] | undefined,
+): string {
+  if (!file) return "";
+  return typeof file === "string" ? file : file.code;
+}
+
 function CodeRunnerInner({
   code,
   labId,
@@ -399,37 +422,38 @@ function CodeRunnerInner({
   const [orientation, setOrientation] = useState<SplitOrientation>("side");
   const [editorFirst, setEditorFirst] = useState(true);
 
-  const playgroundSource = useMemo(() => {
-    if (!htmlMode) return code;
-    const { html, css } = buildHtmlPlaygroundFiles(code, {
+  const headPreview = useMemo(
+    () => ({
       title: t("headPreviewTitle", locale),
       body: t("headPreviewBody", locale),
-    });
+    }),
+    [locale],
+  );
+
+  const playgroundSource = useMemo(() => {
+    if (!htmlMode) return code;
+    const { html, css } = splitPlaygroundEditorSource(code, headPreview);
     return formatPlaygroundCopy(html, css);
-  }, [code, htmlMode, locale]);
+  }, [code, headPreview, htmlMode]);
 
   const files = useMemo((): SandpackFiles => {
     if (htmlMode) {
-      const { html, css } = buildHtmlPlaygroundFiles(code, {
-        title: t("headPreviewTitle", locale),
-        body: t("headPreviewBody", locale),
-      });
-
-      return {
+      const { html, css } = splitPlaygroundEditorSource(code, headPreview);
+      const editorFiles: SandpackFiles = {
         [PLAYGROUND_HTML_FILE]: {
           code: html,
           active: true,
         },
-        [PLAYGROUND_CSS_FILE]: {
-          code: css,
-        },
-        [`/${DEMO_IMG_PATH}`]: { code: STUDENTS_CODING_SVG, hidden: true },
-        [`/${DEMO_INTRO_VTT_PATH}`]: { code: DEMO_VIDEO_VTT, hidden: true },
-        [`/${DEMO_CAPTIONS_VTT_PATH}`]: { code: DEMO_VIDEO_VTT, hidden: true },
       };
+
+      if (css.trim()) {
+        editorFiles[PLAYGROUND_CSS_FILE] = { code: css };
+      }
+
+      return editorFiles;
     }
     return { "/index.js": { code, active: true } };
-  }, [code, htmlMode, locale]);
+  }, [code, headPreview, htmlMode]);
 
   useEffect(() => {
     if (!fullscreen) return;
@@ -476,20 +500,19 @@ function CodeRunnerInner({
     </PanelChrome>
   );
 
+  const visibleHtmlFiles = useMemo(() => {
+    const paths = [PLAYGROUND_HTML_FILE];
+    if (sandpackFileCode(files[PLAYGROUND_CSS_FILE]).trim()) {
+      paths.push(PLAYGROUND_CSS_FILE);
+    }
+    return paths;
+  }, [files]);
+
   const outputPanel = htmlMode ? (
     <PanelChrome label={t("preview", locale)} className="h-full">
-      <PreviewPulse>
-        <div dir="ltr" className="h-full min-h-0">
-          <SandpackPreview
-            showOpenInCodeSandbox={false}
-            showRefreshButton={false}
-            showRestartButton={false}
-            showNavigator={false}
-            className="!h-full !min-h-0 !rounded-none [&_.sp-preview-container]:!h-full [&_iframe]:!h-full"
-            style={{ height: paneHeight, flex: 1, direction: "ltr" }}
-          />
-        </div>
-      </PreviewPulse>
+      <div dir="ltr" className="h-full min-h-0">
+        <HtmlLivePreview headPreview={headPreview} />
+      </div>
     </PanelChrome>
   ) : (
     <PanelChrome label={t("output", locale)} className="h-full">
@@ -529,9 +552,7 @@ function CodeRunnerInner({
           recompileMode: "delayed",
           recompileDelay: 400,
           activeFile: htmlMode ? PLAYGROUND_HTML_FILE : "/index.js",
-          visibleFiles: htmlMode
-            ? [PLAYGROUND_HTML_FILE, PLAYGROUND_CSS_FILE]
-            : ["/index.js"],
+          visibleFiles: htmlMode ? visibleHtmlFiles : ["/index.js"],
           classes: {
             "sp-wrapper": fullscreen
               ? "!bg-transparent !border-0 !rounded-none !flex !min-h-0 !h-full !flex-1 !flex-col"

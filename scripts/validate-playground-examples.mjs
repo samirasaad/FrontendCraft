@@ -13,15 +13,20 @@ const root = path.resolve(__dirname, "..");
 const compiledDir = path.join(__dirname, ".compiled");
 const compiledFile = path.join(compiledDir, "playground-files.js");
 
-if (!fs.existsSync(compiledFile)) {
-  execSync(
-    `"${path.join(root, "node_modules/.bin/tsc")}" lib/playground-files.ts --outDir scripts/.compiled --target ES2020 --module commonjs --skipLibCheck`,
-    { cwd: root, stdio: "inherit" },
-  );
-}
+execSync(
+  `"${path.join(root, "node_modules/.bin/tsc")}" -p scripts/tsconfig.playground-compile.json`,
+  { cwd: root, stdio: "inherit" },
+);
+execSync(
+  `"${path.join(root, "node_modules/.bin/tsc")}" -p scripts/tsconfig.content-compile.json`,
+  { cwd: root, stdio: "inherit" },
+);
 
-const { buildHtmlPlaygroundFiles } = await import(
+const { buildHtmlPlaygroundFiles, splitPlaygroundEditorSource } = await import(
   pathToFileURL(path.join(compiledDir, "playground-files.js")).href
+);
+const { hardHtmlDoc, hardCssFromFragment } = await import(
+  pathToFileURL(path.join(compiledDir, "content/helpers.js")).href
 );
 
 const HEAD_PREVIEW = {
@@ -41,12 +46,44 @@ const LESSON_FILES = [
 
 function extractFromHelpers(source, file) {
   const examples = [];
-  for (const fn of ["simpleExample", "mediumExample", "hardExample"]) {
+
+  for (const fn of ["simpleExample", "mediumExample"]) {
     const re = new RegExp(`${fn}\\(\\s*\`([\\s\\S]*?)\`\\s*,`, "g");
     let match;
     while ((match = re.exec(source))) {
       examples.push({ file, kind: fn, code: match[1] });
     }
+  }
+
+  const hardHtmlRe =
+    /hardExample\(\s*hardHtmlDoc\(\s*`([\s\S]*?)`\s*,\s*\{[\s\S]*?\}\s*\)\s*,/g;
+  let hardHtmlMatch;
+  while ((hardHtmlMatch = hardHtmlRe.exec(source))) {
+    const titleMatch = hardHtmlMatch[0].match(/title:\s*"([^"]+)"/);
+    examples.push({
+      file,
+      kind: "hardExample+hardHtmlDoc",
+      code: hardHtmlDoc(hardHtmlMatch[1], {
+        title: titleMatch?.[1] ?? "Document",
+      }),
+    });
+  }
+
+  const hardCssRe =
+    /hardExample\(\s*hardCssFromFragment\(\s*`([\s\S]*?)`\s*,\s*"([^"]+)"\s*\)\s*,/g;
+  let hardCssMatch;
+  while ((hardCssMatch = hardCssRe.exec(source))) {
+    examples.push({
+      file,
+      kind: "hardExample+hardCssFromFragment",
+      code: hardCssFromFragment(hardCssMatch[1], hardCssMatch[2]),
+    });
+  }
+
+  const hardDirectRe = /hardExample\(\s*`([\s\S]*?)`\s*,/g;
+  let hardDirectMatch;
+  while ((hardDirectMatch = hardDirectRe.exec(source))) {
+    examples.push({ file, kind: "hardExample", code: hardDirectMatch[1] });
   }
 
   const htmlRe = /html\(\s*`([\s\S]*?)`\s*,\s*`([\s\S]*?)`\s*\)/g;
@@ -121,6 +158,40 @@ function issuesForExample(entry) {
       label,
       kind: "no-preview-guard",
       message: "Preview guard script missing",
+    });
+  }
+
+  const { html: editorHtml } = splitPlaygroundEditorSource(entry.code, HEAD_PREVIEW);
+
+  if (!/<!DOCTYPE html>/i.test(editorHtml)) {
+    issues.push({
+      label,
+      kind: "editor-no-doctype",
+      message: "Editor HTML missing doctype after normalize",
+    });
+  }
+
+  if (!/<html\b/i.test(editorHtml) || !/<head\b/i.test(editorHtml) || !/<body\b/i.test(editorHtml)) {
+    issues.push({
+      label,
+      kind: "editor-incomplete-shell",
+      message: "Editor HTML must include html, head, and body",
+    });
+  }
+
+  if (/data-fc-preview-guard/i.test(editorHtml)) {
+    issues.push({
+      label,
+      kind: "editor-preview-guard",
+      message: "Preview guard must not appear in editor HTML",
+    });
+  }
+
+  if (/\bbody\s*\{[\s\S]*font-family:\s*system-ui/i.test(editorHtml)) {
+    issues.push({
+      label,
+      kind: "editor-baseline-css",
+      message: "Preview baseline CSS must not appear in editor HTML",
     });
   }
 
