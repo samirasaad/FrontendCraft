@@ -292,3 +292,32 @@ html[dir="rtl"] .lesson-activity-progress__count {
   background: #334155;
   border-radius: 999px;
 }
+
+@keyframes level-quiz-shake-keyframes {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-7px);
+  }
+  40% {
+    transform: translateX(7px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.level-quiz-shake {
+  animation: level-quiz-shake-keyframes 0.48s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-quiz-shake {
+    animation: none;
+  }
+}

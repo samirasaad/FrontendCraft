@@ -1,3 +1,5 @@
+import type { LevelQuizDefinition } from "@/lib/level-quiz/types";
+
 export type Locale = "en" | "ar";
 
 /** Six-tier curriculum used across every track. */
@@ -218,6 +220,8 @@ export interface LessonContent {
   challenge?: LessonChallenge;
   /** Multi-question interactive activity (preferred over challenge when set). */
   activity?: LessonActivity;
+  /** Premium mixed-type quiz on dedicated level-quiz lessons. */
+  levelQuiz?: LevelQuizDefinition;
 }
 
 export interface Lesson {
