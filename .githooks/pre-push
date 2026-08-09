@@ -1,0 +1,4 @@
+#!/bin/sh
+# Always use the repo owner's GitHub account for pushes from this project.
+gh auth switch -u samirasaad -h github.com >/dev/null 2>&1 || true
+exit 0
