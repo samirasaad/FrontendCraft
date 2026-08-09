@@ -60,6 +60,7 @@ import {
   Tablet,
   Target,
   Timer,
+  Trophy,
   Type,
   Variable,
   Volume2,
@@ -85,6 +86,7 @@ import {
   tierLabel,
   type TierFilter,
 } from "@/lib/tiers";
+import { isLevelQuizLesson } from "@/lib/level-quiz/capstones";
 import type { Tier } from "@/lib/types";
 
 /** Inner content width — outer `.lessons-panel` clips while animating. */
@@ -149,6 +151,7 @@ const iconMap: Record<string, LucideIcon> = {
   Sparkles,
   Film,
   ArrowLeftRight,
+  Trophy,
 };
 
 interface SidebarProps {
@@ -580,7 +583,20 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                           text={loc(lesson.content.title, locale)}
                                         />
                                       </span>
-                                      {done ? (
+                                      {isLevelQuizLesson(lesson) ? (
+                                        done ? (
+                                          <CheckCircle2
+                                            size={14}
+                                            className="shrink-0 text-cyan-300"
+                                          />
+                                        ) : (
+                                          <Trophy
+                                            size={14}
+                                            className="shrink-0 text-yellow-300"
+                                            aria-label={t("lessonTabLevelQuiz", locale)}
+                                          />
+                                        )
+                                      ) : done ? (
                                         <CheckCircle2
                                           size={14}
                                           className="shrink-0 text-cyan-300"

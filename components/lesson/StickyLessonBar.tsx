@@ -12,6 +12,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { RTL_FLIP } from "@/lib/rtl";
+import { isLevelQuizLesson } from "@/lib/level-quiz/capstones";
 import type { Lesson } from "@/lib/types";
 
 export function StickyLessonBar({
@@ -41,6 +42,7 @@ export function StickyLessonBar({
   const prev = index > 0 ? lessons[index - 1] : null;
   const showActivityHint =
     !challengePassed &&
+    !isLevelQuizLesson(lesson) &&
     Boolean(lesson.content.challenge || lesson.content.activity);
 
   function goToLesson(target: Lesson) {
@@ -66,7 +68,9 @@ export function StickyLessonBar({
             }}
             className="hidden min-w-0 flex-1 text-start text-[11px] text-slate-400 transition hover:text-slate-200 sm:block sm:me-auto"
           >
-            {t("challengeHintBar", locale)}
+            {lesson.content.levelQuiz
+              ? t("levelQuizHintBar", locale)
+              : t("challengeHintBar", locale)}
             <span aria-hidden className={`ms-1 inline-block ${RTL_FLIP}`}>
               →
             </span>

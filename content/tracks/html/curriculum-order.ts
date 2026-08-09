@@ -10,11 +10,13 @@ export const HTML_CURRICULUM_ORDER = [
   "text-formatting",
   "links-images",
   "lists",
+  "html-beginner-quiz",
   // Intermediate
   "forms-inputs",
   "form-ux-attributes",
   "tables",
   "details-summary",
+  "html-intermediate-quiz",
   // Advanced
   "media-embed",
   "native-dialog",
@@ -25,6 +27,7 @@ export const HTML_CURRICULUM_ORDER = [
   "accessibility-basics",
   "html-architecture-partials",
   "sr-practice",
+  "html-advanced-quiz",
   // Pro (pitfalls is the capstone)
   "html-core-web-vitals",
   "html-perf-media",
@@ -32,6 +35,7 @@ export const HTML_CURRICULUM_ORDER = [
   "html-speculation-rules",
   "html-global-rtl",
   "html-common-pitfalls",
+  "html-pro-quiz",
   // CheatSheet
   "html-cheatsheet",
 ] as const;

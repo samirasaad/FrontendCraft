@@ -9,13 +9,26 @@ import {
   assertCssLessonActivityCoverage,
   cssLessonActivities,
 } from "@/content/tracks/css/lesson-activities";
+import {
+  assertCssLevelQuizCoverage,
+} from "@/content/tracks/css/level-quizzes";
+import { cssLevelQuizLessons } from "@/content/tracks/css/level-quiz-lessons";
+import {
+  CSS_LEVEL_QUIZ_LESSON_SLUGS,
+  isLevelQuizLesson,
+} from "@/lib/level-quiz/capstones";
 import type { Lesson } from "@/lib/types";
 
 export { CSS_CURRICULUM_ORDER };
 
-assertCssLessonActivityCoverage(CSS_CURRICULUM_ORDER);
+const CONTENT_LESSON_SLUGS = CSS_CURRICULUM_ORDER.filter(
+  (slug) => !CSS_LEVEL_QUIZ_LESSON_SLUGS.includes(slug as (typeof CSS_LEVEL_QUIZ_LESSON_SLUGS)[number]),
+);
+
+assertCssLessonActivityCoverage(CONTENT_LESSON_SLUGS);
+assertCssLevelQuizCoverage(CSS_LEVEL_QUIZ_LESSON_SLUGS);
 assertBrowserWalkthroughCoverage(
-  CSS_CURRICULUM_ORDER,
+  CONTENT_LESSON_SLUGS,
   cssBrowserWalkthrough,
   "CSS",
 );
@@ -52,9 +65,9 @@ function orderCurriculum(list: Lesson[]): Lesson[] {
 }
 
 export const lessons: Lesson[] = orderCurriculum(
-  [...modernLessons, ...extraLessons]
+  [...modernLessons, ...extraLessons, ...cssLevelQuizLessons]
     .map((lesson) => withProductionInsights(lesson, cssInsights))
-    .map(withLabExtras)
+    .map((lesson) => (isLevelQuizLesson(lesson) ? lesson : withLabExtras(lesson)))
     .map((lesson) => attachBrowserWalkthrough(lesson, cssBrowserWalkthrough)),
 );
 
