@@ -242,11 +242,11 @@ function TrackPickerInner() {
     <HubShell>
       <div className="flex flex-col gap-7 py-1 sm:gap-10 sm:py-4">
         <header className="flex flex-col gap-5 sm:gap-6">
-          <div className="max-w-xl">
+          <div>
             <h1 className="font-[family-name:var(--font-display)] text-[1.75rem] font-bold leading-tight tracking-tight text-white sm:text-4xl">
               {t("chooseTrack", locale)}
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400 sm:mt-2.5 sm:text-[17px]">
+            <p className="mt-2 text-sm leading-relaxed text-slate-400 sm:mt-2.5 sm:text-[17px] sm:whitespace-nowrap">
               {t("chooseTrackHint", locale)}
             </p>
           </div>
@@ -327,7 +327,7 @@ function TrackPickerInner() {
                         >
                           {startHere
                             ? t("trackStartCta", locale)
-                            : t("trackEnterLab", locale)}
+                            : t("trackEnter", locale)}
                           <ArrowRight
                             size={15}
                             className={`${RTL_FLIP} transition group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5`}

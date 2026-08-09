@@ -1,13 +1,7 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, Suspense, type KeyboardEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   BookOpen,
@@ -15,7 +9,9 @@ import {
   Code2,
   Lightbulb,
   ListChecks,
+  Presentation,
   Sparkles,
+  Trophy,
 } from "lucide-react";
 import { AccessibilityCard } from "@/components/lesson/AccessibilityCard";
 import { BrowserSupport } from "@/components/lesson/BrowserSupport";
@@ -24,9 +20,12 @@ import { CodeRunner } from "@/components/lesson/CodeRunner";
 import { ComparePractice } from "@/components/lesson/ComparePractice";
 import { DeepDive } from "@/components/lesson/DeepDive";
 import { LessonChallenge } from "@/components/lesson/LessonChallenge";
-import { Quiz } from "@/components/lesson/quiz/Quiz";
+import { LessonActivity } from "@/components/lesson/lesson-activity/LessonActivity";
+import { LevelQuiz } from "@/components/level-quiz/LevelQuiz";
+import { ActivityCongratsOverlay } from "@/components/lesson/lesson-activity/ActivityCongratsOverlay";
 import { PitfallsBox } from "@/components/lesson/PitfallsBox";
 import { SeoCallout } from "@/components/lesson/SeoCallout";
+import { SeeInBrowser } from "@/components/lesson/SeeInBrowser";
 import { StickyLessonBar } from "@/components/lesson/StickyLessonBar";
 import { UnderTheHood } from "@/components/lesson/UnderTheHood";
 import { Visualizer } from "@/components/lesson/Visualizer";
@@ -36,10 +35,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
 import { RTL_FLIP } from "@/lib/rtl";
+import { isHighActivityScore } from "@/lib/lesson-activity";
+import { isLevelQuizLesson } from "@/lib/level-quiz/capstones";
 import { tierBadgeClass, tierLabel } from "@/lib/tiers";
 import type { Lesson } from "@/lib/types";
 
-type LessonTab = "concept" | "live" | "quiz";
+type LessonTab = "concept" | "live" | "activity";
 
 function ConceptPanel({
   lesson,
@@ -59,6 +60,9 @@ function ConceptPanel({
   const deepDive = (
     <>
       <UnderTheHood section={lesson.content.underTheHood} embedded />
+      {lesson.content.browserWalkthrough ? (
+        <SeeInBrowser walkthrough={lesson.content.browserWalkthrough} embedded />
+      ) : null}
       <AccessibilityCard section={lesson.content.accessibility} />
       <SeoCallout section={lesson.content.seo} />
 
@@ -92,6 +96,7 @@ function ConceptPanel({
     lesson.content.underTheHood.paragraphs.length > 0 ||
     lesson.content.accessibility.paragraphs.length > 0 ||
     lesson.content.seo.paragraphs.length > 0 ||
+    Boolean(lesson.content.browserWalkthrough?.steps.length) ||
     lesson.slug === "browser-compatibility" ||
     Boolean(lesson.content.compareCards?.length) ||
     Boolean(lesson.content.pitfalls);
@@ -158,12 +163,12 @@ function ConceptPanel({
 
         <motion.section
           layout
-          className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-slate-900/60 p-4 backdrop-blur-xl sm:p-5 xl:col-span-2 xl:sticky xl:top-20 xl:self-start"
+          className="relative min-h-[18rem] overflow-hidden rounded-3xl border border-cyan-400/25 bg-slate-900/60 p-3 backdrop-blur-xl sm:min-h-0 sm:p-5 xl:col-span-2 xl:sticky xl:top-20 xl:self-start"
         >
           <div className="relative z-10 flex flex-col">
             <div className="mb-1.5 flex items-center gap-2 text-sm font-semibold text-cyan-200">
-              <Sparkles size={16} />
-              {t("visualLab", locale)}
+              <Presentation size={16} />
+              {t("visualExperiments", locale)}
             </div>
             <p
               className={`mb-3 text-sm text-slate-300 ${
@@ -216,18 +221,166 @@ ${trimmed}
   return trimmed;
 }
 
+function LevelQuizLessonBody({ lesson }: { lesson: Lesson }) {
+  const router = useRouter();
+  const { locale } = useLanguage();
+  const { lessons, markComplete, isComplete, trackId, setActiveLessonId } =
+    useProgress();
+  const { playClick } = useSound();
+  const quiz = lesson.content.levelQuiz!;
+  const [activityResult, setActivityResult] = useState<{
+    score: number;
+    total: number;
+  } | null>(null);
+  const [activityRetryKey, setActivityRetryKey] = useState(0);
+  const [challengePassed, setChallengePassed] = useState(() =>
+    isComplete(lesson.id),
+  );
+
+  const lessonIndex = lessons.findIndex((item) => item.id === lesson.id);
+  const nextLesson =
+    lessonIndex >= 0 && lessonIndex < lessons.length - 1
+      ? lessons[lessonIndex + 1]
+      : null;
+
+  const goToLesson = useCallback(
+    (target: Lesson) => {
+      setActivityResult(null);
+      setActiveLessonId(target.id);
+      router.replace(`/${trackId}/learn?lesson=${target.slug}`, { scroll: false });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [trackId, router, setActiveLessonId],
+  );
+
+  const handleActivityComplete = useCallback(
+    (result: { score: number; total: number }) => {
+      setActivityResult(result);
+      if (isHighActivityScore(result.score, result.total)) {
+        setChallengePassed(true);
+        markComplete(lesson.id);
+      }
+    },
+    [lesson.id, markComplete],
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.28 }}
+      className="space-y-5 pb-24"
+    >
+      <header className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span
+            className={`rounded-full border px-3 py-1 text-xs font-semibold ${tierBadgeClass(lesson.tier)}`}
+          >
+            {tierLabel(lesson.tier, locale)}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-yellow-300/30 bg-yellow-300/10 px-3 py-1 text-xs font-semibold text-yellow-200">
+            <Trophy size={12} />
+            {t("lessonTabLevelQuiz", locale)}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+            <Clock3 size={12} />
+            {lesson.readMinutes} {t("readTime", locale)}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
+            <BookOpen size={12} />
+            <span dir="ltr">
+              {lesson.order}/{lessons.length}
+            </span>
+          </span>
+        </div>
+        <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <RichText text={loc(lesson.content.title, locale)} />
+        </h1>
+        <p
+          className={`max-w-3xl text-base text-slate-300 sm:text-[17px] ${
+            locale === "ar" ? "leading-[1.8]" : "leading-relaxed"
+          }`}
+        >
+          <RichText text={loc(lesson.content.summary, locale)} />
+        </p>
+      </header>
+
+      <LevelQuiz
+        key={`level-quiz-${lesson.id}-${activityRetryKey}`}
+        quiz={quiz}
+        onComplete={handleActivityComplete}
+      />
+
+      <StickyLessonBar lesson={lesson} challengePassed={challengePassed} />
+
+      {activityResult ? (
+        <ActivityCongratsOverlay
+          open
+          score={activityResult.score}
+          total={activityResult.total}
+          lesson={lesson}
+          nextLesson={nextLesson}
+          onNextLesson={() => {
+            if (!nextLesson) return;
+            playClick();
+            goToLesson(nextLesson);
+          }}
+          onReviewLesson={() => {
+            playClick();
+            setActivityResult(null);
+            setActivityRetryKey((key) => key + 1);
+          }}
+          onTryAgain={() => {
+            playClick();
+            setActivityResult(null);
+            setActivityRetryKey((key) => key + 1);
+          }}
+        />
+      ) : null}
+    </motion.div>
+  );
+}
+
 function LessonBody({ lesson }: { lesson: Lesson }) {
+  if (isLevelQuizLesson(lesson) && lesson.content.levelQuiz) {
+    return <LevelQuizLessonBody lesson={lesson} />;
+  }
+
+  const router = useRouter();
   const { locale, dir } = useLanguage();
-  const { lessons, markComplete, isComplete, trackId } = useProgress();
-  const { playClick, playSuccess } = useSound();
+  const { lessons, markComplete, isComplete, trackId, setActiveLessonId, completedIds } =
+    useProgress();
+  const { playClick } = useSound();
   const hasLive = Boolean(lesson.content.examples?.length);
-  const hasQuiz = Boolean(lesson.content.quiz || lesson.content.challenge);
+  const hasActivity = Boolean(lesson.content.activity || lesson.content.challenge);
   const [tab, setTab] = useState<LessonTab>("concept");
   const [liveSeed, setLiveSeed] = useState<string | null>(null);
   const [challengePassed, setChallengePassed] = useState(
-    () => !hasQuiz || isComplete(lesson.id),
+    () => !hasActivity || isComplete(lesson.id),
   );
+  const [activityResult, setActivityResult] = useState<{
+    score: number;
+    total: number;
+  } | null>(null);
+  const [activityRetryKey, setActivityRetryKey] = useState(0);
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  const lessonIndex = lessons.findIndex((item) => item.id === lesson.id);
+  const nextLesson =
+    lessonIndex >= 0 && lessonIndex < lessons.length - 1
+      ? lessons[lessonIndex + 1]
+      : null;
+
+  const goToLesson = useCallback(
+    (target: Lesson) => {
+      setActivityResult(null);
+      setActiveLessonId(target.id);
+      router.replace(`/${trackId}/learn?lesson=${target.slug}`, { scroll: false });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [trackId, router, setActiveLessonId],
+  );
 
   const tabs = useMemo(() => {
     const list: {
@@ -246,19 +399,35 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
         icon: Code2,
       },
       {
-        id: "quiz",
-        label: t("lessonTabQuiz", locale),
+        id: "activity",
+        label: t("lessonTabActivity", locale),
         icon: ListChecks,
       },
     ];
-    return hasQuiz ? list : list.filter((item) => item.id !== "quiz");
-  }, [locale, hasQuiz]);
+    return hasActivity ? list : list.filter((item) => item.id !== "activity");
+  }, [locale, hasActivity]);
 
   useEffect(() => {
     setTab("concept");
     setLiveSeed(null);
-    setChallengePassed(!hasQuiz || isComplete(lesson.id));
-  }, [lesson.id, hasQuiz, isComplete]);
+    setActivityResult(null);
+    setActivityRetryKey(0);
+  }, [lesson.id]);
+
+  useEffect(() => {
+    setChallengePassed(!hasActivity || completedIds.has(lesson.id));
+  }, [lesson.id, hasActivity, completedIds]);
+
+  const handleActivityComplete = useCallback(
+    (result: { score: number; total: number }) => {
+      setActivityResult(result);
+      if (isHighActivityScore(result.score, result.total)) {
+        setChallengePassed(true);
+        markComplete(lesson.id);
+      }
+    },
+    [lesson.id, markComplete],
+  );
 
   const selectTab = useCallback(
     (next: LessonTab) => {
@@ -417,16 +586,12 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
             )
           ) : null}
 
-          {tab === "quiz" ? (
-            lesson.content.quiz ? (
-              <Quiz
-                key={`quiz-${lesson.id}`}
-                quiz={lesson.content.quiz}
-                onComplete={() => {
-                  setChallengePassed(true);
-                  markComplete(lesson.id);
-                  playSuccess();
-                }}
+          {tab === "activity" ? (
+            lesson.content.activity ? (
+              <LessonActivity
+                key={`activity-${lesson.id}-${activityRetryKey}`}
+                activity={lesson.content.activity}
+                onComplete={handleActivityComplete}
               />
             ) : lesson.content.challenge ? (
               <LessonChallenge
@@ -447,24 +612,77 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
       <StickyLessonBar
         lesson={lesson}
         challengePassed={challengePassed}
-        onOpenQuiz={hasQuiz ? () => selectTab("quiz") : undefined}
+        onOpenActivity={hasActivity ? () => selectTab("activity") : undefined}
       />
+
+      {activityResult ? (
+        <ActivityCongratsOverlay
+          open
+          score={activityResult.score}
+          total={activityResult.total}
+          lesson={lesson}
+          nextLesson={nextLesson}
+          onNextLesson={() => {
+            if (!nextLesson) return;
+            playClick();
+            goToLesson(nextLesson);
+          }}
+          onReviewLesson={() => {
+            playClick();
+            setActivityResult(null);
+            selectTab("concept");
+          }}
+          onTryAgain={() => {
+            playClick();
+            setActivityResult(null);
+            setActivityRetryKey((key) => key + 1);
+          }}
+        />
+      ) : null}
     </motion.div>
   );
 }
 
 export function LessonContent() {
-  const { lessons, activeLessonId } = useProgress();
+  return (
+    <Suspense fallback={null}>
+      <LessonContentInner />
+    </Suspense>
+  );
+}
+
+function LessonContentInner() {
+  const searchParams = useSearchParams();
+  const { lessons, activeLessonId, setActiveLessonId } = useProgress();
+
+  const slugFromUrl = searchParams.get("lesson");
+  const lessonFromUrl = useMemo(() => {
+    if (!slugFromUrl) return undefined;
+    return lessons.find(
+      (lesson) => lesson.slug === slugFromUrl || lesson.id === slugFromUrl,
+    );
+  }, [lessons, slugFromUrl]);
+
+  useEffect(() => {
+    if (lessonFromUrl && lessonFromUrl.id !== activeLessonId) {
+      setActiveLessonId(lessonFromUrl.id);
+    }
+  }, [lessonFromUrl, activeLessonId, setActiveLessonId]);
+
+  const resolvedLessonId = lessonFromUrl?.id ?? activeLessonId;
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  }, [activeLessonId]);
+  }, [resolvedLessonId]);
 
   if (lessons.length === 0) {
     return null;
   }
 
-  const lesson = lessons.find((l) => l.id === activeLessonId) ?? lessons[0];
+  const lesson =
+    lessonFromUrl ??
+    lessons.find((item) => item.id === activeLessonId) ??
+    lessons[0];
 
   return (
     <AnimatePresence mode="wait">

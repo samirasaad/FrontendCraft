@@ -6,24 +6,24 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "Blink and Gecko tokenize HTML into a DOM tree — not a simple string parse. The doctype triggers `standards mode`; without it, quirks mode applies legacy box model rules that break modern CSS layouts.",
-          "Blink و Gecko بيعملوا `tokenize` للـ `HTML` لـ `DOM tree` — مش `parse` `string` بسيط. الـ `doctype` بيشغّل ``standards mode``؛ من غيره `quirks mode` بيطبّق `box model rules` قديمة بتكسر `CSS layouts` الحديثة.",
+          "Blink and Gecko turn your HTML into a DOM tree — not a simple string. The doctype switches the page into standards mode; without it, quirks mode keeps legacy box-model rules that break modern CSS.",
+          "Blink و Gecko بيحوّلوا HTML لشجرة DOM — مش مجرد نص. الـ doctype بيشغّل standards mode؛ من غيره quirks mode بيخلي قواعد الـ box model القديمة تكسر CSS الحديث.",
         ),
         L(
-          "Parsing is incremental: the parser yields while scripts/styles block. `<head>` metadata is processed before `<body>` paints — charset and viewport must appear early so decoding and layout viewport are correct from the first byte.",
-          "`Parsing` `incremental`: الـ `parser` بيوقف لما `scripts`/`styles` `block`. `metadata` في `<head>` بتتprocess قبل ما `<body>` يpaint — `charset` و `viewport` لازم بدري عشان `decoding` و `layout viewport` صح من أول `byte`.",
+          "Parsing happens in chunks. Scripts and styles in <head> can pause the parser — that is why charset and viewport should appear early, before the first paint.",
+          "الـ parsing بيحصل على دفعات. Scripts و styles في <head> ممكن توقف الـ parser — عشان كده charset و viewport لازم ييجوا بدري، قبل أول paint.",
         ),
         L(
-          "DOM construction pairs with CSSOM for the render tree — HTML structure directly affects which nodes become layout boxes. Invalid nesting (e.g. `<div>` inside `<p>`) gets repaired by the parser, sometimes unpredictably.",
-          "`DOM construction` بيتزاوج مع `CSSOM` للـ `render tree` — `HTML structure` بيأثر مباشرة على أي `nodes` تبقى `layout boxes`. `Nesting` غلط (مثل `<div>` جوه `<p>`) الـ `parser` بيصلحه أحيانًا بشكل `unpredictable`.",
+          "The DOM pairs with the CSSOM to build the render tree. Bad nesting (like <div> inside <p>) gets silently repaired — you will not always see an error, but the tree may surprise you.",
+          "الـ DOM بيتزاوج مع CSSOM عشان يبني render tree. التداخل الغلط (زي <div> جوه <p>) بيتصلح في الخفاء — مش دايمًا هتشوف error، لكن الشجرة ممكن تفاجئك.",
         ),
       ],
       {
         bullets: [
-          L("<!`DOCTYPE` `html`> + `<html lang>` on every page", "<!`DOCTYPE` `html`> + `<html lang>` على كل صفحة"),
-          L("`<meta charset=\"UTF-8\">` within first 1024 `bytes`", "`<meta charset=\"UTF-8\">` في أول 1024 `bytes`"),
-          L("One `<main>`, logical `<header>` / `<footer>` `landmarks`", "`<main>` واحد و `landmarks` `<header>` / `<footer>` منطقية"),
-          L("Validate `HTML` — `parser` `fixes` hide `structural` `bugs`", "Validate `HTML` — `parser fixes` بتخبي `structural bugs`"),
+          L("Standards mode starts when the doctype is recognized", "standards mode بيبدأ لما الـ doctype يتعرّف"),
+          L("Head metadata is processed before body content paints", "metadata الـ head بيتقرأ قبل ما body يترسم"),
+          L("Parser repairs invalid markup — validate in DevTools, do not rely on luck", "الـ parser بيصلح markup غلط — اتأكد في DevTools، متعتمدش على الحظ"),
+          L("DOM + CSSOM merge into the render tree that actually paints pixels", "DOM + CSSOM بيتدمجوا في render tree اللي بيرسم البيكسلات"),
         ],
         code: `<!DOCTYPE html>
 <html lang="en">
@@ -107,11 +107,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("One `<main>` per page — never nest `<main>`", "`<main>` واحد لكل صفحة — ومتعشّشش `<main>` جوّه بعض"),
-          L("`<header>` / `<footer>` on the page = banner / contentinfo; inside a section they are local", "`<header>` / `<footer>` على الصفحة = banner / contentinfo؛ جوّه section بيبقوا محليين"),
-          L("`<section>` needs a heading (or accessible name) to mean anything useful", "`<section>` محتاج heading (أو اسم وصول) عشان يبقى له معنى"),
-          L("`<article>` = self-contained unit; `<section>` = thematic group under a heading", "`<article>` = وحدة مستقلة؛ `<section>` = مجموعة موضوعية تحت عنوان"),
-          L("Prefer native tags over `role=\"banner\"` / `role=\"main\"` duplicates", "فضّل الـ tags الأصلية على تكرار `role=\"banner\"` / `role=\"main\"`"),
+          L("HTML-AAM maps tags to roles at parse time — almost zero runtime cost", "HTML-AAM بيربط الـ tags بالـ roles وقت الـ parse — تكلفة شبه صفر"),
+          L("Nested <header>/<footer> stay local — only top-level ones become banner/contentinfo", "header/footer المتداخلة محلية — اللي على مستوى الصفحة بس هي banner/contentinfo"),
+          L("The old “section outline” algorithm was never shipped — use real h1–h6 ranks", "خوارزمية section outline القديمة ما اتنفذتش — استخدم مراتب h1–h6 الحقيقية"),
+          L("div soup stays generic in the accessibility tree — landmarks need native tags", "div soup بيفضل generic في accessibility tree — الـ landmarks محتاجة tags أصلية"),
         ],
         code: `<body>
   <header>
@@ -253,10 +252,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("One `<h1>` per `document` in typical `marketing`/`docs` pages", "`<h1>` واحد per `document` في `marketing`/`docs`"),
-          L("Do not `skip` `levels` for `styling` — adjust `CSS` instead", "مت`skip` `levels` للـ `styling` — عدّل `CSS`"),
-          L("`<p>` for paragraphs — not double `<br>`", "`<p>` للفقرات — مش double `<br>`"),
-          L("Use `<address>`, `<time datetime>` for `structured` text", "استخدم `<address>`, `<time datetime>` لنص `structured`"),
+          L("Font size on headings comes from CSS — the tag name does not set pixel size", "حجم الخط على العناوين جاي من CSS — اسم الـ tag ما بيحددش البيكسلات"),
+          L("The parser does not enforce order — h3 before h1 still renders without error", "الـ parser ما بيفرضش الترتيب — h3 قبل h1 لسه بيترسم من غير error"),
+          L("Long URLs or unbroken Arabic strings can overflow line boxes without overflow-wrap", "URLs طويلة أو عربي من غير مسافات ممكن يعمل overflow من غير overflow-wrap"),
+          L("<strong> and <em> carry semantics; <b> and <i> are stylistic unless you add meaning", "<strong> و <em> ليهم semantics؛ <b> و <i> للشكل إلا لو ضفت معنى"),
         ],
         code: `<main>
   <h1>Product guide</h1>
@@ -334,10 +333,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`Semantic` inline `tags` beat styled `spans`", "inline `tags` الـ `semantic` أحسن من `spans` مستايلة"),
-          L("`code` / `kbd` / `samp` / `var` for tech text", "`code` / `kbd` / `samp` / `var` للنص التقني"),
-          L("`mark` highlights relevance — not decoration only", "`mark` بيميّز صلة — مش ديكور بس"),
-          L("`del` / `ins` `document` edits over time", "`del` / `ins` بيوثّقوا التعديلات مع الوقت"),
+          L("Inline tags annotate spans inside one paragraph flow — they do not break the block box", "وسوم inline بتعلّم spans جوه flow واحد — ما بتكسرش block box الفقرة"),
+          L("Machine-readable values live in datetime and abbr title attributes", "القيم المقروءة للآلة في datetime و title على abbr"),
+          L("Reader mode and AT use semantic emphasis — decorative bold spans add noise", "Reader mode و AT بيستخدموا emphasis الـ semantic — bold الديكور بيزود ضوضاء"),
+          L("blockquote creates a block; q stays inline inside a paragraph", "blockquote بلوك؛ q يفضل inline جوه الفقرة"),
         ],
         code: `<p>
   <strong>Note:</strong> press <kbd>Ctrl</kbd>+<kbd>S</kbd>.
@@ -403,10 +402,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`Descriptive` link text — not \"click here\"", "Link text وصفي — مش \"click here\""),
-          L("width + height on `<img>` to reserve `layout` space", "width + height على `<img>` لحجز `layout` space"),
-          L("`<picture>` / srcset for responsive assets", "`<picture>` / srcset لـ responsive assets"),
-          L("`Decorative` `images`: alt=\"\" — omit from `accessibility tree`", "`Decorative` `images`: alt=\"\" — خارج `accessibility tree`"),
+          L("href=\"#\" still navigates — use <button> for in-page actions", "href=\"#\" لسه بينقل — استخدم <button> لإجراءات جوه الصفحة"),
+          L("Images decode on the main thread — large files delay paint without sizing", "الصور بتتفك على main thread — الملفات الكبيرة بتأخر paint من غير أبعاد"),
+          L("Lazy loading defers fetch until near the viewport — never lazy the LCP hero", "lazy loading بيأجل التحميل لحد قرب الـ viewport — ما تعملش lazy لصورة الـ hero"),
+          L("Replaced elements only reserve space when width/height or aspect-ratio is set", "العناصر replaced بتحجز مساحة لما width/height أو aspect-ratio متحددين"),
         ],
         code: `<img
   src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Hero"
@@ -483,10 +482,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`<ul>` `unordered`, `<ol>` sequential steps", "`<ul>` `unordered`، `<ol>` sequential steps"),
-          L("`<dl>` / `<dt>` / `<dd>` for `term`-`definition` pairs", "`<dl>` / `<dt>` / `<dd>` لـ `term`-`definition`"),
-          L("Do not use lists purely for `layout columns`", "متستخدمش lists للـ `layout columns` بس"),
-          L("`CSS` `list-style: none` still keeps list `role` if `<ul>`", "`CSS` `list-style: none` لسه list `role` لو `<ul>`"),
+          L("list-style: none in CSS does not remove list role — only changes bullets visually", "list-style: none في CSS ما بيشيلش list role — بيغيّر الشكل بس"),
+          L("Invalid children inside ul/ol get repaired — item counts in AT may be wrong", "أطفال غلط جوه ul/ol بيتصلحوا — عدد العناصر في AT ممكن يبقى غلط"),
+          L("Nested lists encode level in the DOM — flat divs lose “item 2 of 5, level 2”", "القوائم المتداخلة بتحفظ المستوى في DOM — divs مسطّحة بتفقد “item 2 of 5, level 2”"),
+          L("dl pairs dt/dd — broken pairs confuse screen reader pronunciation", "dl بيربط dt/dd — أزواج مكسورة بتلخبط نطق قارئ الشاشة"),
         ],
         code: `<ol>
   <li>Boil water</li>
@@ -521,7 +520,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
         code: `<nav aria-label="Primary">
   <ul>
     <li><a href="/">Home</a></li>
-    <li><a href="/tracks">Tracks</a></li>
+    <li><a href="/tracks">Labs</a></li>
   </ul>
 </nav>`,
         codeCaption: L("`Semantic` `nav` list for `AT`", "`Nav` list `semantic` لـ `AT`"),
@@ -567,10 +566,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`<label for=\"id\">` on every control", "`<label for=\"id\">` على كل control"),
-          L("Use native `type=\"email|url|tel|search\"`", "استخدم native `type=\"email|url|tel|search\"`"),
-          L("`<button type=\"submit\">` vs `type=\"button\"` `explicit`", "`<button type=\"submit\">` vs `type=\"button\"` صريح"),
-          L("`Autocomplete` `attributes` for passwords and addresses", "`Autocomplete` `attributes` للـ passwords و addresses"),
+          L("Each input type maps to an OS-native widget — custom divs lose autofill and mobile keyboards", "كل input type بيروح لـ widget أصلي من النظام — divs مخصصة بتفقد autofill وكيبورد الموبايل"),
+          L("Placeholder is not a label — it vanishes when the user types", "Placeholder مش label — بيختفي لما المستخدم يكتب"),
+          L("Client-side validation runs before submit — server validation is still required", "التحقق من جهة العميل قبل الإرسال — التحقق من السيرفر لسه مطلوب"),
+          L("method, action, and enctype control how the browser sends the HTTP request", "method و action و enctype بيحددوا إزاي المتصفح يبعت طلب HTTP"),
         ],
         code: `<label for="email">Email</label>
 <input
@@ -651,10 +650,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`Tables` for data — not `page layout` grids", "`Tables` للـ data — مش `page layout` grids"),
-          L("`<thead>`, `<tbody>`, `<tfoot>` for `structure`", "`<thead>`, `<tbody>`, `<tfoot>` للـ `structure`"),
-          L("`scope` or `headers`/id for complex `tables`", "`scope` أو `headers`/id للـ complex `tables`"),
-          L("`<caption>` as first child summarizes the `table`", "`<caption>` كأول child يلخص الـ `table`"),
+          L("Table layout uses its own column algorithm — different from CSS Grid", "جدول الـ table layout له خوارزمية أعمدة خاصة — مختلفة عن CSS Grid"),
+          L("th scope wires header cells without JavaScript", "th scope بيربط خلايا العناوين من غير JavaScript"),
+          L("Wide tables need horizontal scroll wrappers — keyboard focus gets harder", "الجداول العريضة محتاجة scroll أفقي — التركيز بالكيبورد بيبقى أصعب"),
+          L("border-collapse and column widths are computed before cell paint", "border-collapse وعرض الأعمدة بيتحسبوا قبل رسم الخلايا"),
         ],
         code: `<table>
   <caption>Q3 sales by region</caption>
@@ -730,10 +729,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Native `HTML` first — `ARIA` fills gaps only", "Native `HTML` الأول — `ARIA` fills gaps بس"),
-          L("Four `principles`: `perceivable`, `operable`, `understandable`, `robust`", "أربع `principles`: `perceivable`, `operable`, `understandable`, `robust`"),
-          L("Test with `keyboard only` + one `screen reader`", "اختبر `keyboard only` + `screen reader` واحد"),
-          L("`WCAG` 2.2 AA is the common production bar", "`WCAG` 2.2 AA هو production bar الشائع"),
+          L("display:none and visibility:hidden remove nodes from the accessibility tree", "display:none و visibility:hidden بيشيلوا العقد من accessibility tree"),
+          L("Accessible name merges label, aria-label, and visible text", "الاسم الوصولي بيدمج label و aria-label والنص الظاهر"),
+          L(":focus-visible shows rings for keyboard users, not every mouse click", ":focus-visible بيعرض حلقة لمستخدمي الكيبورد، مش كل كليك ماوس"),
+          L("aria-hidden hides subtrees from AT while pixels may still paint", "aria-hidden بيخفي أجزاء من AT والبيكسلات ممكن تفضل ظاهرة"),
         ],
         code: `/* Show focus for keyboard, subtle for mouse */
 :focus-visible {
@@ -746,8 +745,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "This lesson is the a11y source of truth for the HTML track — other lessons link concepts here instead of repeating thin tips. NVDA (Windows) and VoiceOver (macOS/iOS) are the pair to practice with.",
-          "الدرس ده مصدر a11y للـ HTML track — الدروس التانية بترجع هنا بدل تكرار نصائح سطحية. NVDA (Windows) و VoiceOver (macOS/iOS) هما اللي تتدرب عليهم.",
+          "This lesson is the a11y source of truth for the HTML lab — other lessons link concepts here instead of repeating thin tips. NVDA (Windows) and VoiceOver (macOS/iOS) are the pair to practice with.",
+          "الدرس ده مصدر a11y للـ HTML lab — الدروس التانية بترجع هنا بدل تكرار نصائح سطحية. NVDA (Windows) و VoiceOver (macOS/iOS) هما اللي تتدرب عليهم.",
         ),
         L(
           "Keyboard: Tab/Shift+Tab move focus; Enter activates links and buttons; Space toggles buttons and checkboxes; Escape closes dialogs. Never trap focus without a dismiss path.",
@@ -815,20 +814,20 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       {
         bullets: [
           L(
-            "Ship name + role + value that match the UI",
-            "طلّع name + role + value تطابق الـ UI",
+            "Screen readers traverse the accessibility tree — name, role, and value/state, not CSS paint",
+            "قارئات الشاشة بتجول في accessibility tree — name و role و value/state، مش رسم CSS",
           ),
           L(
-            "Native HTML first; ARIA only when needed",
-            "Native HTML أولًا؛ ARIA عند الحاجة بس",
+            "Accessible name order: associated label, then aria-labelledby, then aria-label, then text content",
+            "ترتيب accessible name: label مرتبط، بعدين aria-labelledby، بعدين aria-label، بعدين النص",
           ),
           L(
-            "Never leave Tab stops inside aria-hidden",
-            "متسيبش Tab جوّه aria-hidden",
+            "aria-hidden removes a subtree from AT but does not remove elements from the tab order",
+            "aria-hidden بيشيل subtree من AT لكن ما بيشيلش العناصر من ترتيب Tab",
           ),
           L(
-            "Test keyboard-only + one screen reader",
-            "اختبر keyboard-only + screen reader واحد",
+            "Positive tabindex reorders focus away from DOM sequence — breaking predictable keyboard traversal",
+            "tabindex الموجب بيعيد ترتيب focus بعيد عن DOM — وده بيكسر تنقّل الكيبورد المتوقع",
           ),
         ],
         code: `<button type="button" aria-expanded="false" aria-controls="panel">
@@ -845,8 +844,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "This lesson is the practice set for the HTML track. Theory is in Accessibility (a11y). Here you compare bad vs ready until the good pattern feels automatic.",
-          "الدرس ده مجموعة الـ practice للـ HTML track. النظرية في درس Accessibility (a11y). هنا تقارن bad مقابل ready لحد ما النمط الصح يبقى تلقائي.",
+          "This lesson is the practice set for the HTML lab. Theory is in Accessibility (a11y). Here you compare bad vs ready until the good pattern feels automatic.",
+          "الدرس ده مجموعة الـ practice للـ HTML lab. النظرية في درس Accessibility (a11y). هنا تقارن bad مقابل ready لحد ما النمط الصح يبقى تلقائي.",
         ),
         L(
           "Quick WCAG checks while you scan: meaningful names (2.4.4 / 4.1.2), keyboard works (2.1.1), focus visible (2.4.7 / 2.4.11), skip blocks (2.4.1), status messages (4.1.3).",
@@ -913,15 +912,27 @@ export const htmlInsights: Record<string, ProductionInsights> = {
         ),
         L(
           "Progressive enhancement keeps a usable HTML path first, then upgrades when APIs exist — the opposite of shipping a Newly Baseline-only control with no fallback.",
-          "Progressive enhancement بيخلي مسار HTML يشتغل أولًا، وبعدين يترقّى لما الـ APIs تبقى موجودة — عكس ما تنشر كنترول Newly Baseline من غير fallback.",
+          "Progressive enhancement بيخلي معمل HTML يشتغل أولًا، وبعدين يترقّى لما الـ APIs تبقى موجودة — عكس ما تنشر كنترول Newly Baseline من غير fallback.",
         ),
       ],
       {
         bullets: [
-          L("`Baseline` `Widely` ≈ safe `default` for most products", "`Baseline` `Widely` ≈ افتراضي آمن لمعظم المنتجات"),
-          L("`Newly` → `document` Safari/WebKit floor + `fallback`", "`Newly` → وثّق حد Safari/WebKit + `fallback`"),
-          L("`Detect` `features`; never `parse` `navigator.userAgent` for `UX`", "افحص الميزات؛ متفكّش `navigator.userAgent` للـ `UX`"),
-          L("This lesson owns `compatibility matrices` for the track", "الدرس ده مالك مصفوفات التوافق للـ track"),
+          L(
+            "Blink, Gecko, and WebKit ship features on independent release trains — the same tag can parse everywhere but behave differently",
+            "Blink و Gecko و WebKit بينزلوا ميزات بمواعيد مستقلة — نفس الـ tag ممكن يتparse في كل مكان لكن يتصرف بشكل مختلف",
+          ),
+          L(
+            "Feature detection queries prototypes or CSS support at runtime — UA strings spoof and rot quickly",
+            "Feature detection بيسأل الـ prototypes أو دعم CSS وقت التشغيل — سلاسل UA بتتزوّر وتبقى قديمة بسرعة",
+          ),
+          L(
+            "@supports and CSS.supports ask the style engine; the in operator asks the JavaScript object model",
+            "@supports و CSS.supports بيسألوا محرك الستايل؛ in operator بيسأل نموذج كائنات JavaScript",
+          ),
+          L(
+            "Progressive enhancement keeps a functional HTML path when newer APIs are absent",
+            "Progressive enhancement بيخلي معمل HTML شغال لما APIs أحدث مش موجودة",
+          ),
         ],
         code: `if ("showModal" in HTMLDialogElement.prototype) {
   dialog.showModal();
@@ -973,8 +984,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "This Advanced lesson is the SEO source of truth for the HTML track. Crawlers fetch a URL, tokenize HTML into a DOM, extract `<title>` / meta / canonical early, then schedule rendering. Body text present in that first payload is what indexes most reliably.",
-          "الدرس Advanced ده مصدر SEO للـ HTML track. الـ crawlers بتجيب URL، بتعمل tokenize لـ HTML لـ DOM، بتستخرج `<title>` / meta / canonical بدري، وبعدين بتحجز الرندر. نص الـ body الموجود في أول حمولة هو اللي بيتفهرس بأعلى موثوقية.",
+          "This Advanced lesson is the SEO source of truth for the HTML lab. Crawlers fetch a URL, tokenize HTML into a DOM, extract `<title>` / meta / canonical early, then schedule rendering. Body text present in that first payload is what indexes most reliably.",
+          "الدرس Advanced ده مصدر SEO للـ HTML lab. الـ crawlers بتجيب URL، بتعمل tokenize لـ HTML لـ DOM، بتستخرج `<title>` / meta / canonical بدري، وبعدين بتحجز الرندر. نص الـ body الموجود في أول حمولة هو اللي بيتفهرس بأعلى موثوقية.",
         ),
         L(
           "Mental model: crawl → render → index. Discovery uses sitemaps, internal links, and backlinks. The renderer may execute JS later, but primary copy that only appears after a client-only fetch risks delayed or thin indexing — especially on mobile.",
@@ -991,14 +1002,13 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Unique title + `description` per `indexable` `URL`", "Title + `description` فريدين لكل `URL` قابل للفهرسة"),
-          L("One absolute `HTTPS` `canonical` per `content` item", "`Canonical` `HTTPS` مطلق واحد لكل `content` item"),
-          L("`Semantic` `outline` + real <a href> `links`", "`Outline` `semantic` + لينكات <a href> حقيقية"),
-          L("`JSON-LD` only when it matches the page", "`JSON-LD` بس لما يطابق الصفحة"),
-          L("Monitor `coverage` in `Search Console` after deploys", "راقب `coverage` في `Search Console` بعد كل `deploy`"),
+          L("Crawlers tokenize the first HTML response before scheduling JS render", "الزواحف بتفكك أول استجابة HTML قبل ما تحجز render بالـ JS"),
+          L("Canonical merges duplicate URLs — params, trailing slash, mirrors", "canonical بيجمع URLs مكررة — params و trailing slash ومرايا"),
+          L("JSON-LD must mirror visible content or rich results get ignored", "JSON-LD لازم يطابق المحتوى الظاهر وإلا rich results تتتجاهل"),
+          L("Client-only shells delay discovery of titles and body copy", "shells من الـ client بس بتأخر اكتشاف العناوين ونص الصفحة"),
         ],
         code: `<head>
-  <title>FrontendCraft — HTML Track</title>
+  <title>FrontendCraft — HTML Lab</title>
   <meta name="description" content="Learn HTML with interactive labs." />
   <link rel="canonical" href="https://example.com/html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -1064,7 +1074,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
 <div id="root"></div>
 <!-- Better: SSR body with real headings + links -->
 <main>
-  <h1>HTML track</h1>
+  <h1>HTML lab</h1>
   <a href="/html/forms-inputs">Learn HTML forms</a>
 </main>`,
         codeCaption: L("Crawlable `content` vs empty `root`", "محتوى قابل للزحف مقابل `root` فاضي"),
@@ -1090,10 +1100,10 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("`<video controls>` + poster for `preview` frame", "`<video controls>` + poster لـ `preview` frame"),
-          L("Captions: `<track kind=\"captions\">` for video", "Captions: `<track kind=\"captions\">` للـ video"),
-          L("iframe title attribute required", "iframe title attribute مطلوب"),
-          L("preconnect to embed origins when `LCP`-adjacent", "preconnect لـ embed origins لما `LCP`-adjacent"),
+          L("Video and audio decoders run off the main thread — layout still reacts to size changes", "فكّ الفيديو والصوت بيحصل برّه main thread — الـ layout لسه بيتأثر بتغيير الحجم"),
+          L("iframes create nested browsing contexts with their own cookies", "iframes بتعمل سياقات تصفح متداخلة بكوكيز خاصة"),
+          L("picture/source lets the browser pick WebP/AVIF with JPEG fallback", "picture/source بيخلي المتصفح يختار WebP/AVIF مع JPEG احتياطي"),
+          L("lazy on below-fold iframes saves bandwidth on first load", "lazy على iframes تحت الطية بيوفر bandwidth في أول تحميل"),
         ],
         code: `<video
   controls
@@ -1162,8 +1172,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "This lesson is the Core Web Vitals source of truth for the HTML track. LCP, INP, and CLS are field metrics from real users (CrUX) — lab tools help debug, but ranking and UX decisions should follow field data.",
-          "الدرس ده مصدر Core Web Vitals للـ HTML track. LCP و INP و CLS مقاييس ميدانية من مستخدمين حقيقيين (CrUX) — أدوات الـ lab بتساعد في الـ debug، لكن قرارات الترتيب والـ UX تمشي مع field data.",
+          "This lesson is the Core Web Vitals source of truth for the HTML lab. LCP, INP, and CLS are field metrics from real users (CrUX) — lab tools help debug, but ranking and UX decisions should follow field data.",
+          "الدرس ده مصدر Core Web Vitals للـ HTML lab. LCP و INP و CLS مقاييس ميدانية من مستخدمين حقيقيين (CrUX) — أدوات الـ lab بتساعد في الـ debug، لكن قرارات الترتيب والـ UX تمشي مع field data.",
         ),
         L(
           "LCP marks when the largest contentful element paints. Heroes without dimensions, lazy-loaded above-the-fold images, and render-blocking resources push LCP past 2.5s.",
@@ -1180,10 +1190,22 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("Good: `LCP` < 2.5s · `INP` < 200ms · `CLS` < 0.1", "جيد: `LCP` < 2.5s · `INP` < 200ms · `CLS` < 0.1"),
-          L("Never `lazy-load` the `LCP` element", "متعَمِلش lazy على عنصر `LCP`"),
-          L("Reserve space before `bytes` arrive", "احجز المساحة قبل ما الـ `bytes` توصل"),
-          L("Keep interaction `handlers` short on the main thread", "خلّي `handlers` التفاعل قصيرة على الـ main thread"),
+          L(
+            "LCP is recorded when the largest contentful element paints — usually an img or text block in the render tree",
+            "LCP بيتسجّل لما أكبر عنصر محتوى يترسم — غالبًا img أو بلوك نص في render tree",
+          ),
+          L(
+            "INP aggregates interaction latency across the page lifetime from input event to next paint",
+            "INP بيجمع تأخير التفاعل على عمر الصفحة من حدث الإدخال لحد الرسم الجاي",
+          ),
+          L(
+            "CLS accumulates layout shift scores when elements move after initial paint without user intent",
+            "CLS بيجمع درجات layout shift لما عناصر تتحرك بعد الرسم الأول من غير قصد من المستخدم",
+          ),
+          L(
+            "The preload scanner can discover LCP images early — lazy on above-fold candidates delays the metric",
+            "preload scanner ممكن يكتشف صور LCP بدري — lazy على مرشحين فوق الشاشة بيأخر المقياس",
+          ),
         ],
         code: `<link
   rel="preload"
@@ -1261,10 +1283,22 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("width/height on `<img>` — primary `CLS` fix", "width/height على `<img>` — primary `CLS` fix"),
-          L("loading=\"lazy\" below fold; fetchpriority=\"high\" on `LCP`", "loading=\"lazy\" below fold؛ fetchpriority=\"high\" على `LCP`"),
-          L("Modern formats via `<picture>` — WebP/AVIF + `fallback`", "Modern formats عبر `<picture>` — WebP/AVIF + `fallback`"),
-          L("defer/async scripts — avoid `render`-blocking `JS`", "defer/async scripts — تجنب `render`-blocking `JS`"),
+          L(
+            "width and height establish intrinsic size in the layout tree before image bytes decode",
+            "width و height بيحددوا الحجم الجوهري في layout tree قبل ما بايتات الصورة تتفكّ",
+          ),
+          L(
+            "loading=lazy defers fetch until the image nears the viewport — intersection observer gates the network request",
+            "loading=lazy بيأجل الجلب لحد ما الصورة تقرب من viewport — intersection observer بيفتح طلب الشبكة",
+          ),
+          L(
+            "decoding=async lets decode happen off the critical paint path when the main thread is busy",
+            "decoding=async بيخلي فك الترميز يحصل برّه مسار الرسم الحرج لما main thread مشغول",
+          ),
+          L(
+            "defer and async change when script execution interrupts HTML parsing in the tokenizer",
+            "defer و async بيغيّروا إمتى تنفيذ السكربت يوقف parsing الـ HTML في الـ tokenizer",
+          ),
         ],
         code: `<link
   rel="preload"
@@ -1345,10 +1379,22 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       ],
       {
         bullets: [
-          L("One `<main>` per page — partials update inside it", "`<main>` واحد per page — partials update جواه"),
-          L("`Server` includes for header/footer/`nav` consistency", "`Server` includes لـ header/footer/`nav` consistency"),
-          L("`<template>` for `client` clones — not `hidden` `div soup`", "`<template>` لـ `client` clones — مش `hidden` `div soup`"),
-          L("Validate assembled `HTML` in CI", "Validate assembled `HTML` في CI"),
+          L(
+            "The browser always receives one document — server includes compose before the parser sees bytes",
+            "المتصفح دايمًا بيستقبل مستند واحد — server includes بتتجمّع قبل ما الـ parser يشوف البايتات",
+          ),
+          L(
+            "Fragment swaps via innerHTML re-run the HTML fragment parser and can reparent invalid inserts",
+            "تبديل fragments عبر innerHTML بيشغّل HTML fragment parser تاني ويمكن يعيد ترتيب إدراجات غير صالحة",
+          ),
+          L(
+            "template contents stay inert — scripts inside do not execute until cloneNode instantiates them",
+            "محتوى template بيفضل inert — السكربتات جواه ما بتتنفّذش لحد ما cloneNode يفعّلها",
+          ),
+          L(
+            "Landmark and heading structure must survive partial updates or the accessibility tree map breaks",
+            "هيكل landmarks والعناوين لازم يعيش partial updates وإلا خريطة accessibility tree بتتكسر",
+          ),
         ],
         code: `<main id="main">
   <!-- server partial: article-body.html -->
@@ -1421,10 +1467,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`noopener` blocks `opener` control; `noreferrer` trims `referrer`", "`noopener` بيمنع `opener` control؛ و`noreferrer` بيقلل `referrer`"),
-          L("`Sandbox` first, then add only needed `tokens`", "`Sandbox` الأول، وبعدها زوّد `tokens` المطلوبة بس"),
-          L("Audit `action` and every `formaction`", "راجع `action` وكل `formaction`"),
-          L("`Client`-`visible` `markup` cannot store `secrets`", "`Markup` ظاهر للعميل مينفعش يخزن أسرار"),
+          L(
+            "target=_blank creates an opener browsing context — rel=noopener severs window.opener at navigation time",
+            "target=_blank بيعمل browsing context فيه opener — rel=noopener بيقطع window.opener وقت التنقل",
+          ),
+          L(
+            "sandbox applies an opaque origin and strips capabilities until each token restores one",
+            "sandbox بيطبّق opaque origin ويشيل capabilities لحد ما كل token يرجّع واحدة",
+          ),
+          L(
+            "allow-scripts plus allow-same-origin on same-origin frames can let embedded scripts remove the sandbox",
+            "allow-scripts مع allow-same-origin على frames من نفس الـ origin ممكن يخلي السكربتات المضمّنة تشيل الـ sandbox",
+          ),
+          L(
+            "formaction on a submit button overrides the form action URL for that specific submission",
+            "formaction على زر إرسال بيتجاوز action URL للفورم في الإرسال ده بالذات",
+          ),
         ],
         code: `<a href="https://docs.example.com" target="_blank"
    rel="noopener noreferrer">Docs</a>
@@ -1492,10 +1550,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`Prefetch` warms a `response`; `prerender` warms activation", "`Prefetch` بيسخّن `response`؛ `prerender` بيسخّن activation"),
-          L("`Same-origin`, read-only URLs are the safe starting set", "URLs `same-origin` وread-only هي نقطة البداية الآمنة"),
-          L("Do not `prerender` `logout`, delete, `checkout`, or token routes", "ماتعملش `prerender` لـ `logout` أو delete أو `checkout` أو token routes"),
-          L("Budget `bandwidth` against current-page performance", "حط budget للـ `bandwidth` مقابل أداء الصفحة الحالية"),
+          L(
+            "speculationrules JSON is parsed by supporting engines during document load",
+            "JSON بتاع speculationrules بيتقرأ من الـ engines الداعمة أثناء تحميل المستند",
+          ),
+          L(
+            "prefetch warms the HTTP cache — activation still runs a full navigation lifecycle",
+            "prefetch بيسخّن HTTP cache — التفعيل لسه بيشغّل دورة تنقل كاملة",
+          ),
+          L(
+            "prerender builds a hidden browsing context with layout and can execute page scripts before the user navigates",
+            "prerender بيبني browsing context مخفي فيه layout ويمكن يشغّل سكربتات الصفحة قبل ما المستخدم يتنقل",
+          ),
+          L(
+            "Unsupported browsers ignore the script type entirely — no fallback behavior is needed",
+            "المتصفحات غير الداعمة بتتجاهل نوع السكربت بالكامل — مش محتاج سلوك fallback",
+          ),
         ],
         code: `<script type="speculationrules">
 { "prefetch": [{ "urls": ["/products/keyboard"] }] }
@@ -1563,10 +1633,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`Root` lang + dir are the `document` defaults", "`Root` lang + dir هم افتراضي المستند"),
-          L("`Isolate` opposite-direction `tokens` — don’t hope `CSS` `fixes` `bidi`", "اعزل الرموز المعاكسة — متستناش `CSS` يصلح `bidi`"),
-          L("dir=auto for UGC; `explicit` dir for product `chrome`", "dir=auto لـ UGC؛ dir صريح لـ `chrome` المنتج"),
-          L("Carry lang/dir into teleported roots", "انقل lang/dir لجذور العناصر المتنقلة"),
+          L(
+            "dir creates a new embedding or isolation level in the Unicode bidi algorithm",
+            "dir بيعمل مستوى embedding أو isolation جديد في خوارزمية Unicode bidi",
+          ),
+          L(
+            "bdi is an isolate by default — nested opposite-direction runs cannot reorder surrounding text",
+            "bdi isolate افتراضيًا — نصوص معاكسة متداخلة مش بتعيد ترتيب النص حوالينها",
+          ),
+          L(
+            "dir=auto resolves direction from the first strong character in the element's text",
+            "dir=auto بيحدد الاتجاه من أول حرف قوي في نص العنصر",
+          ),
+          L(
+            "Teleported UI escapes the document direction context unless lang and dir are set on the new root",
+            "UI المنقول بيخرج من سياق اتجاه المستند إلا لو lang و dir متحطّين على الجذر الجديد",
+          ),
         ],
         code: `<p lang="ar" dir="rtl">
   راجع
@@ -1636,10 +1718,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("No `block` `elements` inside `<p>`", "مفيش `block` `elements` جوه `<p>`"),
-          L("No interactive `nesting`: a > `button`, `button` > a", "مفيش interactive `nesting`: a > `button`, `button` > a"),
-          L("One `<main>`, one logical `<h1>`", "`<main>` واحد، `<h1>` منطقي واحد"),
-          L("Run `html`-validate or W3C validator in CI", "شغّل `html`-validate أو W3C validator في CI"),
+          L(
+            "Invalid nesting triggers parser repair — block inside p closes the paragraph early",
+            "تداخل غير صالح بيشغّل parser repair — block جوه p بيقفل الفقرة بدري",
+          ),
+          L(
+            "Interactive element nesting creates unpredictable focus targets and activation behavior",
+            "تداخل عناصر تفاعلية بيعمل focus targets وسلوك تفعيل غير متوقع",
+          ),
+          L(
+            "Multiple main elements confuse accessibility tree landmark mapping — browsers do not error",
+            "عناصر main متعددة بتلخبط landmark mapping في accessibility tree — المتصفحات ما بتطلعش error",
+          ),
+          L(
+            "Skipped heading levels break the document outline that AT uses for navigation",
+            "قفز في مستويات العناوين بيكسر document outline اللي AT بتستخدمه للتنقل",
+          ),
         ],
         code: `<!-- Wrong -->
 <p><div>Broken</div></p>
@@ -1713,10 +1807,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`DOCTYPE` + lang + `charset` + `viewport` + title", "`DOCTYPE` + lang + `charset` + `viewport` + title"),
-          L("`Landmarks`: header, `nav`, main, footer", "`Landmarks`: header, `nav`, main, footer"),
-          L("`Headings`, lists, `tables` for `structure` — not divs", "`Headings`, lists, `tables` للـ `structure` — مش divs"),
-          L("`ARIA` only when native `HTML` insufficient", "`ARIA` لما native `HTML` مش كافي"),
+          L(
+            "Parse flows HTML to DOM, CSS to CSSOM, then merges into the render tree for layout and paint",
+            "الـ parse بيحوّل HTML لـ DOM و CSS لـ CSSOM، وبعدين يدمجهم في render tree للـ layout والرسم",
+          ),
+          L(
+            "Semantic landmarks become nodes in the accessibility tree that AT exposes as navigation shortcuts",
+            "landmarks الدلالية بتبقى nodes في accessibility tree اللي AT بتعرضها كاختصارات تنقل",
+          ),
+          L(
+            "Native form controls wire directly to the browser submission and validation pipeline",
+            "form controls الأصلية مربوطة مباشرة بمسار الإرسال والتحقق في المتصفح",
+          ),
+          L(
+            "Each tag choice affects parse time, a11y tree shape, and crawlable content simultaneously",
+            "كل اختيار tag بيأثر وقت الـ parse وشكل a11y tree والمحتوى القابل للزحف في نفس الوقت",
+          ),
         ],
         code: `<!DOCTYPE html>
 <html lang="ar">
@@ -1796,9 +1902,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("`type` = `semantics` + `fallback` `keyboard`", "`type` = معنى + كيبورد `fallback`"),
-          L("`inputmode` never replaces `validation`", "`inputmode` مش بديل للتحقق"),
-          L("Use standard WHATWG `autocomplete` `tokens`", "استخدم رموز `autocomplete` القياسية من WHATWG"),
+          L(
+            "inputmode routes to the platform IME without changing stored value type or validation rules",
+            "inputmode بيوجّه لـ IME المنصة من غير ما يغيّر نوع القيمة المخزّنة أو قواعد التحقق",
+          ),
+          L(
+            "Constraint validation still runs from type, required, pattern, and min/max regardless of inputmode",
+            "constraint validation لسه بيشتغل من type و required و pattern و min/max بغض النظر عن inputmode",
+          ),
+          L(
+            "Autocomplete tokens feed OS autofill heuristics — wrong tokens can silence suggestions on WebKit mobile",
+            "رموز autocomplete بتغذي heuristics الـ autofill — الرمز الغلط ممكن يكتم الاقتراحات على WebKit الموبايل",
+          ),
+          L(
+            "Password managers match fields by autocomplete name before scanning visible labels",
+            "password managers بتطابق الحقول باسم autocomplete قبل ما تفحص الـ labels الظاهرة",
+          ),
         ],
         code: `<input type="tel" inputmode="tel" autocomplete="tel" pattern="[0-9+\\-\\s]{8,}" />`,
         codeCaption: L("Tel stack for mobile `UX`", "حزمة tel لتجربة الموبايل"),
@@ -1857,9 +1976,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Top layer + `backdrop` are `engine` `features`", "Top layer + `backdrop` ميزات من الـ `engine`"),
-          L("Escape closes `modal` dialogs by `default`", "Escape بيقفل `modal` افتراضيًا"),
-          L("`Polyfill` only for Safari < 15.4 if required", "`Polyfill` بس لـ Safari < 15.4 لو مطلوب"),
+          L(
+            "showModal() promotes the element to the top layer, above regular stacking and popovers",
+            "showModal() بيرفع العنصر لـ top layer فوق التكديس العادي والـ popovers",
+          ),
+          L(
+            "The UA paints ::backdrop as a pseudo-element over the inert document below",
+            "المتصفح بيرسم ::backdrop كـ pseudo-element فوق المستند inert تحته",
+          ),
+          L(
+            "Focus trap cycles tab order inside the dialog until it closes",
+            "focus trap بيدوّر ترتيب Tab جوه الـ dialog لحد ما يتقفل",
+          ),
+          L(
+            "close() and Escape restore focus to the previously focused element in the opener",
+            "close() و Escape بيرجّعوا focus للعنصر اللي كان مركّز قبل كده في الفاتح",
+          ),
         ],
         code: `dialog.showModal();\ndialog.addEventListener("close", () => {\n  console.log(dialog.returnValue);\n});`,
         codeCaption: L("`Modal` open + returnValue", "فتح `modal` و returnValue"),
@@ -1918,9 +2050,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Summary is the activation control", "summary هو كنترول التفعيل"),
-          L("`open` attribute reflects `state`", "صفة `open` بتعكس الحالة"),
-          L("Listen to `toggle` for analytics if needed", "اسمع حدث `toggle` للتحليلات لو لزم"),
+          L(
+            "Toggle flips the open IDL attribute — the renderer shows or hides content without script",
+            "التبديل بيقلب open IDL attribute — الرندر بيظهر أو يخفي المحتوى من غير سكربت",
+          ),
+          L(
+            "The accessibility tree exposes summary as an expandable button with expanded/collapsed state",
+            "accessibility tree بيعرض summary كزرار قابل للتوسيع بحالة expanded/collapsed",
+          ),
+          L(
+            "Exclusive name grouping lets the engine close sibling details when one opens",
+            "تجميع name الحصري بيخلي الـ engine يقفل details الإخوة لما واحدة تتفتح",
+          ),
+          L(
+            "The toggle event fires synchronously when open state changes",
+            "حدث toggle بينطلق بشكل متزامن لما حالة open تتغيّر",
+          ),
         ],
         code: `<details name="faq">\n  <summary>…</summary>\n  <p>…</p>\n</details>`,
         codeCaption: L("Exclusive `FAQ` group", "مجموعة `FAQ` حصرية"),
@@ -1978,9 +2123,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Order sources most-preferred first", "رتّب المصادر من الأكثر تفضيلًا"),
-          L("Always terminate with `<img>`", "دايمًا اختم بـ `<img>`"),
-          L("AVIF/WebP reduce `LCP` `bytes` when supported", "AVIF/WebP بيقلّلوا بايتات `LCP` لما يتدعموا"),
+          L(
+            "The preload scanner evaluates source candidates before paint — selection happens without JS",
+            "preload scanner بيقيّم مرشحي source قبل الرسم — الاختيار بيحصل من غير JS",
+          ),
+          L(
+            "Browser walks sources top-down until type, media, and srcset all match",
+            "المتصفح بيمشي على المصادر من فوق لتحت لحد ما type و media و srcset يطابقوا",
+          ),
+          L(
+            "The trailing img provides the final URL, alt text, and dimensions for the layout tree",
+            "img الأخير بيوفّر URL النهائي ونص alt والأبعاد لـ layout tree",
+          ),
+          L(
+            "Format negotiation happens per-image at fetch time — each candidate can request a different decoder",
+            "تفاوض الصيغة بيحصل لكل صورة وقت الجلب — كل مرشح ممكن يطلب decoder مختلف",
+          ),
         ],
         code: `<picture>
   <source
@@ -2050,9 +2208,22 @@ main.querySelector("h1")?.focus();`,
       ],
       {
         bullets: [
-          L("Emit OG/Twitter `tags` in the first `response`", "طلّع وسوم OG/Twitter في أول استجابة"),
-          L("Absolute `HTTPS` og:image URLs", "روابط og:image مطلقة بـ `HTTPS`"),
-          L("SVG + ICO favicon pair covers most clients", "زوج SVG + ICO بيغطي أغلب العملاء"),
+          L(
+            "The HTML parser builds head metadata during the initial parse — before body scripts run",
+            "محلل HTML بيبني metadata الـ head أثناء الـ parse الأولي — قبل ما سكربتات body تشتغل",
+          ),
+          L(
+            "Social unfurl bots typically fetch raw HTML without executing your SPA bundle",
+            "بوتات unfurl للسوشيال غالبًا بتجيب HTML خام من غير ما تشغّل حزمة الـ SPA",
+          ),
+          L(
+            "theme-color is read from meta and passed to the browser chrome layer on supported mobile UIs",
+            "theme-color بيتقرأ من meta ويتبعت لطبقة واجهة المتصفح على UIs الموبايل الداعمة",
+          ),
+          L(
+            "Favicon link rels are resolved by the network stack during document load, not at paint time",
+            "link rels للـ favicon بتتحل من network stack أثناء تحميل المستند، مش وقت الرسم",
+          ),
         ],
         code: `<meta property="og:image" content="https://example.com/og.png" />\n<meta name="twitter:card" content="summary_large_image" />`,
         codeCaption: L("Share `preview` essentials", "أساسيات معاينة المشاركة"),

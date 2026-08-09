@@ -1,3 +1,5 @@
+import type { LevelQuizDefinition } from "@/lib/level-quiz/types";
+
 export type Locale = "en" | "ar";
 
 /** Six-tier curriculum used across every track. */
@@ -31,7 +33,7 @@ export interface LocalizedString {
 /** Visualizer ids are plain strings per track. */
 export type VisualizerId = string;
 
-export type ExampleKind = "simple" | "realWorld";
+export type ExampleKind = "simple" | "medium" | "hard";
 
 export interface CodeExample {
   id: ExampleKind;
@@ -105,6 +107,18 @@ export interface InsightSection {
   codeCaption?: LocalizedString;
 }
 
+/** One numbered step for the “See it in the browser” DevTools walkthrough. */
+export interface BrowserWalkthroughStep {
+  title: LocalizedString;
+  detail: LocalizedString;
+}
+
+/** DevTools steps shown in the lesson deep dive (Live tab examples). */
+export interface BrowserWalkthrough {
+  intro?: LocalizedString;
+  steps: BrowserWalkthroughStep[];
+}
+
 /** ❌ vs ✅ teaching card for scannable practice. */
 export interface ComparePair {
   title?: LocalizedString;
@@ -139,30 +153,30 @@ export interface LessonChallenge {
   explanation: LocalizedString;
 }
 
-/** One option in a multi-question quiz. */
-export interface QuizOption {
+/** One option in a lesson activity question. */
+export interface ActivityOption {
   id: string;
   label: LocalizedString;
 }
 
-/** One question inside a lesson quiz. */
-export interface QuizQuestion {
+/** One question inside a lesson activity. */
+export interface ActivityQuestion {
   id: string;
   prompt: LocalizedString;
   /** Optional code shown under the prompt. */
   code?: string;
   language?: "html" | "css" | "javascript" | "tsx";
-  options: QuizOption[];
+  options: ActivityOption[];
   correctId: string;
   explanation: LocalizedString;
   /** Optional softer hint shown with the explanation. */
   hint?: LocalizedString;
 }
 
-/** Multi-question interactive quiz for a lesson. */
-export interface LessonQuiz {
+/** Multi-question interactive activity for a lesson. */
+export interface LessonActivity {
   title?: LocalizedString;
-  questions: QuizQuestion[];
+  questions: ActivityQuestion[];
 }
 
 export interface LessonContent {
@@ -196,14 +210,18 @@ export interface LessonContent {
     label: LocalizedString;
     support: BrowserSupportInfo;
   }[];
-  /** Visual ❌/✅ comparison cards (HTML lab scannability). */
+  /** Visual ❌/✅ comparison cards (HTML track scannability). */
   compareCards?: ComparePair[];
+  /** DevTools walkthrough — open Elements, Network, Console, etc. */
+  browserWalkthrough?: BrowserWalkthrough;
   /** Browser pipeline steps for interactive walkthrough. */
   pipelineSteps?: PipelineStep[];
   /** One-question interactive challenge before advancing. */
   challenge?: LessonChallenge;
-  /** Multi-question interactive quiz (preferred over challenge when set). */
-  quiz?: LessonQuiz;
+  /** Multi-question interactive activity (preferred over challenge when set). */
+  activity?: LessonActivity;
+  /** Premium mixed-type quiz on dedicated level-quiz lessons. */
+  levelQuiz?: LevelQuizDefinition;
 }
 
 export interface Lesson {

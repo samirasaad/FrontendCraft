@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -10,15 +10,15 @@ import {
   Sparkles,
   XCircle,
 } from "lucide-react";
-import { QuizCodeSnippet } from "@/components/lesson/quiz/QuizCodeSnippet";
-import { QuizOptionCard } from "@/components/lesson/quiz/QuizOptionCard";
-import { QuizProgress } from "@/components/lesson/quiz/QuizProgress";
+import { LessonActivityCodeSnippet } from "@/components/lesson/lesson-activity/LessonActivityCodeSnippet";
+import { LessonActivityOptionCard } from "@/components/lesson/lesson-activity/LessonActivityOptionCard";
+import { LessonActivityProgress } from "@/components/lesson/lesson-activity/LessonActivityProgress";
 import { RichText } from "@/components/shared/RichText";
 import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
 import { RTL_FLIP } from "@/lib/rtl";
-import type { LessonQuiz, QuizQuestion } from "@/lib/types";
+import type { LessonActivity as LessonActivityData, ActivityQuestion } from "@/lib/types";
 
 function fillTemplate(
   template: string,
@@ -37,7 +37,7 @@ function QuestionView({
   selected,
   onSelect,
 }: {
-  question: QuizQuestion;
+  question: ActivityQuestion;
   index: number;
   total: number;
   selected: string | null;
@@ -49,7 +49,7 @@ function QuestionView({
 
   return (
     <div>
-      <QuizProgress current={index + 1} total={total} />
+      <LessonActivityProgress current={index + 1} total={total} />
 
       <p className="mb-4 text-base font-semibold leading-relaxed text-white sm:text-lg">
         <RichText text={loc(question.prompt, locale)} />
@@ -57,7 +57,7 @@ function QuestionView({
 
       {question.code ? (
         <div className="mb-5">
-          <QuizCodeSnippet
+          <LessonActivityCodeSnippet
             code={question.code}
             language={question.language ?? "html"}
           />
@@ -70,7 +70,7 @@ function QuestionView({
         aria-label={loc(question.prompt, locale)}
       >
         {question.options.map((option, optionIndex) => (
-          <QuizOptionCard
+          <LessonActivityOptionCard
             key={option.id}
             index={optionIndex}
             label={loc(option.label, locale)}
@@ -119,7 +119,7 @@ function QuestionView({
                     : t("challengeWrong", locale)}
                 </p>
                 <p className="mt-1 text-[13px] font-semibold uppercase tracking-[0.14em] text-slate-500">
-                  {t("quizExplanation", locale)}
+                  {t("activityExplanation", locale)}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-slate-200">
                   <RichText text={loc(question.explanation, locale)} />
@@ -135,7 +135,7 @@ function QuestionView({
                 />
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200/80">
-                    {t("quizHint", locale)}
+                    {t("activityHint", locale)}
                   </p>
                   <p className="mt-0.5 text-sm leading-relaxed text-slate-300">
                     <RichText text={loc(question.hint, locale)} />
@@ -176,10 +176,10 @@ function ResultsView({
         <Sparkles size={24} />
       </div>
       <h3 className="font-[family-name:var(--font-display)] text-2xl font-bold text-white">
-        {t("quizComplete", locale)}
+        {t("activityComplete", locale)}
       </h3>
       <p className="mt-2 text-sm text-slate-400">
-        {fillTemplate(t("quizScore", locale), { score, total })}
+        {fillTemplate(t("activityScore", locale), { score, total })}
       </p>
 
       <div className="mx-auto mt-5 h-2 max-w-xs overflow-hidden rounded-full bg-white/10">
@@ -196,18 +196,18 @@ function ResultsView({
   );
 }
 
-/** Multi-question interactive quiz with code snippet, glow feedback, and progress. */
-export function Quiz({
-  quiz,
+/** Multi-question interactive activity with code snippet, glow feedback, and progress. */
+export function LessonActivity({
+  activity,
   onComplete,
 }: {
-  quiz: LessonQuiz;
+  activity: LessonActivityData;
   /** Fires once when the learner reaches the results screen. */
   onComplete?: (result: { score: number; total: number }) => void;
 }) {
   const { locale } = useLanguage();
   const { playClick, playSuccess } = useSound();
-  const questions = quiz.questions;
+  const questions = activity.questions;
   const total = questions.length;
 
   const [index, setIndex] = useState(0);
@@ -221,8 +221,8 @@ export function Quiz({
   const isLast = index >= total - 1;
 
   const title = useMemo(
-    () => (quiz.title ? loc(quiz.title, locale) : t("quizTitle", locale)),
-    [quiz.title, locale],
+    () => (activity.title ? loc(activity.title, locale) : t("activityTitle", locale)),
+    [activity.title, locale],
   );
 
   function handleSelect(id: string) {
@@ -239,15 +239,17 @@ export function Quiz({
     playClick();
     if (isLast) {
       setPhase("results");
-      if (!reported) {
-        setReported(true);
-        onComplete?.({ score, total });
-      }
       return;
     }
     setIndex((i) => i + 1);
     setSelected(null);
   }
+
+  useEffect(() => {
+    if (phase !== "results" || reported) return;
+    setReported(true);
+    onComplete?.({ score, total });
+  }, [phase, reported, score, total, onComplete]);
 
   if (!question && phase !== "results") return null;
 
@@ -268,7 +270,7 @@ export function Quiz({
         </span>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/90">
-            {t("lessonTabQuiz", locale)}
+            {t("lessonTabActivity", locale)}
           </p>
           <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white">
             {title}
@@ -315,7 +317,7 @@ export function Quiz({
                     onClick={advance}
                     className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-300 to-cyan-300 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.25)] transition hover:brightness-110"
                   >
-                    {isLast ? t("quizFinish", locale) : t("quizNext", locale)}
+                    {isLast ? t("activityFinish", locale) : t("activityNext", locale)}
                     <ArrowRight size={14} className={RTL_FLIP} />
                   </button>
                 </motion.div>
@@ -328,6 +330,6 @@ export function Quiz({
   );
 }
 
-export { QuizCodeSnippet } from "@/components/lesson/quiz/QuizCodeSnippet";
-export { QuizOptionCard } from "@/components/lesson/quiz/QuizOptionCard";
-export { QuizProgress } from "@/components/lesson/quiz/QuizProgress";
+export { LessonActivityCodeSnippet } from "@/components/lesson/lesson-activity/LessonActivityCodeSnippet";
+export { LessonActivityOptionCard } from "@/components/lesson/lesson-activity/LessonActivityOptionCard";
+export { LessonActivityProgress } from "@/components/lesson/lesson-activity/LessonActivityProgress";

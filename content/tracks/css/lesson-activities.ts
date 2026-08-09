@@ -1,18 +1,18 @@
 import { L } from "@/content/helpers";
-import type { LessonQuiz, QuizOption, QuizQuestion } from "@/lib/types";
+import type { LessonActivity, ActivityOption, ActivityQuestion } from "@/lib/types";
 
-function opt(id: string, en: string, ar: string): QuizOption {
+function opt(id: string, en: string, ar: string): ActivityOption {
   return { id, label: L(en, ar) };
 }
 
 function q(
   id: string,
   prompt: ReturnType<typeof L>,
-  options: QuizOption[],
+  options: ActivityOption[],
   correctId: string,
   explanation: ReturnType<typeof L>,
-  extra?: Partial<Pick<QuizQuestion, "code" | "language" | "hint">>,
-): QuizQuestion {
+  extra?: Partial<Pick<ActivityQuestion, "code" | "language" | "hint">>,
+): ActivityQuestion {
   return {
     id,
     prompt,
@@ -23,10 +23,10 @@ function q(
   };
 }
 
-/** Multi-question quizzes keyed by lesson slug — every lesson gets its own 4 questions. */
-export const cssQuizzes: Record<string, LessonQuiz> = {
+/** Multi-question lesson activities keyed by lesson slug — every lesson gets its own 4 questions. */
+export const cssLessonActivities: Record<string, LessonActivity> = {
   "cascade-specificity": {
-    title: L("The cascade & specificity check", "اختبار الـ `cascade` و`specificity`"),
+    title: L("The cascade & specificity check", "نشاط الـ `cascade` و`specificity`"),
     questions: [
       q(
         "q1",
@@ -84,7 +84,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "box-model": {
-    title: L("The box model check", "اختبار `box model`"),
+    title: L("The box model check", "نشاط `box model`"),
     questions: [
       q(
         "q1",
@@ -142,7 +142,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "units-sizing": {
-    title: L("Units & responsive sizing check", "اختبار الوحدات والمقاسات المتجاوبة"),
+    title: L("Units & responsive sizing check", "نشاط الوحدات والمقاسات المتجاوبة"),
     questions: [
       q(
         "q1",
@@ -200,7 +200,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "colors-typography": {
-    title: L("Color & typography check", "اختبار الألوان والـ `typography`"),
+    title: L("Color & typography check", "نشاط الألوان والـ `typography`"),
     questions: [
       q(
         "q1",
@@ -258,7 +258,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "display-flow": {
-    title: L("Display & normal flow check", "اختبار `display` والـ `normal flow`"),
+    title: L("Display & normal flow check", "نشاط `display` والـ `normal flow`"),
     questions: [
       q(
         "q1",
@@ -316,7 +316,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "backgrounds-borders": {
-    title: L("Backgrounds & borders check", "اختبار الخلفيات والحدود"),
+    title: L("Backgrounds & borders check", "نشاط الخلفيات والحدود"),
     questions: [
       q(
         "q1",
@@ -374,7 +374,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "flexbox-basics": {
-    title: L("Flexbox basics check", "اختبار أساسيات `Flexbox`"),
+    title: L("Flexbox basics check", "نشاط أساسيات `Flexbox`"),
     questions: [
       q(
         "q1",
@@ -432,7 +432,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "css-grid": {
-    title: L("CSS Grid check", "اختبار `CSS Grid`"),
+    title: L("CSS Grid check", "نشاط `CSS Grid`"),
     questions: [
       q(
         "q1",
@@ -490,7 +490,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "positioning": {
-    title: L("Positioning check", "اختبار الـ `Positioning`"),
+    title: L("Positioning check", "نشاط الـ `Positioning`"),
     questions: [
       q(
         "q1",
@@ -548,7 +548,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "responsive-media": {
-    title: L("Responsive media check", "اختبار الميديا المتجاوبة"),
+    title: L("Responsive media check", "نشاط الميديا المتجاوبة"),
     questions: [
       q(
         "q1",
@@ -606,7 +606,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "custom-properties": {
-    title: L("Custom properties check", "اختبار الـ `Custom Properties`"),
+    title: L("Custom properties check", "نشاط الـ `Custom Properties`"),
     questions: [
       q(
         "q1",
@@ -664,7 +664,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "transitions-transforms": {
-    title: L("Transitions & transforms check", "اختبار الـ `Transitions` و`Transforms`"),
+    title: L("Transitions & transforms check", "نشاط الـ `Transitions` و`Transforms`"),
     questions: [
       q(
         "q1",
@@ -722,7 +722,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "css-animations": {
-    title: L("CSS animations check", "اختبار الـ `CSS Animations`"),
+    title: L("CSS animations check", "نشاط الـ `CSS Animations`"),
     questions: [
       q(
         "q1",
@@ -780,7 +780,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "logical-properties": {
-    title: L("Logical properties & RTL check", "اختبار الـ `Logical Properties` و`RTL`"),
+    title: L("Logical properties & RTL check", "نشاط الـ `Logical Properties` و`RTL`"),
     questions: [
       q(
         "q1",
@@ -838,7 +838,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "css-common-pitfalls": {
-    title: L("CSS pitfalls check", "اختبار أخطاء `CSS` الشائعة"),
+    title: L("CSS pitfalls check", "نشاط أخطاء `CSS` الشائعة"),
     questions: [
       q(
         "q1",
@@ -896,7 +896,7 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 
   "css-cheatsheet": {
-    title: L("CSS CheatSheet check", "اختبار `CSS CheatSheet`"),
+    title: L("CSS CheatSheet check", "نشاط `CSS CheatSheet`"),
     questions: [
       q(
         "q1",
@@ -954,9 +954,9 @@ export const cssQuizzes: Record<string, LessonQuiz> = {
   },
 };
 
-export function assertCssQuizCoverage(order: readonly string[]) {
-  const missing = order.filter((slug) => !cssQuizzes[slug]);
+export function assertCssLessonActivityCoverage(order: readonly string[]) {
+  const missing = order.filter((slug) => !cssLessonActivities[slug]);
   if (missing.length) {
-    throw new Error(`Missing CSS quiz for lesson slug(s): ${missing.join(", ")}`);
+    throw new Error(`Missing CSS lesson activity for lesson slug(s): ${missing.join(", ")}`);
   }
 }

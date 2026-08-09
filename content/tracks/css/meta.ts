@@ -6,13 +6,13 @@ export const cssMeta: TrackMeta = {
   order: 3,
   accent: "from-sky-400 to-blue-500",
   icon: "Palette",
-  title: { en: "CSS", ar: "CSS" },
-  description: {
-    en: "Layout, cascade, responsive design, and modern visual systems.",
-    ar: "الـ layout والـ cascade والـ responsive design وأنظمة الشكل الحديثة.",
-  },
+  title: { en: "CSS Foundations", ar: "أساسيات CSS" },
   tagline: {
-    en: "Style with intention",
-    ar: "صمّم بوعي",
+    en: "Why a page feels like a product, not a bare document.",
+    ar: "لماذا تبدو الصفحة كمنتج وليس كمستند فارغ.",
+  },
+  description: {
+    en: "Layout, cascade, responsive design, and visual systems — turning structure into polished UI.",
+    ar: "التخطيط، التسلسل، التصميم المتجاوب، وأنظمة الشكل — تحويل البنية إلى واجهة منسقة.",
   },
 };

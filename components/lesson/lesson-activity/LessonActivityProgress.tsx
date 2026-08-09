@@ -3,7 +3,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import { t } from "@/content/i18n/ui-strings";
 
-export function QuizProgress({
+export function LessonActivityProgress({
   current,
   total,
 }: {
@@ -17,8 +17,8 @@ export function QuizProgress({
   const pct = total === 0 ? 0 : Math.min(100, Math.round((current / total) * 100));
 
   return (
-    <div className="quiz-progress mb-5">
-      <div className="quiz-progress__meta mb-2 flex items-center justify-between gap-3 text-[11px]">
+    <div className="lesson-activity-progress mb-5">
+      <div className="lesson-activity-progress__meta mb-2 flex items-center justify-between gap-3 text-[11px]">
         <span className="font-semibold tracking-wide text-cyan-300/90">
           {ar ? (
             <span className="inline-flex items-baseline gap-1" dir="rtl">
@@ -31,14 +31,14 @@ export function QuizProgress({
             </span>
           ) : (
             <span className="uppercase tracking-[0.16em]">
-              {t("quizProgress", locale)
+              {t("activityProgress", locale)
                 .replace("{current}", String(current))
                 .replace("{total}", String(total))}
             </span>
           )}
         </span>
         <span
-          className="quiz-progress__count font-mono text-slate-500"
+          className="lesson-activity-progress__count font-mono text-slate-500"
           dir="ltr"
           hidden={ar}
         >
@@ -47,7 +47,7 @@ export function QuizProgress({
       </div>
 
       <div
-        className="quiz-progress__track h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+        className="lesson-activity-progress__track h-1.5 w-full overflow-hidden rounded-full bg-white/10"
         role="progressbar"
         aria-valuenow={current}
         aria-valuemin={1}
@@ -57,7 +57,7 @@ export function QuizProgress({
         }
       >
         <div
-          className="quiz-progress__fill h-full rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.45)] transition-[width] duration-500 ease-out"
+          className="lesson-activity-progress__fill h-full rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.45)] transition-[width] duration-500 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>

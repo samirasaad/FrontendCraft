@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+scripts/.compiled/
+
+# Motion lab sandbox — tracked on branch motion-lab-sandbox only
+/app/motion-lab-sandbox/

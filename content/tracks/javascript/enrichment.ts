@@ -1,11 +1,16 @@
 import {
   L,
   pitfall,
-  realWorldExample,
+  hardExample,
+  mediumExample,
   simpleExample,
 } from "@/content/helpers";
 import type { LegacyLesson } from "@/content/tracks/_legacy";
 import { defaultInsights } from "@/content/tracks/_insights";
+import {
+  jsFallbackTiers,
+  jsMediumExamples,
+} from "@/content/tracks/javascript/legacy-example-tiers";
 import { javascriptInsights } from "@/content/tracks/javascript/insights";
 import type {
   CodeExample,
@@ -15,14 +20,14 @@ import type {
 } from "@/lib/types";
 
 interface Overlay {
-  realWorld: CodeExample;
+  hard: CodeExample;
   deepDive: LocalizedString[];
   pitfalls: PitfallExample;
 }
 
 const overlays: Record<string, Overlay> = {
   "var-let-const": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// UI cart quantity — mutate count, never rebind the cart object
 const cart = { items: [], total: 0 };
 
@@ -68,7 +73,7 @@ console.log(cart.total, checkoutStep, cart.items.length);`,
     ),
   },
   "data-types": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// Formatting API user prefs without mutating the response
 const apiUser = { name: "Samira", tags: ["js", "html"] };
 
@@ -112,7 +117,7 @@ b.score = 99;
     ),
   },
   equality: {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// Guard UI flags coming from query strings / forms
 function isEnabled(flag) {
   return flag === true || flag === "true";
@@ -151,7 +156,7 @@ console.log(isEnabled(1)); // loose APIs still fail closed with ===`,
     ),
   },
   "functions-scope": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// Closure keeps private UI state for a counter widget
 function createCounter(start = 0) {
   let value = start;
@@ -200,7 +205,7 @@ console.log(likes.get());`,
     ),
   },
   "arrow-this": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// React-ish class method scheduling UI updates
 const store = {
   items: ["a"],
@@ -250,7 +255,7 @@ ui.onClick(); // Save`,
     ),
   },
   "arrays-hof": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// Normalize cart lines from an API payload
 const payload = [
   { id: 1, price: 20, qty: 2, active: true },
@@ -295,7 +300,7 @@ console.log(next);`,
     ),
   },
   "objects-destructuring": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// Pull only what a profile card needs from a fat API user
 function toCard({ name, avatarUrl = "/default.png", role = "member" }) {
   return { title: name, image: avatarUrl, badge: role };
@@ -338,7 +343,7 @@ console.log(name); // undefined`,
     ),
   },
   promises: {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `function saveDraft(text) {
   return new Promise((resolve) => {
     setTimeout(() => resolve({ ok: true, chars: text.length }), 200);
@@ -379,7 +384,7 @@ saveDraft("hello UI")
     ),
   },
   "async-await-fetch": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `async function loadTodos() {
   const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
   if (!res.ok) throw new Error("HTTP " + res.status);
@@ -420,7 +425,7 @@ const data = await res.json();`,
     ),
   },
   "event-loop": {
-    realWorld: realWorldExample(
+    hard: hardExample(
       `// Keep input snappy: defer heavy work
 console.log("paint UI");
 
@@ -462,11 +467,7 @@ setTimeout(() => console.log("timeout"), 0);
 
 function fallbackOverlay(lesson: LegacyLesson): Overlay {
   return {
-    realWorld: realWorldExample(
-      lesson.content.code,
-      lesson.content.expectedOutput.en,
-      lesson.content.expectedOutput.ar,
-    ),
+    hard: jsFallbackTiers.hard,
     deepDive: [
       L(
         "Engines parse, compile (often JIT), and optimize hot functions. Write clear code first — readability beats micro-tweaks until you measure.",
@@ -521,7 +522,8 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
           lesson.content.expectedOutput.en,
           lesson.content.expectedOutput.ar,
         ),
-        overlay.realWorld,
+        jsMediumExamples[lesson.slug] ?? jsFallbackTiers.medium,
+        overlay.hard,
       ],
       visualHint: lesson.content.visualHint,
       underTheHood: pack.underTheHood,

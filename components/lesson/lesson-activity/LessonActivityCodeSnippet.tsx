@@ -114,7 +114,7 @@ function tokenize(code: string, language: Lang) {
 }
 
 /** Lightweight highlighted code panel — no Prism/Shiki dependency. */
-export function QuizCodeSnippet({
+export function LessonActivityCodeSnippet({
   code,
   language = "html",
   label,
@@ -154,7 +154,7 @@ export function QuizCodeSnippet({
   );
 }
 
-export function QuizOptionLetter({ children }: { children: ReactNode }) {
+export function ActivityOptionLetter({ children }: { children: ReactNode }) {
   return (
     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-bold text-slate-300">
       {children}

@@ -179,12 +179,8 @@ export const htmlCheatCards: CheatCard[] = [
     {
       id: "dialog",
       category: "interactive",
-      previewHtml: `<dialog open>
-  <strong>Confirm</strong>
-  <p style="margin:6px 0">Delete progress?</p>
-  <button>Cancel</button>
-  <button>Delete</button>
-</dialog>`,
+      previewHtml: `<p><button type="button">Open dialog</button></p>
+<p style="margin:6px 0;font-size:12px;color:#64748b">Click to open the native modal.</p>`,
       boilerplate: `<button type="button" id="open">Open</button>
 <dialog id="confirm">
   <form method="dialog">
@@ -221,16 +217,16 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("Details `accordion`", "أكورديون `<details>`"),
     `<details>
-  <summary>What is the Event Loop?</summary>
-  <p>It coordinates the call stack and task queues.</p>
+  <summary>What is semantic HTML?</summary>
+  <p>Elements that describe meaning — not just boxes.</p>
 </details>`,
     L("Zero-`JS` `disclosure` — great for FAQs. Mind `name` for exclusive groups.", "`Disclosure` من غير `JS` — ممتاز لـ `FAQ`. استخدم `name` للمجموعات الحصرية."),
     {
       id: "details",
       category: "interactive",
-      previewHtml: `<details open>
-  <summary>What is the Event Loop?</summary>
-  <p style="margin:8px 0 0">Coordinates stack + queues.</p>
+      previewHtml: `<details>
+  <summary>What is semantic HTML?</summary>
+  <p style="margin:8px 0 0">Meaningful elements, not div soup.</p>
 </details>`,
       boilerplate: `<details name="faq">
   <summary>Shipping CSS?</summary>
@@ -258,10 +254,7 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("Responsive picture", "`<picture>` متجاوب"),
     `<picture>
-  <source
-    type="image/webp"
-    srcset="https://placehold.co/640x360/0ea5e9/fff.webp?text=WebP"
-  />
+  <source srcset="/students-coding.svg" type="image/svg+xml" />
   <img
     src="https://placehold.co/640x360/0284c7/fff.jpg?text=JPEG"
     alt="Learner coding"
@@ -281,16 +274,13 @@ export const htmlCheatCards: CheatCard[] = [
     height="180"
   />
 </picture>
-<p class="chip">AVIF → WebP → JPEG</p>`,
+<p class="chip">SVG → JPEG</p>`,
       boilerplate: `<picture>
   <source
     media="(max-width: 640px)"
     srcset="https://placehold.co/640x360/f59e0b/111.jpg?text=Mobile"
   />
-  <source
-    type="image/webp"
-    srcset="https://placehold.co/1200x630/0ea5e9/fff.webp?text=WebP"
-  />
+  <source srcset="/students-coding.svg" type="image/svg+xml" />
   <img
     src="https://placehold.co/1200x630/0284c7/fff.jpg?text=JPEG"
     alt="Learner at a code playground"
@@ -374,15 +364,15 @@ export const htmlCheatCards: CheatCard[] = [
   ),
   cheatCard(
     L("`Button` vs link", "`button` مقابل `link`"),
-    `<a href="/javascript">Open JS track</a>
+    `<a href="/javascript">Open JS lab</a>
 <button type="button">Mark complete</button>`,
     L("`Links` navigate. `Buttons` trigger actions in-place.", "اللينك للتنقّل. الزر لفعل في نفس الصفحة."),
     {
       id: "button-link",
       category: "structure",
-      previewHtml: `<p><a href="#">Open JS track</a></p>
+      previewHtml: `<p><a href="#">Open JS lab</a></p>
 <button type="button">Mark complete</button>`,
-      tailwindSnippet: `<a class="text-cyan-300 underline-offset-4 hover:underline" href="/javascript">Open JS track</a>
+      tailwindSnippet: `<a class="text-cyan-300 underline-offset-4 hover:underline" href="/javascript">Open JS lab</a>
 <button type="button" class="rounded-full bg-cyan-300 px-4 py-2 text-sm font-bold text-slate-950">
   Mark complete
 </button>`,
@@ -512,7 +502,7 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("Select + options", "`<select>` + `options`"),
     `<label>
-  Track
+  Lab
   <select name="track" required>
     <option value="">Choose…</option>
     <option value="html">HTML</option>
@@ -523,7 +513,7 @@ export const htmlCheatCards: CheatCard[] = [
     {
       id: "select",
       category: "forms",
-      previewHtml: `<label style="display:grid;gap:4px">Track
+      previewHtml: `<label style="display:grid;gap:4px">Lab
   <select>
     <option>Choose…</option>
     <option>HTML</option>
@@ -662,10 +652,10 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("`Table` with `headers`", "جدول بـ `headers`"),
     `<table>
-  <caption>Track progress</caption>
+  <caption>Lab progress</caption>
   <thead>
     <tr>
-      <th scope="col">Track</th>
+      <th scope="col">Lab</th>
       <th scope="col">Lessons</th>
     </tr>
   </thead>
@@ -681,9 +671,9 @@ export const htmlCheatCards: CheatCard[] = [
       id: "table",
       category: "structure",
       previewHtml: `<table style="width:100%;border-collapse:collapse;font-size:12px">
-  <caption style="text-align:start;font-weight:700;margin-bottom:4px">Track progress</caption>
+  <caption style="text-align:start;font-weight:700;margin-bottom:4px">Lab progress</caption>
   <thead>
-    <tr><th style="border-bottom:1px solid #cbd5e1;text-align:start">Track</th><th style="border-bottom:1px solid #cbd5e1;text-align:start">Lessons</th></tr>
+    <tr><th style="border-bottom:1px solid #cbd5e1;text-align:start">Lab</th><th style="border-bottom:1px solid #cbd5e1;text-align:start">Lessons</th></tr>
   </thead>
   <tbody>
     <tr><th style="text-align:start">HTML</th><td>23</td></tr>
@@ -700,8 +690,7 @@ export const htmlCheatCards: CheatCard[] = [
   height="360"
   poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
 >
-  <source src="/lesson.webm" type="video/webm" />
-  <source src="/lesson.mp4" type="video/mp4" />
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
   <track kind="captions" srclang="en" src="/captions.vtt" label="English" default />
 </video>`,
     L("Always offer `controls` + a `caption` track when speech matters.", "دايمًا حط `controls` و track ترجمة لما الكلام يهم."),
@@ -719,8 +708,7 @@ export const htmlCheatCards: CheatCard[] = [
   poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
   preload="metadata"
 >
-  <source src="/lesson.webm" type="video/webm" />
-  <source src="/lesson.mp4" type="video/mp4" />
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
   <track
     kind="captions"
     srclang="en"
@@ -728,12 +716,6 @@ export const htmlCheatCards: CheatCard[] = [
     label="English"
     default
   />
-  <p>
-    Download the
-    <a href="/lesson.mp4">lesson video</a>
-    or read the
-    <a href="/transcript">transcript</a>.
-  </p>
 </video>`,
       support: support("3+", "3.5+", "3.1+", "12+", "widely"),
     },
@@ -741,11 +723,11 @@ export const htmlCheatCards: CheatCard[] = [
   cheatCard(
     L("Lazy iframe embed", "`iframe` `lazy`"),
     `<iframe
-  title="Event Loop demo"
-  src="https://example.com/embed"
+  title="Lesson walkthrough"
+  src="about:blank"
   loading="lazy"
   width="640"
-  height="360"
+  height="200"
 ></iframe>`,
     L("Always set `title`. `Lazy-load` non-critical embeds.", "حط `title` دايمًا. أخّر الـ embeds غير الحرجة."),
     {
@@ -802,7 +784,7 @@ export const htmlCheatCards: CheatCard[] = [
   ),
   cheatCard(
     L("`SEO` essentials", "أساسيات `SEO`"),
-    `<title>FrontendCraft — HTML track</title>
+    `<title>FrontendCraft — HTML lab</title>
 <meta name="description" content="Interactive HTML learning lab" />
 <link rel="canonical" href="https://example.com/html" />
 <meta name="robots" content="index,follow" />`,
@@ -810,13 +792,13 @@ export const htmlCheatCards: CheatCard[] = [
     {
       id: "seo-meta",
       category: "head",
-      previewHtml: `<p style="margin:0;font-weight:700;color:#1d4ed8">FrontendCraft — HTML track</p>
+      previewHtml: `<p style="margin:0;font-weight:700;color:#1d4ed8">FrontendCraft — HTML lab</p>
 <p style="margin:4px 0 0;color:#475569;font-size:12px">Interactive HTML learning lab</p>
 <p class="chip">canonical · robots</p>`,
       boilerplate: `<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FrontendCraft — HTML track</title>
+  <title>FrontendCraft — HTML lab</title>
   <meta name="description" content="Interactive HTML learning lab" />
   <link rel="canonical" href="https://example.com/html" />
   <meta name="robots" content="index,follow" />

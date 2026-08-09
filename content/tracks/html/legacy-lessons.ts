@@ -256,7 +256,7 @@ export const legacyLessons: LegacyLesson[] = [
       code: `<p>
   Learn <strong>HTML</strong> with <em>clarity</em>.
   Press <kbd>Ctrl</kbd>+<kbd>S</kbd> to save.
-  Use <code>npm run dev</code> — output <samp>ready</samp>.
+  Use <code>&lt;section&gt;</code> — output <samp>block</samp>.
 </p>
 <p>
   H<sub>2</sub>O · E=mc<sup>2</sup> ·
@@ -269,7 +269,7 @@ export const legacyLessons: LegacyLesson[] = [
 </p>
 <blockquote>
   <p>Longer quoted passage for articles and docs.</p>
-  <footer>— <cite>FrontendCraft</cite></footer>
+  <footer>— <cite>MDN Web Docs</cite></footer>
 </blockquote>
 <p><small>Fine print and side notes.</small></p>`,
       expectedOutput: {
@@ -702,21 +702,21 @@ export const legacyLessons: LegacyLesson[] = [
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FrontendCraft — HTML track</title>
+  <title>FrontendCraft — HTML lab</title>
   <meta name="description" content="Learn HTML with interactive labs and live sandboxes." />
   <link rel="canonical" href="https://example.com/html" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Course",
-    "name": "HTML track",
+    "name": "HTML lab",
     "description": "Interactive HTML labs and live sandboxes."
   }
   </script>
 </head>
 <body>
   <main>
-    <h1>HTML track</h1>
+    <h1>HTML lab</h1>
     <p>Primary copy ships in the first HTML response.</p>
     <a href="/html/forms-inputs">Learn HTML forms</a>
   </main>
@@ -794,15 +794,16 @@ export const legacyLessons: LegacyLesson[] = [
   width="640"
   poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
 >
-  <source src="/intro.webm" type="video/webm" />
-  <source src="/intro.mp4" type="video/mp4" />
+  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
   <track kind="captions" src="/captions.vtt" srclang="en" label="English" />
 </video>
 
 <iframe
-  title="Map"
-  src="https://example.com/map"
+  title="Course map"
+  src="about:blank"
   loading="lazy"
+  width="640"
+  height="200"
   sandbox="allow-scripts allow-same-origin"
 ></iframe>`,
       expectedOutput: {

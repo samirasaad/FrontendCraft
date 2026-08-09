@@ -37,7 +37,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     },
     good: {
       label: L("Semantic & SR ready", "`semantic` وجاهز لقارئ الشاشة"),
-      code: `<a href="/javascript">Open JS track</a>`,
+      code: `<a href="/javascript">Open JS lab</a>`,
       note: L(
         "A real `href` gives link semantics, keyboard support, and clear AT announcement.",
         "`href` حقيقي بيدي link semantics وكيبورد وإعلان واضح لـ AT.",
@@ -56,7 +56,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     },
     good: {
       label: L("Semantic & SR ready", "`semantic` وجاهز لقارئ الشاشة"),
-      code: `<button type="button">Save</button>\n<a href="/lessons/html">HTML track</a>`,
+      code: `<button type="button">Save</button>\n<a href="/lessons/html">HTML lab</a>`,
       note: L(
         "Actions → `<button>`. Routes → `<a href>`. Don’t mix the two jobs.",
         "الأفعال → `<button>`. المسارات → `<a href>`. متخلطش الشغل الاتنين.",
@@ -455,7 +455,7 @@ export const screenReaderPracticeCards: ComparePair[] = [
     },
     good: {
       label: L("Semantic & SR ready", "`semantic` وجاهز لقارئ الشاشة"),
-      code: `<iframe title="Event Loop demo" src="/embed" loading="lazy"></iframe>`,
+      code: `<iframe title="Lesson walkthrough" src="about:blank" loading="lazy" width="640" height="200"></iframe>`,
       note: L(
         "`title` names the embedded document in the accessibility tree.",
         "`title` بيسمّي المستند المضمّن في الـ accessibility tree.",

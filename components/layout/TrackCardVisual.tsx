@@ -184,7 +184,7 @@ function ReactVisual({ muted }: { muted?: boolean }) {
   );
 }
 
-/** Quiet, card-sized showcase — designed for the track picker, not the live lab. */
+/** Quiet, card-sized showcase — designed for the track picker, not the live lesson view. */
 export function TrackCardVisual({
   trackId,
   muted = false,

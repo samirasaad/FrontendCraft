@@ -32,3 +32,19 @@ export const STUDENTS_CODING_SVG = `<svg xmlns="http://www.w3.org/2000/svg" widt
 `;
 
 export const DEMO_IMG_PATH = "students-coding.svg";
+
+/** CC0 sample video — works in Sandpack preview without bundling binary MP4. */
+export const DEMO_VIDEO_MP4 =
+  "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+
+export const DEMO_VIDEO_VTT = `WEBVTT
+
+00:00.000 --> 00:05.000
+Sample captions for the lesson preview.
+
+00:05.000 --> 00:10.000
+Replace with your real transcript in production.
+`;
+
+export const DEMO_CAPTIONS_VTT_PATH = "captions.vtt";
+export const DEMO_INTRO_VTT_PATH = "intro.vtt";

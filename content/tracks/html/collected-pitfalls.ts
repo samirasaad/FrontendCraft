@@ -50,7 +50,7 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
       "Missing alt → empty accessible name.",
       "من غير alt → اسم وصول فاضي.",
     ),
-    `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X" alt="Open track X" /></a>`,
+    `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X" alt="Open lab X" /></a>`,
     L("Give the link a spoken name.", "ادي للينك اسم يتقال."),
     L("`Links` & `images`", "اللينكات والصور"),
   ),
@@ -106,7 +106,7 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
       "Default titles waste the richest SERP text.",
       "عناوين افتراضية بتضيع أهم نص في نتائج البحث.",
     ),
-    `<title>FrontendCraft — JavaScript track</title>`,
+    `<title>FrontendCraft — JavaScript lab</title>`,
     L("Specific, human `titles` win clicks.", "عنوان واضح وبشري بيكسب نقرات."),
     L("Meta & SEO", "الـ `meta` و `SEO`"),
   ),
@@ -159,13 +159,13 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
     L("New-tab links", "لينكات التاب الجديد"),
   ),
   pitfall(
-    `<h1>Track</h1>
+    `<h1>Lab</h1>
 <h3>Lesson</h3>`,
     L(
       "Skipping heading levels breaks the document outline for AT.",
       "تخطي مستويات العناوين بيكسر الـ outline لقارئ الشاشة.",
     ),
-    `<h1>Track</h1>
+    `<h1>Lab</h1>
 <h2>Lesson</h2>`,
     L(
       "Step down one level at a time; style size with CSS.",
@@ -410,7 +410,7 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
       "root فاضي من الكلاينت = مفيش محتوى في أول رد HTML / للزاحف.",
     ),
     `<main id="root">
-  <h1>JavaScript track</h1>
+  <h1>JavaScript lab</h1>
   <p>Start with values and memory.</p>
 </main>`,
     L(

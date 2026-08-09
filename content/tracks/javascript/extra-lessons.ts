@@ -2,7 +2,8 @@ import {
   L,
   cheatCard,
   pitfall,
-  realWorldExample,
+  hardExample,
+  mediumExample,
   simpleExample,
 } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
@@ -58,7 +59,27 @@ search("jav");
 // only the last call logs after 200ms quiet`,
           "query: jav",
         ),
-        realWorldExample(
+        mediumExample(
+          `function throttle(fn, ms) {
+  let last = 0;
+  return (...args) => {
+    const now = Date.now();
+    if (now - last >= ms) {
+      last = now;
+      fn(...args);
+    }
+  };
+}
+
+const log = throttle(() => console.log("tick"), 50);
+log();
+log();
+log();
+console.log("burst done");`,
+          "tick\nburst done",
+          "tick\nburst done",
+        ),
+        hardExample(
           `function throttle(fn, ms) {
   let last = 0;
   return (...args) => {
@@ -146,7 +167,29 @@ off();
 console.log("listener cleaned");`,
           "listener cleaned",
         ),
-        realWorldExample(
+        mediumExample(
+          `function createCache(max = 2) {
+  const map = new Map();
+  return {
+    set(key, val) {
+      if (map.size >= max) map.delete(map.keys().next().value);
+      map.set(key, val);
+    },
+    size() {
+      return map.size;
+    },
+  };
+}
+
+const cache = createCache(2);
+cache.set("a", 1);
+cache.set("b", 2);
+cache.set("c", 3);
+console.log("cache size", cache.size());`,
+          "cache size 2",
+          "cache size 2",
+        ),
+        hardExample(
           `function createStore() {
   const listeners = new Set();
   return {
@@ -232,7 +275,17 @@ console.log(typeof null);
 console.log(Number.isNaN(NaN));`,
           "0.30000000000000004\ntrue\nobject\ntrue",
         ),
-        realWorldExample(
+        mediumExample(
+          `function closeEnough(a, b, eps = 1e-10) {
+  return Math.abs(a - b) < eps;
+}
+console.log(closeEnough(0.1 + 0.2, 0.3));
+console.log(Number.isNaN("not a number"));
+console.log(isNaN("not a number")); // coerces!`,
+          "true\nfalse\ntrue",
+          "true\nfalse\ntrue",
+        ),
+        hardExample(
           `function moneyAdd(centsA, centsB) {
   return (centsA + centsB) / 100;
 }
@@ -314,7 +367,22 @@ function search(id) {
 Promise.all([search(1), search(2)]).then(console.log);`,
           "[ 'ignored', 'result-2' ]",
         ),
-        realWorldExample(
+        mediumExample(
+          `let current = null;
+function search(q) {
+  const token = {};
+  current = token;
+  return Promise.resolve().then(() => {
+    if (current !== token) return "cancelled";
+    return "found: " + q;
+  });
+}
+
+Promise.all([search("old"), search("new")]).then(console.log);`,
+          "[ 'cancelled', 'found: new' ]",
+          "[ 'cancelled', 'found: new' ]",
+        ),
+        hardExample(
           `function createSearcher() {
   let controller = null;
   return async function search(q) {
@@ -406,7 +474,14 @@ async function load(url) {
 console.log(nums.map((n) => n * 2).filter((n) => n > 2));`,
           "[4, 6]",
         ),
-        realWorldExample(
+        mediumExample(
+          `const nums = [1, 2, 3, 4];
+const evens = nums.filter((n) => n % 2 === 0).map((n) => n * 10);
+console.log(evens.join(", "));`,
+          "20, 40",
+          "20, 40",
+        ),
+        hardExample(
           `const state = { user: "Samira", cart: [1, 2] };
 const next = { ...state, cart: [...state.cart, 3] };
 console.log(next.cart.join("-"));`,

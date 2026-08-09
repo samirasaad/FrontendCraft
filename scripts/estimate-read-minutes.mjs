@@ -60,9 +60,9 @@ function estimateAssembled(lesson, track) {
     w += enWords(ex.label);
     if (ex.code) w += Math.round(words(ex.code) * 0.25);
   }
-  const quizCount = c.quiz?.questions?.length ?? 0;
-  if (c.quiz?.questions) {
-    for (const q of c.quiz.questions) {
+  const quizCount = c.activity?.questions?.length ?? 0;
+  if (c.activity?.questions) {
+    for (const q of c.activity.questions) {
       w += enWords(q.prompt || q.question || q.stem);
       for (const opt of q.options || []) {
         w += Math.round(enWords(opt.label || opt.text || opt) * 0.5);
@@ -114,7 +114,7 @@ function estimateAssembled(lesson, track) {
   };
 }
 
-/** Estimate paused JS drafts (no quiz wiring in export). */
+/** Estimate paused JS drafts (no activity wiring in export). */
 function estimateJsDraft(draft, legacy) {
   const c = draft.content;
   const titleEn = c.title?.en || draft.slug;
@@ -129,7 +129,7 @@ function estimateJsDraft(draft, legacy) {
   w += sectionWords(pack.underTheHood);
   w += sectionWords(pack.accessibility);
   w += sectionWords(pack.seo);
-  // examples / quiz not attached on paused export — budget typical extras
+  // examples / activity not attached on paused export — budget typical extras
   const extras = legacy ? 120 : 180;
   w += extras;
   const read = w / 150;

@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FrontendCraft — Interactive Learning Lab",
+  title: "FrontendCraft — Learn Frontend by Building",
   description:
-    "A bilingual interactive dashboard for learning JavaScript, HTML, CSS, and Tailwind with motion visuals and a code playground.",
+    "Become a frontend developer through interactive lessons, real challenges, and hands-on playgrounds. Bilingual, visual, and built for builders — not spectators.",
   applicationName: "FrontendCraft",
 };
 

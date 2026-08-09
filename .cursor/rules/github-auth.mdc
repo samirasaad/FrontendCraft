@@ -1,0 +1,15 @@
+---
+description: GitHub auth for this repo — always use samirasaad
+alwaysApply: true
+---
+
+# GitHub auth (FrontendCraft)
+
+This repository belongs to **samirasaad/FrontendCraft**. Never use the `samiras3d` account for git or `gh` operations here.
+
+Before any `git push`, `gh pr create`, or other remote GitHub command:
+
+1. Run `gh auth switch -u samirasaad -h github.com` (or `scripts/ensure-github-auth.sh`)
+2. Do not ask the user which account to use — always `samirasaad`
+
+The `.githooks/pre-push` hook switches accounts automatically on push.

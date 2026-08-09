@@ -1,25 +1,45 @@
 import { withProductionInsights } from "@/content/tracks/_insights";
+import { attachBrowserWalkthrough, assertBrowserWalkthroughCoverage } from "@/content/tracks/_attach-browser-walkthrough";
 import { CSS_CURRICULUM_ORDER } from "@/content/tracks/css/curriculum-order";
+import { cssBrowserWalkthrough } from "@/content/tracks/css/browser-walkthrough";
 import { extraLessons } from "@/content/tracks/css/extra-lessons";
 import { cssInsights } from "@/content/tracks/css/insights";
 import { modernLessons } from "@/content/tracks/css/modern-lessons";
 import {
-  assertCssQuizCoverage,
-  cssQuizzes,
-} from "@/content/tracks/css/quizzes";
+  assertCssLessonActivityCoverage,
+  cssLessonActivities,
+} from "@/content/tracks/css/lesson-activities";
+import {
+  assertCssLevelQuizCoverage,
+} from "@/content/tracks/css/level-quizzes";
+import { cssLevelQuizLessons } from "@/content/tracks/css/level-quiz-lessons";
+import {
+  CSS_LEVEL_QUIZ_LESSON_SLUGS,
+  isLevelQuizLesson,
+} from "@/lib/level-quiz/capstones";
 import type { Lesson } from "@/lib/types";
 
 export { CSS_CURRICULUM_ORDER };
 
-assertCssQuizCoverage(CSS_CURRICULUM_ORDER);
+const CONTENT_LESSON_SLUGS = CSS_CURRICULUM_ORDER.filter(
+  (slug) => !CSS_LEVEL_QUIZ_LESSON_SLUGS.includes(slug as (typeof CSS_LEVEL_QUIZ_LESSON_SLUGS)[number]),
+);
+
+assertCssLessonActivityCoverage(CONTENT_LESSON_SLUGS);
+assertCssLevelQuizCoverage(CSS_LEVEL_QUIZ_LESSON_SLUGS);
+assertBrowserWalkthroughCoverage(
+  CONTENT_LESSON_SLUGS,
+  cssBrowserWalkthrough,
+  "CSS",
+);
 
 function withLabExtras(lesson: Lesson): Lesson {
-  const quiz = cssQuizzes[lesson.slug];
-  if (!quiz) {
-    throw new Error(`Missing CSS quiz for lesson slug: ${lesson.slug}`);
+  const activity = cssLessonActivities[lesson.slug];
+  if (!activity) {
+    throw new Error(`Missing CSS lesson activity for lesson slug: ${lesson.slug}`);
   }
 
-  return { ...lesson, content: { ...lesson.content, quiz } };
+  return { ...lesson, content: { ...lesson.content, activity } };
 }
 
 function orderCurriculum(list: Lesson[]): Lesson[] {
@@ -45,9 +65,10 @@ function orderCurriculum(list: Lesson[]): Lesson[] {
 }
 
 export const lessons: Lesson[] = orderCurriculum(
-  [...modernLessons, ...extraLessons]
+  [...modernLessons, ...extraLessons, ...cssLevelQuizLessons]
     .map((lesson) => withProductionInsights(lesson, cssInsights))
-    .map(withLabExtras),
+    .map((lesson) => (isLevelQuizLesson(lesson) ? lesson : withLabExtras(lesson)))
+    .map((lesson) => attachBrowserWalkthrough(lesson, cssBrowserWalkthrough)),
 );
 
 export function getLessonById(id: string): Lesson | undefined {

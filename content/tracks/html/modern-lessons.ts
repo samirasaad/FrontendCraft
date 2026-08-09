@@ -1,6 +1,8 @@
 import {
   L,
-  realWorldExample,
+  hardExample,
+  hardHtmlDoc,
+  mediumExample,
   simpleExample,
   support,
 } from "@/content/helpers";
@@ -62,27 +64,62 @@ export const modernLessons: LessonDraft[] = [
           "Tel field with keyboard + autocomplete + pattern",
           "حقل هاتف بكيبورد و autocomplete و pattern",
         ),
-        realWorldExample(
+        mediumExample(
           `<form>
   <label>
-    Email
-    <input name="email" type="email" inputmode="email" autocomplete="email" required />
+    Full name
+    <input name="name" autocomplete="name" required />
   </label>
   <label>
-    One-time code
+    Email
     <input
+      name="email"
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      required
+    />
+  </label>
+  <button type="submit">Sign up</button>
+</form>`,
+          "Sign-up form with name + email autocomplete",
+          "فورم تسجيل بـ autocomplete للاسم والإيميل",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Verify sign-in</h1>
+  <form action="/verify" method="post">
+    <label for="email">Email</label>
+    <input
+      id="email"
+      name="email"
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      required
+    />
+
+    <label for="otp">One-time code</label>
+    <input
+      id="otp"
       name="otp"
       inputmode="numeric"
       autocomplete="one-time-code"
       pattern="[0-9]{6}"
       maxlength="6"
+      aria-describedby="otp-hint"
       required
     />
-  </label>
-  <button type="submit">Continue</button>
-</form>`,
-          "Checkout-style email + OTP fields",
-          "حقول email و OTP بأسلوب checkout",
+    <p id="otp-hint">Enter the 6-digit code from your email.</p>
+
+    <button type="submit">Continue</button>
+  </form>
+</main>`,
+            { title: "Sign-in verification" },
+          ),
+          "Full page: email + OTP with autocomplete and hint",
+          "صفحة كاملة: email و OTP مع autocomplete وتلميح",
         ),
       ],
       visualHint: L(
@@ -119,11 +156,11 @@ export const modernLessons: LessonDraft[] = [
         ),
         L(
           "Detect features, don't sniff user agents: `if ('showModal' in HTMLDialogElement.prototype)`. Keep a usable HTML fallback path so a gap in Safari or a lagging corporate Chrome build never breaks the flow completely.",
-          "اعمل feature detection وسيبك من شمّ الـ user-agent: `if ('showModal' in HTMLDialogElement.prototype)`. سيّب مسار HTML fallback يشتغل عشان فجوة في Safari أو Chrome شركات متأخر ميكسرش التدفق خالص.",
+          "اعمل feature detection وسيبك من شمّ الـ user-agent: `if ('showModal' in HTMLDialogElement.prototype)`. سيّب معمل HTML fallback يشتغل عشان فجوة في Safari أو Chrome شركات متأخر ميكسرش التدفق خالص.",
         ),
         L(
-          "Safari/WebKit ships fewer engines and often lags Chrome/Firefox on newer APIs, so it's the one path worth testing manually. The matrices below are the source of truth for this track's high-stakes tags — dialog, details, picture, lazy media, forms hints, template, search, popover, inert, and media tracks.",
-          "Safari/WebKit بيطلع أقل نسخ وغالبًا بيتأخر عن Chrome/Firefox في الـ APIs الجديدة، فهو المسار اللي يستاهل تختبره يدويًا. المصفوفات تحت هي المصدر الموثوق لـ tags الحساسة في الـ track ده — dialog و details و picture و lazy media وتلميحات الفورم و template و search و popover و inert و media tracks.",
+          "Safari/WebKit ships fewer engines and often lags Chrome/Firefox on newer APIs, so it's the one path worth testing manually. The matrices below are the source of truth for this lab's high-stakes tags — dialog, details, picture, lazy media, forms hints, template, search, popover, inert, and media tracks.",
+          "Safari/WebKit بيطلع أقل نسخ وغالبًا بيتأخر عن Chrome/Firefox في الـ APIs الجديدة، فهو المسار اللي يستاهل تختبره يدويًا. المصفوفات تحت هي المصدر الموثوق لـ tags الحساسة في المعمل ده — dialog و details و picture و lazy media وتلميحات الفورم و template و search و popover و inert و media tracks.",
         ),
       ],
       keyPoints: [
@@ -190,31 +227,77 @@ export const modernLessons: LessonDraft[] = [
           "Feature-detect showModal before calling it",
           "افحص showModal قبل ما تستدعيه",
         ),
-        realWorldExample(
-          `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Progressive details</title>
-  </head>
-  <body>
-    <main>
-      <h1>Shipping checklist</h1>
-      <!-- Progressive enhancement: details works; name grouping is optional -->
-      <details>
-        <summary>Open checklist</summary>
-        <ul>
-          <li>Baseline status reviewed</li>
-          <li>Safari smoke test</li>
-          <li>Fallback documented</li>
-        </ul>
-      </details>
-    </main>
-  </body>
-</html>`,
-          "Ship the widely-supported core first",
-          "انشر النواة المدعومة على نطاق واسع أولًا",
+        mediumExample(
+          `<main>
+      <h1>Hero image</h1>
+      <picture>
+        <source srcset="/students-coding.svg" type="image/svg+xml" />
+        <img
+          src="https://placehold.co/800x450/0284c7/fff.jpg?text=JPEG+fallback"
+          alt="Course banner"
+          width="800"
+          height="450"
+        />
+      </picture>
+    </main>`,
+          "Picture with a real SVG source + JPEG fallback",
+          "picture بمصدر SVG حقيقي + JPEG fallback",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Release gate</h1>
+  <p id="status">Checking Baseline support…</p>
+  <button type="button" id="open">Reset progress</button>
+  <p id="fallback" hidden>
+    Fallback: <a href="#confirm-reset">Confirm on a separate page</a>
+  </p>
+
+  <details>
+    <summary>Compatibility checklist</summary>
+    <ul>
+      <li>Baseline status reviewed</li>
+      <li>Safari smoke test scheduled</li>
+      <li>Fallback path documented</li>
+    </ul>
+  </details>
+
+  <dialog id="confirm" aria-labelledby="dlg-title">
+    <h2 id="dlg-title">Confirm reset</h2>
+    <p>This clears your lesson progress.</p>
+    <form method="dialog">
+      <button value="cancel">Cancel</button>
+      <button value="ok">Reset</button>
+    </form>
+  </dialog>
+
+  <script>
+    const dialog = document.getElementById("confirm");
+    const status = document.getElementById("status");
+    const fallback = document.getElementById("fallback");
+    const canModal =
+      typeof HTMLDialogElement !== "undefined" &&
+      typeof HTMLDialogElement.prototype.showModal === "function";
+
+    status.textContent = canModal
+      ? "showModal supported — native dialog path."
+      : "showModal missing — HTML fallback link only.";
+
+    if (!canModal) fallback.hidden = false;
+
+    document.getElementById("open").addEventListener("click", () => {
+      if (canModal) dialog.showModal();
+      else {
+        fallback.hidden = false;
+        fallback.querySelector("a")?.focus();
+      }
+    });
+  </script>
+</main>`,
+            { title: "Baseline release gate" },
+          ),
+          "Full page: feature-detect dialog + checklist + HTML fallback",
+          "صفحة كاملة: feature-detect لـ dialog + checklist + fallback HTML",
         ),
       ],
       visualHint: L(
@@ -455,24 +538,55 @@ export const modernLessons: LessonDraft[] = [
           "Modal dialog with labeled title + dialog form",
           "dialog modal بعنوان مسمّى + form dialog",
         ),
-        realWorldExample(
-          `<button type="button" id="share-open">Share lesson</button>
-<dialog id="share" aria-labelledby="share-title">
+        mediumExample(
+          `<button type="button" id="settings-open">Settings</button>
+<dialog id="settings" aria-labelledby="settings-title">
+  <h2 id="settings-title">Preferences</h2>
+  <label>
+    <input type="checkbox" name="dark" />
+    Dark mode
+  </label>
   <form method="dialog">
-    <h2 id="share-title">Share</h2>
-    <label>
-      Copy link
-      <input readonly dir="ltr" value="https://frontendcraft-app.vercel.app/html" />
-    </label>
-    <button value="done">Done</button>
+    <button value="cancel">Cancel</button>
+    <button value="save">Save</button>
   </form>
 </dialog>
 <script>
-  const share = document.getElementById("share");
-  document.getElementById("share-open").onclick = () => share.showModal();
+  const dlg = document.getElementById("settings");
+  document.getElementById("settings-open").onclick = () => dlg.showModal();
 </script>`,
-          "Lightweight share sheet pattern",
-          "نمط share sheet خفيف",
+          "Preferences dialog with checkbox + dialog buttons",
+          "dialog تفضيلات بـ checkbox وأزرار dialog",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Lesson settings</h1>
+  <button type="button" id="share-open">Share lesson</button>
+
+  <dialog id="share" aria-labelledby="share-title">
+    <form method="dialog">
+      <h2 id="share-title">Share this lesson</h2>
+      <label>
+        Copy link
+        <input readonly dir="ltr" value="https://example.com/html/forms" />
+      </label>
+      <div>
+        <button value="cancel">Close</button>
+        <button value="done">Done</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    const share = document.getElementById("share");
+    document.getElementById("share-open").onclick = () => share.showModal();
+  </script>
+</main>`,
+            { title: "Share dialog" },
+          ),
+          "Full page: modal share sheet with dialog form",
+          "صفحة كاملة: share sheet modal مع form dialog",
         ),
       ],
       visualHint: L(
@@ -526,17 +640,39 @@ export const modernLessons: LessonDraft[] = [
           "Single disclosure widget",
           "ودجت disclosure واحدة",
         ),
-        realWorldExample(
-          `<details name="faq">
-  <summary>Is CSS available?</summary>
-  <p>Coming soon on FrontendCraft.</p>
+        mediumExample(
+          `<details>
+  <summary>What is semantic HTML?</summary>
+  <p>Elements that describe meaning — not just boxes.</p>
 </details>
-<details name="faq">
-  <summary>Can I practice in the sandbox?</summary>
-  <p>Yes — every lesson has a live playground.</p>
+<details>
+  <summary>Why use native elements?</summary>
+  <p>Keyboard and screen reader support come for free.</p>
 </details>`,
-          "FAQ group with shared name",
-          "مجموعة FAQ بـ name مشترك",
+          "Independent FAQ items without accordion grouping",
+          "عناصر FAQ مستقلة من غير تجميع accordion",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Course FAQ</h1>
+  <details name="faq" open>
+    <summary>What is semantic HTML?</summary>
+    <p>Tags that describe meaning — not just boxes for styling.</p>
+  </details>
+  <details name="faq">
+    <summary>Is CSS available?</summary>
+    <p>Yes — the CSS lab covers layout, color, and responsive design.</p>
+  </details>
+  <details name="faq">
+    <summary>Can I practice in the sandbox?</summary>
+    <p>Every lesson includes a live playground tab.</p>
+  </details>
+</main>`,
+            { title: "Course FAQ" },
+          ),
+          "Full page: exclusive FAQ group with name",
+          "صفحة كاملة: مجموعة FAQ حصرية بـ name",
         ),
       ],
       visualHint: L(
@@ -584,10 +720,7 @@ export const modernLessons: LessonDraft[] = [
       examples: [
         simpleExample(
           `<picture>
-  <source
-    type="image/webp"
-    srcset="https://placehold.co/640x360/0ea5e9/fff.webp?text=WebP"
-  />
+  <source srcset="/students-coding.svg" type="image/svg+xml" />
   <img
     src="https://placehold.co/640x360/0284c7/fff.jpg?text=JPEG+fallback"
     alt="Learner coding"
@@ -595,10 +728,10 @@ export const modernLessons: LessonDraft[] = [
     height="360"
   />
 </picture>`,
-          "Format waterfall with img fallback",
-          "تسلسل صيغ مع img fallback",
+          "SVG source + JPEG fallback",
+          "مصدر SVG + JPEG fallback",
         ),
-        realWorldExample(
+        mediumExample(
           `<picture>
   <source
     media="(max-width: 640px)"
@@ -606,18 +739,45 @@ export const modernLessons: LessonDraft[] = [
   />
   <img
     src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Desktop+hero"
-    alt="FrontendCraft playground"
+    alt="Course thumbnail"
     width="1200"
     height="630"
-    decoding="async"
   />
 </picture>`,
           "Art-directed mobile crop + desktop hero",
           "قصّة موبايل موجّهة + hero ديسكتوب",
         ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Course hero</h1>
+  <figure>
+    <picture>
+      <source srcset="/students-coding.svg" type="image/svg+xml" />
+      <source
+        media="(max-width: 640px)"
+        srcset="https://placehold.co/640x360/f59e0b/111.jpg?text=Mobile+crop"
+      />
+      <img
+        src="https://placehold.co/1200x630/0f172a/38bdf8.jpg?text=Desktop+hero"
+        alt="Students coding together in a classroom"
+        width="1200"
+        height="630"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </picture>
+    <figcaption>SVG source, art-directed mobile crop, and JPEG fallback.</figcaption>
+  </figure>
+</main>`,
+            { title: "Responsive hero image" },
+          ),
+          "Full page: SVG + art direction + sized hero img",
+          "صفحة كاملة: SVG + art direction + img hero بمقاسات",
+        ),
       ],
       visualHint: L(
-        "Format waterfall (AVIF → WebP → JPEG), then art direction for mobile vs desktop — trailing img always stays.",
+        "SVG or media art direction, then a trailing img with alt and dimensions.",
         "تسلسل الصيغ (AVIF → WebP → JPEG)، وبعدين art direction للموبايل مقابل الديسكتوب — و img في الآخر دايمًا.",
       ),
     },
@@ -676,7 +836,7 @@ export const modernLessons: LessonDraft[] = [
   </head>
   <body>
     <main>
-      <h1>HTML track</h1>
+      <h1>HTML lab</h1>
       <p>Check the browser tab title and theme-color from this head.</p>
     </main>
   </body>
@@ -684,24 +844,47 @@ export const modernLessons: LessonDraft[] = [
           "Core head tags + theme color",
           "وسوم head أساسية + theme color",
         ),
-        realWorldExample(
+        mediumExample(
           `<!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Document Anatomy — FrontendCraft</title>
-    <meta name="description" content="Learn the HTML document shell" />
-    <meta property="og:title" content="Document Anatomy" />
-    <meta property="og:description" content="Learn the HTML document shell" />
-    <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=FrontendCraft" />
+    <title>FrontendCraft — HTML</title>
+    <meta name="description" content="Interactive HTML lab" />
+    <meta name="theme-color" content="#020617" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  </head>
+  <body>
+    <main>
+      <h1>HTML lab</h1>
+      <p>SVG favicon with ICO and apple-touch fallbacks.</p>
+    </main>
+  </body>
+</html>`,
+          "Favicon strategy: SVG + ICO + apple-touch-icon",
+          "استراتيجية favicon: SVG + ICO + apple-touch-icon",
+        ),
+        hardExample(
+          `<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>HTML Lab — Learn semantic markup</title>
+    <meta name="description" content="Interactive HTML lessons with live previews" />
+    <meta property="og:title" content="HTML Lab" />
+    <meta property="og:description" content="Interactive HTML lessons with live previews" />
+    <meta property="og:image" content="https://placehold.co/1200x630/0f172a/38bdf8?text=HTML+Lab" />
     <meta property="og:type" content="article" />
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <main>
-      <h1>Document Anatomy</h1>
-      <p>Share-ready head tags for a lesson page — title, description, and Open Graph.</p>
+      <h1>HTML Lab</h1>
+      <p>Share-ready head tags — title, description, and Open Graph for this lesson page.</p>
     </main>
   </body>
 </html>`,
@@ -766,45 +949,52 @@ export const modernLessons: LessonDraft[] = [
       ],
       examples: [
         simpleExample(
-          `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ready: button vs link</title>
-  </head>
-  <body>
-    <main>
-      <h1>Actions vs navigation</h1>
-      <p><a href="/html">Open HTML track</a></p>
-      <p><button type="button">Mark lesson complete</button></p>
-    </main>
-  </body>
-</html>`,
-          "Full page: link for nav, button for action",
-          "صفحة كاملة: لينك للتنقّل وزر للفعل",
+          `<main>
+  <h1>Actions vs navigation</h1>
+  <p><a href="#html">Open HTML lab</a></p>
+  <p><button type="button">Mark lesson complete</button></p>
+</main>`,
+          "Link for nav, button for action",
+          "لينك للتنقّل وزر للفعل",
         ),
-        realWorldExample(
-          `<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ready: labeled form</title>
-  </head>
-  <body>
-    <main>
-      <h1>Newsletter</h1>
-      <form>
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" autocomplete="email" required />
-        <button type="submit">Subscribe</button>
-      </form>
-    </main>
-  </body>
-</html>`,
-          "Full page: labeled email form",
-          "صفحة كاملة: فورم إيميل بـ label",
+        mediumExample(
+          `<header>
+  <nav aria-label="Primary">
+    <a href="#html">HTML lab</a>
+  </nav>
+</header>
+<main>
+  <img
+    src="/students-coding.svg"
+    alt="Students coding together at laptops"
+    width="320"
+    height="180"
+  />
+</main>`,
+          "Labeled nav + informative image alt",
+          "nav مسمّى + alt وصفي للصورة",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<a class="skip" href="#main">Skip to content</a>
+<header>
+  <nav aria-label="Primary">
+    <a href="#html">HTML lab</a>
+    <a href="#css">CSS lab</a>
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <h1>Newsletter</h1>
+  <form>
+    <label for="email">Email address</label>
+    <input id="email" name="email" type="email" autocomplete="email" required />
+    <button type="submit">Subscribe</button>
+  </form>
+</main>`,
+            { title: "Accessible newsletter page" },
+          ),
+          "Full page: skip link, labeled nav, and email form",
+          "صفحة كاملة: skip link و nav مسمّى وفورم إيميل",
         ),
       ],
       visualHint: L(

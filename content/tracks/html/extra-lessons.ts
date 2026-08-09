@@ -1,6 +1,8 @@
 import {
   L,
-  realWorldExample,
+  hardExample,
+  hardHtmlDoc,
+  mediumExample,
   simpleExample,
 } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
@@ -81,7 +83,32 @@ export const extraLessons: LessonDraft[] = [
           "Full page: sized LCP image with preload",
           "صفحة كاملة: صورة LCP بمقاس + preload",
         ),
-        realWorldExample(
+        mediumExample(
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Core Web Vitals — INP</title>
+  </head>
+  <body>
+    <main>
+      <h1>Fast response</h1>
+      <button type="button" id="toggle">Toggle details</button>
+      <p id="status" hidden>Details are visible.</p>
+    </main>
+    <script>
+      document.getElementById("toggle").addEventListener("click", () => {
+        const status = document.getElementById("status");
+        status.hidden = !status.hidden;
+      });
+    </script>
+  </body>
+</html>`,
+          "Full page: light click handler for INP",
+          "صفحة كاملة: handler ضغطة خفيف لـ INP",
+        ),
+        hardExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -98,7 +125,7 @@ export const extraLessons: LessonDraft[] = [
       <aside class="ad-slot" aria-label="Sponsored">
         <!-- late-loaded creative cannot shove main content -->
       </aside>
-      <button type="button">Save progress</button>
+      <p>Content stays put while the ad slot reserves space.</p>
     </main>
   </body>
 </html>`,
@@ -175,37 +202,57 @@ export const extraLessons: LessonDraft[] = [
           "Full page: sized hero — stable layout",
           "صفحة كاملة: صورة hero بمقاس ثابت",
         ),
-        realWorldExample(
+        mediumExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lazy media</title>
+    <title>Lazy below fold</title>
   </head>
   <body>
     <main>
-      <h1>Below-the-fold media</h1>
+      <h1>Gallery</h1>
+      <p>Hero loads eagerly above.</p>
       <img
-        src="https://placehold.co/640x360/0284c7/fff.jpg?text=Below+fold"
-        alt=""
+        src="https://placehold.co/640x360/0284c7/fff.jpg?text=Gallery+1"
+        alt="Screenshot of the HTML playground"
         width="640"
         height="360"
         loading="lazy"
         decoding="async"
       />
-      <iframe
-        title="Event Loop demo"
-        src="https://example.com/embed"
-        loading="lazy"
-        width="640"
-        height="360"
-      ></iframe>
     </main>
   </body>
 </html>`,
-          "Full page: lazy image + lazy iframe",
-          "صفحة كاملة: صورة و iframe متأخرين",
+          "Full page: lazy below-the-fold gallery image",
+          "صفحة كاملة: صورة معرض lazy تحت الشاشة",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Gallery</h1>
+  <p>Hero loads eagerly above the fold.</p>
+  <img
+    src="https://placehold.co/640x360/0284c7/fff.jpg?text=Below+fold"
+    alt="Gallery thumbnail from the HTML lesson"
+    width="640"
+    height="360"
+    loading="lazy"
+    decoding="async"
+  />
+  <iframe
+    title="Lesson walkthrough embed"
+    src="about:blank"
+    loading="lazy"
+    width="640"
+    height="200"
+  ></iframe>
+</main>`,
+            { title: "Below-the-fold media" },
+          ),
+          "Full page: lazy image + lazy iframe with dimensions",
+          "صفحة كاملة: صورة و iframe متأخرين بمقاسات",
         ),
       ],
       visualHint: L(
@@ -277,34 +324,60 @@ export const extraLessons: LessonDraft[] = [
           "Full page: skip link + landmarks",
           "صفحة كاملة: skip link + landmarks",
         ),
-        realWorldExample(
+        mediumExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HTML Forms</title>
+    <title>Document architecture</title>
   </head>
   <body>
+    <a href="#content">Skip</a>
     <header>
       <p>FrontendCraft</p>
-      <nav aria-label="Tracks">
+      <nav aria-label="Primary">
+        <a href="/">Home</a>
         <a href="/html">HTML</a>
       </nav>
     </header>
     <main id="content">
-      <article>
-        <h1>HTML Forms</h1>
-        <section aria-labelledby="tips">
-          <h2 id="tips">Tips</h2>
-          <p>Keep one main landmark.</p>
-        </section>
-      </article>
+      <h1>Main content</h1>
     </main>
+    <footer>
+      <p>© FrontendCraft</p>
+    </footer>
   </body>
 </html>`,
-          "Full page: article inside main",
-          "صفحة كاملة: article جوّه main",
+          "Full page: landmarks + labeled primary nav",
+          "صفحة كاملة: landmarks + nav أساسي مسمّى",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<a href="#content">Skip to main content</a>
+<header>
+  <p>Learning hub</p>
+  <nav aria-label="Labs">
+    <a href="/html">HTML</a>
+    <a href="/css">CSS</a>
+  </nav>
+</header>
+<main id="content">
+  <article>
+    <h1>Document architecture</h1>
+    <section aria-labelledby="tips-heading">
+      <h2 id="tips-heading">Landmark tips</h2>
+      <p>One <code>&lt;main&gt;</code>, labeled <code>&lt;nav&gt;</code>, and a skip link.</p>
+    </section>
+  </article>
+</main>
+<footer>
+  <p><small>© 2026 Learning hub</small></p>
+</footer>`,
+            { title: "Document architecture" },
+          ),
+          "Full page: skip link, landmarks, article, and footer",
+          "صفحة كاملة: skip link و landmarks و article و footer",
         ),
       ],
       visualHint: L(
@@ -381,7 +454,32 @@ export const extraLessons: LessonDraft[] = [
           "Full page: external tab with opener and referrer protection",
           "صفحة كاملة: tab خارجية بحماية opener و referrer",
         ),
-        realWorldExample(
+        mediumExample(
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Embedded widget</title>
+  </head>
+  <body>
+    <main>
+      <h1>Weather widget</h1>
+      <iframe
+        title="Live weather forecast"
+        src="https://widgets.example.net/weather"
+        sandbox="allow-scripts"
+        referrerpolicy="no-referrer"
+        width="320"
+        height="240"
+      ></iframe>
+    </main>
+  </body>
+</html>`,
+          "Full page: sandboxed third-party iframe",
+          "صفحة كاملة: iframe طرف ثالث داخل sandbox",
+        ),
+        hardExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -493,18 +591,45 @@ export const extraLessons: LessonDraft[] = [
           "Full page: same-origin prefetch for likely lesson links",
           "صفحة كاملة: same-origin prefetch للينكات دروس المتوقعة",
         ),
-        realWorldExample(
+        mediumExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Product collection</title>
+    <title>Lesson hub</title>
+    <script type="speculationrules">
+      {
+        "prefetch": [
+          { "urls": ["/html/forms"] }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>Next up</h1>
+      <a href="/html/forms">Forms lesson</a>
+      <a href="/logout">Sign out</a>
+      <!-- Only prefetch read-only, same-origin lesson links. -->
+    </main>
+  </body>
+</html>`,
+          "Full page: targeted prefetch for one lesson link",
+          "صفحة كاملة: prefetch مستهدف لدرس واحد",
+        ),
+        hardExample(
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lesson hub</title>
     <script type="speculationrules">
       {
         "prerender": [
           {
-            "urls": ["/products/keyboard"],
+            "urls": ["/html/forms"],
             "eagerness": "moderate"
           }
         ]
@@ -513,8 +638,8 @@ export const extraLessons: LessonDraft[] = [
   </head>
   <body>
     <main>
-      <h1>Popular today</h1>
-      <a href="/products/keyboard">Mechanical keyboard</a>
+      <h1>Next lesson</h1>
+      <a href="/html/forms">HTML forms</a>
       <a href="/logout">Sign out</a>
       <!-- Never add /logout, checkout, delete, or token URLs to prerender rules. -->
     </main>
@@ -582,11 +707,11 @@ export const extraLessons: LessonDraft[] = [
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>RTL demo — Document anatomy</title>
+    <title>RTL demo — هيكل المستند</title>
   </head>
   <body>
     <main>
-      <h1>Document anatomy</h1>
+      <h1>هيكل المستند</h1>
       <p>
         English chrome on an RTL root. Isolate technical tokens so they stay LTR:
         <bdi dir="ltr">&lt;!DOCTYPE html&gt;</bdi>
@@ -604,7 +729,38 @@ export const extraLessons: LessonDraft[] = [
           "RTL root with English UI + isolated tokens",
           "Root RTL مع UI إنجليزي + tokens معزولة",
         ),
-        realWorldExample(
+        mediumExample(
+          `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RTL demo — Sign in</title>
+  </head>
+  <body>
+    <main>
+      <h1>تسجيل الدخول</h1>
+      <form>
+        <label>
+          البريد الإلكتروني
+          <input
+            name="email"
+            type="email"
+            autocomplete="email"
+            inputmode="email"
+            dir="ltr"
+            required
+          />
+        </label>
+        <button type="submit">متابعة</button>
+      </form>
+    </main>
+  </body>
+</html>`,
+          "RTL page with Arabic label and LTR email field",
+          "صفحة RTL بـ label عربي وحقل إيميل LTR",
+        ),
+        hardExample(
           `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
@@ -707,7 +863,25 @@ export const extraLessons: LessonDraft[] = [
           "Basic document template",
           "قالب مستند أساسي",
         ),
-        realWorldExample(
+        mediumExample(
+          `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main>
+      <h1>Hello</h1>
+      <p>Landmarks added — still room to fix semantics on the cards.</p>
+    </main>
+  </body>
+</html>`,
+          "Document with main landmark, no nav yet",
+          "مستند فيه main landmark، من غير nav لسه",
+        ),
+        hardExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -722,7 +896,7 @@ export const extraLessons: LessonDraft[] = [
   <body>
     <header>
       <nav aria-label="Primary">
-        <a href="/html">HTML track</a>
+        <a href="/html">HTML lab</a>
       </nav>
     </header>
     <main>
@@ -798,28 +972,52 @@ export const extraLessons: LessonDraft[] = [
           "Minimal valid document",
           "مستند صالح مختصر",
         ),
-        realWorldExample(
+        mediumExample(
           `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Dialog demo</title>
+    <title>Form demo</title>
   </head>
   <body>
     <main>
-      <h1>Native dialog</h1>
-      <dialog id="hi" open>
-        <p>Native dialog preview</p>
-        <form method="dialog">
-          <button>Close</button>
-        </form>
-      </dialog>
+      <h1>Subscribe</h1>
+      <form>
+        <label>
+          Email
+          <input name="email" type="email" autocomplete="email" required />
+        </label>
+        <button type="submit">Join</button>
+      </form>
     </main>
   </body>
 </html>`,
-          "Full page with native dialog",
-          "صفحة كاملة مع native dialog",
+          "Full page with a labeled email form",
+          "صفحة كاملة بفورم إيميل بـ label",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>HTML cheatsheet</h1>
+  <p>Semantic landmarks you reach for on most pages.</p>
+  <dl>
+    <dt><code>&lt;main&gt;</code></dt>
+    <dd>Primary page content — one per document.</dd>
+    <dt><code>&lt;nav&gt;</code></dt>
+    <dd>Major navigation links.</dd>
+    <dt><code>&lt;section&gt;</code></dt>
+    <dd>Thematic grouping with a heading.</dd>
+    <dt><code>&lt;article&gt;</code></dt>
+    <dd>Self-contained content such as a post or card.</dd>
+    <dt><code>&lt;aside&gt;</code></dt>
+    <dd>Related content tangential to the main flow.</dd>
+  </dl>
+</main>`,
+            { title: "HTML cheatsheet" },
+          ),
+          "Full page: semantic landmarks reference",
+          "صفحة كاملة: مرجع معالم semantic",
         ),
       ],
       visualHint: L(

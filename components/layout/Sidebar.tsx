@@ -60,6 +60,7 @@ import {
   Tablet,
   Target,
   Timer,
+  Trophy,
   Type,
   Variable,
   Volume2,
@@ -68,6 +69,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { loc, t } from "@/content/i18n/ui-strings";
+import { getTrack } from "@/content/tracks";
 import { RichText } from "@/components/shared/RichText";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -84,6 +86,7 @@ import {
   tierLabel,
   type TierFilter,
 } from "@/lib/tiers";
+import { isLevelQuizLesson } from "@/lib/level-quiz/capstones";
 import type { Tier } from "@/lib/types";
 
 /** Inner content width — outer `.lessons-panel` clips while animating. */
@@ -148,6 +151,7 @@ const iconMap: Record<string, LucideIcon> = {
   Sparkles,
   Film,
   ArrowLeftRight,
+  Trophy,
 };
 
 interface SidebarProps {
@@ -169,6 +173,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
     trackId,
   } = useProgress();
   const { playClick } = useSound();
+  const track = useMemo(() => getTrack(trackId), [trackId]);
   const [query, setQuery] = useState("");
   const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [expandedTiers, setExpandedTiers] = useState<Set<Tier>>(() => new Set());
@@ -355,12 +360,14 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
         >
           <div className="relative flex h-12 shrink-0 items-center border-b border-white/10">
             <p
-              className={`px-3 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-300 transition-opacity duration-500 ease-out ${
+              className={`min-w-0 px-3 text-xs font-semibold uppercase tracking-[0.2em] transition-opacity duration-500 ease-out ${
                 panelOpen ? "opacity-100" : "pointer-events-none opacity-0"
               }`}
               aria-hidden={!panelOpen}
             >
-              {t("lessons", locale)}
+              <span className="text-white">{loc(track.title, locale)}</span>
+              <span className="text-slate-600"> · </span>
+              <span className="text-cyan-300">{t("lessons", locale)}</span>
             </p>
             <button
               type="button"
@@ -576,7 +583,20 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                           text={loc(lesson.content.title, locale)}
                                         />
                                       </span>
-                                      {done ? (
+                                      {isLevelQuizLesson(lesson) ? (
+                                        done ? (
+                                          <CheckCircle2
+                                            size={14}
+                                            className="shrink-0 text-cyan-300"
+                                          />
+                                        ) : (
+                                          <Trophy
+                                            size={14}
+                                            className="shrink-0 text-yellow-300"
+                                            aria-label={t("lessonTabLevelQuiz", locale)}
+                                          />
+                                        )
+                                      ) : done ? (
                                         <CheckCircle2
                                           size={14}
                                           className="shrink-0 text-cyan-300"

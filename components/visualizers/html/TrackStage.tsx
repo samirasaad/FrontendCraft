@@ -6,10 +6,10 @@ import { PlayPauseButton } from "@/components/shared/PlayPauseButton";
 import { LAB_LOOP_S } from "@/lib/motion-pace";
 
 /**
- * Shared stage chrome for Motion labs — atmosphere, play/pause, caption,
+ * Shared stage chrome for motion tracks — atmosphere, play/pause, caption,
  * and a fixed tall frame that fits the full visualization without scrolling.
  */
-export function LabStage({
+export function TrackStage({
   children,
   className = "",
   /** When set with `onTogglePlay`, shows a Play/Pause control. */
@@ -17,7 +17,7 @@ export function LabStage({
   onTogglePlay,
   /** Super-descriptive status line for the current step. */
   caption,
-  /** Optional short lab title above the caption. */
+  /** Optional short track title above the caption. */
   title,
 }: {
   children: ReactNode;
@@ -105,15 +105,15 @@ export const labSpring = {
 
 export const labEase = [0.22, 1, 0.36, 1] as const;
 
-/** Readable step / status hint (legacy — prefer LabStage `caption`). */
+/** Readable step / status hint (legacy — prefer TrackStage `caption`). */
 export const labTipClass =
   "mb-2 shrink-0 text-sm leading-snug text-slate-200";
 
 export const labTipInlineClass = "text-sm leading-snug text-slate-300";
 
 /**
- * Tall fixed viewport for every motion lab — holds the complete visualization
+ * Tall fixed viewport for every motion track — holds the complete visualization
  * without growing or scrolling inside the frame.
  */
 export const LAB_FRAME_CLASS =
-  "h-[min(40rem,calc(100dvh-11rem))] min-h-[30rem] w-full overflow-hidden sm:min-h-[34rem]";
+  "h-[min(36rem,calc(100dvh-12rem))] min-h-[18rem] w-full overflow-hidden sm:min-h-[26rem] md:min-h-[32rem]";

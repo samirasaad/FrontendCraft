@@ -30,7 +30,7 @@ import {
   HtmlGlobalRtlLabVisualizer,
   HtmlPitfallsLabVisualizer,
 } from "@/components/visualizers/html";
-import { LAB_FRAME_CLASS } from "@/components/visualizers/html/LabStage";
+import { LAB_FRAME_CLASS } from "@/components/visualizers/html/TrackStage";
 
 const htmlVisualizers: Record<string, () => ReactNode> = {
   "document-tree": () => <DocumentTreeVisualizer />,

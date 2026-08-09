@@ -6,13 +6,13 @@ export const javascriptMeta: TrackMeta = {
   order: 4,
   accent: "from-yellow-300 to-cyan-400",
   icon: "Braces",
-  title: { en: "JavaScript", ar: "JavaScript" },
-  description: {
-    en: "Core language fundamentals with interactive motion labs.",
-    ar: "أساسيات اللغة مع معامل حركة تفاعلية.",
-  },
+  title: { en: "JavaScript Core", ar: "أساسيات JavaScript" },
   tagline: {
-    en: "Interactive core JavaScript lab",
-    ar: "معمل تفاعلي لأساسيات JavaScript",
+    en: "How clicks, forms, and live updates actually work.",
+    ar: "كيف تعمل النقرات والنماذج والتحديثات المباشرة.",
+  },
+  description: {
+    en: "Events, state, async, and the core language that makes pages react.",
+    ar: "الأحداث، الحالة، البرمجة غير المتزامنة، واللغة الأساسية التي تجعل الصفحات تتفاعل.",
   },
 };

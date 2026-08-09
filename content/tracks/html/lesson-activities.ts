@@ -1,18 +1,18 @@
 import { L } from "@/content/helpers";
-import type { LessonQuiz, QuizOption, QuizQuestion } from "@/lib/types";
+import type { LessonActivity, ActivityOption, ActivityQuestion } from "@/lib/types";
 
-function opt(id: string, en: string, ar: string): QuizOption {
+function opt(id: string, en: string, ar: string): ActivityOption {
   return { id, label: L(en, ar) };
 }
 
 function q(
   id: string,
   prompt: ReturnType<typeof L>,
-  options: QuizOption[],
+  options: ActivityOption[],
   correctId: string,
   explanation: ReturnType<typeof L>,
-  extra?: Partial<Pick<QuizQuestion, "code" | "language" | "hint">>,
-): QuizQuestion {
+  extra?: Partial<Pick<ActivityQuestion, "code" | "language" | "hint">>,
+): ActivityQuestion {
   return {
     id,
     prompt,
@@ -23,10 +23,10 @@ function q(
   };
 }
 
-/** Multi-question quizzes keyed by lesson slug — every lesson gets 3–6 questions. */
-export const htmlQuizzes: Record<string, LessonQuiz> = {
+/** Multi-question lesson activities keyed by lesson slug — every lesson gets 3–6 questions. */
+export const htmlLessonActivities: Record<string, LessonActivity> = {
   "document-anatomy": {
-    title: L("Document anatomy check", "اختبار تشريح المستند"),
+    title: L("Document anatomy check", "نشاط تشريح المستند"),
     questions: [
       q(
         "q1",
@@ -189,7 +189,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "semantic-structure": {
-    title: L("Semantic structure check", "اختبار الهيكل الدلالي"),
+    title: L("Semantic structure check", "نشاط الهيكل الدلالي"),
     questions: [
       q(
         "q1",
@@ -326,7 +326,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "text-headings": {
-    title: L("Headings check", "اختبار الـ headings"),
+    title: L("Headings check", "نشاط الـ headings"),
     questions: [
       q(
         "q1",
@@ -473,7 +473,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "text-formatting": {
-    title: L("Text formatting check", "اختبار تنسيق النص"),
+    title: L("Text formatting check", "نشاط تنسيق النص"),
     questions: [
       q(
         "q1",
@@ -615,7 +615,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "links-images": {
-    title: L("Links & images check", "اختبار اللينكات والصور"),
+    title: L("Links & images check", "نشاط اللينكات والصور"),
     questions: [
       q(
         "q1",
@@ -777,7 +777,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   lists: {
-    title: L("Lists check", "اختبار القوائم"),
+    title: L("Lists check", "نشاط القوائم"),
     questions: [
       q(
         "q1",
@@ -908,7 +908,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "forms-inputs": {
-    title: L("Forms check", "اختبار النماذج"),
+    title: L("Forms check", "نشاط النماذج"),
     questions: [
       q(
         "q1",
@@ -1049,7 +1049,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   tables: {
-    title: L("Tables check", "اختبار الجداول"),
+    title: L("Tables check", "نشاط الجداول"),
     questions: [
       q(
         "q1",
@@ -1182,7 +1182,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "form-ux-attributes": {
-    title: L("Form UX attributes check", "اختبار خصائص تجربة النماذج"),
+    title: L("Form UX attributes check", "نشاط خصائص تجربة النماذج"),
     questions: [
       q(
         "q1",
@@ -1324,7 +1324,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "details-summary": {
-    title: L("Details & summary check", "اختبار الأكورديون بـ `<details>` و `<summary>`"),
+    title: L("Details & summary check", "نشاط الأكورديون بـ `<details>` و `<summary>`"),
     questions: [
       q(
         "q1",
@@ -1457,7 +1457,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "media-embed": {
-    title: L("Media & embeds check", "اختبار الوسائط والـ embeds"),
+    title: L("Media & embeds check", "نشاط الوسائط والـ embeds"),
     questions: [
       q(
         "q1",
@@ -1596,7 +1596,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "browser-compatibility": {
-    title: L("Browser compatibility check", "اختبار توافق المتصفحات"),
+    title: L("Browser compatibility check", "نشاط توافق المتصفحات"),
     questions: [
       q(
         "q1",
@@ -1737,7 +1737,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "native-dialog": {
-    title: L("Native dialog check", "اختبار الـ dialog الأصلي"),
+    title: L("Native dialog check", "نشاط الـ dialog الأصلي"),
     questions: [
       q(
         "q1",
@@ -1871,7 +1871,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "picture-source": {
-    title: L("Picture & source check", "اختبار الصور المتجاوبة (`<picture>` و `<source>`)"),
+    title: L("Picture & source check", "نشاط الصور المتجاوبة (`<picture>` و `<source>`)"),
     questions: [
       q(
         "q1",
@@ -2013,7 +2013,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "accessibility-basics": {
-    title: L("Accessibility basics check", "اختبار أساسيات الوصولية"),
+    title: L("Accessibility basics check", "نشاط أساسيات الوصولية"),
     questions: [
       q(
         "q1",
@@ -2151,7 +2151,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "meta-seo": {
-    title: L("Meta & SEO check", "اختبار الـ meta و SEO"),
+    title: L("Meta & SEO check", "نشاط الـ meta و SEO"),
     questions: [
       q(
         "q1",
@@ -2293,7 +2293,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "head-social-meta": {
-    title: L("Social meta check", "اختبار وسوم السوشيال ميديا"),
+    title: L("Social meta check", "نشاط وسوم السوشيال ميديا"),
     questions: [
       q(
         "q1",
@@ -2431,7 +2431,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "sr-practice": {
-    title: L("Screen reader practice check", "اختبار ممارسة قارئات الشاشة"),
+    title: L("Screen reader practice check", "نشاط ممارسة قارئات الشاشة"),
     questions: [
       q(
         "q1",
@@ -2580,7 +2580,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-core-web-vitals": {
-    title: L("Core Web Vitals check", "اختبار Core Web Vitals"),
+    title: L("Core Web Vitals check", "نشاط Core Web Vitals"),
     questions: [
       q(
         "q1",
@@ -2718,7 +2718,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-perf-media": {
-    title: L("Media performance check", "اختبار أداء الوسائط"),
+    title: L("Media performance check", "نشاط أداء الوسائط"),
     questions: [
       q(
         "q1",
@@ -2864,7 +2864,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-architecture-partials": {
-    title: L("HTML architecture check", "اختبار هندسة HTML"),
+    title: L("HTML architecture check", "نشاط هندسة HTML"),
     questions: [
       q(
         "q1",
@@ -3006,7 +3006,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-security-hardening": {
-    title: L("HTML security hardening check", "اختبار تقوية أمان HTML"),
+    title: L("HTML security hardening check", "نشاط تقوية أمان HTML"),
     questions: [
       q(
         "q1",
@@ -3102,7 +3102,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-speculation-rules": {
-    title: L("Speculation Rules check", "اختبار Speculation Rules"),
+    title: L("Speculation Rules check", "نشاط Speculation Rules"),
     questions: [
       q(
         "q1",
@@ -3198,7 +3198,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-global-rtl": {
-    title: L("Global & RTL HTML check", "اختبار HTML العالمي و RTL"),
+    title: L("Global & RTL HTML check", "نشاط HTML العالمي و RTL"),
     questions: [
       q(
         "q1",
@@ -3329,7 +3329,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-common-pitfalls": {
-    title: L("HTML pitfalls check", "اختبار أخطاء HTML الشائعة"),
+    title: L("HTML pitfalls check", "نشاط أخطاء HTML الشائعة"),
     questions: [
       q(
         "q1",
@@ -3475,7 +3475,7 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
   },
 
   "html-cheatsheet": {
-    title: L("CheatSheet check", "اختبار الـ CheatSheet"),
+    title: L("CheatSheet check", "نشاط الـ CheatSheet"),
     questions: [
       q(
         "q1",
@@ -3622,16 +3622,16 @@ export const htmlQuizzes: Record<string, LessonQuiz> = {
 };
 
 /** Runtime guard used by the HTML lesson assembler. */
-export function assertHtmlQuizCoverage(slugs: readonly string[]) {
+export function assertHtmlLessonActivityCoverage(slugs: readonly string[]) {
   for (const slug of slugs) {
-    const quiz = htmlQuizzes[slug];
+    const activity = htmlLessonActivities[slug];
     if (
-      !quiz ||
-      quiz.questions.length < 3 ||
-      quiz.questions.length > 6
+      !activity ||
+      activity.questions.length < 3 ||
+      activity.questions.length > 6
     ) {
       throw new Error(
-        `HTML quiz missing or invalid length for lesson "${slug}" (need 3–6 questions, got ${quiz?.questions.length ?? 0})`,
+        `HTML lesson activity missing or invalid length for lesson "${slug}" (need 3–6 questions, got ${activity?.questions.length ?? 0})`,
       );
     }
   }

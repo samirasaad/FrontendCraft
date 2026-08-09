@@ -1,11 +1,11 @@
-import { L, realWorldExample, simpleExample } from "@/content/helpers";
+import { L, hardCssFromFragment, hardExample, mediumExample, simpleExample } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
 import type { Tier } from "@/lib/types";
 
 type LessonSpec = {
   slug: string;
   tier: Extract<Tier, "beginner" | "intermediate" | "advanced">;
-  /** Estimated minutes for concept + lab + quiz. */
+  /** Estimated minutes for concept + lab + activity. */
   readMinutes: number;
   title: [string, string];
   summary: [string, string];
@@ -14,7 +14,8 @@ type LessonSpec = {
   icon: string;
   visualizer: string;
   simple: string;
-  real: string;
+  medium: string;
+  hard: string;
   visualHint: [string, string];
 };
 
@@ -43,10 +44,15 @@ function lesson(spec: LessonSpec, index: number): LessonDraft {
           `Simple practice — ${spec.title[0]}`,
           `تمرين بسيط — ${spec.title[1]}`,
         ),
-        realWorldExample(
-          spec.real,
-          `Real-world pattern — ${spec.title[0]}`,
-          `نمط واقعي — ${spec.title[1]}`,
+        mediumExample(
+          spec.medium,
+          `Medium scenario — ${spec.title[0]}`,
+          `سيناريو متوسط — ${spec.title[1]}`,
+        ),
+        hardExample(
+          hardCssFromFragment(spec.hard, spec.title[0]),
+          `Hard challenge — ${spec.title[0]}`,
+          `تحدي صعب — ${spec.title[1]}`,
         ),
       ],
       visualHint: L(...spec.visualHint),
@@ -66,7 +72,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["`importance` comes before `specificity`", "`importance` قبل `specificity`"], ["Later wins only on a tie", "المتأخر يكسب بس في التعادل"], ["Prefer low-specificity component classes", "فضّل `component classes` قليلة `specificity`"]],
     simple: html(`p { color: steelblue; }\n.note { color: tomato; }`, `<p class="note">The class rule wins.</p>`),
-    real: html(`.card { border: 2px solid #94a3b8; }\n.card--featured { border-color: #0ea5e9; }`, `<article class="card card--featured">Featured CSS lesson</article>`),
+    medium: html(`.btn { color: #1e3a8a; padding: .5rem 1rem; border: 1px solid #1e3a8a; background: white; }\n.btn--primary { color: white; background: #1e3a8a; }\n#promo { color: #b91c1c; }`, `<button class="btn">Default</button>\n<button class="btn btn--primary" id="promo">Primary promo</button>`),
+    hard: html(`.card { border: 2px solid #94a3b8; }\n.card--featured { border-color: #0ea5e9; }`, `<article class="card card--featured">Featured CSS lesson</article>`),
     visualHint: ["Add or remove a class on the element and see which color wins.", "غيّر `class` واحد على العنصر واتفرّج أنهي لون بيكسب."],
   },
   {
@@ -80,7 +87,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["`padding` is inside; `margin` is outside", "`padding` جوه؛ `margin` بره"], ["Use `border-box` globally", "استخدم `border-box` بشكل عام"], ["`gap` avoids many margin surprises", "`gap` بتتجنب مفاجآت `margin` كتير"]],
     simple: html(`.box { box-sizing: border-box; width: 220px; padding: 24px; border: 4px solid #38bdf8; margin: 16px; background: #e0f2fe; }`, `<div class="box">220px stays 220px wide.</div>`),
-    real: html(`* { box-sizing: border-box; }\n.card { width: 100%; max-width: 320px; padding: 1.25rem; border: 1px solid #cbd5e1; border-radius: 12px; }`, `<article class="card"><h2>Lesson card</h2><p>Predictable sizing.</p></article>`),
+    medium: html(`.compare { display: flex; gap: 1rem; }\n.content { box-sizing: content-box; width: 160px; padding: 16px; border: 4px solid #38bdf8; background: #e0f2fe; }\n.border { box-sizing: border-box; width: 160px; padding: 16px; border: 4px solid #38bdf8; background: #e0f2fe; }`, `<div class="compare"><div class="content">content-box</div><div class="border">border-box</div></div>`),
+    hard: html(`* { box-sizing: border-box; }\n.card { width: 100%; max-width: 320px; padding: 1.25rem; border: 1px solid #cbd5e1; border-radius: 12px; }`, `<article class="card"><h2>Lesson card</h2><p>Predictable sizing.</p></article>`),
     visualHint: ["Switch between `content-box` and `border-box`, then resize the panel.", "بدّل بين `content-box` و`border-box`، وبعدين غيّر مقاس اللوحة."],
   },
   {
@@ -94,7 +102,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Use `rem` for scalable spacing", "استخدم `rem` لمسافات قابلة للتكبير"], ["Constrain fluid widths with `max-width`", "قيّد العروض السائلة بـ `max-width`"], ["`clamp()` expresses safe ranges", "`clamp()` بتعبر عن مدى آمن"]],
     simple: html(`h1 { font-size: clamp(2rem, 7vw, 4.5rem); }\n.wrap { width: min(92%, 70rem); margin-inline: auto; }`, `<main class="wrap"><h1>Fluid, not wild</h1></main>`),
-    real: html(`.video { width: min(100%, 48rem); aspect-ratio: 16 / 9; background: #0f172a; color: white; display: grid; place-items: center; }`, `<section class="video">Responsive video area</section>`),
+    medium: html(`p { font-size: 1.125rem; line-height: 1.6; max-width: 65ch; }\n.card { width: 80%; max-width: 24rem; padding: 1rem; margin-inline: auto; background: #f1f5f9; }`, `<div class="card"><p>Percent width with a max cap keeps cards readable.</p></div>`),
+    hard: html(`.video { width: min(100%, 48rem); aspect-ratio: 16 / 9; background: #0f172a; color: white; display: grid; place-items: center; }`, `<section class="video">Responsive video area</section>`),
     visualHint: ["Resize the preview and watch `clamp()` scale the heading.", "غيّر عرض المعاينة واتفرّج على `clamp()` وهي بتكبّر العنوان."],
   },
   {
@@ -108,7 +117,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Use semantic color tokens", "استخدم `color tokens` معنوية"], ["Set a comfortable `line-height`", "حط `line-height` مريحة"], ["Contrast is a usability requirement", "التباين مطلب قابلية استخدام"]],
     simple: html(`body { color: #172033; font: 1rem/1.6 system-ui; }\nh1 { color: #075985; letter-spacing: -0.02em; }`, `<h1>Readable heading</h1><p>Comfortable body text has room to breathe.</p>`),
-    real: html(`.notice { max-width: 60ch; padding: 1rem; background: #ecfeff; color: #164e63; border-inline-start: 4px solid #0891b2; }`, `<aside class="notice"><strong>Tip:</strong> Keep line length near 45–75 characters.</aside>`),
+    medium: html(`body { color: #334155; font: 1rem/1.7 system-ui; }\na { color: #0369a1; text-decoration-thickness: 2px; }\n.lead { font-size: 1.25rem; color: #0f172a; }`, `<p class="lead">A slightly larger intro line.</p><p>Body copy with a <a href="#">styled link</a> for contrast.</p>`),
+    hard: html(`.notice { max-width: 60ch; padding: 1rem; background: #ecfeff; color: #164e63; border-inline-start: 4px solid #0891b2; }`, `<aside class="notice"><strong>Tip:</strong> Keep line length near 45–75 characters.</aside>`),
     visualHint: ["Tweak `font-size` or `line-height` and read the paragraph aloud.", "عدّل `font-size` أو `line-height` واقرأ الفقرة بصوت عالي."],
   },
   {
@@ -122,7 +132,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Blocks stack by default", "الـ `blocks` بتترص افتراضيًا"], ["Inline boxes flow with text", "الـ `inline boxes` بتمشي مع النص"], ["`display` changes layout participation", "`display` بتغير المشاركة في الـ `layout`"]],
     simple: html(`.tag { display: inline-block; padding: .25rem .5rem; background: #dbeafe; border-radius: 999px; }\n.panel { display: block; padding: 1rem; background: #f8fafc; }`, `<span class="tag">Inline-block tag</span><div class="panel">A normal block panel</div>`),
-    real: html(`article { max-width: 65ch; margin: auto; }\narticle p { margin-block: 1em; }\nmark { display: inline; background: #fef08a; }`, `<article><h1>Article flow</h1><p>Text keeps a readable <mark>inline rhythm</mark>.</p><p>Blocks stack naturally.</p></article>`),
+    medium: html(`nav { display: block; padding: .75rem; background: #f8fafc; }\nnav a { display: inline-block; margin-inline-end: 1rem; padding: .25rem 0; color: #0369a1; }\nsection { margin-block-start: 1rem; padding: 1rem; border: 1px solid #e2e8f0; }`, `<nav><a href="#">Home</a><a href="#">Lessons</a></nav><section>Block section follows inline nav links.</section>`),
+    hard: html(`article { max-width: 65ch; margin: auto; }\narticle p { margin-block: 1em; }\nmark { display: inline; background: #fef08a; }`, `<article><h1>Article flow</h1><p>Text keeps a readable <mark>inline rhythm</mark>.</p><p>Blocks stack naturally.</p></article>`),
     visualHint: ["Toggle `display` between `block` and `inline-block` on the tag.", "بدّل `display` بين `block` و`inline-block` على الـ `tag`."],
   },
   {
@@ -136,7 +147,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Backgrounds can be layered", "الخلفيات ممكن تتراكب"], ["Borders affect size", "الحدود بتأثر على المقاس"], ["Use `outline` for visible focus", "استخدم `outline` للـ `focus` الظاهر"]],
     simple: html(`.tile { padding: 1.5rem; border: 2px solid #7dd3fc; border-radius: 1rem; background: linear-gradient(135deg, #ecfeff, #eff6ff); }`, `<div class="tile">A layered surface</div>`),
-    real: html(`.hero { padding: 3rem 1.5rem; color: white; border-radius: 1.25rem; background: linear-gradient(#0f172acc, #0f172acc), radial-gradient(circle at top, #38bdf8, #0f172a); }\n.hero:focus-within { outline: 3px solid #facc15; outline-offset: 4px; }`, `<section class="hero"><h1>Build surfaces</h1><button>Start lesson</button></section>`),
+    medium: html(`.chip { padding: .5rem 1rem; border: 2px solid #38bdf8; border-radius: 999px; background: #e0f2fe; box-shadow: inset 0 -2px 0 #7dd3fc; }\n.chip:focus-visible { outline: 2px solid #0ea5e9; outline-offset: 3px; }`, `<button class="chip">Outlined chip</button>`),
+    hard: html(`.hero { padding: 3rem 1.5rem; color: white; border-radius: 1.25rem; background: linear-gradient(#0f172acc, #0f172acc), radial-gradient(circle at top, #38bdf8, #0f172a); }\n.hero:focus-within { outline: 3px solid #facc15; outline-offset: 4px; }`, `<section class="hero"><h1>Build surfaces</h1><button>Start lesson</button></section>`),
     visualHint: ["Change `border-radius` or add an `outline` and see what moves.", "غيّر `border-radius` أو ضيف `outline` واتفرّج إيه اللي بيتحرك."],
   },
   {
@@ -150,7 +162,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Flex is one-dimensional", "`Flex` أحادي البعد"], ["`justify` main, `align` cross", "`justify` للمحور الرئيسي و`align` للعرضي"], ["Prefer `gap` over child margins", "فضّل `gap` عن `margins` الأطفال"]],
     simple: html(`.row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem; background: #f1f5f9; }`, `<div class="row"><strong>CSS lesson</strong><button>Open</button></div>`),
-    real: html(`.card { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; border: 1px solid #cbd5e1; }\n.icon { flex: 0 0 2.5rem; display: grid; place-items: center; border-radius: 50%; background: #bae6fd; }\n.copy { flex: 1; }`, `<article class="card"><div class="icon">CSS</div><div class="copy"><strong>Flex card</strong><p>Copy grows while the icon stays stable.</p></div></article>`),
+    medium: html(`.stack { display: flex; flex-direction: column; gap: .75rem; padding: 1rem; background: #f8fafc; }\n.stack > * { padding: .75rem; background: #dbeafe; }`, `<div class="stack"><div>Lesson 1</div><div>Lesson 2</div><div>Lesson 3</div></div>`),
+    hard: html(`.card { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem; border: 1px solid #cbd5e1; }\n.icon { flex: 0 0 2.5rem; display: grid; place-items: center; border-radius: 50%; background: #bae6fd; }\n.copy { flex: 1; }`, `<article class="card"><div class="icon">CSS</div><div class="copy"><strong>Flex card</strong><p>Copy grows while the icon stays stable.</p></div></article>`),
     visualHint: ["Change `justify-content` or `align-items` and watch the row shift.", "غيّر `justify-content` أو `align-items` واتفرّج الصف بيتحرك إزاي."],
   },
   {
@@ -164,7 +177,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Grid coordinates two axes", "`Grid` بتنسق محورين"], ["`fr` divides remaining space", "`fr` بتقسم المساحة الباقية"], ["`minmax` enables fluid cards", "`minmax` بتمكّن كروت سائلة"]],
     simple: html(`.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }\n.grid > * { padding: 1rem; background: #dbeafe; }`, `<div class="grid"><div>1</div><div>2</div><div>3</div></div>`),
-    real: html(`.catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }\n.lesson { padding: 1rem; border: 1px solid #cbd5e1; border-radius: .75rem; }`, `<section class="catalog"><article class="lesson">Cascade</article><article class="lesson">Flexbox</article><article class="lesson">Grid</article></section>`),
+    medium: html(`.layout { display: grid; grid-template-columns: 12rem 1fr; gap: 1rem; }\n.sidebar, .main { padding: 1rem; background: #e2e8f0; }\n.main { background: #dbeafe; }`, `<div class="layout"><aside class="sidebar">Sidebar</aside><main class="main">Main content area</main></div>`),
+    hard: html(`.catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1rem; }\n.lesson { padding: 1rem; border: 1px solid #cbd5e1; border-radius: .75rem; }`, `<section class="catalog"><article class="lesson">Cascade</article><article class="lesson">Flexbox</article><article class="lesson">Grid</article></section>`),
     visualHint: ["Edit `grid-template-columns` and resize to see columns reflow.", "عدّل `grid-template-columns` وغيّر العرض واتفرّج الأعمدة بتتغيّر."],
   },
   {
@@ -179,7 +193,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["`relative` anchors absolute children", "`relative` بتربط أطفال `absolute`"], ["`absolute` leaves normal flow", "`absolute` بتخرج من `normal flow`"], ["`sticky` needs an inset like `top`", "`sticky` محتاجة `inset` زي `top`"], ["`z-index` only compares positioned elements", "`z-index` بيقارن بس عناصر `positioned`"]],
     simple: html(`.badge-wrap { position: relative; width: 14rem; padding: 2rem; background: #e0f2fe; }\n.badge { position: absolute; top: -.5rem; right: -.5rem; padding: .25rem .5rem; background: #0284c7; color: white; border-radius: 999px; }`, `<div class="badge-wrap">Course card <span class="badge">New</span></div>`),
-    real: html(`.toolbar { position: sticky; top: 0; z-index: 1; padding: .75rem; background: white; border-bottom: 1px solid #cbd5e1; }`, `<div class="toolbar">Lesson tools stay visible while you scroll.</div><p style="min-height:180px">Scroll space</p>`),
+    medium: html(`.tooltip-wrap { position: relative; display: inline-block; padding: 1rem; background: #e0f2fe; }\n.tooltip { position: absolute; bottom: calc(100% + .5rem); left: 50%; transform: translateX(-50%); padding: .25rem .5rem; background: #0f172a; color: white; border-radius: .25rem; font-size: .875rem; white-space: nowrap; }`, `<span class="tooltip-wrap">Hover term <span class="tooltip">CSS units</span></span>`),
+    hard: html(`.toolbar { position: sticky; top: 0; z-index: 1; padding: .75rem; background: white; border-bottom: 1px solid #cbd5e1; }`, `<div class="toolbar">Lesson tools stay visible while you scroll.</div><p style="min-height:180px">Scroll space</p>`),
     visualHint: ["Switch `position` values and scroll to test `sticky`.", "بدّل قيم `position` واعمل scroll عشان تجرب `sticky`."],
   },
   {
@@ -193,7 +208,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Mobile-first adds enhancements", "`Mobile-first` بتضيف تحسينات"], ["Break on content pressure", "اعمل `breakpoint` عند ضغط المحتوى"], ["Honor reduced motion", "احترم `reduced motion`"]],
     simple: html(`.nav { display: grid; gap: .5rem; }\n@media (min-width: 42rem) { .nav { grid-template-columns: repeat(3, 1fr); } }`, `<nav class="nav"><a href="#">Learn</a><a href="#">Practice</a><a href="#">Review</a></nav>`),
-    real: html(`.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }\n@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; transition-duration: 0.01ms !important; } }`, `<section class="cards"><article>Any width</article><article>Content-led</article><article>Respectful</article></section>`),
+    medium: html(`.hero { display: flex; flex-direction: column; gap: 1rem; padding: 1rem; }\n@media (min-width: 36rem) { .hero { flex-direction: row; align-items: center; } }\n.hero > * { flex: 1; padding: 1rem; background: #f1f5f9; }`, `<section class="hero"><div>Copy stacks on narrow screens.</div><div>Side content aligns in a row on wider viewports.</div></section>`),
+    hard: html(`.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem; }\n@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; transition-duration: 0.01ms !important; } }`, `<section class="cards"><article>Any width</article><article>Content-led</article><article>Respectful</article></section>`),
     visualHint: ["Resize the preview and watch the layout break at the breakpoint.", "غيّر عرض المعاينة واتفرّج الـ `layout` بتتغيّر عند الـ `breakpoint`."],
   },
   {
@@ -207,7 +223,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Tokens inherit", "الـ `tokens` بتتورث"], ["Name tokens by purpose", "سمّي `tokens` حسب الغرض"], ["`var()` accepts a fallback", "`var()` بتقبل `fallback`"]],
     simple: html(`:root { --accent: #0284c7; }\n.button { padding: .6rem 1rem; color: white; background: var(--accent); border: 0; border-radius: .5rem; }`, `<button class="button">Save progress</button>`),
-    real: html(`.card { --accent: #7c3aed; padding: 1rem; border-inline-start: 4px solid var(--accent, #64748b); }\n.card--warning { --accent: #d97706; }`, `<article class="card">Default theme</article><article class="card card--warning">Warning theme</article>`),
+    medium: html(`:root { --surface: #f8fafc; --text: #0f172a; --accent: #0284c7; }\n.panel { padding: 1rem; color: var(--text); background: var(--surface); border-inline-start: 4px solid var(--accent); }`, `<aside class="panel">Tokens keep surface, text, and accent in sync.</aside>`),
+    hard: html(`.card { --accent: #7c3aed; padding: 1rem; border-inline-start: 4px solid var(--accent, #64748b); }\n.card--warning { --accent: #d97706; }`, `<article class="card">Default theme</article><article class="card card--warning">Warning theme</article>`),
     visualHint: ["Change a `--token` value and watch every linked rule update.", "غيّر قيمة `--token` واتفرّج كل القواعد المربوطة بتتحدّث."],
   },
   {
@@ -221,7 +238,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Transition the resting state", "حط `transition` على `resting state`"], ["Prefer `transform` and `opacity`", "فضّل `transform` و`opacity`"], ["Keep motion purposeful", "خلّي الحركة لها هدف"]],
     simple: html(`button { padding: .7rem 1rem; transition: transform 160ms ease, background 160ms ease; }\nbutton:hover, button:focus-visible { transform: translateY(-2px); background: #bae6fd; }`, `<button>Hover or focus me</button>`),
-    real: html(`.lesson { transition: box-shadow 180ms ease, transform 180ms ease; }\n.lesson:hover { transform: scale(1.02); box-shadow: 0 12px 24px #0f172a22; }\n@media (prefers-reduced-motion: reduce) { .lesson { transition: none; } }`, `<article class="lesson">Subtle, optional feedback</article>`),
+    medium: html(`.card { padding: 1rem; border: 1px solid #cbd5e1; border-radius: .5rem; transition: transform 200ms ease, box-shadow 200ms ease; }\n.card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px #0f172a1a; }`, `<article class="card">Lift on hover with transform and shadow.</article>`),
+    hard: html(`.lesson { transition: box-shadow 180ms ease, transform 180ms ease; }\n.lesson:hover { transform: scale(1.02); box-shadow: 0 12px 24px #0f172a22; }\n@media (prefers-reduced-motion: reduce) { .lesson { transition: none; } }`, `<article class="lesson">Subtle, optional feedback</article>`),
     visualHint: ["Hover or focus the button and watch the `transform` kick in.", "اعمل `hover` أو `focus` على الزر واتفرّج `transform` بتشتغل."],
   },
   {
@@ -235,7 +253,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Keyframes define stages", "`Keyframes` بتحدد المراحل"], ["Animation has a lifecycle", "`Animation` ليها `lifecycle`"], ["Reduced motion is essential", "`Reduced motion` أساسية"]],
     simple: html(`@keyframes pop { 0% { transform: scale(.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }\n.badge { animation: pop 240ms ease-out both; padding: .5rem; background: #dcfce7; }`, `<span class="badge">Completed!</span>`),
-    real: html(`@keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }\n.bar { height: .5rem; background: #e2e8f0; overflow: hidden; }\n.bar::before { content: ""; display:block; height:100%; background:#22c55e; transform-origin:left; animation:progress 1s ease-out both; }\n@media (prefers-reduced-motion: reduce) { .bar::before { animation: none; transform: scaleX(1); } }`, `<div class="bar" aria-label="Lesson progress: complete"></div>`),
+    medium: html(`@keyframes pulse { 50% { opacity: .6; } }\n.loader { width: 2rem; height: 2rem; border-radius: 50%; background: #38bdf8; animation: pulse 1.2s ease-in-out infinite; }`, `<div class="loader" aria-label="Loading lesson"></div>`),
+    hard: html(`@keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }\n.bar { height: .5rem; background: #e2e8f0; overflow: hidden; }\n.bar::before { content: ""; display:block; height:100%; background:#22c55e; transform-origin:left; animation:progress 1s ease-out both; }\n@media (prefers-reduced-motion: reduce) { .bar::before { animation: none; transform: scaleX(1); } }`, `<div class="bar" aria-label="Lesson progress: complete"></div>`),
     visualHint: ["Replay the animation and toggle `prefers-reduced-motion`.", "شغّل الـ `animation` تاني وبدّل `prefers-reduced-motion`."],
   },
   {
@@ -249,7 +268,8 @@ const specs: LessonSpec[] = [
     ],
     points: [["Inline follows writing direction", "`Inline` بتتبع اتجاه الكتابة"], ["Use logical spacing by default", "استخدم `logical spacing` افتراضيًا"], ["HTML `dir` sets document direction", "`HTML dir` بتحدد اتجاه المستند"]],
     simple: html(`.note { padding-inline: 1rem; padding-block: .75rem; border-inline-start: 4px solid #0ea5e9; background: #f0f9ff; }`, `<p class="note">This border starts at reading start.</p>`),
-    real: html(`.card { margin-inline: auto; padding: 1rem; max-inline-size: 36rem; border-start-start-radius: 1rem; border-end-end-radius: 1rem; background: #f8fafc; }`, `<article class="card" dir="rtl"><h2>درس CSS</h2><p>المسافات تتبع الاتجاه تلقائيًا.</p></article>`),
+    medium: html(`.list { list-style: none; padding: 0; margin: 0; }\n.list li { padding-inline: 1rem; padding-block: .5rem; border-block-end: 1px solid #e2e8f0; }\n.list li:first-child { border-inline-start: 3px solid #0ea5e9; }`, `<ul class="list" dir="rtl"><li>الدرس الأول</li><li>الدرس الثاني</li></ul>`),
+    hard: html(`.card { margin-inline: auto; padding: 1rem; max-inline-size: 36rem; border-start-start-radius: 1rem; border-end-end-radius: 1rem; background: #f8fafc; }`, `<article class="card" dir="rtl"><h2>درس CSS</h2><p>المسافات تتبع الاتجاه تلقائيًا.</p></article>`),
     visualHint: ["Switch `dir` between `ltr` and `rtl` and watch spacing flip.", "بدّل `dir` بين `ltr` و`rtl` واتفرّج المسافات بتتقلب."],
   },
 ];

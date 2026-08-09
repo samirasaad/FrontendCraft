@@ -248,6 +248,9 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
               <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 {loc(track.title, locale)}
               </h1>
+              <p className="mt-2 max-w-2xl text-base font-medium leading-relaxed text-slate-200">
+                {loc(track.tagline, locale)}
+              </p>
               <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-400">
                 {loc(track.description, locale)}
               </p>

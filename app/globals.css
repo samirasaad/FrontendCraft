@@ -181,23 +181,23 @@ html[data-locale-to="en"][data-locale-anim="out"] body {
   }
 }
 
-/* Quiz progress: fill from reading-start (right in Arabic) */
-.quiz-progress__track {
+/* Lesson activity progress: fill from reading-start (right in Arabic) */
+.lesson-activity-progress__track {
   display: flex;
   justify-content: flex-start;
   direction: ltr;
 }
 
-html[dir="rtl"] .quiz-progress__track {
+html[dir="rtl"] .lesson-activity-progress__track {
   justify-content: flex-end;
 }
 
 /* Keep "سؤال N من M" on the physical left in Arabic. */
-.quiz-progress__meta {
+.lesson-activity-progress__meta {
   direction: ltr;
 }
 
-html[dir="rtl"] .quiz-progress__count {
+html[dir="rtl"] .lesson-activity-progress__count {
   display: none;
 }
 
@@ -291,4 +291,33 @@ html[dir="rtl"] .quiz-progress__count {
 ::-webkit-scrollbar-thumb {
   background: #334155;
   border-radius: 999px;
+}
+
+@keyframes level-quiz-shake-keyframes {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-7px);
+  }
+  40% {
+    transform: translateX(7px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+.level-quiz-shake {
+  animation: level-quiz-shake-keyframes 0.48s ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .level-quiz-shake {
+    animation: none;
+  }
 }

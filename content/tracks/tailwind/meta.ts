@@ -7,12 +7,12 @@ export const tailwindMeta: TrackMeta = {
   accent: "from-teal-300 to-cyan-500",
   icon: "Wind",
   title: { en: "Tailwind CSS", ar: "Tailwind CSS" },
-  description: {
-    en: "Utility-first workflows, design tokens, and rapid UI composition.",
-    ar: "Utility-first، وdesign tokens، وتركيب UI بسرعة.",
-  },
   tagline: {
-    en: "Ship polished UI faster",
-    ar: "طلّع UI أنظف وأسرع",
+    en: "A faster way to write CSS once you understand CSS itself.",
+    ar: "طريقة أسرع لكتابة CSS بعد فهم CSS نفسه.",
+  },
+  description: {
+    en: "Utility-first workflows and design tokens — same CSS, less custom stylesheet work.",
+    ar: "سير عمل utility-first ورموز التصميم — نفس CSS بجهد أقل في ملفات الأنماط.",
   },
 };

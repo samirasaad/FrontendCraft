@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
-import { QuizOptionLetter } from "@/components/lesson/quiz/QuizCodeSnippet";
+import { ActivityOptionLetter } from "@/components/lesson/lesson-activity/LessonActivityCodeSnippet";
 import { RichText } from "@/components/shared/RichText";
 
 const LETTERS = ["A", "B", "C", "D"] as const;
 
-export function QuizOptionCard({
+export function LessonActivityOptionCard({
   index,
   label,
   selected,
@@ -56,7 +56,7 @@ export function QuizOptionCard({
       onClick={onSelect}
       className={`group relative flex w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-start transition disabled:cursor-default ${tone} ${glow}`}
     >
-      <QuizOptionLetter>{LETTERS[index] ?? index + 1}</QuizOptionLetter>
+      <ActivityOptionLetter>{LETTERS[index] ?? index + 1}</ActivityOptionLetter>
       <span className="min-w-0 flex-1 pt-0.5 text-sm font-medium leading-relaxed text-slate-100 sm:text-[15px]">
         <RichText text={label} />
       </span>

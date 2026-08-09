@@ -141,7 +141,7 @@ export const htmlChallenges: Record<string, LessonChallenge> = {
       {
         id: "b",
         label: L("`SSR head` + main + real link", "`SSR head` + main + لينك حقيقي"),
-        code: `<title>HTML track</title>\n<link rel="canonical" href="https://example.com/html" />\n<main>\n  <h1>HTML track</h1>\n  <a href="/html/forms-inputs">Learn HTML forms</a>\n</main>`,
+        code: `<title>HTML lab</title>\n<link rel="canonical" href="https://example.com/html" />\n<main>\n  <h1>HTML lab</h1>\n  <a href="/html/forms-inputs">Learn HTML forms</a>\n</main>`,
       },
     ],
     correctId: "b",
@@ -247,7 +247,7 @@ export function defaultHtmlChallenge(titleEn: string): LessonChallenge {
   return {
     prompt: L(
       `Quick check: which practice matches “${titleEn}”?`,
-      `اختبار سريع: أنهي ممارسة بتطابق “${titleEn}”؟`,
+      `نشاط سريع: أنهي ممارسة بتطابق “${titleEn}”؟`,
     ),
     options: [
       {

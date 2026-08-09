@@ -7,12 +7,12 @@ export const reactMeta: TrackMeta = {
   accent: "from-sky-300 to-indigo-400",
   icon: "Atom",
   title: { en: "React", ar: "React" },
-  description: {
-    en: "Components, props, state, and building app UIs on top of HTML, CSS, and JS.",
-    ar: "Components و props و state، وبناء UI للتطبيقات فوق HTML و CSS و JS.",
-  },
   tagline: {
-    en: "Compose UI with components",
-    ar: "ركّب الـ UI بـ components",
+    en: "Build once as a component — reuse it anywhere in the app.",
+    ar: "ابنِ مرة كمكوّن — وأعد استخدامه في أي مكان بالتطبيق.",
+  },
+  description: {
+    en: "Components, props, and state — organizing HTML, CSS, and JS into app-scale UI.",
+    ar: "المكونات والخصائص والحالة — تنظيم HTML و CSS و JS في واجهة على مستوى التطبيق.",
   },
 };

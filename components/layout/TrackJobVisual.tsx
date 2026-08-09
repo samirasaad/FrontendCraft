@@ -1056,7 +1056,7 @@ function SeoScene({
               hero ? "text-sm" : "text-[10px]"
             }`}
           >
-            Learn structure, look, and behavior in an interactive lab.
+            Build structure, styling, and behavior — hands-on from day one.
           </motion.p>
         </div>
       </div>

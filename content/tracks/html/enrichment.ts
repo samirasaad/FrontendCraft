@@ -1,12 +1,16 @@
 import {
   L,
   pitfall,
-  realWorldExample,
+  hardExample,
+  hardHtmlDoc,
+  mediumExample,
   simpleExample,
 } from "@/content/helpers";
 import type { LegacyLesson } from "@/content/tracks/_legacy";
 import { defaultInsights } from "@/content/tracks/_insights";
+import { htmlMediumExamples } from "@/content/tracks/html/legacy-example-tiers";
 import { htmlInsights } from "@/content/tracks/html/insights";
+import { DEMO_VIDEO_MP4 } from "@/lib/demo-assets";
 import type {
   CodeExample,
   Lesson,
@@ -15,28 +19,22 @@ import type {
 } from "@/lib/types";
 
 interface Overlay {
-  realWorld: CodeExample;
+  hard: CodeExample;
   deepDive: LocalizedString[];
   pitfalls: PitfallExample;
 }
 
 const overlays: Record<string, Overlay> = {
   "document-anatomy": {
-    realWorld: realWorldExample(
-      `<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>FrontendCraft — Tracks</title>
-  </head>
-  <body>
-    <header><h1>FrontendCraft</h1></header>
-    <main><p>Choose a track to start.</p></main>
-  </body>
-</html>`,
-      "Valid shell with lang, charset, viewport, header/main",
-      "هيكل سليم: lang و charset و viewport و header/main",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<header><h1>My site</h1></header>
+<main><p>Valid document shell with lang, charset, and viewport.</p></main>
+<footer><p><small>Built with semantic HTML.</small></p></footer>`,
+        { title: "Lesson page" },
+      ),
+      "Valid shell with lang, charset, viewport, header/main/footer",
+      "هيكل سليم: lang و charset و viewport و header/main/footer",
     ),
     deepDive: [
       L(
@@ -68,22 +66,23 @@ const overlays: Record<string, Overlay> = {
     ),
   },
   "semantic-structure": {
-    realWorld: realWorldExample(
-      `<body>
-  <header>
-    <p>FrontendCraft</p>
-    <nav aria-label="Primary"><a href="/js">JS</a></nav>
-  </header>
-  <main>
-    <article>
-      <h1>Event Loop</h1>
-      <p>Stack runs now. Queue waits.</p>
-    </article>
-  </main>
-  <footer><small>© FrontendCraft</small></footer>
-</body>`,
-      "Landmark regions: header, nav, main, article, footer",
-      "مناطق landmarks: header و nav و main و article و footer",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<header>
+  <p>Learning hub</p>
+  <nav aria-label="Primary"><a href="/javascript">JavaScript</a></nav>
+</header>
+<main>
+  <article>
+    <h1>HTML basics</h1>
+    <p>Landmarks split chrome from the primary lesson content.</p>
+  </article>
+</main>
+<footer><small>© Learning hub</small></footer>`,
+        { title: "HTML basics" },
+      ),
+      "Full page: header, nav, main, article, footer",
+      "صفحة كاملة: header و nav و main و article و footer",
     ),
     deepDive: [
       L(
@@ -115,7 +114,7 @@ const overlays: Record<string, Overlay> = {
 function fallbackOverlay(lesson: LegacyLesson): Overlay {
   const code = lesson.content.code;
   return {
-    realWorld: realWorldExample(
+    hard: hardExample(
       code,
       lesson.content.expectedOutput.en,
       lesson.content.expectedOutput.ar,
@@ -148,18 +147,23 @@ function fallbackOverlay(lesson: LegacyLesson): Overlay {
 
 const specific: Record<string, Partial<Overlay>> = {
   "text-headings": {
-    realWorld: realWorldExample(
-      `<article>
-  <h1>Ship your first page</h1>
-  <h2>Structure</h2>
-  <h3>Document outline</h3>
-  <h4>Ranks in order</h4>
-  <h5>Rare deep nesting</h5>
-  <h6>Finest label</h6>
-  <p>Use h1–h6 as an outline — CSS handles size.</p>
-</article>`,
-      "Full outline: h1 → h2 → h3 → h4 → h5 → h6",
-      "Outline كامل: h1 → h2 → h3 → h4 → h5 → h6",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<main>
+  <article>
+    <h1>Ship your first page</h1>
+    <h2>Structure</h2>
+    <h3>Document outline</h3>
+    <h4>Ranks in order</h4>
+    <h5>Rare deep nesting</h5>
+    <h6>Finest label</h6>
+    <p>Use h1–h6 as an outline — CSS handles size.</p>
+  </article>
+</main>`,
+        { title: "Heading outline" },
+      ),
+      "Full page: h1 → h6 document outline",
+      "صفحة كاملة: outline من h1 لـ h6",
     ),
     deepDive: [
       L(
@@ -181,23 +185,28 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   "text-formatting": {
-    realWorld: realWorldExample(
-      `<article>
-  <h1>Release notes</h1>
-  <p>
-    Fixed <code>focus</code> trap. Press <kbd>Esc</kbd> to close.
-    <mark>Breaking:</mark> <del>v1 API</del> <ins>v2 API</ins>.
-  </p>
-  <p>
-    Shipped <time datetime="2026-08-02">Aug 2, 2026</time>.
-    See <cite>HTML Living Standard</cite>.
-  </p>
-  <blockquote>
-    <p>Prefer native semantics over CSS-only emphasis.</p>
-  </blockquote>
-</article>`,
-      "Docs-style formatting: code, kbd, mark, del/ins, time, cite",
-      "تنسيق docs: code و kbd و mark و del/ins و time و cite",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<main>
+  <article>
+    <h1>Release notes</h1>
+    <p>
+      Fixed <code>focus</code> trap. Press <kbd>Esc</kbd> to close.
+      <mark>Breaking:</mark> <del>v1 API</del> <ins>v2 API</ins>.
+    </p>
+    <p>
+      Shipped <time datetime="2026-08-02">Aug 2, 2026</time>.
+      See <cite>HTML Living Standard</cite>.
+    </p>
+    <blockquote>
+      <p>Prefer native semantics over CSS-only emphasis.</p>
+    </blockquote>
+  </article>
+</main>`,
+        { title: "Release notes" },
+      ),
+      "Full page: code, kbd, mark, del/ins, time, cite",
+      "صفحة كاملة: code و kbd و mark و del/ins و time و cite",
     ),
     deepDive: [
       L(
@@ -223,18 +232,24 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   "links-images": {
-    realWorld: realWorldExample(
-      `<a href="/javascript">
-  <img
-    src="https://placehold.co/80x80/64748b/fff.jpg?text=JS"
-    alt=""
-    width="80"
-    height="80"
-  />
-  <span>Start JavaScript track</span>
-</a>`,
-      "Link with decorative image (empty alt) + text",
-      "لينك مع صورة ديكور (alt فاضي) + نص",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<main>
+  <h1>Choose a lab</h1>
+  <a href="/javascript">
+    <img
+      src="https://placehold.co/80x80/64748b/fff.jpg?text=JS"
+      alt=""
+      width="80"
+      height="80"
+    />
+    <span>Start JavaScript lab</span>
+  </a>
+</main>`,
+        { title: "Lab picker" },
+      ),
+      "Full page: link with decorative image (empty alt) + text",
+      "صفحة كاملة: لينك مع صورة ديكور (alt فاضي) + نص",
     ),
     deepDive: [
       L(
@@ -248,7 +263,7 @@ const specific: Record<string, Partial<Overlay>> = {
         "Missing alt → empty accessible name.",
         "من غير alt → اسم وصول فاضي.",
       ),
-      `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X" alt="Open track X" /></a>`,
+      `<a href="/x"><img src="https://placehold.co/80x80/94a3b8/fff.jpg?text=X" alt="Open lab X" /></a>`,
       L(
         "Give the link a spoken name.",
         "ادي للينك اسم يتقال.",
@@ -256,15 +271,24 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   lists: {
-    realWorld: realWorldExample(
-      `<nav aria-label="Lessons">
-  <ol>
-    <li><a href="#b1">Beginner</a></li>
-    <li><a href="#p1">Pro tips</a></li>
-  </ol>
-</nav>`,
-      "Ordered lesson nav list",
-      "قائمة دروس مرتبة",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<header>
+  <nav aria-label="Lessons">
+    <ol>
+      <li><a href="#b1">Beginner</a></li>
+      <li><a href="#p1">Pro tips</a></li>
+    </ol>
+  </nav>
+</header>
+<main>
+  <h1>Curriculum</h1>
+  <p>Ordered lesson links inside a labeled navigation landmark.</p>
+</main>`,
+        { title: "Lesson navigation" },
+      ),
+      "Full page: ordered nav list inside header",
+      "صفحة كاملة: قائمة nav مرتبة جوّه header",
     ),
     deepDive: [
       L(
@@ -286,16 +310,20 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   "forms-inputs": {
-    realWorld: realWorldExample(
-      `<form action="/api/subscribe" method="post">
-  <label>
-    Email
-    <input type="email" name="email" required autocomplete="email" />
-  </label>
-  <button type="submit">Join waitlist</button>
-</form>`,
-      "Labeled email field + submit",
-      "حقل إيميل بـ label + submit",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<main>
+  <h1>Join the waitlist</h1>
+  <form action="/api/subscribe" method="post">
+    <label for="email">Email</label>
+    <input id="email" type="email" name="email" required autocomplete="email" />
+    <button type="submit">Join waitlist</button>
+  </form>
+</main>`,
+        { title: "Waitlist signup" },
+      ),
+      "Full page: labeled email field with autocomplete",
+      "صفحة كاملة: حقل إيميل بـ label و autocomplete",
     ),
     deepDive: [
       L(
@@ -317,18 +345,25 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   tables: {
-    realWorld: realWorldExample(
-      `<table>
-  <caption>Track progress</caption>
-  <thead>
-    <tr><th scope="col">Tier</th><th scope="col">Done</th></tr>
-  </thead>
-  <tbody>
-    <tr><th scope="row">Beginner</th><td>3/3</td></tr>
-  </tbody>
-</table>`,
-      "Captioned table with scoped headers",
-      "جدول بـ caption و headers محددة النطاق",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<main>
+  <h1>Your progress</h1>
+  <table>
+    <caption>Lab progress</caption>
+    <thead>
+      <tr><th scope="col">Tier</th><th scope="col">Done</th></tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Beginner</th><td>3/3</td></tr>
+      <tr><th scope="row">Pro</th><td>1/4</td></tr>
+    </tbody>
+  </table>
+</main>`,
+        { title: "Progress table" },
+      ),
+      "Full page: captioned table with scoped headers",
+      "صفحة كاملة: جدول بـ caption و headers محددة النطاق",
     ),
     deepDive: [
       L(
@@ -350,14 +385,18 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   "accessibility-basics": {
-    realWorld: realWorldExample(
-      `<button type="button" aria-pressed="false">SFX off</button>
-<a href="#main">Skip to content</a>
+    hard: hardExample(
+      hardHtmlDoc(
+        `<a href="#main">Skip to content</a>
+<button type="button" aria-pressed="false">SFX off</button>
 <main id="main" tabindex="-1">
   <h1>Lessons</h1>
+  <p>Skip link, named control, and a focusable main landmark.</p>
 </main>`,
-      "Named control + skip link + main target",
-      "زر مسمّى + skip link + هدف main",
+        { title: "Accessibility basics" },
+      ),
+      "Full page: skip link, toggle button, and main target",
+      "صفحة كاملة: skip link وزر toggle وهدف main",
     ),
     deepDive: [
       L(
@@ -379,23 +418,28 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   "meta-seo": {
-    realWorld: realWorldExample(
-      `<head>
-  <title>FrontendCraft — Learn HTML in the browser</title>
-  <meta name="description" content="Interactive HTML labs with live sandboxes and bilingual lessons." />
-  <link rel="canonical" href="https://example.com/html" />
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Course","name":"HTML track"}
-  </script>
-</head>
-<body>
-  <main>
-    <h1>HTML track</h1>
-    <a href="/html/forms-inputs">Learn HTML forms</a>
-  </main>
-</body>`,
-      "SSR-ready head + main + descriptive link",
-      "head جاهز لـ SSR + main + لينك وصفي",
+    hard: hardExample(
+      `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Learn HTML in the browser</title>
+    <meta name="description" content="Interactive HTML labs with live sandboxes and bilingual lessons." />
+    <link rel="canonical" href="https://example.com/html" />
+    <script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Course","name":"HTML lab"}
+    </script>
+  </head>
+  <body>
+    <main>
+      <h1>HTML lab</h1>
+      <a href="/html/forms-inputs">Learn HTML forms</a>
+    </main>
+  </body>
+</html>`,
+      "Full page: SEO head + crawlable main + internal link",
+      "صفحة كاملة: head للـ SEO + main قابل للزحف + لينك داخلي",
     ),
     deepDive: [
       L(
@@ -418,9 +462,9 @@ const specific: Record<string, Partial<Overlay>> = {
         "Default title + empty mount — thin SERP and delayed indexing.",
         "عنوان افتراضي + mount فاضي — SERP ضعيف وفهرسة متأخرة.",
       ),
-      `<title>FrontendCraft — HTML track</title>
+      `<title>FrontendCraft — HTML lab</title>
 <main>
-  <h1>HTML track</h1>
+  <h1>HTML lab</h1>
   <a href="/html/forms-inputs">Learn HTML forms</a>
 </main>`,
       L(
@@ -430,20 +474,26 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
   },
   "media-embed": {
-    realWorld: realWorldExample(
-      `<figure>
-  <video
-    controls
-    playsinline
-    poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
-  >
-    <source src="/intro.mp4" type="video/mp4" />
-    <track kind="captions" srclang="en" src="/intro.vtt" default />
-  </video>
-  <figcaption>Event Loop in 60s</figcaption>
-</figure>`,
-      "Video with captions + figcaption",
-      "فيديو بكابشنز و figcaption",
+    hard: hardExample(
+      hardHtmlDoc(
+        `<main>
+  <h1>Lesson intro</h1>
+  <figure>
+    <video
+      controls
+      playsinline
+      poster="https://placehold.co/640x360/0f172a/38bdf8.jpg?text=Video+poster"
+    >
+      <source src="${DEMO_VIDEO_MP4}" type="video/mp4" />
+      <track kind="captions" srclang="en" src="/captions.vtt" default />
+    </video>
+    <figcaption>HTML lesson intro with captions and a poster frame.</figcaption>
+  </figure>
+</main>`,
+        { title: "Lesson video" },
+      ),
+      "Full page: video with captions, poster, and figcaption",
+      "صفحة كاملة: فيديو بكابشنز و poster و figcaption",
     ),
     deepDive: [
       L(
@@ -472,7 +522,7 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
   const base = overlays[lesson.slug] ?? fallbackOverlay(lesson);
   const patch = specific[lesson.slug] ?? {};
   const overlay: Overlay = {
-    realWorld: patch.realWorld ?? base.realWorld,
+    hard: patch.hard ?? base.hard,
     deepDive: patch.deepDive ?? base.deepDive,
     pitfalls: patch.pitfalls ?? base.pitfalls,
   };
@@ -500,7 +550,13 @@ export function enrichLegacyLesson(lesson: LegacyLesson, order: number): Lesson 
           lesson.content.expectedOutput.en,
           lesson.content.expectedOutput.ar,
         ),
-        overlay.realWorld,
+        htmlMediumExamples[lesson.slug] ??
+          mediumExample(
+            lesson.content.code,
+            lesson.content.expectedOutput.en,
+            lesson.content.expectedOutput.ar,
+          ),
+        overlay.hard,
       ],
       visualHint: lesson.content.visualHint,
       underTheHood: pack.underTheHood,

@@ -1,35 +1,55 @@
 import { withProductionInsights } from "@/content/tracks/_insights";
+import { attachBrowserWalkthrough, assertBrowserWalkthroughCoverage } from "@/content/tracks/_attach-browser-walkthrough";
 import { HTML_CURRICULUM_ORDER } from "@/content/tracks/html/curriculum-order";
 import { enrichLegacyLesson } from "@/content/tracks/html/enrichment";
+import { htmlBrowserWalkthrough } from "@/content/tracks/html/browser-walkthrough";
 import { extraLessons } from "@/content/tracks/html/extra-lessons";
 import { htmlInsights } from "@/content/tracks/html/insights";
 import { legacyLessons } from "@/content/tracks/html/legacy-lessons";
 import { modernLessons } from "@/content/tracks/html/modern-lessons";
 import {
-  assertHtmlQuizCoverage,
-  htmlQuizzes,
-} from "@/content/tracks/html/quizzes";
+  assertHtmlLessonActivityCoverage,
+  htmlLessonActivities,
+} from "@/content/tracks/html/lesson-activities";
+import {
+  assertHtmlLevelQuizCoverage,
+} from "@/content/tracks/html/level-quizzes";
+import { htmlLevelQuizLessons } from "@/content/tracks/html/level-quiz-lessons";
+import {
+  HTML_LEVEL_QUIZ_LESSON_SLUGS,
+  isLevelQuizLesson,
+} from "@/lib/level-quiz/capstones";
 import type { Lesson } from "@/lib/types";
 
 export { HTML_CURRICULUM_ORDER };
 
-assertHtmlQuizCoverage(HTML_CURRICULUM_ORDER);
+const CONTENT_LESSON_SLUGS = HTML_CURRICULUM_ORDER.filter(
+  (slug) => !HTML_LEVEL_QUIZ_LESSON_SLUGS.includes(slug as (typeof HTML_LEVEL_QUIZ_LESSON_SLUGS)[number]),
+);
+
+assertHtmlLessonActivityCoverage(CONTENT_LESSON_SLUGS);
+assertHtmlLevelQuizCoverage(HTML_LEVEL_QUIZ_LESSON_SLUGS);
+assertBrowserWalkthroughCoverage(
+  CONTENT_LESSON_SLUGS,
+  htmlBrowserWalkthrough,
+  "HTML",
+);
 
 const coreLessons: Lesson[] = legacyLessons.map((lesson) =>
   enrichLegacyLesson(lesson, lesson.order),
 );
 
 function withLabExtras(lesson: Lesson): Lesson {
-  const quiz = htmlQuizzes[lesson.slug];
-  if (!quiz) {
-    throw new Error(`Missing HTML quiz for lesson slug: ${lesson.slug}`);
+  const activity = htmlLessonActivities[lesson.slug];
+  if (!activity) {
+    throw new Error(`Missing HTML lesson activity for lesson slug: ${lesson.slug}`);
   }
 
   return {
     ...lesson,
     content: {
       ...lesson.content,
-      quiz,
+      activity,
     },
   };
 }
@@ -56,9 +76,10 @@ function orderCurriculum(list: Lesson[]): Lesson[] {
 }
 
 export const lessons: Lesson[] = orderCurriculum(
-  [...coreLessons, ...modernLessons, ...extraLessons]
+  [...coreLessons, ...modernLessons, ...extraLessons, ...htmlLevelQuizLessons]
     .map((lesson) => withProductionInsights(lesson, htmlInsights))
-    .map(withLabExtras),
+    .map((lesson) => (isLevelQuizLesson(lesson) ? lesson : withLabExtras(lesson)))
+    .map((lesson) => attachBrowserWalkthrough(lesson, htmlBrowserWalkthrough)),
 );
 
 export function getLessonById(id: string): Lesson | undefined {
