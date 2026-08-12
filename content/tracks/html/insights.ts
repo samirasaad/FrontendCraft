@@ -2263,4 +2263,163 @@ main.querySelector("h1")?.focus();`,
       },
     ),
   },
+
+  "inline-vs-block": {
+    underTheHood: insight(
+      [
+        L(
+          "In CSS terms, block boxes participate in block layout (stacking vertically). Inline boxes join line boxes inside a paragraph. HTML’s default `display` for each tag is what beginners feel first.",
+          "بمصطلحات CSS، صناديق block بتدخل في block layout (تكديس رأسي). صناديق inline بتدخل في line boxes جوّه الفقرة. الـ `display` الافتراضي لكل tag هو اللي المبتدئ بيحسّه أول.",
+        ),
+        L(
+          "You can change display with CSS later (`inline-block`, flex, grid) — but start by picking the right HTML default so the document makes sense without stylesheets.",
+          "تقدر تغيّر العرض بـ CSS بعدين (`inline-block` و flex و grid) — لكن ابدأ بالافتراضي الصح في HTML عشان المستند يفضل مفهوم من غير ستايلشيت.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Block stacks · inline flows in a line", "Block بيتكدّس · inline بيمشي في سطر"),
+          L("Don’t put block tags inside inline tags", "متحطش وسوم block جوّه inline"),
+          L("`div` block box · `span` inline hook", "`div` صندوق block · `span` hook inline"),
+        ],
+        code: `<p>Text <a href="/">link</a> and <strong>stress</strong>.</p>
+<section><h2>Block section</h2></section>`,
+        codeCaption: L("Inline inside `p` · block `section`", "Inline جوّه `p` · `section` بلوك"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Screen readers mostly care about roles and names, not block vs inline. Still, broken nesting can confuse the accessibility tree after parser repair.",
+          "قارئات الشاشة بتهتم بالأدوار والأسماء أكتر من block مقابل inline. لكن التداخل الغلط ممكن يلغبط accessibility tree بعد إصلاح الـ parser.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Prefer semantic tags over empty `div`/`span` soup", "فضّل وسوم semantic عن شوربة `div`/`span`"),
+          L("Links and buttons should stay focusable interactive elements", "اللينكات والأزرار تفضل عناصر تفاعلية قابلة للتركيز"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Crawlers read the DOM. Clear block structure with headings helps outline detection more than decorative spans.",
+          "الزواحف بتقرأ الـ DOM. بنية block واضحة بعناوين بتساعد الـ outline أكتر من spans ديكور.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Use headings and landmarks for structure", "استخدم عناوين و landmarks للبنية"),
+          L("Don’t fake sections with only styled spans", "متعملش أقسام وهمية بـ spans متسيّقة بس"),
+        ],
+      },
+    ),
+  },
+
+  "classes-and-ids": {
+    underTheHood: insight(
+      [
+        L(
+          "`id` must be unique in the document — duplicate ids break `getElementById`, fragment links, and label association. Classes are a set of tokens for styling and querying many nodes.",
+          "`id` لازم يكون فريد في المستند — تكرار الـ ids بيكسر `getElementById` وروابط الأقسام وربط الـ label. الـ classes مجموعة tokens للتنسيق والاستعلام عن nodes كتير.",
+        ),
+        L(
+          "CSS specificity: `#id` beats `.class` beats element selectors. Prefer classes for reusable UI so you don’t paint yourself into an `#id` corner.",
+          "خصوصية CSS: `#id` أقوى من `.class` أقوى من element. فضّل classes لواجهة قابلة لإعادة الاستخدام عشان متتحشرش في `#id`.",
+        ),
+      ],
+      {
+        bullets: [
+          L("One unique `id` per page", "`id` واحد فريد لكل صفحة"),
+          L("Reuse `class` for shared look and behavior", "أعد استخدام `class` للشكل والسلوك المشترك"),
+          L("`label for` must match the control `id`", "`label for` لازم يطابق `id` الـ control"),
+        ],
+        code: `<label for="q">Search</label>
+<input id="q" class="input" name="q" />`,
+        codeCaption: L("`for`/`id` pair + shared class", "زوج `for`/`id` + class مشترك"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Ids glue labels to inputs and skip targets to landmarks. Missing or duplicated ids hurt keyboard and screen reader users first.",
+          "الـ ids بتربط labels بالـ inputs وأهداف التخطي بالـ landmarks. الـ ids الناقصة أو المكررة بتضر مستخدمي الكيبورد وقارئ الشاشة أول.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Never duplicate an `id`", "متكررش `id`"),
+          L("Keep names readable for teammates and AT testing", "خلّي الأسماء مقروءة للفريق واختبار AT"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Fragment ids (`#section`) help share deep links. Stable, meaningful ids beat auto-generated gibberish when content is cited.",
+          "معرفات الأقسام (`#section`) بتساعد مشاركة روابط عميقة. ids ثابتة ومعناها أوضح من نصوص عشوائية مولّدة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Use clear fragment ids for important sections", "استخدم ids واضحة للأقسام المهمة"),
+          L("Don’t rely on presentational class names for meaning", "معتمدش على أسماء class شكلية كمعنى"),
+        ],
+      },
+    ),
+  },
+
+  "html-browser-apis": {
+    underTheHood: insight(
+      [
+        L(
+          "Geolocation, Drag and Drop, and Web Storage are browser capabilities exposed to JavaScript. HTML supplies the controls and `draggable` hooks; permissions and quotas are enforced by the browser.",
+          "Geolocation و Drag and Drop و Web Storage قدرات متصفح متعرّضة لـ JavaScript. HTML بيدي عناصر التحكم و hooks الـ `draggable`؛ الأذونات والحصص بيفرضها المتصفح.",
+        ),
+        L(
+          "`localStorage` is synchronous and origin-scoped (~5MB typical). Large writes can jank the main thread — keep payloads small or move heavy data to IndexedDB later.",
+          "`localStorage` متزامن ومحدود بالـ origin (حوالي 5MB غالبًا). الكتابات الكبيرة ممكن تعلّق الـ main thread — خلّي البيانات صغيرة أو انقل التقيل لـ IndexedDB بعدين.",
+        ),
+      ],
+      {
+        bullets: [
+          L("APIs need feature detection + permission handling", "الـ APIs محتاجة feature detection + التعامل مع الإذن"),
+          L("`draggable` is HTML · events are JavaScript", "`draggable` من HTML · الأحداث من JavaScript"),
+          L("Web Storage is not encrypted — never store secrets", "Web Storage مش مشفّر — متخزنش أسرار"),
+        ],
+        code: `localStorage.setItem("theme", "dark");
+const theme = localStorage.getItem("theme");`,
+        codeCaption: L("Tiny `localStorage` read/write", "قراءة/كتابة `localStorage` صغيرة"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Drag-and-drop UIs need keyboard and button alternatives. Geolocation prompts should explain purpose in visible UI copy, not only the browser chrome dialog.",
+          "واجهات السحب والإفلات محتاجة بدائل كيبورد وأزرار. طلبات الموقع لازم توضّح الغرض في نص ظاهر، مش في حوار المتصفح بس.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Provide non-drag ways to complete the same task", "وفّر طرق من غير سحب لنفس المهمة"),
+          L("Announce status updates with `role=\"status\"` when helpful", "أعلن تحديثات الحالة بـ `role=\"status\"` لما يفيد"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "These APIs don’t replace crawlable HTML content. Prefer progressive enhancement — core info in markup, APIs as extras.",
+          "الـ APIs دي مش بديل لمحتوى HTML قابل للزحف. فضّل التحسين التدريجي — المعلومات الأساسية في الـ markup، والـ APIs كإضافة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Keep critical content in HTML first", "خلّي المحتوى الحرج في HTML أولًا"),
+          L("Don’t gate SEO text behind storage or GPS", "متقفلش نص SEO ورا التخزين أو GPS"),
+        ],
+      },
+    ),
+  },
 };

@@ -101,6 +101,10 @@ export const legacyLessons: LegacyLesson[] = [
           en: "Don’t build a soup of nested `<div>`s when a semantic tag already fits — it costs nothing extra and gives screen reader users free navigation landmarks.",
           ar: "متعملش شوربة `<div>` متداخلة لو في `semantic tag` مناسب أصلًا — مش هيكلفك حاجة زيادة، وهيدّي لمستخدمي قارئات الشاشة `landmarks` للتنقل ببلاش.",
         },
+        {
+          en: "Most of these tags are **block** elements — they start on a new line and take the full width by default (`div`, `p`, `header`, `main`). **Inline** elements sit inside a line of text (`span`, `a`, `strong`). Pick block for page sections, inline for pieces of text.",
+          ar: "معظم الوسوم دي عناصر **block** — بتبدأ في سطر جديد وبتاخد العرض كله افتراضيًا (`div` و `p` و `header` و `main`). عناصر **inline** بتقعد جوّه سطر النص (`span` و `a` و `strong`). اختار block لأقسام الصفحة، و inline لقطع النص.",
+        },
       ],
       keyPoints: [
         {
@@ -118,6 +122,10 @@ export const legacyLessons: LegacyLesson[] = [
         {
           en: "Semantic tags give screen readers free navigation landmarks",
           ar: "الـ `semantic tags` بتدّي قارئات الشاشة `landmarks` تنقل ببلاش",
+        },
+        {
+          en: "Block = sections of the page · Inline = pieces of text",
+          ar: "Block = أقسام الصفحة · Inline = قطع النص",
         },
       ],
       code: `<body>
@@ -234,6 +242,10 @@ export const legacyLessons: LegacyLesson[] = [
           en: "For quotes, `<q>` handles a short inline quote and `<blockquote>` a longer one, both paired with `<cite>` for the source. For technical bits, `<code>` and `<abbr title=\"...\">` add real meaning beyond plain text.",
           ar: "للاقتباس، `<q>` لاقتباس قصير جوّه السطر، و `<blockquote>` للأطول، واتنينهم بيترافقوا مع `<cite>` للمصدر. وللحاجات التقنية، `<code>` و `<abbr title=\"...\">` بيضيفوا معنى حقيقي أكتر من نص عادي.",
         },
+        {
+          en: "`<span>` is a neutral **inline** wrapper — it has no meaning by itself. Use it when you only need a hook for CSS or JavaScript (a color, a class, a small highlight). Prefer `<strong>`, `<em>`, `<mark>`, or `<code>` when the text has real meaning.",
+          ar: "`<span>` غلاف **inline** محايد — ملهوش معنى لوحده. استخدمه لما محتاج hook لـ CSS أو JavaScript (لون، class، تمييز صغير). فضّل `<strong>` و `<em>` و `<mark>` أو `<code>` لما النص ليه معنى حقيقي.",
+        },
       ],
       keyPoints: [
         {
@@ -252,6 +264,10 @@ export const legacyLessons: LegacyLesson[] = [
           en: "Don’t underline plain text to look like a link",
           ar: "متظللش نص عادي عشان يبان `link`",
         },
+        {
+          en: "`<span>` = styling hook · semantic tags = meaning",
+          ar: "`<span>` = hook للتنسيق · الوسوم الـ semantic = المعنى",
+        },
       ],
       code: `<p>
   Learn <strong>HTML</strong> with <em>clarity</em>.
@@ -266,6 +282,10 @@ export const legacyLessons: LegacyLesson[] = [
 <p>
   <mark>Remember</mark>: <del>old copy</del> <ins>new copy</ins>.
   <q>Short quote</q> — <cite>MDN</cite>
+</p>
+<p>
+  Price: <span class="price">$19</span>
+  <!-- span only for CSS — no extra meaning -->
 </p>
 <blockquote>
   <p>Longer quoted passage for articles and docs.</p>
@@ -449,34 +469,60 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "الأزرار كمان محتاجة `type`: `submit` بيبعت الفورم (وهو الافتراضي جوّه `<form>`)، `button` مبيعملش حاجة لوحده ومستني `JavaScript`، و `reset` بيمسح كل الحقول لقيمتها الافتراضية.",
         },
         {
-          en: "Attributes like `required`, `min`, `max`, and `pattern` give free, built-in validation before any JavaScript runs.",
-          ar: "خصائص زي `required` و `min` و `max` و `pattern` بتديك التحقق من البيانات (Input Validation) جاهز ببلاش قبل أي `JavaScript`.",
+          en: "Handy beginner attributes: `placeholder` (hint text), `value` (starting value), `checked` (for checkboxes/radios), `disabled` / `readonly`, `maxlength` / `minlength`, and `required`. On the form itself, `action` is where data goes and `method` is usually `get` or `post`.",
+          ar: "خصائص مفيدة للمبتدئ: `placeholder` (نص تلميح)، `value` (قيمة البداية)، `checked` (للـ checkbox/radio)، `disabled` / `readonly`، `maxlength` / `minlength`، و `required`. على الفورم نفسه، `action` هو مكان البيانات و `method` غالبًا `get` أو `post`.",
+        },
+        {
+          en: "`required`, `min`, `max`, and `pattern` give free, built-in validation before any JavaScript runs. Next lesson goes deeper on `inputmode`, `autocomplete`, and `pattern` for better mobile UX.",
+          ar: "`required` و `min` و `max` و `pattern` بتديك التحقق جاهز ببلاش قبل أي `JavaScript`. الدرس الجاي بيتعمّق في `inputmode` و `autocomplete` و `pattern` لتجربة موبايل أحسن.",
         },
       ],
       keyPoints: [
         {
-          en: "Label every input",
-          ar: "اعمل `label` لكل `input`",
+          en: "Label every input (`for` + `id` or wrap)",
+          ar: "اعمل `label` لكل `input` (`for` + `id` أو لف)",
         },
         {
-          en: "`name` matters for submission, `type` matters for behavior",
-          ar: "`name` مهم في الـ `submission`، و `type` مهم في السلوك",
+          en: "`name` for submit · `type` for behavior",
+          ar: "`name` للإرسال · `type` للسلوك",
         },
         {
-          en: "Buttons need an explicit `type`: `submit`, `button`, or `reset`",
-          ar: "الأزرار محتاجة `type` واضح: `submit` أو `button` أو `reset`",
+          en: "Buttons need `type`: `submit`, `button`, or `reset`",
+          ar: "الأزرار محتاجة `type`: `submit` أو `button` أو `reset`",
         },
         {
-          en: "Native validation attributes help before JavaScript",
-          ar: "خصائص التحقق من البيانات الأصلية بتساعد قبل `JavaScript`",
+          en: "Learn `placeholder`, `value`, `checked`, `disabled`, `maxlength`, `required`",
+          ar: "اتعلّم `placeholder` و `value` و `checked` و `disabled` و `maxlength` و `required`",
+        },
+        {
+          en: "`action` + `method` on `<form>` control where data goes",
+          ar: "`action` + `method` على `<form>` بيحددوا فين بتروح البيانات",
         },
       ],
       code: `<form action="/signup" method="post">
   <label for="email">Email</label>
-  <input id="email" name="email" type="email" required />
+  <input
+    id="email"
+    name="email"
+    type="email"
+    placeholder="you@example.com"
+    maxlength="120"
+    required
+  />
 
   <label for="pass">Password</label>
-  <input id="pass" name="password" type="password" minlength="8" required />
+  <input
+    id="pass"
+    name="password"
+    type="password"
+    minlength="8"
+    required
+  />
+
+  <label>
+    <input type="checkbox" name="terms" value="yes" required />
+    I agree to the terms
+  </label>
 
   <button type="submit">Create account</button>
 </form>`,
@@ -520,6 +566,10 @@ export const legacyLessons: LegacyLesson[] = [
           en: "For layout grids, use CSS — tables for comparing rows of related values.",
           ar: "لـ `layout grids` استخدم `CSS` — الـ `tables` لمقارنة صفوف قيم مرتبطة.",
         },
+        {
+          en: "Beginner styling tips (CSS, not more HTML): use `border-collapse: collapse` so cell borders look clean, add padding on `th`/`td`, and give `th` a light background. Wrap wide tables in a scrollable container so mobile users can still read them. Don’t use tables to build your whole page layout.",
+          ar: "نصائح تنسيق للمبتدئ (CSS مش HTML زيادة): استخدم `border-collapse: collapse` عشان الحدود تبقى مرتبة، زوّد padding على `th`/`td`، وادي `th` خلفية فاتحة. لف الجداول العريضة في حاوية scroll عشان الموبايل يقراها. متستخدمش tables لبناء layout الصفحة كلها.",
+        },
       ],
       keyPoints: [
         {
@@ -534,8 +584,18 @@ export const legacyLessons: LegacyLesson[] = [
           en: "Separate head and body sections",
           ar: "افصل أقسام `head` و `body`",
         },
+        {
+          en: "Style with CSS: `border-collapse`, padding, header background",
+          ar: "ستايل بـ CSS: `border-collapse` و padding وخلفية الهيدر",
+        },
       ],
-      code: `<table>
+      code: `<style>
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; }
+  th { background: #e2e8f0; text-align: start; }
+</style>
+
+<table>
   <caption>Scoreboard</caption>
   <thead>
     <tr>

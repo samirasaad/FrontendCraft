@@ -8,8 +8,10 @@ export const HTML_CURRICULUM_ORDER = [
   "semantic-structure",
   "text-headings",
   "text-formatting",
+  "inline-vs-block",
   "links-images",
   "lists",
+  "classes-and-ids",
   "html-beginner-quiz",
   // Intermediate
   "forms-inputs",
@@ -34,6 +36,7 @@ export const HTML_CURRICULUM_ORDER = [
   "html-security-hardening",
   "html-speculation-rules",
   "html-global-rtl",
+  "html-browser-apis",
   "html-common-pitfalls",
   "html-pro-quiz",
   // CheatSheet

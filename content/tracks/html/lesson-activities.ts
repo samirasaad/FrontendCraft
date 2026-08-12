@@ -611,6 +611,36 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           ),
         },
       ),
+      q(
+        "q6",
+        L(
+          "When should you use `<span>`?",
+          "إمتى تستخدم `<span>`؟",
+        ),
+        [
+          opt(
+            "a",
+            "To wrap a word for CSS/JS with no extra meaning",
+            "علّف كلمة لـ CSS/JS من غير معنى زيادة",
+          ),
+          opt("b", "Instead of a heading", "بدل عنوان"),
+          opt("c", "As a page section container", "كصندوق قسم للصفحة"),
+          opt("d", "To make text bold by itself", "عشان تخلي النص عريض لوحدها"),
+        ],
+        "a",
+        L(
+          "`<span>` is a neutral inline hook for styling or scripting. Prefer `<strong>`/`<em>` when meaning matters, and `<div>` for block boxes.",
+          "`<span>` hook inline محايد للتنسيق أو السكربت. فضّل `<strong>`/`<em>` لما المعنى مهم، و `<div>` لصناديق block.",
+        ),
+        {
+          code: `<p>Price: <span class="price">$19</span></p>`,
+          language: "html",
+          hint: L(
+            "`span` adds no meaning — it just marks a piece of text.",
+            "`span` مش بيضيف معنى — بيسِم قطعة نص بس.",
+          ),
+        },
+      ),
     ],
   },
 
@@ -1045,6 +1075,38 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           ),
         },
       ),
+      q(
+        "q6",
+        L(
+          "What do `action` and `method` on `<form>` control?",
+          "`action` و `method` على `<form>` بيتحكّموا في إيه؟",
+        ),
+        [
+          opt(
+            "a",
+            "Where the form submits and which HTTP method to use",
+            "فين الفورم هتتبعت وأنهي HTTP method",
+          ),
+          opt("b", "Only the button color", "لون الزرار بس"),
+          opt("c", "The label text", "نص الـ label"),
+          opt("d", "Whether inputs are required", "هل الـ inputs مطلوبة"),
+        ],
+        "a",
+        L(
+          "`action` is the URL; `method` is usually `get` or `post`. Beginner attributes like `placeholder`, `disabled`, and `maxlength` shape UX — they don’t replace labels or names.",
+          "`action` هو الـ URL؛ `method` غالبًا `get` أو `post`. خصائص المبتدئ زي `placeholder` و `disabled` و `maxlength` بتشكّل UX — مش بديل للـ labels أو الـ names.",
+        ),
+        {
+          code: `<form action="/search" method="get">
+  <input name="q" placeholder="Search…" maxlength="80" />
+</form>`,
+          language: "html",
+          hint: L(
+            "`action` = where · `method` = how · `placeholder` is a hint, not a label.",
+            "`action` = فين · `method` = إزاي · `placeholder` تلميح مش label.",
+          ),
+        },
+      ),
     ],
   },
 
@@ -1175,6 +1237,38 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           hint: L(
             "`scope` tells AT which axis (column or row) a header describes.",
             "`scope` بيقول لـ AT الرأس ده بيوصف عمود ولا صف.",
+          ),
+        },
+      ),
+      q(
+        "q6",
+        L(
+          "Which CSS tip helps beginner tables look cleaner?",
+          "أنهي نصيحة CSS بتخلّي جداول المبتدئ أنضف؟",
+        ),
+        [
+          opt(
+            "a",
+            "`border-collapse: collapse` plus cell padding",
+            "`border-collapse: collapse` مع padding للخلايا",
+          ),
+          opt("b", "Use tables for the whole page layout", "استخدم جداول لتخطيط الصفحة كلها"),
+          opt("c", "Remove `<th>` so borders look thinner", "شيل `<th>` عشان الحدود تبقى أرفع"),
+          opt("d", "Skip captions to save space", "اتخطى الـ caption عشان توفّر مساحة"),
+        ],
+        "a",
+        L(
+          "`border-collapse: collapse` merges double borders; padding and a light `th` background improve readability. Wrap wide tables for horizontal scroll on small screens.",
+          "`border-collapse: collapse` بيدمج الحدود المزدوجة؛ الـ padding وخلفية خفيفة لـ `th` بتحسّن القراءة. لف الجداول العريضة عشان scroll أفقي على الشاشات الصغيرة.",
+        ),
+        {
+          code: `table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 0.5rem; }
+th { background: #f5f5f5; text-align: left; }`,
+          language: "css",
+          hint: L(
+            "Styling is CSS — keep the HTML semantic (`th`, `caption`, etc.).",
+            "التنسيق من CSS — سيّب HTML semantic (`th` و `caption` إلخ).",
           ),
         },
       ),
@@ -3614,6 +3708,327 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           hint: L(
             "A pasted snippet still has placeholder names — make them match your real page.",
             "الـ snippet الملصوق لسه فيه أسماء placeholder — خليها تناسب صفحتك الحقيقية.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "inline-vs-block": {
+    title: L("Inline vs block check", "نشاط inline مقابل block"),
+    questions: [
+      q(
+        "q1",
+        L("Which tags are block by default?", "أنهي tags block افتراضيًا؟"),
+        [
+          opt("a", "<span> and <a>", "<span> و <a>"),
+          opt("b", "<div>, <p>, and <section>", "<div> و <p> و <section>"),
+          opt("c", "<strong> and <em>", "<strong> و <em>"),
+          opt("d", "<code> only", "<code> بس"),
+        ],
+        "b",
+        L(
+          "Block tags like `<div>`, `<p>`, and `<section>` start on a new line and take full width by default.",
+          "وسوم block زي `<div>` و `<p>` و `<section>` بتبدأ سطر جديد وبتاخد العرض الكامل افتراضيًا.",
+        ),
+        {
+          hint: L(
+            "Think “big pieces of the page” vs “bits inside a sentence.”",
+            "فكّر “قطع كبيرة من الصفحة” مقابل “قطع جوّه الجملة.”",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("What do inline elements do?", "عناصر inline بتعمل إيه؟"),
+        [
+          opt("a", "Always force a new page section", "دايمًا بتفتح قسم صفحة جديد"),
+          opt(
+            "b",
+            "Flow inside a line of text without a forced new line",
+            "بتمشي جوّه سطر النص من غير سطر جديد إجباري",
+          ),
+          opt("c", "Replace CSS Grid", "بدل CSS Grid"),
+          opt("d", "Hide content from screen readers", "بتخفي المحتوى من قارئات الشاشة"),
+        ],
+        "b",
+        L(
+          "Inline tags like `<span>`, `<a>`, and `<strong>` sit inside text.",
+          "وسوم inline زي `<span>` و `<a>` و `<strong>` بتقعد جوّه النص.",
+        ),
+        {
+          hint: L(
+            "Inline = inside the sentence · block = its own chunk.",
+            "Inline = جوّه الجملة · block = قطعة لوحدها.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L("Which nesting is a common beginner mistake?", "أنهي تداخل غلط شائع للمبتدئ؟"),
+        [
+          opt("a", "<p> with <strong> inside", "<p> وفيها <strong>"),
+          opt("b", "<div> containing <p>", "<div> فيها <p>"),
+          opt(
+            "c",
+            "Putting a <div> inside a <span>",
+            "تحط <div> جوّه <span>",
+          ),
+          opt("d", "<ul> containing <li>", "<ul> فيها <li>"),
+        ],
+        "c",
+        L(
+          "Don’t put block tags inside inline tags. Keep structure in blocks and text pieces inline.",
+          "متحطش وسوم block جوّه inline. خلّي البنية في block وقطع النص inline.",
+        ),
+        {
+          code: `<!-- avoid -->\n<span><div>Oops</div></span>`,
+          language: "html",
+          hint: L(
+            "Block inside inline is the mix-up to avoid.",
+            "Block جوّه inline هو الخلط اللي تتجنّبه.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L(
+          "`div` vs `span` — what’s the simple rule?",
+          "`div` مقابل `span` — القاعدة البسيطة؟",
+        ),
+        [
+          opt(
+            "a",
+            "`div` = block box · `span` = inline hook",
+            "`div` = صندوق block · `span` = hook inline",
+          ),
+          opt("b", "They mean the same thing", "نفس المعنى"),
+          opt("c", "`span` is only for forms", "`span` للفورم بس"),
+          opt("d", "`div` is always better for bold text", "`div` دايمًا أحسن للنص العريض"),
+        ],
+        "a",
+        L(
+          "Both are neutral (no special meaning). Choose by layout need: block box vs inline piece.",
+          "الاتنين محايدين (من غير معنى خاص). اختار حسب الحاجة: صندوق block ولا قطعة inline.",
+        ),
+        {
+          hint: L(
+            "Same “no meaning” idea — different default display.",
+            "نفس فكرة “من غير معنى” — عرض افتراضي مختلف.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "classes-and-ids": {
+    title: L("Classes & IDs check", "نشاط الـ classes والـ ids"),
+    questions: [
+      q(
+        "q1",
+        L("How many elements can share the same `id`?", "كام عنصر يقدروا يشاركوا نفس الـ `id`؟"),
+        [
+          opt("a", "As many as you want", "قد ما تحب"),
+          opt("b", "Only one per page", "واحد بس في الصفحة"),
+          opt("c", "Two — one for CSS, one for JS", "اتنين — واحد لـ CSS وواحد لـ JS"),
+          opt("d", "Only inside forms", "جوّه الفورم بس"),
+        ],
+        "b",
+        L(
+          "`id` must be unique in the document. Reuse styles with `class` instead.",
+          "`id` لازم يكون فريد في المستند. أعد استخدام التنسيق بـ `class`.",
+        ),
+        {
+          hint: L(
+            "Think of `id` like a unique name tag.",
+            "فكّر في `id` زي اسم فريد على تاج.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("What is `class` best for?", "`class` أنسب لإيه؟"),
+        [
+          opt(
+            "a",
+            "Shared styling or behavior on many elements",
+            "تنسيق أو سلوك مشترك على عناصر كتير",
+          ),
+          opt("b", "Replacing the `name` attribute on inputs", "بدل خاصية `name` على الـ inputs"),
+          opt("c", "Making text semantic like `<strong>`", "تخلي النص semantic زي `<strong>`"),
+          opt("d", "Only one element ever", "عنصر واحد بس للأبد"),
+        ],
+        "a",
+        L(
+          "Classes can repeat. Use them for reusable look and JS hooks.",
+          "الـ classes تتكرر. استخدمها للشكل القابل لإعادة الاستخدام و hooks الـ JS.",
+        ),
+        {
+          code: `<button class="btn btn-primary">Save</button>`,
+          language: "html",
+          hint: L(
+            "One class name can style many buttons the same way.",
+            "اسم class واحد يقدر ينسّق أزرار كتير بنفس الطريقة.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L(
+          "Why must `<label for=\"email\">` match the input’s `id`?",
+          "ليه `<label for=\"email\">` لازم يطابق `id` الـ input؟",
+        ),
+        [
+          opt(
+            "a",
+            "So clicking the label focuses the input",
+            "عشان الضغط على الـ label يركّز على الـ input",
+          ),
+          opt("b", "So CSS Grid works", "عشان CSS Grid يشتغل"),
+          opt("c", "So the form uses GET", "عشان الفورم تستخدم GET"),
+          opt("d", "It is optional decoration", "ديكور اختياري"),
+        ],
+        "a",
+        L(
+          "`for` + matching `id` links the label to the control for mouse, keyboard, and screen readers.",
+          "`for` + `id` مطابق بيربط الـ label بالـ control للماوس والكيبورد وقارئ الشاشة.",
+        ),
+        {
+          code: `<label for="email">Email</label>\n<input id="email" name="email" type="email" />`,
+          language: "html",
+          hint: L(
+            "Match the strings exactly — `for` and `id` are a pair.",
+            "طابق النصوص بالظبط — `for` و `id` زوج.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L(
+          "Which is a good beginner habit for CSS?",
+          "أنهي عادة كويسة للمبتدئ مع CSS؟",
+        ),
+        [
+          opt(
+            "a",
+            "Prefer classes for reusable UI; keep ids rare and unique",
+            "فضّل classes للواجهة القابلة لإعادة الاستخدام؛ خلّي الـ ids نادرة وفريدة",
+          ),
+          opt("b", "Style everything with `#id` only", "نسّق كل حاجة بـ `#id` بس"),
+          opt("c", "Skip classes and use inline styles everywhere", "اتخطى الـ classes واستخدم inline styles في كل حتة"),
+          opt("d", "Put the same id on every button", "حط نفس الـ id على كل زرار"),
+        ],
+        "a",
+        L(
+          "`#id` selectors are very specific. Classes scale better for shared components.",
+          "محددات `#id` قوية جدًا. الـ classes بتتكيّف أحسن للمكوّنات المشتركة.",
+        ),
+        {
+          hint: L(
+            "Reuse → class · unique target / label link → id.",
+            "إعادة استخدام → class · هدف فريد / ربط label → id.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "html-browser-apis": {
+    title: L("Browser APIs check", "نشاط APIs المتصفح"),
+    questions: [
+      q(
+        "q1",
+        L("What must Geolocation do before reading location?", "Geolocation لازم يعمل إيه قبل قراءة الموقع؟"),
+        [
+          opt("a", "Ask the user for permission", "اطلب إذن المستخدم"),
+          opt("b", "Write the GPS to localStorage first", "يكتب GPS في localStorage أول"),
+          opt("c", "Disable all CSS", "يقفل كل CSS"),
+          opt("d", "Open a new tab automatically", "يفتح تاب جديد لوحده"),
+        ],
+        "a",
+        L(
+          "Browsers require an explicit permission prompt. Always handle “denied” and explain why you need location.",
+          "المتصفحات بتطلب إذن واضح. دايمًا تعامل مع الرفض ووضّح ليه محتاج الموقع.",
+        ),
+        {
+          hint: L(
+            "Location is private — the browser asks first.",
+            "الموقع خاص — المتصفح بيسأل أول.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L(
+          "What HTML attribute starts a drag-and-drop source?",
+          "أنهي خاصية HTML بتبدأ مصدر السحب والإفلات؟",
+        ),
+        [
+          opt("a", "contenteditable", "contenteditable"),
+          opt("b", "draggable=\"true\"", "draggable=\"true\""),
+          opt("c", "autocomplete=\"on\"", "autocomplete=\"on\""),
+          opt("d", "hidden", "hidden"),
+        ],
+        "b",
+        L(
+          "Mark the element `draggable=\"true\"`, then handle drag/drop events in JavaScript. Offer a keyboard alternative too.",
+          "علّم العنصر `draggable=\"true\"`، وبعدين عالج أحداث السحب/الإفلات في JavaScript. وفّر بديل كيبورد كمان.",
+        ),
+        {
+          code: `<p id="item" draggable="true">Drag me</p>`,
+          language: "html",
+          hint: L(
+            "HTML marks it draggable — JS listens for the events.",
+            "HTML بيعلّمه قابل للسحب — JS بيسمع الأحداث.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L(
+          "`localStorage` vs `sessionStorage` — what’s the difference?",
+          "`localStorage` مقابل `sessionStorage` — الفرق إيه؟",
+        ),
+        [
+          opt(
+            "a",
+            "`localStorage` keeps data until cleared; `sessionStorage` lasts for the tab session",
+            "`localStorage` بيفضل لحد ما يتمسح؛ `sessionStorage` لمدة جلسة التاب",
+          ),
+          opt("b", "They are the same API with two names", "نفس الـ API باسمين"),
+          opt("c", "`sessionStorage` is encrypted; `localStorage` is not", "`sessionStorage` مشفّر؛ `localStorage` لأ"),
+          opt("d", "Only `sessionStorage` can store passwords safely", "`sessionStorage` بس يقدر يخزّن كلمات مرور بأمان"),
+        ],
+        "a",
+        L(
+          "Both store small strings on the origin. Neither is safe for secrets.",
+          "الاتنين بيخزّنوا نصوص صغيرة على الـ origin. ولا واحد آمن للأسرار.",
+        ),
+        {
+          hint: L(
+            "Persist across visits → local · tab session → session.",
+            "يفضل بين الزيارات → local · جلسة التاب → session.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L("What should you never put in Web Storage?", "إيه اللي متخزنوش في Web Storage؟"),
+        [
+          opt("a", "A theme preference like \"dark\"", "تفضيل ثيم زي \"dark\""),
+          opt("b", "Passwords, tokens, or other secrets", "كلمات مرور أو tokens أو أسرار"),
+          opt("c", "A small UI flag", "flag صغير للواجهة"),
+          opt("d", "A cached language code", "كود لغة محفوظ"),
+        ],
+        "b",
+        L(
+          "Any script on your origin can read storage. Keep secrets on the server.",
+          "أي سكربت على نفس الـ origin يقدر يقرأ التخزين. خلّي الأسرار على السيرفر.",
+        ),
+        {
+          hint: L(
+            "If it’s sensitive, don’t leave it in the browser’s storage APIs.",
+            "لو حساس، متسيبهوش في APIs تخزين المتصفح.",
           ),
         },
       ),

@@ -1004,4 +1004,168 @@ export const modernLessons: LessonDraft[] = [
       compareCards: screenReaderPracticeCards,
     },
   },
+  {
+    id: "html-12",
+    order: 5,
+    slug: "inline-vs-block",
+    tier: "beginner",
+    readMinutes: 6,
+    icon: "Columns2",
+    visualizer: "semantic-blocks",
+    content: {
+      title: L("Inline vs block elements", "عناصر inline مقابل block"),
+      summary: L(
+        "Block elements build page sections. Inline elements sit inside a line of text.",
+        "عناصر block بتبني أقسام الصفحة. عناصر inline بتقعد جوّه سطر النص.",
+      ),
+      paragraphs: [
+        L(
+          "**Block** elements start on a new line and take the full available width by default — like `<div>`, `<p>`, `<h1>`, `<ul>`, `<section>`, and `<main>`. Use them for structure and big pieces of content.",
+          "عناصر **block** بتبدأ في سطر جديد وبتاخد العرض المتاح كله افتراضيًا — زي `<div>` و `<p>` و `<h1>` و `<ul>` و `<section>` و `<main>`. استخدمها للبنية والقطع الكبيرة.",
+        ),
+        L(
+          "**Inline** elements flow inside text without forcing a new line — like `<span>`, `<a>`, `<strong>`, `<em>`, `<img>`, and `<code>`. Use them for words or small bits inside a paragraph.",
+          "عناصر **inline** بتمشي جوّه النص من غير سطر جديد — زي `<span>` و `<a>` و `<strong>` و `<em>` و `<img>` و `<code>`. استخدمها لكلمات أو قطع صغيرة جوّه الفقرة.",
+        ),
+        L(
+          "A common beginner mix-up: putting a block tag inside an inline tag (for example a `<div>` inside a `<span>` or `<a>`). Keep blocks for layout/sections and inline for text pieces. CSS can change display later — start with the natural HTML default.",
+          "خلط شائع للمبتدئ: تحط block جوّه inline (مثلاً `<div>` جوّه `<span>` أو `<a>`). خلّي block للبنية والأقسام، و inline لقطع النص. CSS يقدر يغيّر العرض بعدين — ابدأ بالافتراضي الطبيعي في HTML.",
+        ),
+      ],
+      keyPoints: [
+        L("Block = new line + full width (structure)", "Block = سطر جديد + عرض كامل (بنية)"),
+        L("Inline = inside the text line (pieces)", "Inline = جوّه سطر النص (قطع)"),
+        L("Don’t nest block inside inline", "متحطش block جوّه inline"),
+        L("`div` is a block box · `span` is an inline hook", "`div` صندوق block · `span` hook inline"),
+      ],
+      examples: [
+        simpleExample(
+          `<p>
+  Hello <strong>world</strong> —
+  <a href="/about">about us</a>
+</p>
+<div class="card">
+  <h2>Card title</h2>
+  <p>A whole section on its own line.</p>
+</div>`,
+          "Inline tags inside a paragraph · block card below",
+          "وسوم inline جوّه فقرة · كارت block تحتها",
+        ),
+        mediumExample(
+          `<!-- Good -->
+<p>Price: <span class="price">$19</span></p>
+
+<!-- Awkward: block inside inline -->
+<span>
+  <div>Don’t do this</div>
+</span>`,
+          "span for a price hook · avoid block-in-inline",
+          "span لسعر · تجنب block جوّه inline",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Inline vs block</h1>
+  <p>
+    This sentence has
+    <strong>important</strong> and
+    <a href="#more">inline</a> pieces.
+  </p>
+  <section>
+    <h2>Next section</h2>
+    <p>Sections are block-level regions.</p>
+  </section>
+</main>`,
+            { title: "Inline vs block demo" },
+          ),
+          "Full page: paragraph inlines + block section",
+          "صفحة كاملة: inline في فقرة + section بلوك",
+        ),
+      ],
+      visualHint: L(
+        "Watch what sits on one line (inline) vs what stacks as boxes (block).",
+        "اتفرّج على اللي بيقعد في سطر واحد (inline) مقابل اللي بيتكدّس كصناديق (block).",
+      ),
+    },
+  },
+  {
+    id: "html-13",
+    order: 7,
+    slug: "classes-and-ids",
+    tier: "beginner",
+    readMinutes: 6,
+    icon: "Blocks",
+    visualizer: "document-tree",
+    content: {
+      title: L("Classes and IDs", "الـ classes والـ IDs"),
+      summary: L(
+        "class groups many elements. id names one unique element — then CSS and JavaScript can find them.",
+        "`class` بيجمّع عناصر كتير. `id` بيسمّي عنصر واحد فريد — وبعدين CSS و JavaScript يلاقوهم.",
+      ),
+      paragraphs: [
+        L(
+          "`class=\"card\"` can appear on many elements. Classes are for shared styles and shared behavior — buttons, cards, badges.",
+          "`class=\"card\"` ممكن يظهر على عناصر كتير. الـ classes للستايل والسلوك المشترك — أزرار، كروت، بادجات.",
+        ),
+        L(
+          "`id=\"email\"` must be unique on the page. Use ids to connect a `<label for=\"...\">`, jump to a section with `href=\"#...\"`, or target one element in JavaScript.",
+          "`id=\"email\"` لازم يكون فريد في الصفحة. استخدم الـ ids لربط `<label for=\"...\">`، أو القفز لقسم بـ `href=\"#...\"`، أو استهداف عنصر واحد في JavaScript.",
+        ),
+        L(
+          "Beginner rules: prefer `class` for styling many things; use `id` when you need exactly one target. Don’t start class/id names with a number, and keep names short and clear (`btn-primary`, not `x1`).",
+          "قواعد للمبتدئ: فضّل `class` لتنسيق حاجات كتير؛ استخدم `id` لما محتاج هدف واحد بس. متبدأش الأسماء برقم، وخلّيها قصيرة وواضحة (`btn-primary` مش `x1`).",
+        ),
+      ],
+      keyPoints: [
+        L("`class` = many elements · `id` = one unique element", "`class` = عناصر كتير · `id` = عنصر واحد فريد"),
+        L("Match `label for` with the input `id`", "طابق `label for` مع `id` الـ input"),
+        L("Use clear names: `card`, `btn`, `hero` — not random letters", "أسماء واضحة: `card` و `btn` و `hero` — مش حروف عشوائية"),
+        L("CSS targets `.class` and `#id`", "CSS بيستهدف `.class` و `#id`"),
+      ],
+      examples: [
+        simpleExample(
+          `<button class="btn btn-primary">Save</button>
+<button class="btn">Cancel</button>
+
+<label for="email">Email</label>
+<input id="email" name="email" type="email" />`,
+          "Shared class on buttons · unique id for the label",
+          "class مشترك على الأزرار · id فريد للـ label",
+        ),
+        mediumExample(
+          `<nav>
+  <a href="#about">About</a>
+</nav>
+<main>
+  <section id="about">
+    <h2>About us</h2>
+    <p class="lead">We teach HTML by building.</p>
+  </section>
+</main>`,
+          "id for in-page jump · class for lead text style",
+          "id للقفز جوّه الصفحة · class لنص lead",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<header>
+  <p class="brand">FrontendCraft</p>
+</header>
+<main id="main">
+  <article class="card">
+    <h1 class="card-title">Lesson</h1>
+    <p class="card-body">Classes group styles. One id marks the main landmark.</p>
+  </article>
+</main>`,
+            { title: "Classes and IDs" },
+          ),
+          "Full page: brand/card classes + main id",
+          "صفحة كاملة: classes للبراند/الكارت + id للـ main",
+        ),
+      ],
+      visualHint: L(
+        "Spot what is shared (class) vs what is unique (id) on the page.",
+        "ميّز اللي مشترك (class) عن اللي فريد (id) في الصفحة.",
+      ),
+    },
+  },
 ];

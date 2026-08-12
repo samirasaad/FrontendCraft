@@ -920,6 +920,119 @@ export const extraLessons: LessonDraft[] = [
     },
   },
   {
+    id: "html-pro-apis",
+    order: 25,
+    slug: "html-browser-apis",
+    tier: "pro",
+    readMinutes: 9,
+    icon: "Cpu",
+    visualizer: "baseline-compat",
+    content: {
+      title: L("HTML & browser APIs", "HTML و APIs المتصفح"),
+      summary: L(
+        "Geolocation, Drag and Drop, and Web Storage — browser features you call from JavaScript with HTML hooks.",
+        "Geolocation و Drag and Drop و Web Storage — مميزات متصفح بتناديها من JavaScript مع hooks من HTML.",
+      ),
+      paragraphs: [
+        L(
+          "These are **browser APIs**, not new HTML tags. Your HTML still provides the buttons, drop zones, and forms — JavaScript asks the browser for location, drag events, or saved data.",
+          "دول **browser APIs**، مش tags HTML جديدة. الـ HTML لسه بيدي الأزرار ومناطق السحب والفورم — و JavaScript بيطلب من المتصفح الموقع أو أحداث السحب أو بيانات محفوظة.",
+        ),
+        L(
+          "**Geolocation** (`navigator.geolocation`): ask the user for their location (with permission). Always explain why you need it, handle “denied”, and never assume GPS works offline or indoors.",
+          "**Geolocation** (`navigator.geolocation`): اطلب موقع المستخدم (بإذن). دايمًا وضّح ليه محتاجه، تعامل مع الرفض، ومتفترضش إن GPS شغال offline أو جوّه المباني.",
+        ),
+        L(
+          "**Drag and Drop**: mark something `draggable=\"true\"`, listen for `dragstart` / `drop`, and use `dataTransfer`. Pair with keyboard alternatives — not everyone can drag with a mouse.",
+          "**Drag and Drop**: خلّي العنصر `draggable=\"true\"`، اسمع `dragstart` / `drop`، واستخدم `dataTransfer`. وفّر بديل كيبورد — مش كل الناس تقدر تسحب بالماوس.",
+        ),
+        L(
+          "**Web Storage**: `localStorage` keeps data until cleared; `sessionStorage` lasts for the tab session. Store small strings only (stringify objects). Don’t put secrets or passwords here — storage is readable by any script on your origin.",
+          "**Web Storage**: `localStorage` بيفضل لحد ما يتمسح؛ `sessionStorage` لمدة جلسة التاب. خزّن نصوص صغيرة بس (stringify للـ objects). متخزنش أسرار أو كلمات مرور — أي سكربت على نفس الـ origin يقدر يقراها.",
+        ),
+      ],
+      keyPoints: [
+        L("Geolocation needs user permission — always handle deny", "Geolocation محتاج إذن — دايمًا تعامل مع الرفض"),
+        L("`draggable=\"true\"` + drop events · add a keyboard path", "`draggable=\"true\"` + أحداث drop · وفّر مسار كيبورد"),
+        L("`localStorage` persists · `sessionStorage` is per tab", "`localStorage` بيفضل · `sessionStorage` لكل تاب"),
+        L("Never store secrets in Web Storage", "متخزنش أسرار في Web Storage"),
+      ],
+      examples: [
+        simpleExample(
+          `<button type="button" id="locate">Share my city</button>
+<p id="status" role="status"></p>
+
+<script>
+  document.getElementById("locate").onclick = () => {
+    if (!navigator.geolocation) {
+      status.textContent = "Geolocation not supported";
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        status.textContent =
+          "Lat " + pos.coords.latitude.toFixed(2) +
+          ", Lng " + pos.coords.longitude.toFixed(2);
+      },
+      () => { status.textContent = "Permission denied or unavailable"; }
+    );
+  };
+</script>`,
+          "Ask for location with a clear button + status text",
+          "اطلب الموقع بزر واضح + نص حالة",
+        ),
+        mediumExample(
+          `<div id="bin" class="dropzone">Drop files or text here</div>
+<p id="item" draggable="true">Drag me</p>
+
+<script>
+  const item = document.getElementById("item");
+  const bin = document.getElementById("bin");
+
+  item.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text/plain", item.id);
+  });
+
+  bin.addEventListener("dragover", (e) => e.preventDefault());
+  bin.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    bin.append(document.getElementById(id));
+  });
+</script>`,
+          "Minimal drag-and-drop with draggable + drop zone",
+          "سحب وإفلات بسيط بـ draggable + منطقة drop",
+        ),
+        hardExample(
+          `<label for="note">Quick note</label>
+<textarea id="note" rows="3"></textarea>
+<button type="button" id="save">Save</button>
+<button type="button" id="load">Load</button>
+
+<script>
+  const note = document.getElementById("note");
+  const KEY = "draft-note";
+
+  document.getElementById("save").onclick = () => {
+    localStorage.setItem(KEY, note.value);
+  };
+  document.getElementById("load").onclick = () => {
+    note.value = localStorage.getItem(KEY) || "";
+  };
+  // Auto-restore on visit
+  note.value = localStorage.getItem(KEY) || "";
+</script>`,
+          "Save a draft with localStorage",
+          "احفظ مسودة بـ localStorage",
+        ),
+      ],
+      visualHint: L(
+        "Permission → location · drag → drop · save → reload storage.",
+        "إذن → موقع · سحب → إفلات · حفظ → إعادة تحميل التخزين.",
+      ),
+    },
+  },
+  {
     id: "html-sheet-1",
     order: 26,
     slug: "html-cheatsheet",

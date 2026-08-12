@@ -662,6 +662,94 @@ export const htmlBrowserWalkthrough: Record<string, BrowserWalkthrough> = {
     ],
   },
 
+  "html-browser-apis": {
+    intro: liveIntro,
+    steps: [
+      {
+        title: L("Run the Live example", "شغّل مثال Live"),
+        detail: L(
+          "Open the Live tab and run a sample with a locate button, a draggable item, or localStorage setItem/getItem.",
+          "افتح تبويب Live وشغّل مثال فيه زر موقع، أو عنصر draggable، أو localStorage setItem/getItem.",
+        ),
+      },
+      {
+        title: L("Console — try the APIs", "Console — جرّب الـ APIs"),
+        detail: L(
+          "In Console: typeof navigator.geolocation, then localStorage.setItem('demo','1') and localStorage.getItem('demo'). Expect strings back.",
+          "في Console: typeof navigator.geolocation، وبعدين localStorage.setItem('demo','1') و localStorage.getItem('demo'). المفروض ترجع strings.",
+        ),
+      },
+      {
+        title: L("Application — Storage", "Application — التخزين"),
+        detail: L(
+          "Open Application → Local Storage / Session Storage. Confirm keys appear after setItem and clear when you remove them.",
+          "افتح Application → Local Storage / Session Storage. تأكد إن المفاتيح تظهر بعد setItem وتختفي لما تمسحها.",
+        ),
+      },
+      {
+        title: L("Elements — draggable", "Elements — draggable"),
+        detail: L(
+          "Select the draggable node. Confirm draggable=\"true\" in Attributes, then watch drag events if you log them in Console.",
+          "اختار العنصر القابل للسحب. تأكد من draggable=\"true\" في Attributes، وراقب أحداث السحب لو بتطبعها في Console.",
+        ),
+      },
+    ],
+  },
+
+  "inline-vs-block": {
+    intro: liveIntro,
+    steps: [
+      {
+        title: L("Elements — spot block vs inline", "Elements — فرّق block و inline"),
+        detail: L(
+          "Run the lesson example. In Elements, select a <p> or <div>, then a <span> or <a> inside text.",
+          "شغّل مثال الدرس. في Elements، اختار <p> أو <div>، وبعدين <span> أو <a> جوّه النص.",
+        ),
+      },
+      {
+        title: L("Computed — display", "Computed — display"),
+        detail: L(
+          "With the node selected, open Computed and find display. Block tags show block; span/a usually show inline.",
+          "والعنصر متختار، افتح Computed ولاقي display. وسوم block بتظهر block؛ span/a غالبًا inline.",
+        ),
+      },
+      {
+        title: L("Box model check", "فحص الـ box model"),
+        detail: L(
+          "In the Styles box model diagram, block boxes stretch full width; inline boxes hug the text width.",
+          "في مخطط الـ box model في Styles، صناديق block بتمتد للعرض الكامل؛ صناديق inline بتلف عرض النص.",
+        ),
+      },
+    ],
+  },
+
+  "classes-and-ids": {
+    intro: liveIntro,
+    steps: [
+      {
+        title: L("Elements — id and class", "Elements — id و class"),
+        detail: L(
+          "Select an element with id and class. In Attributes, confirm id is unique and class lists the tokens you expect.",
+          "اختار عنصر فيه id و class. في Attributes، تأكد إن id فريد و class فيه الـ tokens المتوقعة.",
+        ),
+      },
+      {
+        title: L("Console — query selectors", "Console — محددات الاستعلام"),
+        detail: L(
+          "Try document.getElementById('…') and document.querySelectorAll('.…'). One id → one node; a class can match many.",
+          "جرّب document.getElementById('…') و document.querySelectorAll('.…'). id واحد → عنصر واحد؛ الـ class يطابق عناصر كتير.",
+        ),
+      },
+      {
+        title: L("label for ↔ input id", "label for ↔ input id"),
+        detail: L(
+          "Click a <label> in the preview. The matching input should focus — if not, for and id strings don’t match.",
+          "اضغط <label> في المعاينة. الـ input المطابق لازم يتركّز — لو لأ، نصوص for و id مش متطابقين.",
+        ),
+      },
+    ],
+  },
+
   "html-common-pitfalls": {
     intro: liveIntro,
     steps: [
