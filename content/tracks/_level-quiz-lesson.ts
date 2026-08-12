@@ -2,6 +2,7 @@ import { L } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
 import type { LevelQuizDefinition } from "@/lib/level-quiz/types";
 import type { Tier } from "@/lib/types";
+import { LEVEL_QUIZ_VISUALIZER_ID } from "@/lib/visualizer-ids";
 
 export function levelQuizLesson(
   id: string,
@@ -16,7 +17,7 @@ export function levelQuizLesson(
     tier,
     readMinutes: 10,
     icon: "Trophy",
-    visualizer: "level-quiz",
+    visualizer: LEVEL_QUIZ_VISUALIZER_ID,
     content: {
       title: quiz.title,
       summary: L(

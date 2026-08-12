@@ -1,5 +1,4 @@
-import { withProductionInsights } from "@/content/tracks/_insights";
-import { attachBrowserWalkthrough, assertBrowserWalkthroughCoverage } from "@/content/tracks/_attach-browser-walkthrough";
+import { assembleTrackLessons, getLessonById as byId, getLessonBySlug as bySlug } from "@/content/tracks/_assemble-lessons";
 import { HTML_CURRICULUM_ORDER } from "@/content/tracks/html/curriculum-order";
 import { enrichLegacyLesson } from "@/content/tracks/html/enrichment";
 import { htmlBrowserWalkthrough } from "@/content/tracks/html/browser-walkthrough";
@@ -7,85 +6,40 @@ import { extraLessons } from "@/content/tracks/html/extra-lessons";
 import { htmlInsights } from "@/content/tracks/html/insights";
 import { legacyLessons } from "@/content/tracks/html/legacy-lessons";
 import { modernLessons } from "@/content/tracks/html/modern-lessons";
-import {
-  assertHtmlLessonActivityCoverage,
-  htmlLessonActivities,
-} from "@/content/tracks/html/lesson-activities";
-import {
-  assertHtmlLevelQuizCoverage,
-} from "@/content/tracks/html/level-quizzes";
+import { htmlLessonActivities } from "@/content/tracks/html/lesson-activities";
+import { assertHtmlLevelQuizCoverage } from "@/content/tracks/html/level-quizzes";
 import { htmlLevelQuizLessons } from "@/content/tracks/html/level-quiz-lessons";
-import {
-  HTML_LEVEL_QUIZ_LESSON_SLUGS,
-  isLevelQuizLesson,
-} from "@/lib/level-quiz/capstones";
+import { HTML_LEVEL_QUIZ_LESSON_SLUGS } from "@/lib/level-quiz/capstones";
+import { HTML_VISUALIZER_ID_SET } from "@/lib/visualizer-ids";
 import type { Lesson } from "@/lib/types";
 
 export { HTML_CURRICULUM_ORDER };
 
-const CONTENT_LESSON_SLUGS = HTML_CURRICULUM_ORDER.filter(
-  (slug) => !HTML_LEVEL_QUIZ_LESSON_SLUGS.includes(slug as (typeof HTML_LEVEL_QUIZ_LESSON_SLUGS)[number]),
-);
-
-assertHtmlLessonActivityCoverage(CONTENT_LESSON_SLUGS);
-assertHtmlLevelQuizCoverage(HTML_LEVEL_QUIZ_LESSON_SLUGS);
-assertBrowserWalkthroughCoverage(
-  CONTENT_LESSON_SLUGS,
-  htmlBrowserWalkthrough,
-  "HTML",
-);
-
-const coreLessons: Lesson[] = legacyLessons.map((lesson) =>
+const coreLessons = legacyLessons.map((lesson) =>
   enrichLegacyLesson(lesson, lesson.order),
 );
 
-function withLabExtras(lesson: Lesson): Lesson {
-  const activity = htmlLessonActivities[lesson.slug];
-  if (!activity) {
-    throw new Error(`Missing HTML lesson activity for lesson slug: ${lesson.slug}`);
-  }
-
-  return {
-    ...lesson,
-    content: {
-      ...lesson.content,
-      activity,
-    },
-  };
-}
-
-function orderCurriculum(list: Lesson[]): Lesson[] {
-  const bySlug = new Map(list.map((lesson) => [lesson.slug, lesson]));
-  const ordered: Lesson[] = [];
-
-  for (const [index, slug] of HTML_CURRICULUM_ORDER.entries()) {
-    const lesson = bySlug.get(slug);
-    if (!lesson) {
-      throw new Error(`HTML curriculum missing lesson slug: ${slug}`);
-    }
-    ordered.push({ ...lesson, order: index + 1 });
-    bySlug.delete(slug);
-  }
-
-  if (bySlug.size > 0) {
-    const extras = [...bySlug.keys()].join(", ");
-    throw new Error(`HTML lessons not listed in HTML_CURRICULUM_ORDER: ${extras}`);
-  }
-
-  return ordered;
-}
-
-export const lessons: Lesson[] = orderCurriculum(
-  [...coreLessons, ...modernLessons, ...extraLessons, ...htmlLevelQuizLessons]
-    .map((lesson) => withProductionInsights(lesson, htmlInsights))
-    .map((lesson) => (isLevelQuizLesson(lesson) ? lesson : withLabExtras(lesson)))
-    .map((lesson) => attachBrowserWalkthrough(lesson, htmlBrowserWalkthrough)),
-);
+export const lessons: Lesson[] = assembleTrackLessons({
+  trackLabel: "HTML",
+  order: HTML_CURRICULUM_ORDER,
+  levelQuizSlugs: HTML_LEVEL_QUIZ_LESSON_SLUGS,
+  bodies: [
+    ...coreLessons,
+    ...modernLessons,
+    ...extraLessons,
+    ...htmlLevelQuizLessons,
+  ],
+  insights: htmlInsights,
+  activities: htmlLessonActivities,
+  walkthroughs: htmlBrowserWalkthrough,
+  assertLevelQuizzes: assertHtmlLevelQuizCoverage,
+  knownVisualizerIds: HTML_VISUALIZER_ID_SET,
+});
 
 export function getLessonById(id: string): Lesson | undefined {
-  return lessons.find((lesson) => lesson.id === id);
+  return byId(lessons, id);
 }
 
 export function getLessonBySlug(slug: string): Lesson | undefined {
-  return lessons.find((lesson) => lesson.slug === slug);
+  return bySlug(lessons, slug);
 }

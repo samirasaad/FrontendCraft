@@ -1,3 +1,4 @@
+import { assertLessonActivityCoverage } from "@/content/tracks/_assemble-lessons";
 import { L } from "@/content/helpers";
 import type { LessonActivity, ActivityOption, ActivityQuestion } from "@/lib/types";
 
@@ -955,8 +956,5 @@ export const cssLessonActivities: Record<string, LessonActivity> = {
 };
 
 export function assertCssLessonActivityCoverage(order: readonly string[]) {
-  const missing = order.filter((slug) => !cssLessonActivities[slug]);
-  if (missing.length) {
-    throw new Error(`Missing CSS lesson activity for lesson slug(s): ${missing.join(", ")}`);
-  }
+  assertLessonActivityCoverage("CSS", order, cssLessonActivities);
 }

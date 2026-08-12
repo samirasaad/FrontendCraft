@@ -1,3 +1,4 @@
+import { assertLessonActivityCoverage } from "@/content/tracks/_assemble-lessons";
 import { L } from "@/content/helpers";
 import type { LessonActivity, ActivityOption, ActivityQuestion } from "@/lib/types";
 
@@ -4036,18 +4037,7 @@ th { background: #f5f5f5; text-align: left; }`,
   },
 };
 
-/** Runtime guard used by the HTML lesson assembler. */
+/** Runtime guard — prefer assembleTrackLessons; kept for direct callers/tests. */
 export function assertHtmlLessonActivityCoverage(slugs: readonly string[]) {
-  for (const slug of slugs) {
-    const activity = htmlLessonActivities[slug];
-    if (
-      !activity ||
-      activity.questions.length < 3 ||
-      activity.questions.length > 6
-    ) {
-      throw new Error(
-        `HTML lesson activity missing or invalid length for lesson "${slug}" (need 3–6 questions, got ${activity?.questions.length ?? 0})`,
-      );
-    }
-  }
+  assertLessonActivityCoverage("HTML", slugs, htmlLessonActivities);
 }
