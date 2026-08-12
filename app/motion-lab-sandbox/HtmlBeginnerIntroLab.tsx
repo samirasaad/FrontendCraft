@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { LabStage, labEase } from "@/components/visualizers/html/LabStage";
+import { TrackStage, labEase } from "@/components/visualizers/html/TrackStage";
 import { useLanguage } from "@/context/LanguageContext";
 import { LAB_STEP_MS } from "@/lib/motion-pace";
 import { RECORD_LAB_STEP_MS } from "./sandbox-pace";
@@ -65,7 +65,7 @@ export function HtmlBeginnerIntroLab({
   }, [reduce, playing, stepMs]);
 
   return (
-    <LabStage className="h-full max-h-full min-h-0 overflow-hidden" title={ar ? beat.label.ar : beat.label.en}>
+    <TrackStage className="h-full max-h-full min-h-0 overflow-hidden" title={ar ? beat.label.ar : beat.label.en}>
       <div className="flex min-h-0 w-full flex-1 flex-col gap-2 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -81,7 +81,7 @@ export function HtmlBeginnerIntroLab({
           </motion.div>
         </AnimatePresence>
       </div>
-    </LabStage>
+    </TrackStage>
   );
 }
 
