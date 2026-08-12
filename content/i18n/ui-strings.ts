@@ -473,8 +473,8 @@ export const ui = {
     ar: "Accessibility (a11y) Best Practices",
   },
   accessibilityHint: {
-    en: "How NVDA / VoiceOver / TalkBack hear this — landmarks, names, keyboard, and focus",
-    ar: "كيف يسمع NVDA / VoiceOver / TalkBack هذا — المعالم والأسماء ولوحة المفاتيح والتركيز",
+    en: "Tips so people using a screen reader or only a keyboard can use this page",
+    ar: "نصائح عشان الناس اللي بتستخدم قارئ شاشة أو الكيبورد بس تقدر تستخدم الصفحة دي",
   },
   seoTitle: {
     en: "SEO Insights",
