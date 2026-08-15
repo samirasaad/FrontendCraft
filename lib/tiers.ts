@@ -1,4 +1,4 @@
-import type { Locale, Tier } from "@/lib/types";
+import type { Locale, Tier, TrackId } from "@/lib/types";
 import { t, type UiKey } from "@/content/i18n/ui-strings";
 
 export const TIER_ORDER: Tier[] = [
@@ -44,7 +44,21 @@ export function tierLabel(tier: Tier, locale: Locale): string {
   return t(TIER_UI_KEY[tier], locale);
 }
 
-export function tierBlurb(tier: Tier, locale: Locale): string {
+const HTML_TIER_BLURB_KEY: Record<Tier, UiKey> = {
+  beginner: "htmlTierBeginnerBlurb",
+  intermediate: "htmlTierIntermediateBlurb",
+  advanced: "htmlTierAdvancedBlurb",
+  pro: "htmlTierProBlurb",
+  pitfalls: "htmlTierPitfallsBlurb",
+  cheatsheet: "htmlTierCheatsheetBlurb",
+};
+
+export function tierBlurb(
+  tier: Tier,
+  locale: Locale,
+  trackId?: TrackId,
+): string {
+  if (trackId === "html") return t(HTML_TIER_BLURB_KEY[tier], locale);
   return t(TIER_BLURB_KEY[tier], locale);
 }
 
@@ -99,6 +113,24 @@ export function tierDotClass(tier: Tier | "all"): string {
       return "bg-orange-400";
     case "cheatsheet":
       return "bg-cyan-400";
+  }
+}
+
+/** Nested tree spine under a level. */
+export function tierRailClass(tier: Tier): string {
+  switch (tier) {
+    case "beginner":
+      return "border-emerald-400/30";
+    case "intermediate":
+      return "border-yellow-300/30";
+    case "advanced":
+      return "border-rose-400/30";
+    case "pro":
+      return "border-violet-400/30";
+    case "pitfalls":
+      return "border-orange-400/30";
+    case "cheatsheet":
+      return "border-cyan-400/30";
   }
 }
 

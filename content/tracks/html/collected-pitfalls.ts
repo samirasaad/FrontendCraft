@@ -59,7 +59,7 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
     L("Fake bullets are not lists.", "نقط مزيفة مش `lists`."),
     `<ul><li>Item</li></ul>`,
     L(
-      "Real lists expose list semantics to AT.",
+      "Real lists expose list semantics to screen readers.",
       "الـ lists الحقيقية بتدي semantics لقارئ الشاشة.",
     ),
     L("Lists", "القوائم"),
@@ -162,7 +162,7 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
     `<h1>Lab</h1>
 <h3>Lesson</h3>`,
     L(
-      "Skipping heading levels breaks the document outline for AT.",
+      "Skipping heading levels breaks the document outline for screen readers.",
       "تخطي مستويات العناوين بيكسر الـ outline لقارئ الشاشة.",
     ),
     `<h1>Lab</h1>
@@ -232,8 +232,8 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
   <button type="button">Close</button>
 </div>`,
     L(
-      "Focusable controls inside `aria-hidden` trap keyboard/AT users.",
-      "عناصر عليها focus جوّه `aria-hidden` بتحبس مستخدمي الكيبورد/AT.",
+      "Focusable controls inside `aria-hidden` trap keyboard and screen-reader users.",
+      "عناصر عليها focus جوّه `aria-hidden` بتحبس مستخدمي الكيبورد/screen readers.",
     ),
     `<div hidden>
   <button type="button">Close</button>
@@ -344,8 +344,8 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
 ...
 <h1>Pricing</h1>`,
     L(
-      "Multiple `<h1>`s confuse the page’s main topic for AT and SEO.",
-      "أكتر من `<h1>` بيلبّس موضوع الصفحة على AT و SEO.",
+      "Multiple `<h1>`s confuse the page’s main topic for screen readers and SEO.",
+      "أكتر من `<h1>` بيلبّس موضوع الصفحة على screen readers و SEO.",
     ),
     `<h1>Home</h1>
 ...
@@ -390,8 +390,8 @@ export const collectedHtmlPitfalls: PitfallExample[] = [
   <button type="button">Start</button>
 </a>`,
     L(
-      "Interactive content nested inside links creates nested controls — broken for AT.",
-      "محتوى تفاعلي جوّه لينك = عناصر متداخلة — بايظة لـ AT.",
+      "Interactive content nested inside links creates nested controls — broken for screen readers.",
+      "محتوى تفاعلي جوّه لينك = عناصر متداخلة — بايظة لـ screen readers.",
     ),
     `<article>
   <h2><a href="/js">JavaScript</a></h2>

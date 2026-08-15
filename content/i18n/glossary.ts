@@ -38,8 +38,9 @@
  * 2. What it is — description + body copy
  *
  * ## Arabic style
- * Use simple, descriptive Modern Standard Arabic (MSA).
- * Keep technical terms in English. Avoid dialect (e.g. معمل، إزاي، دلوقتي، عشان).
+ * Lesson copy: simple Egyptian Arabic (عشان، إزاي، جوّه، دلوقتي).
+ * Keep technical terms in English (HTML tags, attributes, APIs).
+ * Platform chrome (nav, buttons) can stay short MSA if space is tight.
  */
 
 export const glossary = {

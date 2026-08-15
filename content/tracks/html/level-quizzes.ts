@@ -11,85 +11,94 @@ const beginnerQuestions: LevelQuestion[] = [
     type: "mcq",
     difficulty: "easy",
     prompt: L(
-      "What is `<!DOCTYPE html>` for?",
-      "ما فائدة `<!DOCTYPE html>`؟",
+      "What does this first line tell the browser?",
+      "السطر الأول ده بيقول للمتصفح إيه؟",
     ),
     options: [
-      O("a", "Old browsers only", "للمتصفحات القديمة فقط"),
-      O("b", "Tells the browser to use modern HTML rules", "يخبر المتصفح باستخدام قواعد HTML الحديثة"),
-      O("c", "Loads JavaScript", "يحمّل JavaScript"),
-      O("d", "Required only for XHTML", "مطلوب فقط لـ XHTML"),
+      O("a", "This page is only for old phones", "الصفحة للموبايلات القديمة بس"),
+      O("b", "This is a modern HTML page", "دي صفحة HTML حديثة"),
+      O("c", "Load JavaScript now", "حمّل JavaScript دلوقتي"),
+      O("d", "Skip the rest of the file", "تخطّى باقي الملف"),
     ],
     correctId: "b",
     explanation: L(
-      "`<!DOCTYPE html>` switches the browser to standards mode — the baseline for modern HTML parsing.",
-      "`<!DOCTYPE html>` يُفعّل standards mode في المتصفح — الأساس لتحليل HTML الحديث.",
+      "Put `<!DOCTYPE html>` on line 1. It tells the browser: treat this file as modern HTML.",
+      "حط `<!DOCTYPE html>` في السطر الأول. بيقول للمتصفح: الملف ده HTML حديث.",
     ),
     hint: L(
-      "Think about how the browser chooses its parsing rules.",
-      "فكّر في كيفية اختيار المتصفح لقواعد التحليل.",
+      "It is the very first line — before `<html>`.",
+      "ده أول سطر خالص — قبل `<html>`.",
     ),
     code: `<!DOCTYPE html>`,
     language: "html",
   },
   {
-    id: "b-easy-click-ul",
+    id: "b-easy-click-h1",
     type: "click-element",
     difficulty: "easy",
     prompt: L(
-      "Which element is the unordered list?",
-      "أي عنصر هو القائمة غير المرتبة؟",
+      "Click the big page title.",
+      "اضغط على عنوان الصفحة الكبير.",
     ),
-    markup: `<nav data-target="nav">Home</nav>
-<ul data-target="list">
-  <li data-target="item">Apples</li>
-  <li data-target="item2">Oranges</li>
-</ul>
-<p data-target="para">Fresh fruit.</p>`,
-    correctTargetId: "list",
+    markup: `<h1 data-target="title" style="margin:0 0 12px;font-size:22px">Fruit shop</h1>
+<p data-target="intro" style="margin:0 0 12px">We sell apples.</p>
+<a data-target="link" href="/buy" style="color:#0e7490">Buy apples</a>`,
+    correctTargetId: "title",
     explanation: L(
-      "`<ul>` wraps unordered list items. Each item lives inside `<li>`.",
-      "`<ul>` يغلّف عناصر القائمة غير المرتبة. كل عنصر داخل `<li>`.",
+      "The big title is `<h1>`. The sentence is a `<p>`. The blue text is an `<a>` link.",
+      "العنوان الكبير `<h1>`. الجملة `<p>`. النص الأزرق لينك `<a>`.",
     ),
-    demoHtml: `<ul><li>Apples</li><li>Oranges</li></ul>`,
+    demoHtml: `<h1 style="font:22px system-ui;margin:0">Fruit shop</h1><p style="font:16px system-ui">We sell apples.</p>`,
   },
   {
-    id: "b-med-fill-li",
-    type: "fill-code",
+    id: "b-med-mcq-li",
+    type: "mcq",
     difficulty: "medium",
     prompt: L(
-      "Fill in the missing list item.",
-      "اكتب عنصر القائمة الناقص.",
+      "Each row in this list should use which tag?",
+      "كل سطر في القائمة دي يستخدم أنهي وسم؟",
     ),
-    template: `<ul>\n  {{item}}\n  <li>Eggs</li>\n</ul>`,
-    blankId: "item",
-    correctAnswers: ["<li>Milk</li>"],
-    language: "html",
+    options: [
+      O("a", "<li>", "<li>"),
+      O("b", "<p>", "<p>"),
+      O("c", "<div>", "<div>"),
+      O("d", "<span>", "<span>"),
+    ],
+    correctId: "a",
     explanation: L(
-      "List items must use `<li>` — never raw text or `<div>` bullets inside `<ul>`.",
-      "عناصر القائمة يجب أن تستخدم `<li>` — لا نصاً خاماً ولا `<div>` كنقاط داخل `<ul>`.",
+      "A list is `<ul>` or `<ol>`. Each item inside it is `<li>`.",
+      "القائمة `<ul>` أو `<ol>`. كل عنصر جوّهها `<li>`.",
     ),
-    hint: L("The tag name is two letters.", "اسم الوسم حرفان."),
+    hint: L(
+      "A list row is not a paragraph and not a box.",
+      "سطر القائمة مش فقرة ومش صندوق.",
+    ),
+    code: `<ul>\n  <li>Eggs</li>\n  ??? Milk\n</ul>`,
+    language: "html",
   },
   {
     id: "b-med-arrange-doc",
     type: "arrange-steps",
     difficulty: "medium",
     prompt: L(
-      "Put these lines in order to build a valid HTML page.",
-      "رتّب هذه الأسطر لبناء صفحة HTML صحيحة.",
+      "Drag each node into page order, from top to bottom.",
+      "اسحب كل node ترتيب الصفحة، من فوق لتحت.",
     ),
     items: [
-      { id: "s1", label: L("<!DOCTYPE html>", "<!DOCTYPE html>") },
-      { id: "s2", label: L('<html lang="en">', '<html lang="en">') },
-      { id: "s3", label: L("<head><meta charset=\"UTF-8\"><title>App</title></head>", "<head><meta charset=\"UTF-8\"><title>App</title></head>") },
-      { id: "s4", label: L("<body><main><h1>Hello</h1></main></body>", "<body><main><h1>Hello</h1></main></body>") },
-      { id: "s5", label: L("</html>", "</html>") },
+      { id: "n7", label: L("<body>", "<body>") },
+      { id: "n1", label: L("<!DOCTYPE html>", "<!DOCTYPE html>") },
+      { id: "n9", label: L("<h1>Hello</h1>", "<h1>Hello</h1>") },
+      { id: "n3", label: L("<head>", "<head>") },
+      { id: "n10", label: L("</html>", "</html>") },
+      { id: "n2", label: L('<html lang="en">', '<html lang="en">') },
+      { id: "n6", label: L("</head>", "</head>") },
+      { id: "n8", label: L("</body>", "</body>") },
+      { id: "n5", label: L("<title>App</title>", "<title>App</title>") },
     ],
-    correctOrder: ["s1", "s2", "s3", "s4", "s5"],
+    correctOrder: ["n1", "n2", "n3", "n5", "n6", "n7", "n9", "n8", "n10"],
     explanation: L(
-      "DOCTYPE first, then `<html>` with `lang`, early charset in `<head>`, content in `<body>`, close `</html>`.",
-      "DOCTYPE أولاً، ثم `<html>` مع `lang`، و charset مبكراً في `<head>`، والمحتوى في `<body>`، ثم إغلاق `</html>`.",
+      "`<!DOCTYPE html>` then `<html>`, then `<head>` with `<title>`, close the head, then `<body>` with the heading people see, then close body and html.",
+      "`<!DOCTYPE html>` بعدين `<html>`، بعدين `<head>` وفيها `<title>`، قفل الـ head، بعدين `<body>` والعنوان اللي الناس بتشوفه، بعدين قفل body و html.",
     ),
   },
   {
@@ -97,8 +106,8 @@ const beginnerQuestions: LevelQuestion[] = [
     type: "match-pairs",
     difficulty: "medium",
     prompt: L(
-      "Match each tag to what it is used for.",
-      "طابق كل وسم مع استخدامه.",
+      "Connect each tag node to what it does on the page.",
+      "وصّل كل وسم باللي بيعمله في الصفحة.",
     ),
     left: [
       { id: "l1", label: L("<nav>", "<nav>") },
@@ -106,23 +115,35 @@ const beginnerQuestions: LevelQuestion[] = [
       { id: "l3", label: L("<h1>", "<h1>") },
     ],
     right: [
-      { id: "r1", label: L("Primary page heading", "العنوان الرئيسي للصفحة") },
-      { id: "r2", label: L("Primary content landmark", "معلم المحتوى الرئيسي") },
-      { id: "r3", label: L("Navigation links group", "مجموعة روابط التنقل") },
+      { id: "r1", label: L("The big page title", "عنوان الصفحة الكبير") },
+      { id: "r2", label: L("The main content of this page", "المحتوى الأساسي للصفحة") },
+      { id: "r3", label: L("The menu links", "لينكات القائمة") },
     ],
     correctPairs: { l1: "r3", l2: "r2", l3: "r1" },
     explanation: L(
-      "Semantic landmarks help users and assistive tech jump to the right region.",
-      "المعالم الدلالية تساعد المستخدمين وتقنيات المساعدة على الانتقال للمنطقة الصحيحة.",
+      "`<nav>` = menu. `<main>` = the unique page content. `<h1>` = the main title.",
+      "`<nav>` = القائمة. `<main>` = محتوى الصفحة. `<h1>` = العنوان الرئيسي.",
     ),
+    demoHtml: `<style>
+      body{margin:0;font:15px/1.4 system-ui,sans-serif;color:#0f172a;background:#fff}
+      nav{background:#e0f2fe;padding:8px 12px;font-weight:600}
+      main{padding:12px}
+      h1{margin:0 0 6px;font-size:20px}
+      p{margin:0;color:#475569}
+    </style>
+    <nav>Home · About</nav>
+    <main>
+      <h1>Fruit shop</h1>
+      <p>We sell apples.</p>
+    </main>`,
   },
   {
     id: "b-med-dom-main",
     type: "dom-tree",
     difficulty: "medium",
     prompt: L(
-      "Select the node that should wrap the page's unique main content.",
-      "اختر العقدة التي يجب أن تغلّف المحتوى الرئيسي الفريد للصفحة.",
+      "A shop page has a logo at the top, a fruit article in the middle, and contact at the bottom. Click the node that should wrap only the article.",
+      "صفحة محل: لوجو فوق، مقال فاكهة في النص، وتواصل تحت. اضغط الـ node اللي يلف المقال بس.",
     ),
     tree: {
       id: "html",
@@ -131,52 +152,94 @@ const beginnerQuestions: LevelQuestion[] = [
         {
           id: "head",
           tag: "head",
-          children: [{ id: "title", tag: "title", label: L("Page title", "عنوان الصفحة") }],
+          children: [{ id: "title", tag: "title", label: L("Fruit shop", "محل فاكهة") }],
         },
         {
           id: "body",
           tag: "body",
           children: [
-            { id: "header", tag: "header", label: L("Site banner", "شعار الموقع") },
-            { id: "main", tag: "main", label: L("Article body", "نص المقال") },
-            { id: "footer", tag: "footer", label: L("Site footer", "تذييل الموقع") },
+            { id: "header", tag: "header", label: L("Logo · Menu", "لوجو · قائمة") },
+            { id: "main", tag: "main", label: L("Why we love apples", "ليه بنحب التفاح") },
+            { id: "footer", tag: "footer", label: L("Contact · ©", "تواصل · ©") },
           ],
         },
       ],
     },
     correctNodeId: "main",
     explanation: L(
-      "One `<main>` per page holds content unique to this document — not repeated nav or footer chrome.",
-      "`<main>` واحد لكل صفحة يحتوي المحتوى الفريد — وليس عناصر التنقل أو التذييل المتكررة.",
+      "The article is unique to this page, so it goes in `<main>`. Logo/menu stay in `<header>`. Contact stays in `<footer>`. Do not pick `<body>` — that box holds all three.",
+      "المقال خاص بالصفحة دي، فمكانه `<main>`. اللوجو والقائمة في `<header>`. التواصل في `<footer>`. متختارش `<body>` — الصندوق ده ماسك التلاتة.",
+    ),
+    hint: L(
+      "Not the whole page (`<body>`). Not the top bar. The middle article box.",
+      "مش الصفحة كلها (`<body>`). مش الشريط فوق. صندوق المقال في النص.",
     ),
   },
   {
     id: "b-hard-spot-fake-list",
-    type: "spot-bug",
+    type: "click-element",
     difficulty: "hard",
     prompt: L(
-      "Spot the token that breaks real list semantics.",
-      "حدد الرمز الذي يُفسد دلالات القائمة الحقيقية.",
+      "Two trees look like lists. Click the fake one.",
+      "شجرتين شكلهم قوائم. اضغط المزيفة.",
     ),
-    code: `<div class="bullets">
-  <div>• Milk</div>
-  <div>• Eggs</div>
+    markup: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-family:ui-sans-serif,system-ui,sans-serif;color:#0f172a">
+  <div data-target="fake" data-label="A" style="text-align:start;border:2px dashed #94a3b8;border-radius:16px;padding:12px;background:#f8fafc;cursor:pointer">
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#64748b;margin-bottom:10px">A</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="width:10px;height:10px;border-radius:99px;background:#94a3b8"></span>
+      <span style="font:600 13px ui-monospace,monospace">&lt;div&gt;</span>
+    </div>
+    <div style="margin-left:12px;padding-left:12px;border-left:2px solid #cbd5e1">
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
+        <span style="width:8px;height:8px;border-radius:99px;background:#cbd5e1"></span>
+        <span style="font:13px ui-monospace,monospace">&lt;div&gt;</span>
+        <span>• Milk</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
+        <span style="width:8px;height:8px;border-radius:99px;background:#cbd5e1"></span>
+        <span style="font:13px ui-monospace,monospace">&lt;div&gt;</span>
+        <span>• Eggs</span>
+      </div>
+    </div>
+  </div>
+  <div data-target="real" data-label="B" style="text-align:start;border:2px solid #22d3ee;border-radius:16px;padding:12px;background:#ecfeff;cursor:pointer">
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#0e7490;margin-bottom:10px">B</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="width:10px;height:10px;border-radius:99px;background:#22d3ee"></span>
+      <span style="font:600 13px ui-monospace,monospace">&lt;ul&gt;</span>
+    </div>
+    <div style="margin-left:12px;padding-left:12px;border-left:2px solid #67e8f9">
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
+        <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
+        <span style="font:13px ui-monospace,monospace">&lt;li&gt;</span>
+        <span>Milk</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
+        <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
+        <span style="font:13px ui-monospace,monospace">&lt;li&gt;</span>
+        <span>Eggs</span>
+      </div>
+    </div>
+  </div>
 </div>`,
-    language: "html",
-    bugToken: "<div>",
+    correctTargetId: "fake",
     explanation: L(
-      "Bullet characters in `<div>` are visual only. Screen readers need `<ul>` and `<li>`.",
-      "رموز النقاط داخل `<div>` للعرض فقط. قارئات الشاشة تحتاج `<ul>` و `<li>`.",
+      "A is fake: `<div>` boxes with a typed • . B is a real list: `<ul>` with `<li>` inside.",
+      "A مزيفة: صناديق `<div>` وعلامة •. B قائمة حقيقية: `<ul>` وفيها `<li>`.",
     ),
-    hint: L("Real lists use dedicated list elements.", "القوائم الحقيقية تستخدم عناصر قوائم مخصصة."),
+    hint: L(
+      "Grey `<div>` tree = fake. Cyan `<ul>` tree = real.",
+      "شجرة `<div>` الرمادي = مزيفة. شجرة `<ul>` السماوي = حقيقية.",
+    ),
   },
   {
     id: "b-hard-predict-list",
     type: "predict-visual",
     difficulty: "hard",
     prompt: L(
-      "Which preview matches nested list markup?",
-      "أي معاينة تطابق ترميز قائمة متداخلة؟",
+      "Look at the code. Which tree shows Apple nested under Fruit?",
+      "بص على الكود. أنهي شجرة بتبيّن Apple جوّه Fruit؟",
     ),
     code: `<ul>
   <li>Fruit
@@ -189,19 +252,57 @@ const beginnerQuestions: LevelQuestion[] = [
     options: [
       {
         id: "flat",
-        previewHtml: `<ul style="margin:8px;padding-left:20px;font:14px system-ui"><li>Fruit</li><li>Apple</li></ul>`,
-        label: L("Flat siblings", "عناصر شقيقة مسطّحة"),
+        previewHtml: `<div style="font-family:ui-sans-serif,system-ui,sans-serif;color:#0f172a;padding:10px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="width:10px;height:10px;border-radius:99px;background:#22d3ee"></span>
+    <span style="font:600 13px ui-monospace,monospace;background:#ecfeff;border:1px solid #a5f3fc;border-radius:999px;padding:4px 10px">&lt;ul&gt;</span>
+  </div>
+  <div style="margin-left:14px;padding-left:12px;border-left:2px solid #67e8f9">
+    <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+      <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
+      <span style="font:13px ui-monospace,monospace;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px">&lt;li&gt; Fruit</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+      <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
+      <span style="font:13px ui-monospace,monospace;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px">&lt;li&gt; Apple</span>
+    </div>
+  </div>
+</div>`,
+        label: L("Fruit and Apple as two top items", "Fruit و Apple عنصرين فوق"),
       },
       {
         id: "nested",
-        previewHtml: `<ul style="margin:8px;padding-left:20px;font:14px system-ui"><li>Fruit<ul style="padding-left:20px"><li>Apple</li></ul></li></ul>`,
-        label: L("Nested sub-list", "قائمة فرعية متداخلة"),
+        previewHtml: `<div style="font-family:ui-sans-serif,system-ui,sans-serif;color:#0f172a;padding:10px">
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <span style="width:10px;height:10px;border-radius:99px;background:#22d3ee"></span>
+    <span style="font:600 13px ui-monospace,monospace;background:#ecfeff;border:1px solid #a5f3fc;border-radius:999px;padding:4px 10px">&lt;ul&gt;</span>
+  </div>
+  <div style="margin-left:14px;padding-left:12px;border-left:2px solid #67e8f9">
+    <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+      <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
+      <span style="font:13px ui-monospace,monospace;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px">&lt;li&gt; Fruit</span>
+    </div>
+    <div style="margin-left:16px;padding-left:12px;border-left:2px solid #a7f3d0">
+      <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+        <span style="width:8px;height:8px;border-radius:99px;background:#22d3ee"></span>
+        <span style="font:13px ui-monospace,monospace;background:#ecfeff;border:1px solid #a5f3fc;border-radius:999px;padding:3px 10px">&lt;ul&gt;</span>
+      </div>
+      <div style="margin-left:16px;padding-left:12px;border-left:2px solid #67e8f9">
+        <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+          <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
+          <span style="font:13px ui-monospace,monospace;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:999px;padding:3px 10px">&lt;li&gt; Apple</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`,
+        label: L("Apple nested under Fruit", "Apple جوّه Fruit"),
       },
     ],
     correctId: "nested",
     explanation: L(
-      "A nested `<ul>` must live inside its parent `<li>` — not as a sibling.",
-      "`<ul>` المتداخلة يجب أن تكون داخل `<li>` الأب — وليس كعنصر شقيق.",
+      "Put the inner `<ul>` inside the Fruit `<li>`. If you put it next to Fruit, Apple becomes a second top item.",
+      "حط `<ul>` الداخلية جوّه `<li>` بتاعة Fruit. لو حطيتها جنبها، Apple هتبقى عنصر تاني فوق.",
     ),
   },
   {
@@ -209,42 +310,61 @@ const beginnerQuestions: LevelQuestion[] = [
     type: "accessibility",
     difficulty: "real-world",
     prompt: L(
-      "A screen-reader user hears only “click here” for every link. What is the best fix?",
-      "يسمع مستخدم قارئ الشاشة «انقر هنا» لكل رابط. ما أفضل إصلاح؟",
+      "The link says only “click here”. What should you write instead?",
+      "اللينك مكتوب عليه «click here» بس. تكتب إيه بدله؟",
     ),
     scenario: L(
-      "Marketing dropped `<a href=\"/sale\">click here</a>` in three places on the homepage.",
-      "وضع فريق التسويق `<a href=\"/sale\">click here</a>` في ثلاثة مواضع على الصفحة الرئيسية.",
+      "The homepage has `<a href=\"/sale\">click here</a>` three times.",
+      "الصفحة فيها `<a href=\"/sale\">click here</a>` ثلاث مرات.",
     ),
     options: [
-      O("a", "Add `title=\"Sale\"` only", "أضف `title=\"Sale\"` فقط"),
-      O("b", "Use descriptive link text like “Summer sale”", "استخدم نص رابط وصفي مثل «تخفيضات الصيف»"),
-      O("c", "Wrap links in `<div role=\"link\">`", "غلّف الروابط في `<div role=\"link\">`"),
-      O("d", "Hide text with `aria-hidden`", "أخفِ النص بـ `aria-hidden`"),
+      O("a", "Keep “click here”", "سيّب click here"),
+      O("b", "Write what the link opens, like “Summer sale”", "اكتب اللي اللينك بيفتحه، زي «تخفيضات الصيف»"),
+      O("c", "Change `<a>` to a `<div>`", "بدّل `<a>` بـ `<div>`"),
+      O("d", "Hide the words", "خبّي الكلام"),
     ],
     correctId: "b",
     explanation: L(
-      "Link text is the accessible name. Make it meaningful out of context.",
-      "نص الرابط هو الاسم المُتاح. اجعله مفهوماً خارج السياق.",
+      "The words inside `<a>…</a>` should say the destination. “Click here” tells nobody where they go.",
+      "الكلام جوّه `<a>…</a>` لازم يقول الوجهة. «click here» مش بتقول هتروح فين.",
     ),
   },
   {
-    id: "b-rw-fill-href",
-    type: "fill-code",
+    id: "b-rw-click-href",
+    type: "click-element",
     difficulty: "real-world",
     prompt: L(
-      "Fill in the attribute that makes this anchor a real hyperlink.",
-      "أكمل السمة التي تجعل هذا الرابط تشعّباً حقيقياً.",
+      "Click the real link — the node that has `href`.",
+      "اضغط اللينك الحقيقي — الـ node اللي فيه `href`.",
     ),
-    template: `<a {{attr}}="/docs">Read the docs</a>`,
-    blankId: "attr",
-    correctAnswers: ["href"],
-    language: "html",
+    markup: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-family:ui-sans-serif,system-ui,sans-serif;color:#0f172a">
+  <div data-target="fake" data-label="A" style="border:2px dashed #94a3b8;border-radius:16px;padding:12px;background:#f8fafc;cursor:pointer">
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#64748b;margin-bottom:10px">A</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <span style="width:10px;height:10px;border-radius:99px;background:#94a3b8"></span>
+      <span style="font:600 13px ui-monospace,monospace">&lt;span&gt;</span>
+    </div>
+    <div style="margin-left:12px;padding:8px 10px;border-left:2px solid #cbd5e1;color:#2563eb;text-decoration:underline">Read the docs</div>
+  </div>
+  <div data-target="real" data-label="B" style="border:2px solid #22d3ee;border-radius:16px;padding:12px;background:#ecfeff;cursor:pointer">
+    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#0e7490;margin-bottom:10px">B</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+      <span style="width:10px;height:10px;border-radius:99px;background:#22d3ee"></span>
+      <span style="font:600 13px ui-monospace,monospace">&lt;a&gt;</span>
+      <span style="font:12px ui-monospace,monospace;background:#fff;border:1px solid #a5f3fc;border-radius:999px;padding:2px 8px;color:#0f766e">href="/docs"</span>
+    </div>
+    <div style="margin-left:12px;padding:8px 10px;border-left:2px solid #67e8f9;color:#0e7490">Read the docs</div>
+  </div>
+</div>`,
+    correctTargetId: "real",
     explanation: L(
-      "Without `href`, `<a>` is not keyboard-focusable navigation — it behaves like a stub.",
-      "بدون `href`، لا يكون `<a>` تنقلاً قابلاً للتركيز بلوحة المفاتيح — يتصرف كعنصر وهمي.",
+      "A real link is `<a href=\"/docs\">`. A blue `<span>` only looks like a link — it does not open a page.",
+      "اللينك الحقيقي `<a href=\"/docs\">`. الـ `<span>` الأزرق شكله لينك بس — مش بيفتح صفحة.",
     ),
-    demoHtml: `<a href="/docs" style="color:#06b6d4">Read the docs</a>`,
+    hint: L(
+      "Find the node with `href=\"/docs\"`.",
+      "دور على الـ node اللي فيه `href=\"/docs\"`.",
+    ),
   },
 ];
 

@@ -78,8 +78,8 @@ export const ui = {
   trackJobA11y: { en: "Inclusive UI", ar: "واجهة شاملة" },
   trackJobSeo: { en: "Discoverability", ar: "الظهور في البحث" },
   trackJobHtmlHint: {
-    en: "What the browser reads before anything looks good.",
-    ar: "ما يقرأه المتصفح قبل أن يبدو أي شيء جيدًا.",
+    en: "What the browser reads before CSS makes it look good.",
+    ar: "اللي المتصفح بيقرأه قبل ما CSS يخلّي الشكل حلو.",
   },
   trackJobCssHint: {
     en: "Why a page feels like a product, not a bare document.",
@@ -106,8 +106,8 @@ export const ui = {
     ar: "ساعد الأشخاص المناسبين في العثور على ما بنيته.",
   },
   trackJobHtmlBody: {
-    en: "HTML is the document. You place content in tags so the browser knows what is a heading, what is a paragraph, and what is a button — structure and meaning, with no styling yet.",
-    ar: "HTML هو المستند. تضع المحتوى في وسوم ليعرف المتصفح ما هو العنوان وما هي الفقرة وما هو الزر — بنية ومعنى، دون تنسيق بعد.",
+    en: "You put words in tags (`h1`, `p`, `button`). The browser learns: this is a heading, this is a paragraph, this is a button. No colors yet — meaning first.",
+    ar: "بتحط الكلام جوّه tags (`h1` و `p` و `button`). المتصفح بيفهم: ده عنوان، دي فقرة، ده زرار. مفيش ألوان لسه — المعنى الأول.",
   },
   trackJobCssBody: {
     en: "CSS is the look layer. Same HTML stays in place; you add color, spacing, type, and radius until the bare document feels like a real product UI.",
@@ -134,20 +134,28 @@ export const ui = {
     ar: "SEO هو كيف تقرأ محركات البحث صفحتك: عناوين واضحة وبيانات وصفية وبنية ذات معنى حتى يجد الأشخاص المناسبون ما بنيته.",
   },
   trackCapHtml0: {
-    en: "Start from an empty document…",
-    ar: "ابدأ من مستند فارغ…",
+    en: "<body>",
+    ar: "<body>",
   },
   trackCapHtml1: {
-    en: "Add a heading — meaning first.",
-    ar: "أضف عنوانًا — المعنى أولًا.",
+    en: "<h2>",
+    ar: "<h2>",
   },
   trackCapHtml2: {
-    en: "Add supporting text under it.",
-    ar: "أضف نصًا توضيحيًا تحته.",
+    en: "<p>",
+    ar: "<p>",
   },
   trackCapHtml3: {
-    en: "Add a control the user can press.",
-    ar: "أضف عنصر تحكم يمكن للمستخدم النقر عليه.",
+    en: "<button>",
+    ar: "<button>",
+  },
+  trackHtmlBlankPage: {
+    en: "blank page",
+    ar: "صفحة فاضية",
+  },
+  trackHtmlEmpty: {
+    en: "empty",
+    ar: "فاضي",
   },
   trackCapCss0: {
     en: "Bones only — structure with no paint.",
@@ -371,9 +379,53 @@ export const ui = {
     en: "Table of contents",
     ar: "جدول المحتويات",
   },
+  htmlLearnPathLabel: {
+    en: "What you will learn",
+    ar: "هتتعلّم إيه",
+  },
+  htmlLearnPath0: {
+    en: "Page shell & tags",
+    ar: "هيكل الصفحة والـ tags",
+  },
+  htmlLearnPath1: {
+    en: "Text, links, lists",
+    ar: "نص، لينكات، قوائم",
+  },
+  htmlLearnPath2: {
+    en: "Forms & tables",
+    ar: "Forms وجداول",
+  },
+  htmlLearnPath3: {
+    en: "Accessibility, SEO & speed",
+    ar: "إمكانية الوصول و SEO والسرعة",
+  },
+  htmlTierBeginnerBlurb: {
+    en: "Page shell, tags, text, links, and lists",
+    ar: "هيكل الصفحة والـ tags والنص واللينكات والقوائم",
+  },
+  htmlTierIntermediateBlurb: {
+    en: "Forms, tables, and native open/close widgets",
+    ar: "Forms وجداول وودجت فتح/قفل أصلية",
+  },
+  htmlTierAdvancedBlurb: {
+    en: "Media, dialogs, accessibility, and SEO",
+    ar: "ميديا و dialogs وإمكانية الوصول و SEO",
+  },
+  htmlTierProBlurb: {
+    en: "Speed, security, RTL, and browser APIs",
+    ar: "سرعة وأمان و RTL و APIs المتصفح",
+  },
+  htmlTierPitfallsBlurb: {
+    en: "Classic HTML mistakes — wrong vs right",
+    ar: "أخطاء HTML الكلاسيكية — غلط مقابل صح",
+  },
+  htmlTierCheatsheetBlurb: {
+    en: "Quick cards you can scan later",
+    ar: "كروت سريعة ترجع ليها بعدين",
+  },
   levelsTree: {
-    en: "Levels",
-    ar: "المستويات",
+    en: "Lesson tree",
+    ar: "شجرة الدروس",
   },
   expandAll: { en: "Expand all", ar: "توسيع الكل" },
   collapseAll: { en: "Collapse all", ar: "طيّ الكل" },
@@ -385,6 +437,7 @@ export const ui = {
     en: "Continue learning",
     ar: "تابع التعلّم",
   },
+  upNext: { en: "Next", ar: "التالي" },
   lessonsCount: {
     en: "lessons",
     ar: "دروس",
@@ -404,6 +457,7 @@ export const ui = {
   lessons: { en: "Lessons", ar: "الدروس" },
   progress: { en: "Your progress", ar: "تقدمك" },
   completed: { en: "completed", ar: "مكتمل" },
+  lessonDone: { en: "Done", ar: "تم" },
   markComplete: { en: "Mark as complete", ar: "علّم كمكتمل" },
   markIncomplete: { en: "Mark as incomplete", ar: "تعليم كغير مكتمل" },
   difficulty: { en: "Tier", ar: "المستوى" },
@@ -638,7 +692,10 @@ export const ui = {
   },
   levelQuizWhy: { en: "Why?", ar: "لماذا؟" },
   levelQuizPagePreview: { en: "Page preview", ar: "معاينة الصفحة" },
-  levelQuizTapElement: { en: "Tap the element name", ar: "اضغط اسم العنصر" },
+  levelQuizTapElement: {
+    en: "Or tap a tag name",
+    ar: "أو اضغط اسم الوسم",
+  },
   levelQuizRevealHint: { en: "Reveal hint", ar: "إظهار تلميح" },
   levelQuizWatchExplanation: { en: "Watch explanation", ar: "شاهد الشرح" },
   levelQuizShowDemo: { en: "Show interactive demo", ar: "عرض العرض التفاعلي" },
@@ -695,6 +752,10 @@ export const ui = {
   activityExplanation: {
     en: "Explanation",
     ar: "التفسير",
+  },
+  activityLooksLike: {
+    en: "What it looks like",
+    ar: "شكله في الصفحة",
   },
   activityHint: {
     en: "Hint",

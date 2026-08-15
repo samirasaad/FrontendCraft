@@ -41,6 +41,87 @@ export const htmlBrowserWalkthrough: Record<string, BrowserWalkthrough> = {
     ],
   },
 
+  "html-comments": {
+    intro: liveIntro,
+    steps: [
+      {
+        title: L("Run the Live example", "شغّل مثال Live"),
+        detail: L(
+          "Paste a page with an HTML comment and a paragraph. The comment text should not appear in the preview.",
+          "الصق صفحة فيها تعليق HTML وفقرة. نص التعليق مفروض يظهرش في المعاينة.",
+        ),
+      },
+      {
+        title: L("Elements — find the comment", "Elements — لاقي التعليق"),
+        detail: L(
+          "Inspect the preview. In Elements, expand body. You should see a #comment node. It is in the tree, not painted.",
+          "افحص المعاينة. في Elements وسّع body. المفروض تشوف #comment. موجود في الشجرة، مش مرسوم.",
+        ),
+      },
+      {
+        title: L("View Source vs page", "View Source مقابل الصفحة"),
+        detail: L(
+          "Right-click → View Page Source (or the editor). Confirm <!-- --> is in the file. The visible page still hides it.",
+          "كليك يمين → View Page Source (أو المحرر). تأكد إن <!-- --> في الملف. الصفحة الظاهرة لسه مخبياه.",
+        ),
+      },
+    ],
+  },
+
+  "global-attributes": {
+    intro: liveIntro,
+    steps: [
+      {
+        title: L("Toggle hidden", "شغّل hidden"),
+        detail: L(
+          "Select an element in Elements. Add or remove the hidden attribute and watch the preview hide/show. The node stays in the tree.",
+          "اختار عنصر في Elements. ضيف أو شيل hidden وراقب المعاينة تخفي/تظهر. العنصر يفضل في الشجرة.",
+        ),
+      },
+      {
+        title: L("Attributes pane — data-*", "لوحة Attributes — data-*"),
+        detail: L(
+          "Inspect a node with data-lesson or data-tier. Confirm the attribute list. In Console, try $0.dataset.",
+          "افحص عنصر فيه data-lesson أو data-tier. تأكد من قائمة الخصائص. في Console جرّب $0.dataset.",
+        ),
+      },
+      {
+        title: L("Accessibility — hidden", "Accessibility — hidden"),
+        detail: L(
+          "With a hidden node selected, open the Accessibility pane. It should not be exposed to the accessibility tree.",
+          "والعنصر hidden متختار، افتح لوحة Accessibility. المفروض مش متعرّض لشجرة الوصول.",
+        ),
+      },
+    ],
+  },
+
+  "html-native-interactive": {
+    intro: liveIntro,
+    steps: [
+      {
+        title: L("Elements — template", "Elements — template"),
+        detail: L(
+          "Inspect <template>. Its children live in a document fragment — they should not appear in the page layout until cloned.",
+          "افحص <template>. أبناءه في document fragment — مش المفروض يظهروا في تخطيط الصفحة لحد ما يتنسخوا.",
+        ),
+      },
+      {
+        title: L("Click the popover button", "اضغط زرار الـ popover"),
+        detail: L(
+          "Run the popover example. Click the button, then click outside or press Esc. The overlay should dismiss.",
+          "شغّل مثال الـ popover. اضغط الزرار، وبعدين اضغط برة أو Esc. الطبقة المفروض تقفل.",
+        ),
+      },
+      {
+        title: L("Compare with dialog", "قارن مع dialog"),
+        detail: L(
+          "Open the dialog example with showModal if present. Note the backdrop and focus trap — heavier than a popover, right for true modals.",
+          "افتح مثال الـ dialog بـ showModal لو موجود. لاحظ الخلفية وحبس الـ focus — أثقل من popover، ومناسب للمودال الحقيقي.",
+        ),
+      },
+    ],
+  },
+
   "semantic-structure": {
     intro: liveIntro,
     steps: [
@@ -169,8 +250,8 @@ export const htmlBrowserWalkthrough: Record<string, BrowserWalkthrough> = {
       {
         title: L("Definition lists", "قوائم التعريف"),
         detail: L(
-          "For <dl>, verify each <dt> is followed by <dd> in Elements — parser repairs bad pairs but AT can get confused.",
-          "لـ <dl>، تأكد إن كل <dt> متبوع بـ <dd> في Elements — الـ parser بيصلح الأزواج الغلط لكن AT ممكن يتلخبط.",
+          "For <dl>, verify each <dt> is followed by <dd> in Elements — parser repairs bad pairs but screen readers can get confused.",
+          "لـ <dl>، تأكد إن كل <dt> متبوع بـ <dd> في Elements — الـ parser بيصلح الأزواج الغلط لكن قارئ الشاشة ممكن يتلخبط.",
         ),
       },
     ],
@@ -756,8 +837,8 @@ export const htmlBrowserWalkthrough: Record<string, BrowserWalkthrough> = {
       {
         title: L("Compare wrong vs right", "قارن غلط وصح"),
         detail: L(
-          "Run each pitfall card in Live. Inspect both versions in Elements — see what the parser or AT receives.",
-          "شغّل كل كارت pitfall في Live. افحص النسختين في Elements — شوف إيه اللي الـ parser أو AT بيستقبله.",
+          "Run each pitfall card in Live. Inspect both versions in Elements — see what the parser or a screen reader receives.",
+          "شغّل كل كارت pitfall في Live. افحص النسختين في Elements — شوف إيه اللي الـ parser أو قارئ الشاشة بيستقبله.",
         ),
       },
       {

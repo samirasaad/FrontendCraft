@@ -42,13 +42,15 @@ function ConfettiBurst({ active }: { active: boolean }) {
   const reduce = useReducedMotion();
   const pieces = useMemo(
     () =>
-      Array.from({ length: reduce ? 0 : 18 }, (_, index) => ({
+      Array.from({ length: reduce ? 0 : 22 }, (_, index) => ({
         id: index,
-        left: `${8 + ((index * 17) % 84)}%`,
-        delay: (index % 6) * 0.04,
-        rotate: (index % 5) * 72,
+        left: `${6 + ((index * 13) % 88)}%`,
+        delay: (index % 8) * 0.28,
+        duration: 2.6 + (index % 5) * 0.45,
+        drift: index % 2 === 0 ? 18 : -16,
+        rotate: (index % 6) * 60,
         color: CONFETTI_COLORS[index % CONFETTI_COLORS.length],
-        size: 6 + (index % 3) * 2,
+        size: 5 + (index % 4) * 2,
       })),
     [reduce],
   );
@@ -63,24 +65,25 @@ function ConfettiBurst({ active }: { active: boolean }) {
       {pieces.map((piece) => (
         <motion.span
           key={piece.id}
-          className="absolute top-0 rounded-sm"
+          className="absolute top-0 rounded-[2px]"
           style={{
             left: piece.left,
             width: piece.size,
-            height: piece.size * 1.6,
+            height: piece.size * 1.7,
             backgroundColor: piece.color,
-            rotate: piece.rotate,
           }}
-          initial={{ y: -12, opacity: 0, scale: 0.6 }}
+          initial={{ y: -24, opacity: 0, x: 0 }}
           animate={{
-            y: ["0%", "120vh"],
+            y: ["-8%", "118%"],
+            x: [0, piece.drift, 0],
             opacity: [0, 1, 1, 0],
-            rotate: piece.rotate + 180,
+            rotate: [piece.rotate, piece.rotate + 280],
           }}
           transition={{
-            duration: 2.4,
+            duration: piece.duration,
             delay: piece.delay,
-            ease: [0.22, 1, 0.36, 1],
+            ease: "linear",
+            repeat: Infinity,
           }}
         />
       ))}
@@ -178,28 +181,84 @@ export function ActivityCongratsOverlay({
           >
             <ConfettiBurst active={highScore} />
 
-            <div
+            <motion.div
               aria-hidden
-              className="pointer-events-none absolute -end-10 -top-10 h-36 w-36 rounded-full bg-cyan-400/15 blur-3xl"
+              className="pointer-events-none absolute -end-10 -top-10 h-36 w-36 rounded-full bg-cyan-400/20 blur-3xl"
+              animate={
+                reduce
+                  ? undefined
+                  : { opacity: [0.35, 0.85, 0.35], scale: [1, 1.18, 1] }
+              }
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
             />
-            <div
+            <motion.div
               aria-hidden
-              className="pointer-events-none absolute -start-8 bottom-0 h-28 w-28 rounded-full bg-emerald-400/10 blur-3xl"
+              className="pointer-events-none absolute -start-8 bottom-0 h-28 w-28 rounded-full bg-emerald-400/15 blur-3xl"
+              animate={
+                reduce
+                  ? undefined
+                  : { opacity: [0.3, 0.75, 0.3], scale: [1.1, 1, 1.1] }
+              }
+              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
             />
 
             <div className="relative text-center">
-              <motion.div
-                className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl ${
-                  highScore
-                    ? "bg-emerald-400/15 text-emerald-300 shadow-[0_0_36px_rgba(52,211,153,0.28)]"
-                    : "bg-amber-400/12 text-amber-200 shadow-[0_0_28px_rgba(251,191,36,0.18)]"
-                }`}
-                initial={reduce ? false : { scale: 0.5, rotate: -12 }}
-                animate={reduce ? undefined : { scale: 1, rotate: 0 }}
-                transition={{ type: "spring", stiffness: 320, damping: 16 }}
-              >
-                {highScore ? <PartyPopper size={28} /> : <Sparkles size={26} />}
-              </motion.div>
+              <div className="relative mx-auto mb-4 h-16 w-16">
+                {reduce ? null : (
+                  <motion.span
+                    aria-hidden
+                    className={`absolute inset-0 rounded-2xl ${
+                      highScore
+                        ? "bg-emerald-400/35"
+                        : "bg-amber-400/30"
+                    }`}
+                    animate={{ scale: [1, 1.45, 1], opacity: [0.45, 0, 0.45] }}
+                    transition={{
+                      duration: 2.2,
+                      repeat: Infinity,
+                      ease: "easeOut",
+                    }}
+                  />
+                )}
+                <motion.div
+                  className={`relative flex h-16 w-16 items-center justify-center rounded-2xl ${
+                    highScore
+                      ? "bg-emerald-400/15 text-emerald-300 shadow-[0_0_36px_rgba(52,211,153,0.35)]"
+                      : "bg-amber-400/12 text-amber-200 shadow-[0_0_28px_rgba(251,191,36,0.22)]"
+                  }`}
+                  initial={reduce ? false : { scale: 0.5, rotate: -12 }}
+                  animate={
+                    reduce
+                      ? { scale: 1 }
+                      : {
+                          scale: [1, 1.08, 1],
+                          rotate: highScore ? [0, -10, 10, 0] : [0, 8, -8, 0],
+                        }
+                  }
+                  transition={
+                    reduce
+                      ? undefined
+                      : {
+                          scale: {
+                            duration: 2.4,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          },
+                          rotate: {
+                            duration: 2.4,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          },
+                        }
+                  }
+                >
+                  {highScore ? (
+                    <PartyPopper size={28} />
+                  ) : (
+                    <Sparkles size={26} />
+                  )}
+                </motion.div>
+              </div>
 
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-cyan-300/90">
                 {t("lessonTabActivity", locale)}
@@ -226,7 +285,7 @@ export function ActivityCongratsOverlay({
 
               <div className="mx-auto mt-4 h-2 max-w-xs overflow-hidden rounded-full bg-white/10">
                 <motion.div
-                  className={`h-full rounded-full ${
+                  className={`relative h-full overflow-hidden rounded-full ${
                     highScore
                       ? "bg-gradient-to-r from-emerald-400 to-cyan-300"
                       : "bg-gradient-to-r from-amber-300 to-orange-400"
@@ -234,7 +293,21 @@ export function ActivityCongratsOverlay({
                   initial={{ width: 0 }}
                   animate={{ width: `${percent}%` }}
                   transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                />
+                >
+                  {reduce ? null : (
+                    <motion.span
+                      aria-hidden
+                      className="absolute inset-y-0 start-0 w-1/3 bg-linear-to-r from-transparent via-white/50 to-transparent"
+                      animate={{ x: ["-120%", "280%"] }}
+                      transition={{
+                        duration: 1.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        repeatDelay: 0.7,
+                      }}
+                    />
+                  )}
+                </motion.div>
               </div>
               <p className="mt-1 text-xs font-semibold tabular-nums text-slate-500" dir="ltr">
                 {percent}%
@@ -243,14 +316,22 @@ export function ActivityCongratsOverlay({
 
             <div className="relative mt-6 space-y-2.5">
               {highScore && nextLesson ? (
-                <button
+                <motion.button
                   type="button"
                   onClick={onNextLesson}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-yellow-300 to-cyan-300 px-4 py-3 text-sm font-bold text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.22)] transition hover:brightness-110"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-yellow-300 via-cyan-300 to-yellow-300 bg-[length:200%_100%] px-4 py-3 text-sm font-bold text-slate-950 shadow-[0_0_24px_rgba(34,211,238,0.28)] transition hover:brightness-110"
+                  animate={
+                    reduce ? undefined : { backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }
+                  }
+                  transition={
+                    reduce
+                      ? undefined
+                      : { duration: 3.4, repeat: Infinity, ease: "linear" }
+                  }
                 >
                   {t("activityCongratsNextLesson", locale)}
                   <ArrowRight size={16} className={RTL_FLIP} />
-                </button>
+                </motion.button>
               ) : null}
 
               {highScore && !nextLesson ? (

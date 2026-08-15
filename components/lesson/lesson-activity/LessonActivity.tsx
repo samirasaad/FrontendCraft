@@ -10,7 +10,11 @@ import {
   Sparkles,
   XCircle,
 } from "lucide-react";
-import { LessonActivityCodeSnippet } from "@/components/lesson/lesson-activity/LessonActivityCodeSnippet";
+import {
+  htmlLooksPreviewable,
+  LessonActivityCodeSnippet,
+  wrapActivityPreviewHtml,
+} from "@/components/lesson/lesson-activity/LessonActivityCodeSnippet";
 import { LessonActivityOptionCard } from "@/components/lesson/lesson-activity/LessonActivityOptionCard";
 import { LessonActivityProgress } from "@/components/lesson/lesson-activity/LessonActivityProgress";
 import { RichText } from "@/components/shared/RichText";
@@ -56,11 +60,30 @@ function QuestionView({
       </p>
 
       {question.code ? (
-        <div className="mb-5">
+        <div
+          className={`mb-5 grid gap-3 ${
+            htmlLooksPreviewable(question.code) ? "sm:grid-cols-2" : ""
+          }`}
+        >
           <LessonActivityCodeSnippet
             code={question.code}
             language={question.language ?? "html"}
           />
+          {question.language !== "css" &&
+          question.language !== "javascript" &&
+          htmlLooksPreviewable(question.code) ? (
+            <div>
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                {t("activityLooksLike", locale)}
+              </p>
+              <iframe
+                title={t("activityLooksLike", locale)}
+                sandbox=""
+                srcDoc={wrapActivityPreviewHtml(question.code)}
+                className="h-32 w-full rounded-xl border border-white/10 bg-white"
+              />
+            </div>
+          ) : null}
         </div>
       ) : null}
 

@@ -10,9 +10,12 @@ const CODE_CLASS =
 export function RichText({
   text,
   className,
+  chips = true,
 }: {
   text: string;
   className?: string;
+  /** When false, keep LTR isolation but skip the cyan code pills (lists, TOCs). */
+  chips?: boolean;
 }) {
   const parts = text.split(/(`[^`]+`)/g);
 
@@ -22,7 +25,15 @@ export function RichText({
         if (part.startsWith("`") && part.endsWith("`") && part.length > 2) {
           const code = part.slice(1, -1);
           return (
-            <code key={index} dir="ltr" className={CODE_CLASS}>
+            <code
+              key={index}
+              dir="ltr"
+              className={
+                chips
+                  ? CODE_CLASS
+                  : "font-[inherit] [unicode-bidi:isolate]"
+              }
+            >
               {code}
             </code>
           );

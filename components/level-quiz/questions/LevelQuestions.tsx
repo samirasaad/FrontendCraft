@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { motion, Reorder } from "framer-motion";
 import { GripVertical } from "lucide-react";
 import { LessonActivityCodeSnippet } from "@/components/lesson/lesson-activity/LessonActivityCodeSnippet";
@@ -39,10 +39,25 @@ function Prompt({ question }: { question: LevelQuestion }) {
 
 function parseTargets(markup: string) {
   const targets: { id: string; label: string }[] = [];
-  const re = /data-target="([^"]+)"[^>]*>([^<]*)</g;
+  const re = /<([A-Za-z][\w:-]*)\b([^>]*data-target="([^"]+)"[^>]*)>/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(markup)) !== null) {
-    targets.push({ id: m[1], label: m[2].trim() || m[1] });
+    const tag = m[1].toLowerCase();
+    const attrs = m[2];
+    const id = m[3];
+    const named = attrs.match(/data-label="([^"]+)"/)?.[1];
+    if (named) {
+      targets.push({ id, label: named });
+      continue;
+    }
+    const text = markup
+      .slice(m.index + m[0].length)
+      .split("<")[0]
+      .trim();
+    targets.push({
+      id,
+      label: text ? `<${tag}> ${text}` : `<${tag}>`,
+    });
   }
   return targets;
 }
@@ -97,6 +112,16 @@ function ClickElement({
   const { locale } = useLanguage();
   const targets = parseTargets(question.markup);
   const selected = typeof answer === "string" ? answer : null;
+  const safeId = selected && /^[A-Za-z][\w-]*$/.test(selected) ? selected : "";
+
+    function handlePreviewClick(event: MouseEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (disabled) return;
+    const el = (event.target as HTMLElement).closest("[data-target]");
+    const id = el?.getAttribute("data-target");
+    if (id) onChange(id);
+  }
+
   return (
     <div>
       <Prompt question={question} />
@@ -104,25 +129,29 @@ function ClickElement({
         {t("levelQuizPagePreview", locale)}
       </p>
       <div
-        className="mb-4 overflow-hidden rounded-2xl border border-white/10 bg-white p-4 text-slate-900 shadow-inner"
+        className="html-click-preview mb-4 overflow-hidden rounded-2xl border border-white/10 bg-white p-4 text-slate-900 shadow-inner [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-8 [&_ol]:ps-8 [&_ul]:my-2 [&_ol]:my-2 [&_p]:my-2 [&_nav]:mb-2 [&_[data-target]]:cursor-pointer [&_[data-target]]:rounded-sm [&_[data-target]]:outline [&_[data-target]]:outline-2 [&_[data-target]]:outline-dashed [&_[data-target]]:outline-slate-400 [&_[data-target]]:outline-offset-2"
+        onClick={handlePreviewClick}
         dangerouslySetInnerHTML={{ __html: question.markup }}
       />
+      {safeId ? (
+        <style>{`.html-click-preview [data-target="${safeId}"]{outline-color:#0891b2;background:#ecfeff}`}</style>
+      ) : null}
       <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
         {t("levelQuizTapElement", locale)}
       </p>
       <div className="flex flex-wrap gap-2">
-        {targets.map((t) => {
-          const isSel = selected === t.id;
-          const isOk = revealed && t.id === question.correctTargetId;
+        {targets.map((item) => {
+          const isSel = selected === item.id;
+          const isOk = revealed && item.id === question.correctTargetId;
           const isBad = revealed && isSel && !isOk;
           return (
             <motion.button
-              key={t.id}
+              key={item.id}
               type="button"
               disabled={disabled}
               whileHover={disabled ? undefined : { scale: 1.03 }}
-              onClick={() => onChange(t.id)}
-              className={`rounded-xl border px-3 py-2 text-sm font-medium transition ${
+              onClick={() => onChange(item.id)}
+              className={`rounded-xl border px-3 py-2 font-mono text-sm font-medium transition ${
                 isOk
                   ? "border-emerald-400 bg-emerald-400/15 text-emerald-100 shadow-[0_0_20px_rgba(52,211,153,0.25)]"
                   : isBad
@@ -132,7 +161,7 @@ function ClickElement({
                       : "border-white/12 bg-slate-950/50 text-slate-200"
               }`}
             >
-              {t.label}
+              {item.label}
             </motion.button>
           );
         })}
@@ -288,7 +317,7 @@ function PredictVisual({
             disabled={disabled}
             whileHover={disabled ? undefined : { y: -4, rotateY: 6 }}
             onClick={() => onChange(opt.id)}
-            className={`overflow-hidden rounded-2xl border text-start transition ${
+            className={`relative cursor-pointer overflow-hidden rounded-2xl border text-start transition ${
               revealed && opt.id === question.correctId
                 ? "border-emerald-400 ring-2 ring-emerald-300/40"
                 : selected === opt.id
@@ -296,9 +325,15 @@ function PredictVisual({
                   : "border-white/12"
             }`}
           >
-            <iframe title={`option-${idx}`} sandbox="" srcDoc={opt.previewHtml} className="h-24 w-full bg-white" />
+            <iframe
+              title={`option-${idx}`}
+              sandbox=""
+              srcDoc={opt.previewHtml}
+              tabIndex={-1}
+              className="pointer-events-none h-48 w-full bg-white"
+            />
             {opt.label ? (
-              <p className="px-2 py-1 text-xs text-slate-400">{loc(opt.label, locale)}</p>
+              <p className="px-3 py-2 text-sm font-medium text-slate-200">{loc(opt.label, locale)}</p>
             ) : null}
           </motion.button>
         ))}
@@ -306,6 +341,65 @@ function PredictVisual({
     </div>
   );
 }
+
+function nodeKind(label: string): "doctype" | "open" | "close" | "leaf" {
+  const text = label.trim();
+  if (!/^</.test(text)) return "leaf";
+  if (text.startsWith("<!")) return "doctype";
+  if (text.startsWith("</")) return "close";
+  if (text.startsWith("<meta") || /<[A-Za-z][^>]*>[\s\S]*<\/[A-Za-z]/.test(text)) {
+    return "leaf";
+  }
+  return "open";
+}
+
+function nodeDepths(labels: string[]) {
+  let depth = 0;
+  return labels.map((label) => {
+    const kind = nodeKind(label);
+    if (kind === "close") {
+      depth = Math.max(0, depth - 1);
+      return depth;
+    }
+    const at = depth;
+    if (kind === "open") depth += 1;
+    return at;
+  });
+}
+
+const TREE_OPEN_TAGS = new Set([
+  "html",
+  "head",
+  "body",
+  "header",
+  "main",
+  "footer",
+  "nav",
+  "section",
+  "article",
+  "ul",
+  "ol",
+]);
+
+function treeNodeKind(tag: string, hasChildren: boolean): "open" | "leaf" {
+  if (hasChildren || TREE_OPEN_TAGS.has(tag.toLowerCase())) return "open";
+  return "leaf";
+}
+
+const NODE_DOT: Record<ReturnType<typeof nodeKind>, string> = {
+  doctype: "bg-orange-300",
+  open: "bg-cyan-300",
+  close: "border-2 border-slate-400 bg-transparent",
+  leaf: "bg-emerald-300",
+};
+
+const NODE_SHELL: Record<ReturnType<typeof nodeKind>, string> = {
+  doctype:
+    "border-orange-300/40 bg-orange-300/10 text-orange-100",
+  open: "border-cyan-300/40 bg-cyan-400/10 text-cyan-100",
+  close: "border-white/15 bg-slate-950/80 text-slate-300",
+  leaf: "border-emerald-300/35 bg-emerald-400/10 text-emerald-100",
+};
 
 function ArrangeSteps({
   question,
@@ -323,16 +417,44 @@ function ArrangeSteps({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const labels = order.map(
+    (id) => loc(question.items.find((i) => i.id === id)!.label, locale),
+  );
+  const depths = nodeDepths(labels);
+
   return (
     <div>
       <Prompt question={question} />
-      <Reorder.Group axis="y" values={order} onReorder={(n) => !disabled && onChange(n)} className="space-y-2">
-        {order.map((id) => {
+      <Reorder.Group
+        axis="y"
+        values={order}
+        onReorder={(n) => !disabled && onChange(n)}
+        className="relative space-y-2 ps-2"
+      >
+        <span
+          aria-hidden
+          className="absolute start-[1.15rem] top-3 bottom-3 w-px bg-white/15"
+        />
+        {order.map((id, index) => {
           const item = question.items.find((i) => i.id === id)!;
+          const label = loc(item.label, locale);
+          const kind = nodeKind(label);
           return (
-            <Reorder.Item key={id} value={id} dragListener={!disabled} className="flex items-center gap-3 rounded-2xl border border-white/12 bg-slate-950/55 px-4 py-3">
-              <GripVertical size={16} className="shrink-0 text-slate-500" />
-              <span className="font-mono text-sm text-cyan-100">{loc(item.label, locale)}</span>
+            <Reorder.Item
+              key={id}
+              value={id}
+              dragListener={!disabled}
+              style={{ marginInlineStart: depths[index] * 18 }}
+              className={`relative z-[1] flex cursor-grab items-center gap-2.5 rounded-full border px-3 py-2 shadow-[0_0_18px_rgba(15,23,42,0.35)] active:cursor-grabbing ${NODE_SHELL[kind]}`}
+            >
+              <GripVertical size={14} className="shrink-0 opacity-50" />
+              <span
+                aria-hidden
+                className={`h-2.5 w-2.5 shrink-0 rounded-full ${NODE_DOT[kind]}`}
+              />
+              <span className="font-mono text-[13px] font-medium tracking-tight">
+                {label}
+              </span>
             </Reorder.Item>
           );
         })}
@@ -368,6 +490,9 @@ function FillCode({
   );
 }
 
+const PAIR_COLORS = ["#22d3ee", "#34d399", "#c4b5fd", "#fb923c"];
+const EMPTY_PAIRS: Record<string, string> = {};
+
 function MatchPairs({
   question,
   answer,
@@ -379,48 +504,147 @@ function MatchPairs({
   const pairs =
     typeof answer === "object" && answer && !Array.isArray(answer) && "pairs" in answer
       ? (answer as { pairs: Record<string, string> }).pairs
-      : {};
+      : EMPTY_PAIRS;
   const [activeLeft, setActiveLeft] = useState<string | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const leftRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const rightRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [, setTick] = useState(0);
+
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const redraw = () => setTick((n) => n + 1);
+    redraw();
+    const ro = new ResizeObserver(redraw);
+    ro.observe(el);
+    window.addEventListener("resize", redraw);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", redraw);
+    };
+  }, [pairs, activeLeft, locale]);
+
+  const lines = Object.entries(pairs).flatMap(([leftId, rightId], index) => {
+    const wrap = wrapRef.current?.getBoundingClientRect();
+    const a = leftRefs.current[leftId]?.getBoundingClientRect();
+    const b = rightRefs.current[rightId]?.getBoundingClientRect();
+    if (!wrap || !a || !b) return [];
+    const ok = !revealed || question.correctPairs[leftId] === rightId;
+    return [
+      {
+        x1: a.right - wrap.left,
+        y1: a.top + a.height / 2 - wrap.top,
+        x2: b.left - wrap.left,
+        y2: b.top + b.height / 2 - wrap.top,
+        color: ok ? PAIR_COLORS[index % PAIR_COLORS.length] : "#fb7185",
+      },
+    ];
+  });
+
+  function pairColor(leftId: string) {
+    const index = Object.keys(pairs).indexOf(leftId);
+    if (index < 0) return null;
+    const ok = !revealed || question.correctPairs[leftId] === pairs[leftId];
+    return ok ? PAIR_COLORS[index % PAIR_COLORS.length] : "#fb7185";
+  }
 
   return (
     <div>
       <Prompt question={question} />
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          {question.left.map((l) => (
-            <button
-              key={l.id}
-              type="button"
-              disabled={disabled}
-              onClick={() => setActiveLeft(activeLeft === l.id ? null : l.id)}
-              className={`w-full rounded-xl border px-3 py-2.5 text-start text-sm font-medium ${
-                activeLeft === l.id ? "border-cyan-300 bg-cyan-400/10" : "border-white/12 bg-slate-950/50 text-slate-200"
-              }`}
-            >
-              {loc(l.label, locale)}
-            </button>
+      {question.demoHtml ? (
+        <iframe
+          title={t("levelQuizPagePreview", locale)}
+          sandbox=""
+          srcDoc={question.demoHtml}
+          className="mb-4 h-28 w-full rounded-2xl border border-white/10 bg-white"
+        />
+      ) : null}
+      <div ref={wrapRef} className="relative grid items-center gap-8 sm:grid-cols-2">
+        <svg
+          aria-hidden
+          className="pointer-events-none absolute inset-0 hidden h-full w-full sm:block"
+        >
+          {lines.map((line, i) => (
+            <path
+              key={i}
+              d={`M ${line.x1} ${line.y1} C ${line.x1 + 28} ${line.y1}, ${line.x2 - 28} ${line.y2}, ${line.x2} ${line.y2}`}
+              fill="none"
+              stroke={line.color}
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
           ))}
+        </svg>
+        <div className="relative z-[1] space-y-2.5">
+          {question.left.map((item) => {
+            const color = pairColor(item.id);
+            const active = activeLeft === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                ref={(el) => {
+                  leftRefs.current[item.id] = el;
+                }}
+                disabled={disabled}
+                onClick={() =>
+                  setActiveLeft(activeLeft === item.id ? null : item.id)
+                }
+                className={`flex w-full items-center gap-2.5 rounded-full border px-3 py-2.5 text-start font-mono text-sm font-medium transition ${
+                  active
+                    ? "border-cyan-300 bg-cyan-400/15 text-cyan-50 ring-2 ring-cyan-300/40"
+                    : color
+                      ? "text-white"
+                      : "border-white/12 bg-slate-950/55 text-cyan-100"
+                }`}
+                style={
+                  color
+                    ? { borderColor: `${color}99`, background: `${color}22` }
+                    : undefined
+                }
+              >
+                <span
+                  className="h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-300"
+                  style={color ? { background: color } : undefined}
+                />
+                {loc(item.label, locale)}
+              </button>
+            );
+          })}
         </div>
-        <div className="space-y-2">
-          {question.right.map((r) => (
-            <button
-              key={r.id}
-              type="button"
-              disabled={disabled || !activeLeft}
-              onClick={() => {
-                if (!activeLeft) return;
-                onChange({ pairs: { ...pairs, [activeLeft]: r.id } });
-                setActiveLeft(null);
-              }}
-              className={`w-full rounded-xl border px-3 py-2.5 text-start text-sm ${
-                revealed && Object.values(question.correctPairs).includes(r.id)
-                  ? "border-emerald-400/40"
-                  : "border-white/12 bg-slate-950/50 text-slate-200"
-              }`}
-            >
-              {loc(r.label, locale)}
-            </button>
-          ))}
+        <div className="relative z-[1] space-y-2.5">
+          {question.right.map((item) => {
+            const leftId = Object.entries(pairs).find(([, r]) => r === item.id)?.[0];
+            const color = leftId ? pairColor(leftId) : null;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                ref={(el) => {
+                  rightRefs.current[item.id] = el;
+                }}
+                disabled={disabled || !activeLeft}
+                onClick={() => {
+                  if (!activeLeft) return;
+                  onChange({ pairs: { ...pairs, [activeLeft]: item.id } });
+                  setActiveLeft(null);
+                }}
+                className={`w-full rounded-full border px-3 py-2.5 text-start text-sm font-medium transition ${
+                  color
+                    ? "text-white"
+                    : "border-white/12 bg-slate-950/55 text-slate-200 disabled:opacity-50"
+                }`}
+                style={
+                  color
+                    ? { borderColor: `${color}99`, background: `${color}22` }
+                    : undefined
+                }
+              >
+                {loc(item.label, locale)}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -511,19 +735,38 @@ function DomTree({
   function Node({ node, depth }: { node: typeof question.tree; depth: number }) {
     const isSel = selected === node.id;
     const isOk = revealed && node.id === question.correctNodeId;
+    const kind = treeNodeKind(node.tag, Boolean(node.children?.length));
+    const caption = node.label ? loc(node.label, locale) : "";
     return (
-      <div style={{ marginInlineStart: depth * 14 }}>
+      <div style={{ marginInlineStart: depth * 18 }}>
         <button
           type="button"
           disabled={disabled}
           onClick={() => onChange(node.id)}
-          className={`mb-1 rounded-lg border px-2 py-1 font-mono text-xs ${
-            isOk ? "border-emerald-400 bg-emerald-400/15 text-emerald-100" : isSel ? "border-cyan-300 bg-cyan-400/10" : "border-white/10 text-slate-300"
+          className={`mb-2 flex w-full max-w-md items-center gap-2.5 rounded-full border px-3 py-2 text-start shadow-[0_0_18px_rgba(15,23,42,0.35)] ${
+            isOk
+              ? "border-emerald-400 bg-emerald-400/15 text-emerald-100"
+              : isSel
+                ? "border-cyan-300 bg-cyan-400/15 text-cyan-50"
+                : NODE_SHELL[kind]
           }`}
         >
-          &lt;{node.tag}&gt;{node.label ? ` ${loc(node.label, locale)}` : ""}
+          <span
+            aria-hidden
+            className={`h-2.5 w-2.5 shrink-0 rounded-full ${NODE_DOT[kind]}`}
+          />
+          <span className="font-mono text-[13px] font-medium tracking-tight">
+            &lt;{node.tag}&gt;
+          </span>
+          {caption ? (
+            <span className="truncate text-[12px] font-sans font-normal text-slate-400">
+              {caption}
+            </span>
+          ) : null}
         </button>
-        {node.children?.map((c) => <Node key={c.id} node={c} depth={depth + 1} />)}
+        {node.children?.map((c) => (
+          <Node key={c.id} node={c} depth={depth + 1} />
+        ))}
       </div>
     );
   }
@@ -531,8 +774,14 @@ function DomTree({
   return (
     <div>
       <Prompt question={question} />
-      <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-4">
-        <Node node={question.tree} depth={0} />
+      <div className="relative rounded-2xl border border-white/10 bg-slate-950/60 p-4 ps-5">
+        <span
+          aria-hidden
+          className="absolute start-[1.35rem] top-6 bottom-6 w-px bg-white/15"
+        />
+        <div className="relative z-[1]">
+          <Node node={question.tree} depth={0} />
+        </div>
       </div>
     </div>
   );

@@ -528,7 +528,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                           {tierEmoji(tier)} {tierLabel(tier, locale)}
                         </span>
                         <span className="mt-0.5 block truncate text-[10px] text-slate-500">
-                          {tierBlurb(tier, locale)}
+                          {tierBlurb(tier, locale, trackId)}
                         </span>
                       </span>
                       <span

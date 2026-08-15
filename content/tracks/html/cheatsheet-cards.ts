@@ -386,7 +386,7 @@ export const htmlCheatCards: CheatCard[] = [
   <header>…</header>
   <main id="main">…</main>
 </body>`,
-    L("First focusable control — jump past repeated `chrome`.", "أول عنصر قابل للتركيز — اقفز بعد الـ `chrome` المتكرر."),
+    L("First focusable control — jump past repeated header and nav.", "أول عنصر قابل للتركيز — اقفز بعد الهيدر والقائمة المتكررين."),
     {
       id: "skip-link",
       category: "structure",
@@ -472,7 +472,7 @@ export const htmlCheatCards: CheatCard[] = [
     <input type="email" name="email" autocomplete="email" required />
   </label>
 </fieldset>`,
-    L("Group related `controls` — legend names the group for `AT`.", "جمّع الـ `controls` المرتبطة — الـ legend بيسمّي المجموعة لـ `AT`."),
+    L("Group related `controls` — legend names the group for screen readers.", "جمّع الـ `controls` المرتبطة — الـ legend بيسمّي المجموعة لقارئ الشاشة."),
     {
       id: "fieldset",
       category: "forms",
@@ -666,7 +666,7 @@ export const htmlCheatCards: CheatCard[] = [
     </tr>
   </tbody>
 </table>`,
-    L("Use `tables` for data — `th` + `scope` + `caption` for `AT`.", "الجداول للبيانات — `th` + `scope` + `caption` لـ `AT`."),
+    L("Use `tables` for data — `th` + `scope` + `caption` for screen readers.", "الجداول للبيانات — `th` + `scope` + `caption` لقارئ الشاشة."),
     {
       id: "table",
       category: "structure",

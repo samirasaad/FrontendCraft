@@ -154,6 +154,23 @@ export function LessonActivityCodeSnippet({
   );
 }
 
+export function htmlLooksPreviewable(code: string): boolean {
+  const hasVisibleTag =
+    /<(p|h[1-6]|ul|ol|li|a|img|button|nav|main|header|footer|strong|em|b|i|mark|table|label|input|details|section|article|blockquote)\b/i.test(
+      code,
+    );
+  const hasVisibleText = />\s*[^<\s][\s\S]*?</.test(code) || /<img\b/i.test(code);
+  return hasVisibleTag && hasVisibleText;
+}
+
+export function wrapActivityPreviewHtml(code: string): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+    html,body{margin:0;padding:12px;font:16px/1.45 system-ui,sans-serif;color:#0f172a;background:#fff}
+    img{max-width:100%;height:auto}
+    ul,ol{margin:0;padding-inline-start:1.25rem}
+  </style></head><body>${code}</body></html>`;
+}
+
 export function ActivityOptionLetter({ children }: { children: ReactNode }) {
   return (
     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-bold text-slate-300">

@@ -8,11 +8,11 @@ export const htmlMeta: TrackMeta = {
   icon: "Code2",
   title: { en: "HTML Fundamentals", ar: "أساسيات HTML" },
   tagline: {
-    en: "What HTML actually does inside the browser.",
-    ar: "ما الذي يفعله HTML داخل المتصفح.",
+    en: "HTML is the page. Tags tell the browser what each part *is*.",
+    ar: "HTML هو الصفحة. الـ tags بتقول للمتصفح كل جزء *إيه*.",
   },
   description: {
-    en: "Semantic tags, forms, accessibility, and document structure — the layer every page is built on.",
-    ar: "وسوم دلالية، نماذج، إمكانية الوصول، وبنية الصفحة — الطبقة التي تُبنى عليها كل صفحة.",
+    en: "Start with the page shell, then text, links, lists, forms, and tables. Later: accessibility, SEO, and speed. You write tags — the browser builds the page people see.",
+    ar: "ابدأ بهيكل الصفحة، وبعدين النص واللينكات والقوائم والفورم والجداول. بعدين: إمكانية الوصول و SEO والسرعة. إنت بتكتب tags — المتصفح بيبني الصفحة اللي الناس بتشوفها.",
   },
 };

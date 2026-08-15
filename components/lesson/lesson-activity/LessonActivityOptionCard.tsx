@@ -57,7 +57,7 @@ export function LessonActivityOptionCard({
       className={`group relative flex w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-start transition disabled:cursor-default ${tone} ${glow}`}
     >
       <ActivityOptionLetter>{LETTERS[index] ?? index + 1}</ActivityOptionLetter>
-      <span className="min-w-0 flex-1 pt-0.5 text-sm font-medium leading-relaxed text-slate-100 sm:text-[15px]">
+      <span className="min-w-0 flex-1 pt-0.5 text-base font-medium leading-relaxed text-slate-100">
         <RichText text={label} />
       </span>
       {answered && isCorrectOption ? (
