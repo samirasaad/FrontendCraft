@@ -636,8 +636,8 @@ export const ui = {
   challengeCorrect: { en: "Correct!", ar: "صح!" },
   challengeWrong: { en: "Not quite.", ar: "ليس تمامًا." },
   challengeHintBar: {
-    en: "Optional: check your understanding in Lesson activity",
-    ar: "اختياري: راجع فهمك في نشاط الدرس",
+    en: "Open Lesson activity to check this",
+    ar: "افتح نشاط الدرس للمراجعة",
   },
   openInLive: {
     en: "Open in Live coding",

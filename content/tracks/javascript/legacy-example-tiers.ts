@@ -47,7 +47,7 @@ console.log(nextPage(), nextPage());`,
     "20 30",
   ),
   "data-types": mediumExample(
-    `const settings = { theme: "dark", notifications: true };
+    `const settings = { language: "en", notifications: true };
 const copy = { ...settings, notifications: false };
 
 console.log(settings.notifications, copy.notifications);`,

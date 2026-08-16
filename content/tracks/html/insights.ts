@@ -2388,8 +2388,8 @@ main.querySelector("h1")?.focus();`,
           L("`draggable` is HTML · events are JavaScript", "`draggable` من HTML · الأحداث من JavaScript"),
           L("Web Storage is not encrypted — never store secrets", "Web Storage مش مشفّر — متخزنش أسرار"),
         ],
-        code: `localStorage.setItem("theme", "dark");
-const theme = localStorage.getItem("theme");`,
+        code: `localStorage.setItem("username", "samira");
+const username = localStorage.getItem("username");`,
         codeCaption: L("Tiny `localStorage` read/write", "قراءة/كتابة `localStorage` صغيرة"),
       },
     ),

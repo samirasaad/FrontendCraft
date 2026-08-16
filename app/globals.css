@@ -8,6 +8,17 @@
   --font-display: "Space Grotesk", "Cairo", sans-serif;
   --font-body: "Cairo", "Space Grotesk", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --fc-logo-bg-from: #0f172a;
+  --fc-logo-bg-to: #164e63;
+  --fc-logo-mark-from: #fde047;
+  --fc-logo-mark-to: #22d3ee;
+  --fc-logo-slash: #fde047;
+  --fc-logo-ring: rgb(34 211 238 / 0.35);
+}
+
+.fc-brand-logo {
+  border-radius: 8px;
+  box-shadow: 0 0 18px rgb(34 211 238 / 0.22);
 }
 
 @theme inline {
@@ -20,6 +31,12 @@
 
 html {
   color-scheme: dark;
+}
+
+.fc-code-chip {
+  border-color: rgb(103 232 249 / 0.2);
+  background: rgb(34 211 238 / 0.1);
+  color: #cffafe;
 }
 
 body {

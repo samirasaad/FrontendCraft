@@ -6,7 +6,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { t } from "@/content/i18n/ui-strings";
 
 const LOGO_SIZE = 36;
-const LOGO_SHADOW = "shadow-[0_0_18px_rgba(34,211,238,0.2)]";
 
 /** Shared brand lockup — same logo size, gap, name, and slogan everywhere. */
 export function BrandLockup({
@@ -31,7 +30,7 @@ export function BrandLockup({
     >
       <BrandLogo
         size={LOGO_SIZE}
-        className={`${LOGO_SHADOW} transition group-hover:brightness-110`}
+        className="transition group-hover:brightness-110"
       />
       <span className="min-w-0">
         <span className="block truncate font-[family-name:var(--font-display)] text-sm font-bold leading-tight tracking-tight text-white sm:text-base">

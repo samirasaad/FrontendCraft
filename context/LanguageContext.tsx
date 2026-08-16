@@ -9,6 +9,13 @@ import {
   useSyncExternalStore,
   type ReactNode,
 } from "react";
+import {
+  DEFAULT_LOCALE,
+  applyDocumentLocale,
+  localeDir,
+  persistLocale,
+  readLocale,
+} from "@/lib/locale";
 import type { Locale } from "@/lib/types";
 
 interface LanguageContextValue {
@@ -19,10 +26,12 @@ interface LanguageContextValue {
 }
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
-const STORAGE_KEY = "frontendcraft-locale";
 const LISTENERS = new Set<() => void>();
 
+let cached: Locale | null = null;
+
 function emit() {
+  cached = null;
   LISTENERS.forEach((listener) => listener());
 }
 
@@ -33,23 +42,13 @@ function subscribe(listener: () => void) {
   };
 }
 
-function getLocaleSnapshot(): Locale {
-  const saved = window.localStorage.getItem(STORAGE_KEY);
-  return saved === "ar" ? "ar" : "en";
-}
-
-function getServerSnapshot(): Locale {
-  return "en";
-}
-
-function applyDocumentLocale(locale: Locale) {
-  document.documentElement.lang = locale === "ar" ? "ar" : "en";
-  document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+function getClientSnapshot(): Locale {
+  cached ??= readLocale();
+  return cached;
 }
 
 function commitLocale(next: Locale) {
-  window.localStorage.setItem(STORAGE_KEY, next);
-  applyDocumentLocale(next);
+  persistLocale(next);
   emit();
 }
 
@@ -59,7 +58,7 @@ function clearLocaleAnimAttrs(root: HTMLElement) {
 }
 
 function runLocaleChange(next: Locale) {
-  if (next === getLocaleSnapshot()) return;
+  if (next === readLocale()) return;
 
   const root = document.documentElement;
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -82,7 +81,6 @@ function runLocaleChange(next: Locale) {
     return;
   }
 
-  // Fallback: soft directional fade when View Transitions are unavailable.
   root.dataset.localeAnim = "out";
   window.setTimeout(() => {
     commitLocale(next);
@@ -93,12 +91,22 @@ function runLocaleChange(next: Locale) {
   }, reduced ? 0 : 180);
 }
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
+function LanguageStore({
+  children,
+  initialLocale,
+}: {
+  children: ReactNode;
+  initialLocale: Locale;
+}) {
   const locale = useSyncExternalStore(
     subscribe,
-    getLocaleSnapshot,
-    getServerSnapshot,
+    getClientSnapshot,
+    () => initialLocale,
   );
+
+  useEffect(() => {
+    persistLocale(readLocale());
+  }, []);
 
   useEffect(() => {
     applyDocumentLocale(locale);
@@ -109,13 +117,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const toggleLocale = useCallback(() => {
-    runLocaleChange(getLocaleSnapshot() === "en" ? "ar" : "en");
+    runLocaleChange(readLocale() === "en" ? "ar" : "en");
   }, []);
 
   const value = useMemo(
     () => ({
       locale,
-      dir: locale === "ar" ? ("rtl" as const) : ("ltr" as const),
+      dir: localeDir(locale),
       setLocale,
       toggleLocale,
     }),
@@ -124,6 +132,23 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   return (
     <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>
+  );
+}
+
+export function LanguageProvider({
+  children,
+  initialLocale,
+}: {
+  children: ReactNode;
+  initialLocale?: Locale;
+}) {
+  const parent = useContext(LanguageContext);
+  if (parent) return children;
+
+  return (
+    <LanguageStore initialLocale={initialLocale ?? DEFAULT_LOCALE}>
+      {children}
+    </LanguageStore>
   );
 }
 

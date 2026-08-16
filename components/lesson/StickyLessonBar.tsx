@@ -66,7 +66,7 @@ export function StickyLessonBar({
               playClick();
               onOpenActivity?.();
             }}
-            className="hidden min-w-0 flex-1 text-start text-[11px] text-slate-400 transition hover:text-slate-200 sm:block sm:me-auto"
+            className="hidden min-w-0 flex-1 whitespace-normal text-start text-[11px] leading-snug text-slate-300 transition hover:text-slate-100 sm:me-auto sm:block"
           >
             {lesson.content.levelQuiz
               ? t("levelQuizHintBar", locale)

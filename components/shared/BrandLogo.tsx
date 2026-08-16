@@ -22,7 +22,7 @@ export function BrandLogo({
       viewBox="0 0 32 32"
       width={size}
       height={size}
-      className={`shrink-0 ${className}`}
+      className={`fc-brand-logo shrink-0 ${className}`}
       role="img"
       aria-label={title}
     >
@@ -36,8 +36,8 @@ export function BrandLogo({
           y2="30"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#0f172a" />
-          <stop offset="1" stopColor="#164e63" />
+          <stop stopColor="var(--fc-logo-bg-from)" />
+          <stop offset="1" stopColor="var(--fc-logo-bg-to)" />
         </linearGradient>
         <linearGradient
           id={mark}
@@ -47,8 +47,8 @@ export function BrandLogo({
           y2="24"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#fde047" />
-          <stop offset="1" stopColor="#22d3ee" />
+          <stop stopColor="var(--fc-logo-mark-from)" />
+          <stop offset="1" stopColor="var(--fc-logo-mark-to)" />
         </linearGradient>
       </defs>
       <rect width="32" height="32" rx="8" fill={`url(#${bg})`} />
@@ -58,8 +58,8 @@ export function BrandLogo({
         width="30"
         height="30"
         rx="7"
-        stroke={`url(#${mark})`}
-        strokeOpacity="0.35"
+        stroke="var(--fc-logo-ring)"
+        strokeOpacity="1"
         strokeWidth="1"
         fill="none"
       />
@@ -81,7 +81,7 @@ export function BrandLogo({
       />
       <path
         d="M18.2 8.8 13.8 23.2"
-        stroke="#fde047"
+        stroke="var(--fc-logo-slash)"
         strokeWidth="2.2"
         strokeLinecap="round"
         fill="none"

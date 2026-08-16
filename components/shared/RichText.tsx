@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 const CODE_CLASS =
-  "mx-0.5 inline-block rounded-md border border-cyan-300/20 bg-cyan-400/10 px-1.5 py-0.5 font-mono text-[0.9em] font-medium leading-none text-cyan-100 [unicode-bidi:isolate]";
+  "fc-code-chip mx-0.5 inline-block rounded-md border px-1.5 py-0.5 font-mono text-[0.9em] font-medium leading-none [unicode-bidi:isolate]";
 
 /**
  * Renders lesson prose with `` `tech terms` `` as LTR <code> chips.

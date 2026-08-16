@@ -527,7 +527,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                         <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-200">
                           {tierEmoji(tier)} {tierLabel(tier, locale)}
                         </span>
-                        <span className="mt-0.5 block truncate text-[10px] text-slate-500">
+                        <span className="mt-0.5 block text-[10px] leading-snug text-slate-400">
                           {tierBlurb(tier, locale, trackId)}
                         </span>
                       </span>
@@ -609,7 +609,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                       )}
                                     </span>
                                     {active ? (
-                                      <span className="mt-0.5 line-clamp-1 text-[11px] text-slate-500">
+                                      <span className="mt-0.5 block text-[11px] leading-snug text-slate-400">
                                         <RichText
                                           text={loc(
                                             lesson.content.summary,

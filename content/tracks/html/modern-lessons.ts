@@ -543,8 +543,8 @@ export const modernLessons: LessonDraft[] = [
 <dialog id="settings" aria-labelledby="settings-title">
   <h2 id="settings-title">Preferences</h2>
   <label>
-    <input type="checkbox" name="dark" />
-    Dark mode
+    <input type="checkbox" name="notify" />
+    Email updates
   </label>
   <form method="dialog">
     <button value="cancel">Cancel</button>
@@ -1260,8 +1260,8 @@ export const modernLessons: LessonDraft[] = [
           "في خصائص **عامة** — تقدر تحطها على أغلب الوسوم. `hidden` بيخفي العنصر من الصفحة (ومن قارئات الشاشة). `title` tooltip أصلي — متستخدمهوش كـ label الوحيد. `lang` على عنصر ابن بيغيّر لغة الجزء ده (مفيد لاقتباس فرنسي في صفحة إنجليزي).",
         ),
         L(
-          "`data-*` attributes store extra info for CSS or JavaScript (`data-theme=\"dark\"`, `data-price=\"19\"`). They are not secrets. Boolean attributes like `hidden`, `disabled`, and `required` are true when present — write `hidden`, not `hidden=\"false\"` (that still hides).",
-          "خصائص `data-*` بتخزّن معلومات زيادة لـ CSS أو JavaScript (`data-theme=\"dark\"` و `data-price=\"19\"`). مش أسرار. الخصائص البوليانية زي `hidden` و `disabled` و `required` تبقى true لما تكون موجودة — اكتب `hidden`، مش `hidden=\"false\"` (برضه هيخفي).",
+          "`data-*` attributes store extra info for CSS or JavaScript (`data-category=\"sale\"`, `data-price=\"19\"`). They are not secrets. Boolean attributes like `hidden`, `disabled`, and `required` are true when present — write `hidden`, not `hidden=\"false\"` (that still hides).",
+          "خصائص `data-*` بتخزّن معلومات زيادة لـ CSS أو JavaScript (`data-category=\"sale\"` و `data-price=\"19\"`). مش أسرار. الخصائص البوليانية زي `hidden` و `disabled` و `required` تبقى true لما تكون موجودة — اكتب `hidden`، مش `hidden=\"false\"` (برضه هيخفي).",
         ),
         L(
           "Be careful with `tabindex`. `0` puts an element in the natural Tab order; `-1` makes it focusable from script only. Do not use `tabindex=\"1\"` or higher — it hijacks keyboard order. Prefer real `<button>` and `<a>` over making a `<div>` focusable.",
