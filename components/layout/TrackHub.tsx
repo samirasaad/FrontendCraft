@@ -100,6 +100,7 @@ function RoadmapViz({
   const hasBehavior = focus >= 2;
   const hasComponents = focus >= 3;
   const canClick = hasBehavior;
+  const showSaved = hasBehavior && saved;
   const snippet = LAYER_SNIPPETS[focus];
 
   return (
@@ -133,7 +134,7 @@ function RoadmapViz({
               {"<SaveCard"}
               <span className="text-amber-200">
                 {" "}
-                saved={saved ? "{true}" : "{false}"}
+                saved={showSaved ? "{true}" : "{false}"}
               </span>
               {">"}
             </span>
@@ -204,35 +205,38 @@ function RoadmapViz({
                 onToggleSave();
               }}
               aria-label={
-                saved
+                showSaved
                   ? t("roadmapDemoBtnDone", locale)
                   : t("roadmapDemoBtnIdle", locale)
               }
-              aria-pressed={canClick ? saved : undefined}
+              aria-pressed={canClick ? showSaved : undefined}
               animate={
-                hasBehavior && playing && !reduce && !saved
+                hasBehavior && playing && !reduce && !showSaved
                   ? { scale: [1, 1.05, 1] }
                   : { scale: 1 }
               }
               transition={{
                 duration: LAB_LOOP_S,
-                repeat: hasBehavior && playing && !reduce && !saved ? Infinity : 0,
+                repeat:
+                  hasBehavior && playing && !reduce && !showSaved
+                    ? Infinity
+                    : 0,
                 ease: "easeInOut",
               }}
               className={`relative font-semibold ${
                 canClick ? "cursor-pointer" : "cursor-default"
               } ${
                 hasLook
-                  ? saved
+                  ? showSaved
                     ? "rounded-full bg-cyan-300 px-4 py-2 text-xs text-slate-950"
                     : "rounded-full bg-orange-300 px-4 py-2 text-xs text-slate-950"
                   : "rounded border border-white/20 px-2.5 py-1.5 text-left font-mono text-xs text-slate-400"
               } ${canClick ? "transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300" : ""}`}
             >
-              {saved
+              {showSaved
                 ? t("roadmapDemoBtnDone", locale)
                 : t("roadmapDemoBtnIdle", locale)}
-              {hasBehavior && playing && !reduce && !saved ? (
+              {hasBehavior && playing && !reduce && !showSaved ? (
                 <motion.span
                   aria-hidden
                   className="pointer-events-none absolute -end-1 -top-1 h-2.5 w-2.5 rounded-full bg-cyan-200"
@@ -258,7 +262,7 @@ function RoadmapViz({
           <p className="mt-1.5 text-end font-mono text-xs text-sky-300/80">
             {"</SaveCard>"}
           </p>
-        ) : hasBehavior ? (
+        ) : canClick && !showSaved && !playing ? (
           <p className="mt-2 text-xs leading-relaxed text-slate-400">
             {t("roadmapVizTryClick", locale)}
           </p>
@@ -287,11 +291,12 @@ function StartRoadmap() {
   }, [playing, reduce]);
 
   useEffect(() => {
-    if (focus < 2) {
-      setSaved(false);
-      return;
-    }
-    if (!playing || reduce) return;
+    if (focus < 2) setSaved(false);
+  }, [focus]);
+
+  useEffect(() => {
+    if (focus < 2 || !playing || reduce) return;
+    setSaved(false);
     const id = window.setTimeout(() => setSaved(true), DEMO_CLICK_MS);
     return () => window.clearTimeout(id);
   }, [focus, playing, reduce]);
@@ -305,6 +310,7 @@ function StartRoadmap() {
   ) {
     playClick();
     setFocus(i);
+    if (i < 2) setSaved(false);
     if (opts?.pause !== false) setPlaying(false);
     if (opts?.moveFocus) stepRefs.current[i]?.focus();
   }
@@ -345,8 +351,10 @@ function StartRoadmap() {
           {t("roadmapTitle", locale)}
         </h1>
         <p className="mt-2 max-w-xl text-[15px] leading-relaxed text-slate-400">
-          {t("hubTagline", locale)}{" "}
-          <span className="text-slate-500">{t("roadmapHint", locale)}</span>
+          {t("hubTagline", locale)}
+        </p>
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-400">
+          {t("roadmapHint", locale)}
         </p>
       </motion.header>
 

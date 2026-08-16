@@ -258,8 +258,8 @@ export const ui = {
     ar: "كيف تُبنى واجهة حقيقية",
   },
   roadmapHint: {
-    en: "Same card, four layers — HTML, CSS, JavaScript, then React.",
-    ar: "نفس البطاقة، أربع طبقات — HTML، CSS، JavaScript، بعدين React.",
+    en: "Watch one card grow in four layers: HTML names each piece, CSS gives it a look, JavaScript makes Save respond, then React wraps it as a reusable component.",
+    ar: "اتفرج على بطاقة واحدة وهي بتكبر على أربع طبقات: HTML بيسمّي كل جزء، CSS بيديها شكل، JavaScript بيخلّي زر Save يرد، بعدين React بيلفّها كمكون تقدر تعيد استخدامه.",
   },
   roadmapHtmlTitle: {
     en: "HTML — what the browser reads first",
@@ -322,8 +322,8 @@ export const ui = {
     ar: "saved = true",
   },
   roadmapVizTryClick: {
-    en: "Your turn — click Save.",
-    ar: "دورك — اضغط Save.",
+    en: "Click Save to run the JavaScript.",
+    ar: "اضغط Save عشان JavaScript يشتغل.",
   },
   roadmapVizProp: {
     en: "prop",
