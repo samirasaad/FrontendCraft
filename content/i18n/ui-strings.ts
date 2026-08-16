@@ -258,8 +258,8 @@ export const ui = {
     ar: "كيف تُبنى واجهة حقيقية",
   },
   roadmapHint: {
-    en: "Structure → styling → behavior, then React components. Same UI grows in order.",
-    ar: "البنية → التنسيق → السلوك، ثم مكونات React. نفس الواجهة تنمو بالترتيب.",
+    en: "Same card, four layers — HTML, CSS, JavaScript, then React.",
+    ar: "نفس البطاقة، أربع طبقات — HTML، CSS، JavaScript، بعدين React.",
   },
   roadmapHtmlTitle: {
     en: "HTML — what the browser reads first",
@@ -294,20 +294,40 @@ export const ui = {
     ar: "لا يزال HTML و CSS و JS — منظّمين في مكونات قابلة لإعادة الاستخدام مع props و state، حتى يمكن استخدام نفس البطاقة في أي مكان بالتطبيق.",
   },
   roadmapPreviewHtml: {
-    en: "Step: structure. A title, a line of text, and a button — the browser knows what each piece means.",
-    ar: "الخطوة: البنية. عنوان وسطر نص وزر — المتصفح يعرف معنى كل جزء.",
+    en: "HTML names each piece: a heading, a paragraph, a button. The browser knows the meaning — still no look.",
+    ar: "HTML بيسمّي كل جزء: عنوان، فقرة، زر. المتصفح فاهم المعنى — لسه مفيش شكل.",
   },
   roadmapPreviewCss: {
-    en: "Step: styling. Spacing, color, and radius turn bare tags into a readable card.",
-    ar: "الخطوة: التنسيق. المسافات واللون والحواف تحوّل الوسوم إلى بطاقة مقروءة.",
+    en: "CSS dresses the same tags: padding, round corners, and a filled Save button.",
+    ar: "CSS بيلبس نفس الوسوم: padding، زوايا مدورة، وزر Save مليان لون.",
   },
   roadmapPreviewJs: {
-    en: "Step: behavior. A click runs JS, state flips to “Saved”, and the button label updates.",
-    ar: "الخطوة: السلوك. النقرة تشغّل JS، الحالة تصبح Saved، ونص الزر يتحدّث.",
+    en: "JavaScript listens. A click sets saved = true, and the button text becomes Saved.",
+    ar: "JavaScript بيسمع. نقرة بتخلي saved = true، ونص الزر يبقى Saved.",
   },
   roadmapPreviewReact: {
-    en: "Step: components. Same card and behavior — wrapped as <SaveCard /> with reusable props and state.",
-    ar: "الخطوة: المكونات. نفس البطاقة والسلوك — ملفوفة في <SaveCard /> مع props و state قابلة لإعادة الاستخدام.",
+    en: "React wraps that card as <SaveCard saved /> — one component you can drop anywhere.",
+    ar: "React بيلف البطاقة في <SaveCard saved /> — مكون واحد تحطه في أي حتة.",
+  },
+  roadmapVizAdding: {
+    en: "This layer writes",
+    ar: "الطبقة دي بتكتب",
+  },
+  roadmapVizClick: {
+    en: "click",
+    ar: "نقرة",
+  },
+  roadmapVizState: {
+    en: "saved = true",
+    ar: "saved = true",
+  },
+  roadmapVizTryClick: {
+    en: "Your turn — click Save.",
+    ar: "دورك — اضغط Save.",
+  },
+  roadmapVizProp: {
+    en: "prop",
+    ar: "prop",
   },
   roadmapPreviewLabel: {
     en: "Watch the same UI grow",

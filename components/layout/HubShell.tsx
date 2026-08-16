@@ -13,7 +13,7 @@ import { useLanguage } from "@/context/LanguageContext";
 export function HubShell({
   children,
   showHomeLink = false,
-  /** Home: lock to one viewport — no page scroll. */
+  /** Home: fill the viewport, but allow scroll on short screens. */
   fitViewport = false,
 }: {
   children: ReactNode;
@@ -25,16 +25,14 @@ export function HubShell({
   return (
     <div
       className={`relative bg-slate-950 text-slate-100 ${
-        fitViewport
-          ? "flex h-dvh max-h-dvh flex-col overflow-hidden"
-          : "min-h-screen overflow-hidden"
+        fitViewport ? "flex min-h-dvh flex-col" : "min-h-screen overflow-hidden"
       }`}
     >
       <Atmosphere />
 
-      <header className="mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between gap-3 px-4 py-3 sm:px-6">
+      <header className="sticky top-0 z-20 mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between gap-3 border-b border-white/5 bg-slate-950/85 px-4 py-3 backdrop-blur-xl sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
-          <BrandLockup compact={fitViewport} />
+          <BrandLockup />
           {showHomeLink ? (
             <Link
               href="/"
@@ -53,7 +51,7 @@ export function HubShell({
       <main
         className={`mx-auto w-full max-w-6xl px-4 sm:px-6 ${
           fitViewport
-            ? "flex min-h-0 flex-1 flex-col overflow-hidden pb-3 pt-1"
+            ? "flex flex-1 flex-col pb-8 pt-3"
             : "pb-16 pt-8 sm:pt-12"
         }`}
       >
