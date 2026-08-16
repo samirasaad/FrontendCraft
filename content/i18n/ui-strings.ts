@@ -23,12 +23,12 @@ export const ui = {
     ar: "اختر مسارك",
   },
   chooseTrackHint: {
-    en: "Build frontend skills that stick — lessons, challenges, playgrounds.",
-    ar: "ابنِ مهارات تطوير واجهات دائمة — دروس، تحديات، وملاعب تطبيقية.",
+    en: "Start with HTML, then CSS. Same order as the home card — JavaScript and the rest open next.",
+    ar: "ابدأ بـ HTML، بعدين CSS. نفس ترتيب البطاقة في الصفحة الرئيسية — JavaScript والباقي جايين بعد كده.",
   },
   trackPathLabel: {
-    en: "Live now",
-    ar: "متاح الآن",
+    en: "Open now",
+    ar: "مفتوح دلوقتي",
   },
   trackUpcomingLabel: {
     en: "Coming up",
@@ -83,7 +83,7 @@ export const ui = {
   },
   trackJobCssHint: {
     en: "Why a page feels like a product, not a bare document.",
-    ar: "لماذا تبدو الصفحة كمنتج وليس كمستند فارغ.",
+    ar: "ليه الصفحة تحس كمنتج، مش مستند فاضي.",
   },
   trackJobJsHint: {
     en: "How clicks, forms, and live updates actually work.",

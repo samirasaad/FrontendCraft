@@ -25,7 +25,7 @@ export function HubShell({
   return (
     <div
       className={`relative bg-slate-950 text-slate-100 ${
-        fitViewport ? "flex min-h-dvh flex-col" : "min-h-screen overflow-hidden"
+        fitViewport ? "flex min-h-dvh flex-col" : "min-h-screen"
       }`}
     >
       <Atmosphere />
@@ -36,7 +36,7 @@ export function HubShell({
           {showHomeLink ? (
             <Link
               href="/"
-              className="ms-1 hidden rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 transition hover:bg-white/10 sm:inline"
+              className="ms-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 transition hover:bg-white/10"
             >
               {t("backHome", locale)}
             </Link>
