@@ -151,6 +151,17 @@ export function assembleTrackLessons(
     assertVisualizerIdCoverage(trackLabel, bodies, knownVisualizerIds);
   }
 
+  const seenIds = new Map<string, string>();
+  for (const lesson of bodies) {
+    const other = seenIds.get(lesson.id);
+    if (other) {
+      throw new Error(
+        `${trackLabel} duplicate lesson id "${lesson.id}" (${other} and ${lesson.slug})`,
+      );
+    }
+    seenIds.set(lesson.id, lesson.slug);
+  }
+
   const assembled = bodies
     .map((lesson) => withProductionInsights(lesson, insights))
     .map((lesson) =>

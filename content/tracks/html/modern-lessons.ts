@@ -1005,7 +1005,7 @@ export const modernLessons: LessonDraft[] = [
     },
   },
   {
-    id: "html-12",
+    id: "html-18",
     order: 5,
     slug: "inline-vs-block",
     tier: "beginner",
@@ -1089,7 +1089,7 @@ export const modernLessons: LessonDraft[] = [
     },
   },
   {
-    id: "html-13",
+    id: "html-19",
     order: 7,
     slug: "classes-and-ids",
     tier: "beginner",
@@ -1169,7 +1169,7 @@ export const modernLessons: LessonDraft[] = [
     },
   },
   {
-    id: "html-14",
+    id: "html-20",
     order: 2,
     slug: "html-comments",
     tier: "beginner",
@@ -1241,7 +1241,7 @@ export const modernLessons: LessonDraft[] = [
     },
   },
   {
-    id: "html-15",
+    id: "html-21",
     order: 8,
     slug: "global-attributes",
     tier: "beginner",
@@ -1309,7 +1309,7 @@ export const modernLessons: LessonDraft[] = [
     },
   },
   {
-    id: "html-16",
+    id: "html-22",
     order: 16,
     slug: "html-native-interactive",
     tier: "advanced",

@@ -65,7 +65,7 @@ export function tierBlurb(
 export function tierBadgeClass(tier: Tier): string {
   switch (tier) {
     case "beginner":
-      return "border-emerald-400/35 bg-emerald-400/10 text-emerald-200";
+      return "border-sky-400/35 bg-sky-400/10 text-sky-200";
     case "intermediate":
       return "border-yellow-300/35 bg-yellow-300/10 text-yellow-100";
     case "advanced":
@@ -75,14 +75,14 @@ export function tierBadgeClass(tier: Tier): string {
     case "pitfalls":
       return "border-orange-400/35 bg-orange-400/10 text-orange-100";
     case "cheatsheet":
-      return "border-cyan-400/35 bg-cyan-400/10 text-cyan-100";
+      return "border-[#a10078]/40 bg-[#a10078]/10 text-[#e8a0d0]";
   }
 }
 
 export function tierEmoji(tier: Tier): string {
   switch (tier) {
     case "beginner":
-      return "🟢";
+      return "🔵";
     case "intermediate":
       return "🟡";
     case "advanced":
@@ -102,7 +102,7 @@ export function tierDotClass(tier: Tier | "all"): string {
     case "all":
       return "bg-gradient-to-br from-yellow-300 to-cyan-300";
     case "beginner":
-      return "bg-emerald-400";
+      return "bg-sky-400";
     case "intermediate":
       return "bg-yellow-300";
     case "advanced":
@@ -112,7 +112,7 @@ export function tierDotClass(tier: Tier | "all"): string {
     case "pitfalls":
       return "bg-orange-400";
     case "cheatsheet":
-      return "bg-cyan-400";
+      return "bg-[#a10078]";
   }
 }
 
@@ -120,17 +120,35 @@ export function tierDotClass(tier: Tier | "all"): string {
 export function tierRailClass(tier: Tier): string {
   switch (tier) {
     case "beginner":
-      return "border-emerald-400/30";
+      return "border-sky-400/50";
     case "intermediate":
-      return "border-yellow-300/30";
+      return "border-yellow-300/50";
     case "advanced":
-      return "border-rose-400/30";
+      return "border-rose-400/50";
     case "pro":
-      return "border-violet-400/30";
+      return "border-violet-400/50";
     case "pitfalls":
-      return "border-orange-400/30";
+      return "border-orange-400/50";
     case "cheatsheet":
-      return "border-cyan-400/30";
+      return "border-[#a10078]/70";
+  }
+}
+
+/** Topic group labels in the curriculum tree. */
+export function tierTopicLabelClass(tier: Tier): string {
+  switch (tier) {
+    case "beginner":
+      return "text-sky-300";
+    case "intermediate":
+      return "text-yellow-200";
+    case "advanced":
+      return "text-rose-300";
+    case "pro":
+      return "text-violet-300";
+    case "pitfalls":
+      return "text-orange-300";
+    case "cheatsheet":
+      return "text-[#a10078]";
   }
 }
 
@@ -140,7 +158,7 @@ export function tierFilterIdleClass(tier: Tier | "all"): string {
     case "all":
       return "border-white/12 bg-white/[0.04] text-slate-300 hover:border-white/20 hover:bg-white/[0.07]";
     case "beginner":
-      return "border-emerald-400/25 bg-emerald-400/[0.06] text-emerald-100/90 hover:border-emerald-400/40 hover:bg-emerald-400/10";
+      return "border-sky-400/25 bg-sky-400/[0.06] text-sky-100/90 hover:border-sky-400/40 hover:bg-sky-400/10";
     case "intermediate":
       return "border-yellow-300/25 bg-yellow-300/[0.06] text-yellow-100/90 hover:border-yellow-300/40 hover:bg-yellow-300/10";
     case "advanced":
@@ -150,7 +168,7 @@ export function tierFilterIdleClass(tier: Tier | "all"): string {
     case "pitfalls":
       return "border-orange-400/25 bg-orange-400/[0.06] text-orange-100/90 hover:border-orange-400/40 hover:bg-orange-400/10";
     case "cheatsheet":
-      return "border-cyan-400/25 bg-cyan-400/[0.06] text-cyan-100/90 hover:border-cyan-400/40 hover:bg-cyan-400/10";
+      return "border-[#a10078]/30 bg-[#a10078]/10 text-[#e8a0d0] hover:border-[#a10078]/50 hover:bg-[#a10078]/15";
   }
 }
 
@@ -160,7 +178,7 @@ export function tierFilterActiveClass(tier: Tier | "all"): string {
     case "all":
       return "border-transparent bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950 shadow-[0_0_20px_-6px_rgba(34,211,238,0.55)]";
     case "beginner":
-      return "border-emerald-300/50 bg-emerald-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(52,211,153,0.55)]";
+      return "border-sky-300/50 bg-sky-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(56,189,248,0.55)]";
     case "intermediate":
       return "border-yellow-200/50 bg-yellow-300 text-slate-950 shadow-[0_0_18px_-6px_rgba(253,224,71,0.5)]";
     case "advanced":
@@ -170,6 +188,6 @@ export function tierFilterActiveClass(tier: Tier | "all"): string {
     case "pitfalls":
       return "border-orange-300/50 bg-orange-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(251,146,60,0.5)]";
     case "cheatsheet":
-      return "border-cyan-300/50 bg-cyan-400 text-slate-950 shadow-[0_0_18px_-6px_rgba(34,211,238,0.5)]";
+      return "border-[#a10078]/60 bg-[#a10078] text-white shadow-[0_0_18px_-6px_rgba(161,0,120,0.55)]";
   }
 }

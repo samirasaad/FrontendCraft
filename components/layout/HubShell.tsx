@@ -30,21 +30,28 @@ export function HubShell({
     >
       <Atmosphere />
 
-      <header className="sticky top-0 z-20 mx-auto flex w-full max-w-6xl shrink-0 items-center justify-between gap-3 border-b border-white/5 bg-slate-950/85 px-4 py-3 backdrop-blur-xl sm:px-6">
-        <div className="flex min-w-0 items-center gap-3">
-          <BrandLockup />
-          {showHomeLink ? (
-            <Link
-              href="/"
-              className="ms-1 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 transition hover:bg-white/10"
-            >
-              {t("backHome", locale)}
-            </Link>
-          ) : null}
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <SfxToggle />
-          <LangToggle />
+      <header className="sticky top-0 z-20 shrink-0 border-b border-white/5 bg-slate-950/85 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
+          <div className="flex min-w-0 flex-1 items-center">
+            <BrandLockup className="min-w-0" />
+          </div>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            {showHomeLink ? (
+              <Link
+                href="/"
+                className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 transition hover:bg-white/10"
+              >
+                {t("backHome", locale)}
+              </Link>
+            ) : null}
+            <SfxToggle compact />
+            <span className="md:hidden">
+              <LangToggle compact />
+            </span>
+            <span className="hidden md:inline-flex">
+              <LangToggle />
+            </span>
+          </div>
         </div>
       </header>
 

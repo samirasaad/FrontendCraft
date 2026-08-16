@@ -283,9 +283,9 @@ export function ActivityCongratsOverlay({
                 {fillTemplate(t("activityScore", locale), { score, total })}
               </p>
 
-              <div className="mx-auto mt-4 h-2 max-w-xs overflow-hidden rounded-full bg-white/10">
+              <div className="relative mx-auto mt-4 h-2 max-w-xs overflow-hidden rounded-full bg-white/10">
                 <motion.div
-                  className={`relative h-full overflow-hidden rounded-full ${
+                  className={`absolute inset-y-0 start-0 overflow-hidden rounded-full ${
                     highScore
                       ? "bg-gradient-to-r from-emerald-400 to-cyan-300"
                       : "bg-gradient-to-r from-amber-300 to-orange-400"

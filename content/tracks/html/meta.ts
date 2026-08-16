@@ -8,8 +8,8 @@ export const htmlMeta: TrackMeta = {
   icon: "Code2",
   title: { en: "HTML Fundamentals", ar: "أساسيات HTML" },
   tagline: {
-    en: "HTML is the page. Tags tell the browser what each part *is*.",
-    ar: "HTML هو الصفحة. الـ tags بتقول للمتصفح كل جزء *إيه*.",
+    en: "HTML is the page. Tags tell the browser what each part is — a heading, a paragraph, a button — before any color or layout.",
+    ar: "HTML هو الصفحة. الـ tags بتقول للمتصفح كل جزء إيه: عنوان، فقرة، زر — قبل أي لون أو شكل.",
   },
   description: {
     en: "Start with the page shell, then text, links, lists, forms, and tables. Later: accessibility, SEO, and speed. You write tags — the browser builds the page people see.",

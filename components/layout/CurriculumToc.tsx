@@ -3,7 +3,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronDown, ChevronsDownUp, ChevronsUpDown, Circle } from "lucide-react";
 import { TrackJobVisual } from "@/components/layout/TrackJobVisual";
 import { Atmosphere } from "@/components/shared/Atmosphere";
 import { BrandLockup } from "@/components/shared/BrandLockup";
@@ -25,6 +25,7 @@ import {
   tierDotClass,
   tierLabel,
   tierRailClass,
+  tierTopicLabelClass,
 } from "@/lib/tiers";
 import type { Lesson, LocalizedString, Tier, TrackDefinition } from "@/lib/types";
 
@@ -44,6 +45,9 @@ function groupByTier(lessons: Lesson[]): Record<Tier, Lesson[]> {
 function padIndex(n: number) {
   return String(n).padStart(2, "0");
 }
+
+const FOCUS =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950";
 
 type NestedGroup = {
   id: string;
@@ -84,16 +88,27 @@ function TreeList({
   children: ReactNode;
   railClass: string;
 }) {
-  return <ul className={`ms-2 border-s ps-3 ${railClass}`}>{children}</ul>;
+  return (
+    <ul className={`ms-3 border-s-2 ps-3 ${railClass}`}>{children}</ul>
+  );
 }
 
-function TreeItem({ children }: { children: ReactNode }) {
+function TreeItem({
+  children,
+  branch = false,
+}: {
+  children: ReactNode;
+  /** Topic label — no connector tick. */
+  branch?: boolean;
+}) {
   return (
     <li className="relative">
-      <span
-        aria-hidden
-        className="absolute top-[1.15rem] -start-3 h-px w-3 bg-white/20"
-      />
+      {branch ? null : (
+        <span
+          aria-hidden
+          className="absolute top-[0.95rem] -start-[0.85rem] h-px w-[0.85rem] bg-white/35"
+        />
+      )}
       {children}
     </li>
   );
@@ -121,47 +136,50 @@ function LessonLeaf({
       <Link
         href={`/${trackId}/learn?lesson=${lesson.slug}`}
         onClick={() => playClick()}
-        className={`group flex min-h-11 items-center gap-2.5 rounded-lg py-2 pe-2 ps-1.5 transition ${
+        className={`group flex items-center gap-2 rounded-md py-1.5 pe-2 ps-1 transition ${FOCUS} ${
           next
             ? "bg-orange-400/10 ring-1 ring-inset ring-orange-300/25"
-            : "hover:bg-white/4"
+            : "hover:bg-white/5"
         }`}
       >
+        <span className="flex h-4 w-4 shrink-0 items-center justify-center">
+          {done ? (
+            <CheckCircle2
+              size={15}
+              strokeWidth={2.2}
+              className="text-emerald-400"
+              aria-label={t("lessonDone", locale)}
+            />
+          ) : (
+            <Circle
+              size={12}
+              strokeWidth={2}
+              className={next ? "text-orange-300" : "text-slate-500"}
+              aria-hidden
+            />
+          )}
+        </span>
         <span
-          className={`flex h-6 w-7 shrink-0 items-center justify-center font-mono text-xs tabular-nums ${
-            next ? "text-orange-200" : "text-slate-600"
+          className={`w-6 shrink-0 font-mono text-[11px] tabular-nums ${
+            next ? "text-orange-200" : "text-slate-400"
           }`}
         >
           {padIndex(index + 1)}
         </span>
         <span
-          className={`min-w-0 flex-1 truncate text-[15px] font-normal tracking-tight ${
+          className={`min-w-0 text-[14px] leading-snug tracking-tight ${
             next
               ? "text-white"
-              : "text-slate-300 group-hover:text-white"
+              : "text-slate-200 group-hover:text-white"
           }`}
         >
           <RichText chips={false} text={loc(lesson.content.title, locale)} />
         </span>
         {next ? (
-          <span className="shrink-0 rounded-full bg-orange-300/15 px-2 py-0.5 text-xs font-semibold text-orange-200">
+          <span className="shrink-0 rounded-full bg-orange-300/15 px-1.5 py-0.5 text-[10px] font-semibold text-orange-200">
             {t("upNext", locale)}
           </span>
-        ) : done ? (
-          <CheckCircle2
-            size={16}
-            strokeWidth={2}
-            className="shrink-0 text-emerald-400"
-            aria-label={t("lessonDone", locale)}
-          />
-        ) : (
-          <span
-            className="hidden shrink-0 font-mono text-xs tabular-nums text-slate-600 sm:inline"
-            dir="ltr"
-          >
-            {lesson.readMinutes}m
-          </span>
-        )}
+        ) : null}
       </Link>
     </TreeItem>
   );
@@ -172,11 +190,13 @@ function TopicBranch({
   trackId,
   nextLessonId,
   startIndex,
+  labelClass,
 }: {
   group: NestedGroup;
   trackId: TrackDefinition["id"];
   nextLessonId?: string;
   startIndex: number;
+  labelClass: string;
 }) {
   const { locale } = useLanguage();
   const titled = Boolean(group.title);
@@ -197,8 +217,10 @@ function TopicBranch({
 
   return (
     <>
-      <TreeItem>
-        <p className="px-1.5 pb-1 pt-3 text-[15px] font-semibold tracking-tight text-slate-200">
+      <TreeItem branch>
+        <p
+          className={`px-1 pb-1 pt-2 text-[12px] font-semibold tracking-wide ${labelClass}`}
+        >
           {loc(group.title!, locale)}
         </p>
       </TreeItem>
@@ -243,7 +265,7 @@ function TierSection({
           onToggle();
         }}
         aria-expanded={open}
-        className="flex w-full items-center gap-2.5 rounded-lg px-1.5 py-2.5 text-start transition hover:bg-white/4"
+        className={`flex w-full items-center gap-2 rounded-lg px-1 py-2 text-start transition hover:bg-white/4 ${FOCUS}`}
       >
         <ChevronDown
           size={18}
@@ -256,18 +278,28 @@ function TierSection({
           className={`h-2 w-2 shrink-0 rounded-full ${tierDotClass(tier)}`}
         />
         <span className="min-w-0 flex-1">
-          <span className="block text-[17px] font-semibold tracking-tight text-white">
+          <span className="block text-[15px] font-semibold tracking-tight text-white">
             {tierLabel(tier, locale)}
           </span>
-          <span className="mt-0.5 block truncate text-[14px] font-normal leading-snug text-slate-500">
+          <span className="mt-0.5 block text-[13px] font-normal leading-snug text-slate-400">
             {tierBlurb(tier, locale, trackId)}
           </span>
         </span>
-        <span
-          className="shrink-0 font-mono text-[13px] tabular-nums text-slate-500"
-          dir="ltr"
-        >
-          {doneCount}/{lessons.length}
+        <span className="flex w-14 shrink-0 flex-col items-end gap-1">
+          <span
+            className="font-mono text-[12px] tabular-nums text-slate-300"
+            dir="ltr"
+          >
+            {doneCount}/{lessons.length}
+          </span>
+          <span className="relative h-1 w-full overflow-hidden rounded-full bg-white/10">
+            <span
+              className={`absolute inset-y-0 start-0 rounded-full ${tierDotClass(tier)}`}
+              style={{
+                width: `${Math.round((doneCount / lessons.length) * 100)}%`,
+              }}
+            />
+          </span>
         </span>
       </button>
 
@@ -291,6 +323,7 @@ function TierSection({
                     trackId={trackId}
                     nextLessonId={nextLessonId}
                     startIndex={startIndex}
+                    labelClass={tierTopicLabelClass(tier)}
                   />
                 );
               })}
@@ -318,156 +351,194 @@ function CurriculumTocInner({ track }: { track: TrackDefinition }) {
   const htmlTrack = track.id === "html";
   const treeSpec = htmlTrack ? HTML_CURRICULUM_TREE : undefined;
 
+  const continueLesson =
+    lessons.find((l) => l.id === activeLessonId && !isComplete(l.id)) ??
+    lessons.find((l) => !isComplete(l.id)) ??
+    lessons.find((l) => l.id === activeLessonId) ??
+    lessons[0];
+
   const [openTiers, setOpenTiers] = useState<Set<Tier>>(() => {
+    const start = continueLesson?.tier;
+    if (start) return new Set([start]);
     const first = TIER_ORDER.find((tier) =>
       lessons.some((lesson) => lesson.tier === tier),
     );
     return first ? new Set([first]) : new Set();
   });
 
-  const continueLesson =
-    lessons.find((l) => l.id === activeLessonId) ??
-    lessons.find((l) => !isComplete(l.id)) ??
-    lessons[0];
+  const allTiers = TIER_ORDER.filter((tier) => groups[tier].length > 0);
+  const allOpen = allTiers.length > 0 && allTiers.every((tier) => openTiers.has(tier));
 
   return (
     <div className="relative min-h-screen bg-slate-950 text-slate-100">
       <Atmosphere />
 
-      <header className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
-          <BrandLockup href="/" onClick={() => playClick()} />
-          <Link
-            href="/tracks"
-            onClick={() => playClick()}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-slate-300 transition hover:bg-white/10"
-          >
-            <ArrowLeft size={12} className={RTL_FLIP} />
-            {t("backToTracks", locale)}
-          </Link>
-        </div>
-        <div className="flex shrink-0 items-center gap-2">
-          <SfxToggle />
-          <LangToggle />
+      <header className="sticky top-0 z-20 border-b border-white/5 bg-slate-950/85 backdrop-blur-xl">
+        <div className="mx-auto flex w-full max-w-6xl items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
+          <div className="flex min-w-0 flex-1 items-center">
+            <BrandLockup href="/" onClick={() => playClick()} className="min-w-0" />
+          </div>
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <Link
+              href="/tracks"
+              onClick={() => playClick()}
+              aria-label={t("backToTracks", locale)}
+              title={t("backToTracks", locale)}
+              className={`inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-slate-300 transition hover:bg-white/10 sm:px-3 ${FOCUS}`}
+            >
+              <ArrowLeft size={12} className={RTL_FLIP} />
+              <span className="hidden sm:inline">{t("backToTracks", locale)}</span>
+            </Link>
+            <SfxToggle compact />
+            <span className="md:hidden">
+              <LangToggle compact />
+            </span>
+            <span className="hidden md:inline-flex">
+              <LangToggle />
+            </span>
+          </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-4 pb-20 sm:px-6">
+      <main className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+        <a
+          href="#lessons"
+          className={`sr-only focus:not-sr-only focus:absolute focus:start-4 focus:top-3 focus:z-30 focus:inline-flex focus:rounded-full focus:bg-orange-300 focus:px-3 focus:py-1.5 focus:text-sm focus:font-bold focus:text-slate-950 ${FOCUS}`}
+        >
+          {t("skipToLessons", locale)}
+        </a>
+
         <motion.header
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 pt-2 sm:pt-4"
+          className="mb-6 pt-5 sm:mb-8 sm:pt-8"
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
-            {t("curriculumToc", locale)}
-          </p>
-          <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
-            <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              {loc(track.title, locale)}
-            </h1>
-            <p
-              className="font-[family-name:var(--font-display)] text-3xl font-bold tabular-nums tracking-tight text-white sm:text-4xl"
-              dir="ltr"
-            >
-              {totalCount}
-              <span className="ms-2 text-sm font-medium tracking-normal text-slate-500">
-                {t("lessonsCount", locale)}
-              </span>
-            </p>
-          </div>
-          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-400">
-            {loc(track.tagline, locale)}
-            {track.id === "html" ? null : (
-              <span className="text-slate-500">
-                {" "}
-                {loc(track.description, locale)}
-              </span>
-            )}
-          </p>
+          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(18rem,1.15fr)] lg:gap-10">
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+                {t("curriculumToc", locale)}
+              </p>
+              <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                {loc(track.title, locale)}
+              </h1>
+              <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-300">
+                {loc(track.tagline, locale)}
+                {track.id === "html" ? null : (
+                  <span className="text-slate-500">
+                    {" "}
+                    {loc(track.description, locale)}
+                  </span>
+                )}
+              </p>
 
-          <div className="mt-5 flex flex-wrap items-center gap-4">
-            {continueLesson ? (
-              <Link
-                href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
-                onClick={() => playClick()}
-                className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-bold text-slate-950 transition hover:brightness-110 ${
-                  htmlTrack
-                    ? "bg-orange-300"
-                    : "bg-gradient-to-r from-yellow-300 to-cyan-300"
-                }`}
-              >
-                {completedCount > 0
-                  ? t("continueLearning", locale)
-                  : t("startCurriculum", locale)}
-                <ArrowRight size={14} className={RTL_FLIP} />
-              </Link>
-            ) : null}
-            <div className="flex min-w-[10rem] flex-1 items-center gap-3 sm:max-w-xs">
-              <div className="h-[3px] min-w-0 flex-1 overflow-hidden rounded-full bg-white/10 rtl:rotate-180">
-                <motion.div
-                  className={`h-full rounded-full bg-gradient-to-r ${track.accent}`}
-                  initial={false}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ type: "spring", stiffness: 120, damping: 22 }}
-                />
+              <div className="mt-5 flex flex-col gap-3">
+                {continueLesson ? (
+                  <Link
+                    href={`/${track.id}/learn?lesson=${continueLesson.slug}`}
+                    onClick={() => playClick()}
+                    className={`inline-flex min-h-11 max-w-full items-center gap-2 self-start rounded-full px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:brightness-110 ${FOCUS} ${
+                      htmlTrack
+                        ? "bg-orange-300"
+                        : "bg-gradient-to-r from-yellow-300 to-cyan-300"
+                    }`}
+                  >
+                    <span className="truncate">
+                      {completedCount > 0
+                        ? t("continueLearning", locale)
+                        : t("startCurriculum", locale)}
+                      <span className="mx-1.5 font-medium opacity-50">·</span>
+                      <RichText
+                        chips={false}
+                        text={loc(continueLesson.content.title, locale)}
+                      />
+                    </span>
+                    <ArrowRight size={14} className={`shrink-0 ${RTL_FLIP}`} />
+                  </Link>
+                ) : null}
+                <div className="flex min-w-0 items-center gap-3 sm:max-w-sm">
+                  <div className="relative h-1.5 min-w-0 flex-1 overflow-hidden rounded-full bg-white/10">
+                    <motion.div
+                      className={`absolute inset-y-0 start-0 rounded-full bg-gradient-to-r ${track.accent}`}
+                      initial={false}
+                      animate={{ width: `${progressPercent}%` }}
+                      transition={{ type: "spring", stiffness: 120, damping: 22 }}
+                    />
+                  </div>
+                  <span
+                    className="shrink-0 font-mono text-xs tabular-nums text-slate-500"
+                    dir="ltr"
+                  >
+                    {completedCount}/{totalCount} {t("lessonsCount", locale)}
+                  </span>
+                </div>
               </div>
-              <span
-                className="shrink-0 font-mono text-[11px] tabular-nums text-slate-500"
-                dir="ltr"
-              >
-                {completedCount}/{totalCount}
-              </span>
+            </div>
+
+            <div className="min-w-0">
+              <TrackJobVisual trackId={track.id} variant="hero" />
             </div>
           </div>
         </motion.header>
-
-        <aside className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/70">
-          <div className="p-3 sm:p-4">
-            <TrackJobVisual trackId={track.id} variant="hero" />
-          </div>
-        </aside>
 
         {totalCount === 0 ? (
           <p className="rounded-2xl border border-dashed border-white/12 px-4 py-10 text-center text-sm text-slate-500">
             {t("emptyTrack", locale)}
           </p>
         ) : (
-          <div>
-            <div className="mb-3 flex items-baseline justify-between gap-3">
-              <h2 className="text-base font-semibold text-slate-300">
-                {t("levelsTree", locale)}
-              </h2>
-              <p
-                className="font-mono text-sm tabular-nums text-slate-500"
-                dir="ltr"
-              >
-                {totalCount} {t("lessonsCount", locale)}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-white/10 bg-slate-950/80 px-2 py-1 sm:px-3">
-              <ul className="divide-y divide-white/6">
-                {TIER_ORDER.map((tier) => (
-                  <TierSection
-                    key={tier}
-                    tier={tier}
-                    lessons={groups[tier]}
-                    branches={treeSpec?.[tier]}
-                    trackId={track.id}
-                    nextLessonId={continueLesson?.id}
-                    open={openTiers.has(tier)}
-                    onToggle={() => {
-                      setOpenTiers((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(tier)) next.delete(tier);
-                        else next.add(tier);
-                        return next;
-                      });
-                    }}
-                  />
-                ))}
-              </ul>
-            </div>
-          </div>
+          <section
+            id="lessons"
+            tabIndex={-1}
+            className="scroll-mt-24 overflow-hidden rounded-2xl border border-white/10 bg-slate-950/80 outline-none"
+          >
+              <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2 sm:px-4">
+                <h2 className="text-sm font-semibold text-white">
+                  {t("levelsTree", locale)}
+                </h2>
+                <button
+                  type="button"
+                  aria-pressed={allOpen}
+                  onClick={() => {
+                    playClick();
+                    setOpenTiers(
+                      allOpen ? new Set() : new Set(allTiers),
+                    );
+                  }}
+                  className={`inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 py-1 pe-3 ps-1.5 text-[11px] font-medium text-slate-200 transition hover:border-orange-300/30 hover:bg-orange-300/10 hover:text-white ${FOCUS}`}
+                >
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-orange-200">
+                    {allOpen ? (
+                      <ChevronsDownUp size={14} aria-hidden />
+                    ) : (
+                      <ChevronsUpDown size={14} aria-hidden />
+                    )}
+                  </span>
+                  {allOpen ? t("collapseAll", locale) : t("expandAll", locale)}
+                </button>
+              </div>
+              <div className="px-2 py-1 sm:px-3">
+                <ul className="divide-y divide-white/8">
+                  {TIER_ORDER.map((tier) => (
+                    <TierSection
+                      key={tier}
+                      tier={tier}
+                      lessons={groups[tier]}
+                      branches={treeSpec?.[tier]}
+                      trackId={track.id}
+                      nextLessonId={continueLesson?.id}
+                      open={openTiers.has(tier)}
+                      onToggle={() => {
+                        setOpenTiers((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(tier)) next.delete(tier);
+                          else next.add(tier);
+                          return next;
+                        });
+                      }}
+                    />
+                  ))}
+                </ul>
+              </div>
+            </section>
         )}
       </main>
     </div>

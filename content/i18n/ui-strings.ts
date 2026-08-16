@@ -23,8 +23,8 @@ export const ui = {
     ar: "اختر مسارك",
   },
   chooseTrackHint: {
-    en: "Start with HTML, then CSS. Same order as the home card — JavaScript and the rest open next.",
-    ar: "ابدأ بـ HTML، بعدين CSS. نفس ترتيب البطاقة في الصفحة الرئيسية — JavaScript والباقي جايين بعد كده.",
+    en: "Start with HTML, then CSS — both are open. The rest is not available yet.",
+    ar: "ابدأ من HTML بعدين CSS — الاتنين مفتوحين. الباقي لسه مش متاح.",
   },
   trackPathLabel: {
     en: "Open now",
@@ -134,20 +134,20 @@ export const ui = {
     ar: "SEO هو كيف تقرأ محركات البحث صفحتك: عناوين واضحة وبيانات وصفية وبنية ذات معنى حتى يجد الأشخاص المناسبون ما بنيته.",
   },
   trackCapHtml0: {
-    en: "<body>",
-    ar: "<body>",
+    en: "An empty <body> — the browser shows a blank page.",
+    ar: "<body> فاضي — المتصفح بيعرض صفحة فاضية.",
   },
   trackCapHtml1: {
-    en: "<h2>",
-    ar: "<h2>",
+    en: "<h2> names a heading. The browser draws it big.",
+    ar: "<h2> بتسمّي عنوان. المتصفح بيرسمه كبير.",
   },
   trackCapHtml2: {
-    en: "<p>",
-    ar: "<p>",
+    en: "<p> is a paragraph under the heading.",
+    ar: "<p> فقرة تحت العنوان.",
   },
   trackCapHtml3: {
-    en: "<button>",
-    ar: "<button>",
+    en: "<button> is something people can click.",
+    ar: "<button> حاجة الناس تقدر تضغط عليها.",
   },
   trackHtmlBlankPage: {
     en: "blank page",
@@ -395,9 +395,17 @@ export const ui = {
     en: "Lessons",
     ar: "الدروس",
   },
+  skipToLessons: {
+    en: "Skip to lessons",
+    ar: "انتقل للدروس",
+  },
   curriculumToc: {
-    en: "Table of contents",
-    ar: "جدول المحتويات",
+    en: "Your path",
+    ar: "مسارك",
+  },
+  tocDemoHint: {
+    en: "You write tags. The browser draws the page.",
+    ar: "بتكتب tags. المتصفح بيرسم الصفحة.",
   },
   htmlLearnPathLabel: {
     en: "What you will learn",
@@ -444,8 +452,8 @@ export const ui = {
     ar: "كروت سريعة ترجع ليها بعدين",
   },
   levelsTree: {
-    en: "Lesson tree",
-    ar: "شجرة الدروس",
+    en: "Lessons",
+    ar: "الدروس",
   },
   expandAll: { en: "Expand all", ar: "توسيع الكل" },
   collapseAll: { en: "Collapse all", ar: "طيّ الكل" },

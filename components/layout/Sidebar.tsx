@@ -482,9 +482,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                     {completedCount}/{totalCount} · {progressPercent}%
                   </span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-slate-800 rtl:rotate-180">
+                <div className="relative h-2 overflow-hidden rounded-full bg-slate-800">
                   <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-lime-300 to-cyan-400"
+                    className="absolute inset-y-0 start-0 rounded-full bg-gradient-to-r from-yellow-300 via-lime-300 to-cyan-400"
                     initial={false}
                     animate={{ width: `${progressPercent}%` }}
                     transition={{ type: "spring", stiffness: 120, damping: 20 }}

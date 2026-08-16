@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import {
   PlayPauseButton,
   useAutoPlay,
@@ -9,6 +10,7 @@ import {
 import { t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { LAB_ENTER_S, LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
+import { RTL_FLIP } from "@/lib/rtl";
 import type { Locale, TrackId } from "@/lib/types";
 
 export const TRACK_JOB_KEYS: Record<
@@ -240,14 +242,14 @@ function HtmlScene({
       controls={controls}
     >
       <div
-        className={`mx-auto grid h-full max-w-4xl ${
+        className={`mx-auto grid h-full max-w-5xl ${
           hero
-            ? "grid-rows-[1fr_auto] gap-3 sm:grid-rows-1 sm:grid-cols-[1fr_3.25rem_1fr] sm:items-stretch sm:gap-0"
+            ? "grid-rows-[1fr_auto] gap-3 sm:grid-rows-1 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch sm:gap-3"
             : "gap-2"
         }`}
       >
         <div
-          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950/80 ${
+          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950/90 ${
             hero ? "p-3.5" : "p-2"
           }`}
         >
@@ -256,10 +258,10 @@ function HtmlScene({
           </span>
           <div
             className={`flex flex-1 flex-col justify-center font-mono ${typeSize} ${
-              hero ? "gap-2" : "gap-1"
+              hero ? "gap-1.5" : "gap-1"
             }`}
           >
-            <p className="text-slate-600">&lt;body&gt;</p>
+            <p className="text-slate-500">&lt;body&gt;</p>
             <AnimatePresence initial={false}>
               {rows.map((row, i) => {
                 const on = i < visible;
@@ -274,7 +276,7 @@ function HtmlScene({
                       x: 0,
                       filter: "blur(0px)",
                       backgroundColor: lit
-                        ? "rgba(251,146,60,0.12)"
+                        ? "rgba(251,146,60,0.14)"
                         : "rgba(0,0,0,0)",
                     }}
                     exit={{ opacity: 0, x: -8 }}
@@ -302,60 +304,37 @@ function HtmlScene({
                 className="ms-4 text-orange-300"
               >
                 ▍
+                <span className="ms-2 font-sans text-[10px] text-slate-500">
+                  {t("trackHtmlEmpty", locale)}
+                </span>
               </motion.p>
             ) : null}
-            <p className="text-slate-600">&lt;/body&gt;</p>
+            <p className="text-slate-500">&lt;/body&gt;</p>
           </div>
         </div>
 
         {hero ? (
-          <div className="relative hidden items-center justify-center sm:flex">
-            <svg
-              viewBox="0 0 52 220"
-              className="h-full w-full max-h-[220px] rtl:-scale-x-100"
-              aria-hidden
-            >
-              <motion.path
-                d="M4 110 C 22 110, 30 110, 48 110"
-                fill="none"
-                stroke="rgba(251,146,60,0.25)"
-                strokeWidth="1.5"
-              />
-              <motion.path
-                key={step}
-                d="M4 110 C 22 110, 30 110, 48 110"
-                fill="none"
-                stroke="rgb(251,146,60)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0.4 }}
-                animate={{ pathLength: 1, opacity: 1 }}
-                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              />
-            </svg>
-            <motion.span
-              key={`chip-${step}`}
-              initial={{ opacity: 0, x: -10, scale: 0.85 }}
-              animate={{ opacity: [0, 1, 1, 0], x: [ -8, 8, 16 ], scale: 1 }}
-              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-              className="pointer-events-none absolute font-mono text-[10px] font-bold text-orange-200"
-            >
-              {step === 0 ? "<body>" : rows[Math.max(active, 0)]?.tag}
-            </motion.span>
+          <div className="hidden flex-col items-center justify-center gap-1 sm:flex">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-300/30 bg-orange-300/10 text-orange-200">
+              <ArrowRight size={16} className={RTL_FLIP} />
+            </span>
+            <span className="max-w-[4.5rem] text-center font-mono text-[9px] uppercase tracking-wider text-slate-500">
+              {t("preview", locale)}
+            </span>
           </div>
         ) : null}
 
         <div
-          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900/80 ${
+          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0b1220] ${
             hero ? "" : "hidden"
           }`}
         >
-          <div className="flex items-center gap-1 border-b border-white/10 px-3 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-rose-400/60" />
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-300/60" />
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/60" />
+          <div className="flex items-center border-b border-white/10 bg-slate-950/80 px-3 py-1.5">
+            <span className="min-w-0 flex-1 truncate rounded-full bg-white/5 px-2.5 py-0.5 text-center font-mono text-[9px] text-slate-500">
+              example.com
+            </span>
           </div>
-          <div className="relative flex flex-1 flex-col justify-center gap-2.5 px-5 py-4">
+          <div className="relative flex flex-1 flex-col justify-center gap-2.5 bg-gradient-to-b from-slate-900/40 to-slate-950 px-5 py-4">
             <AnimatePresence mode="popLayout">
               {visible === 0 ? (
                 <motion.div
@@ -363,21 +342,17 @@ function HtmlScene({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex h-[7.5rem] items-center justify-center rounded-lg border border-dashed border-white/12"
+                  className="flex flex-col items-center justify-center gap-3"
                 >
-                  <motion.span
-                    animate={
-                      animate ? { opacity: [0.25, 0.7, 0.25] } : { opacity: 0.4 }
-                    }
-                    transition={{
-                      duration: LAB_LOOP_S,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="font-mono text-[11px] text-slate-600"
-                  >
-                    ▍
-                  </motion.span>
+                  <div className="w-full max-w-[12rem] space-y-2">
+                    <div className="h-5 w-2/3 rounded bg-white/8" />
+                    <div className="h-2.5 w-full rounded bg-white/6" />
+                    <div className="h-2.5 w-4/5 rounded bg-white/6" />
+                    <div className="h-7 w-16 rounded-full bg-white/8" />
+                  </div>
+                  <p className="font-mono text-[11px] text-slate-500">
+                    {t("trackHtmlBlankPage", locale)}
+                  </p>
                 </motion.div>
               ) : null}
               {visible > 0 ? (
@@ -389,13 +364,12 @@ function HtmlScene({
                     opacity: 1,
                     y: 0,
                     scale: 1,
-                    outlineColor:
+                    boxShadow:
                       active === 0
-                        ? "rgba(251,146,60,0.8)"
-                        : "rgba(251,146,60,0)",
+                        ? "0 0 0 1px rgba(251,146,60,0.7)"
+                        : "0 0 0 0px rgba(251,146,60,0)",
                   }}
-                  className="w-fit rounded-md font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-white outline outline-offset-4"
-                  style={{ outlineWidth: 1 }}
+                  className="w-fit rounded-md px-1 font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-white"
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   Welcome back
@@ -409,13 +383,12 @@ function HtmlScene({
                   animate={{
                     opacity: 1,
                     y: 0,
-                    outlineColor:
+                    boxShadow:
                       active === 1
-                        ? "rgba(34,211,238,0.7)"
-                        : "rgba(34,211,238,0)",
+                        ? "0 0 0 1px rgba(34,211,238,0.7)"
+                        : "0 0 0 0px rgba(34,211,238,0)",
                   }}
-                  className="w-fit max-w-[16rem] rounded-md text-[13px] leading-snug text-slate-400 outline outline-offset-4"
-                  style={{ outlineWidth: 1 }}
+                  className="w-fit max-w-[16rem] rounded-md px-1 text-[13px] leading-snug text-slate-300"
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
                   Save your progress…

@@ -263,7 +263,7 @@ function TrackPickerInner() {
             <h1 className="font-[family-name:var(--font-display)] text-[1.75rem] font-bold leading-tight tracking-tight text-white sm:text-4xl">
               {t("chooseTrack", locale)}
             </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400 sm:mt-2.5 sm:text-[17px]">
+            <p className="mt-2 whitespace-nowrap text-sm leading-normal text-slate-400 sm:mt-2.5 sm:text-[17px]">
               {t("chooseTrackHint", locale)}
             </p>
           </div>

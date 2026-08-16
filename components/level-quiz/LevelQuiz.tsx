@@ -13,7 +13,6 @@ import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
 import { useLevelQuizSession } from "@/hooks/useLevelQuizSession";
-import { levelQuizDifficultyLabel } from "@/lib/level-quiz/labels";
 import type { LevelQuizDefinition, LevelQuizResult } from "@/lib/level-quiz/types";
 
 export function LevelQuiz({
@@ -115,10 +114,6 @@ export function LevelQuiz({
           exit={{ opacity: 0, x: -24 }}
           className={s.shake ? "level-quiz-shake" : ""}
         >
-          <span className="mb-3 inline-block rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-            {levelQuizDifficultyLabel(s.question.difficulty, locale)}
-          </span>
-
           <LevelQuestionView
             question={s.question}
             answer={s.draft}
