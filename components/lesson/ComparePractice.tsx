@@ -18,7 +18,7 @@ export function ComparePractice({ cards }: { cards: ComparePair[] }) {
         <p className="text-sm font-semibold text-orange-100">
           {t("compareTitle", locale)}
         </p>
-        <p className="text-xs text-slate-400">{t("compareHint", locale)}</p>
+        <p className="text-sm leading-relaxed text-slate-300">{t("compareHint", locale)}</p>
       </div>
       <div className="grid gap-4">
         {cards.map((card, index) => (

@@ -8,6 +8,7 @@ import { TrackJobVisual } from "@/components/layout/TrackJobVisual";
 import { Atmosphere } from "@/components/shared/Atmosphere";
 import { BrandLockup } from "@/components/shared/BrandLockup";
 import { RichText } from "@/components/shared/RichText";
+import { TierIcon } from "@/components/shared/TierIcon";
 import { LangToggle } from "@/components/shared/LangToggle";
 import { SfxToggle } from "@/components/shared/SfxToggle";
 import { loc, t } from "@/content/i18n/ui-strings";
@@ -23,8 +24,10 @@ import {
   TIER_ORDER,
   tierBlurb,
   tierDotClass,
+  tierIconClass,
   tierLabel,
   tierRailClass,
+  tierTickClass,
   tierTopicLabelClass,
 } from "@/lib/tiers";
 import type { Lesson, LocalizedString, Tier, TrackDefinition } from "@/lib/types";
@@ -96,17 +99,19 @@ function TreeList({
 function TreeItem({
   children,
   branch = false,
+  tickClass = "bg-white/35",
 }: {
   children: ReactNode;
   /** Topic label — no connector tick. */
   branch?: boolean;
+  tickClass?: string;
 }) {
   return (
     <li className="relative">
       {branch ? null : (
         <span
           aria-hidden
-          className="absolute top-[0.95rem] -start-[0.85rem] h-px w-[0.85rem] bg-white/35"
+          className={`absolute top-[0.95rem] -start-[0.85rem] h-px w-[0.85rem] ${tickClass}`}
         />
       )}
       {children}
@@ -119,11 +124,13 @@ function LessonLeaf({
   index,
   trackId,
   nextLessonId,
+  tickClass,
 }: {
   lesson: Lesson;
   index: number;
   trackId: TrackDefinition["id"];
   nextLessonId?: string;
+  tickClass: string;
 }) {
   const { locale } = useLanguage();
   const { isComplete } = useProgress();
@@ -132,7 +139,7 @@ function LessonLeaf({
   const next = lesson.id === nextLessonId;
 
   return (
-    <TreeItem>
+    <TreeItem tickClass={tickClass}>
       <Link
         href={`/${trackId}/learn?lesson=${lesson.slug}`}
         onClick={() => playClick()}
@@ -191,12 +198,14 @@ function TopicBranch({
   nextLessonId,
   startIndex,
   labelClass,
+  tickClass,
 }: {
   group: NestedGroup;
   trackId: TrackDefinition["id"];
   nextLessonId?: string;
   startIndex: number;
   labelClass: string;
+  tickClass: string;
 }) {
   const { locale } = useLanguage();
   const titled = Boolean(group.title);
@@ -208,6 +217,7 @@ function TopicBranch({
       index={startIndex + i}
       trackId={trackId}
       nextLessonId={nextLessonId}
+      tickClass={tickClass}
     />
   ));
 
@@ -269,16 +279,15 @@ function TierSection({
       >
         <ChevronDown
           size={18}
-          className={`shrink-0 text-slate-500 transition-transform duration-200 ${
+          className={`shrink-0 transition-transform duration-200 ${tierIconClass(tier)} ${
             open ? "rotate-0" : "-rotate-90 rtl:rotate-90"
           }`}
         />
-        <span
-          aria-hidden
-          className={`h-2 w-2 shrink-0 rounded-full ${tierDotClass(tier)}`}
-        />
+        <TierIcon tier={tier} size={18} />
         <span className="min-w-0 flex-1">
-          <span className="block text-[15px] font-semibold tracking-tight text-white">
+          <span
+            className={`block text-[15px] font-semibold tracking-tight ${tierIconClass(tier)}`}
+          >
             {tierLabel(tier, locale)}
           </span>
           <span className="mt-0.5 block text-[13px] font-normal leading-snug text-slate-400">
@@ -324,6 +333,7 @@ function TierSection({
                     nextLessonId={nextLessonId}
                     startIndex={startIndex}
                     labelClass={tierTopicLabelClass(tier)}
+                    tickClass={tierTickClass(tier)}
                   />
                 );
               })}

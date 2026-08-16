@@ -314,7 +314,7 @@ export function CheatSheetCards({
             <LayoutGrid size={16} />
             {t("cheatSheetTitle", locale)}
           </div>
-          <p className="text-xs text-slate-400">{t("cheatSheetHint", locale)}</p>
+          <p className="text-sm leading-relaxed text-slate-300">{t("cheatSheetHint", locale)}</p>
         </div>
         <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/25 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold text-cyan-100">
           <Sparkles size={12} />

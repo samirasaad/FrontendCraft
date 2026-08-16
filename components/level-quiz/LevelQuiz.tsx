@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ListChecks, Trophy } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { ConfettiBurst } from "@/components/level-quiz/ConfettiBurst";
 import { FeedbackPanel } from "@/components/level-quiz/FeedbackPanel";
 import { LevelQuizProgress } from "@/components/level-quiz/LevelQuizProgress";
@@ -87,24 +87,17 @@ export function LevelQuiz({
   if (!s.question) return null;
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-cyan-400/10 via-slate-950/70 to-violet-400/5 p-5 shadow-[0_0_40px_rgba(34,211,238,0.08)] sm:p-6">
+    <section className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-cyan-400/10 via-slate-950/70 to-violet-400/5 p-4 shadow-[0_0_40px_rgba(34,211,238,0.08)] sm:p-5">
       <ParticleBurst active={s.feedbackPhase === "celebrate"} />
-      <div className="relative mb-4 flex items-center gap-3">
+      <div className="relative mb-3 flex items-center gap-2.5">
         <Mascot mood={mood} />
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/90">
-            {t("lessonTabLevelQuiz", locale)}
-          </p>
-          <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white">
-            {loc(quiz.title, locale)}
-          </h2>
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <LevelQuizProgress current={s.index + 1} total={s.total} />
+          <span className="shrink-0 font-mono text-sm font-medium tabular-nums text-slate-400" dir="ltr">
+            {s.index + 1}/{s.total}
+          </span>
         </div>
-        <span className="ms-auto flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
-          <ListChecks size={16} />
-        </span>
       </div>
-
-      <LevelQuizProgress current={s.index + 1} total={s.total} />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -124,7 +117,7 @@ export function LevelQuiz({
           />
 
           {s.feedbackPhase === "answer" ? (
-            <div className="mt-5 flex justify-end">
+            <div className="mt-4 flex justify-end">
               <button
                 type="button"
                 disabled={s.draft == null}

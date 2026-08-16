@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle2,
   Lightbulb,
-  ListChecks,
   Sparkles,
   XCircle,
 } from "lucide-react";
@@ -55,13 +54,13 @@ function QuestionView({
     <div>
       <LessonActivityProgress current={index + 1} total={total} />
 
-      <p className="mb-4 text-base font-semibold leading-relaxed text-white sm:text-lg">
+      <p className="mb-2.5 text-base font-semibold leading-snug text-white sm:text-lg">
         <RichText text={loc(question.prompt, locale)} />
       </p>
 
       {question.code ? (
         <div
-          className={`mb-5 grid gap-3 ${
+          className={`mb-3 grid gap-3 ${
             htmlLooksPreviewable(question.code) ? "sm:grid-cols-2" : ""
           }`}
         >
@@ -88,7 +87,7 @@ function QuestionView({
       ) : null}
 
       <div
-        className="grid gap-2.5 sm:grid-cols-2"
+        className="grid gap-2 sm:grid-cols-2"
         role="radiogroup"
         aria-label={loc(question.prompt, locale)}
       >
@@ -144,7 +143,7 @@ function QuestionView({
                 <p className="mt-1 text-[13px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                   {t("activityExplanation", locale)}
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-slate-200">
+                <p className="mt-1 text-base leading-relaxed text-slate-100">
                   <RichText text={loc(question.explanation, locale)} />
                 </p>
               </div>
@@ -153,14 +152,14 @@ function QuestionView({
             {question.hint ? (
               <div className="flex items-start gap-2.5 border-t border-white/10 bg-black/20 px-4 py-3 sm:px-5">
                 <Lightbulb
-                  size={15}
+                  size={20}
                   className="mt-0.5 shrink-0 text-amber-300"
                 />
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200/80">
+                  <p className="text-base font-semibold text-amber-200">
                     {t("activityHint", locale)}
                   </p>
-                  <p className="mt-0.5 text-sm leading-relaxed text-slate-300">
+                  <p className="mt-1 text-lg leading-relaxed text-slate-100">
                     <RichText text={loc(question.hint, locale)} />
                   </p>
                 </div>
@@ -243,11 +242,6 @@ export function LessonActivity({
   const answered = selected !== null;
   const isLast = index >= total - 1;
 
-  const title = useMemo(
-    () => (activity.title ? loc(activity.title, locale) : t("activityTitle", locale)),
-    [activity.title, locale],
-  );
-
   function handleSelect(id: string) {
     if (selected || !question) return;
     playClick();
@@ -277,30 +271,7 @@ export function LessonActivity({
   if (!question && phase !== "results") return null;
 
   return (
-    <section className="relative overflow-hidden rounded-3xl border border-cyan-400/25 bg-gradient-to-br from-cyan-400/10 via-slate-950/70 to-emerald-400/5 p-5 shadow-[0_0_40px_rgba(34,211,238,0.08)] sm:p-6">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -end-16 -top-20 h-48 w-48 rounded-full bg-cyan-400/10 blur-3xl"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -start-10 bottom-0 h-40 w-40 rounded-full bg-emerald-400/10 blur-3xl"
-      />
-
-      <div className="relative mb-5 flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-cyan-400/15 text-cyan-300">
-          <ListChecks size={16} />
-        </span>
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-300/90">
-            {t("lessonTabActivity", locale)}
-          </p>
-          <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-white">
-            {title}
-          </h2>
-        </div>
-      </div>
-
+    <section className="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/80 p-4 sm:p-5">
       <AnimatePresence mode="wait">
         {phase === "results" ? (
           <motion.div
@@ -333,7 +304,7 @@ export function LessonActivity({
                 <motion.div
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-5 flex justify-end"
+                  className="mt-4 flex justify-end"
                 >
                   <button
                     type="button"

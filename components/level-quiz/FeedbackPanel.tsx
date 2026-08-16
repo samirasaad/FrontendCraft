@@ -45,7 +45,7 @@ export function FeedbackPanel({
   const showHelp = phase === "reflect";
 
   return (
-    <div className="mt-5 space-y-3">
+    <div className="mt-4 space-y-3">
       {celebrate ? (
         <div className="rounded-2xl border border-emerald-400/35 bg-emerald-400/10 px-4 py-3">
           <p className="font-semibold text-emerald-100">{t("levelQuizCorrect", locale)}</p>
@@ -55,7 +55,7 @@ export function FeedbackPanel({
       {showHelp ? (
         <div className="rounded-2xl border border-rose-400/30 bg-rose-400/10 px-4 py-3">
           <p className="font-semibold text-rose-100">{t("levelQuizWrong", locale)}</p>
-          <p className="mt-1 text-sm text-rose-200/85">
+          <p className="mt-1 text-base leading-relaxed text-rose-100">
             {triesLeft > 0
               ? t("levelQuizAttemptsLeft", locale).replace("{n}", String(triesLeft))
               : t("levelQuizNoAttemptsLeft", locale)}
@@ -67,10 +67,15 @@ export function FeedbackPanel({
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex gap-2 rounded-2xl border border-amber-300/25 bg-amber-300/10 px-4 py-3 text-sm text-amber-100"
+          className="flex gap-3 rounded-2xl border border-amber-300/30 bg-amber-300/10 px-4 py-4 text-lg leading-relaxed text-amber-50"
         >
-          <Lightbulb size={16} className="mt-0.5 shrink-0 text-amber-200" />
-          <RichText text={loc(question.hint, locale)} />
+          <Lightbulb size={22} className="mt-0.5 shrink-0 text-amber-200" />
+          <div>
+            <p className="mb-1 text-base font-semibold text-amber-200">
+              {t("activityHint", locale)}
+            </p>
+            <RichText text={loc(question.hint, locale)} />
+          </div>
         </motion.div>
       ) : null}
 
@@ -85,10 +90,10 @@ export function FeedbackPanel({
                 : "border-white/12 bg-slate-950/60"
             }`}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            <p className="text-base font-semibold text-slate-300">
               {t("levelQuizWhy", locale)}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-slate-200">
+            <p className="mt-2 text-base leading-relaxed text-slate-100">
               <RichText text={loc(question.explanation, locale)} />
             </p>
           </motion.div>

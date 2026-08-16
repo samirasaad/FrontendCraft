@@ -59,7 +59,7 @@ export function UnderTheHood({
           <Cog size={16} />
           {t("underTheHood", locale)}
         </div>
-        <p className="mb-3 text-xs text-slate-400">{t("underTheHoodHint", locale)}</p>
+        <p className="mb-3 text-sm leading-relaxed text-slate-300">{t("underTheHoodHint", locale)}</p>
         {body}
       </section>
     );
@@ -84,7 +84,7 @@ export function UnderTheHood({
             <span className="block text-sm font-semibold text-violet-100">
               {t("underTheHood", locale)}
             </span>
-            <span className="mt-0.5 block text-xs text-slate-400">
+            <span className="mt-0.5 block text-sm leading-relaxed text-slate-300">
               {t("underTheHoodHint", locale)}
             </span>
           </span>

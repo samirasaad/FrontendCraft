@@ -45,16 +45,17 @@ export function RichText({
 }
 
 /** Keep Latin runs and bare HTML tags from flipping Arabic punctuation. */
+const HTML_OR_LATIN =
+  /(<\/?[A-Za-z][\w:-]*[^>]*>|[A-Za-z][A-Za-z0-9+.#/_'-]*(?:[ \u00A0]+[A-Za-z][A-Za-z0-9+.#/_'-]*)*)/g;
+const IS_HTML_TAG = /^<\/?[A-Za-z][\w:-]*[^>]*>$/;
+const IS_LATIN_RUN =
+  /^[A-Za-z][A-Za-z0-9+.#/_'-]*(?:[ \u00A0]+[A-Za-z][A-Za-z0-9+.#/_'-]*)*$/;
+
 function TextChunk({ text }: { text: string }): ReactNode {
   if (!text) return null;
-  const chunks = text.split(
-    /(<\/?[A-Za-z][\w:-]*[^>]*>|[A-Za-z][A-Za-z0-9+.#/_-]{1,})/g,
-  );
+  const chunks = text.split(HTML_OR_LATIN);
   return chunks.map((chunk, i) => {
-    if (
-      /^<\/?[A-Za-z][\w:-]*[^>]*>$/.test(chunk) ||
-      /^[A-Za-z][A-Za-z0-9+.#/_-]{1,}$/.test(chunk)
-    ) {
+    if (IS_HTML_TAG.test(chunk) || IS_LATIN_RUN.test(chunk)) {
       return (
         <bdi key={i} dir="ltr" className="[unicode-bidi:isolate]">
           {chunk}

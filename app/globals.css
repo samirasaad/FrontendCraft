@@ -46,6 +46,44 @@ body {
   line-height: 1.6;
 }
 
+/* Clickable controls use a pointer. Beats Tailwind preflight `cursor: default` on buttons. */
+@layer base {
+  a[href],
+  area[href],
+  button,
+  [role="button"],
+  [role="tab"],
+  [role="menuitem"],
+  [role="option"],
+  [role="radio"],
+  [role="checkbox"],
+  [role="switch"],
+  [role="link"],
+  [role="combobox"],
+  [role="treeitem"],
+  summary,
+  label,
+  select,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="file"],
+  input[type="range"],
+  input[type="color"],
+  input[type="image"],
+  [tabindex]:not([tabindex^="-"]) {
+    cursor: pointer;
+  }
+
+  :disabled,
+  [aria-disabled="true"],
+  [aria-disabled="true"] * {
+    cursor: not-allowed;
+  }
+}
+
 /* Longer Arabic reading sessions need extra leading. */
 html[dir="rtl"] body {
   line-height: 1.75;

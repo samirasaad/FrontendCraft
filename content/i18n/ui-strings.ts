@@ -664,8 +664,8 @@ export const ui = {
   challengeCorrect: { en: "Correct!", ar: "صح!" },
   challengeWrong: { en: "Not quite.", ar: "ليس تمامًا." },
   challengeHintBar: {
-    en: "Open Lesson activity to check this",
-    ar: "افتح نشاط الدرس للمراجعة",
+    en: "Check this in Activity",
+    ar: "راجع ده في نشاط الدرس",
   },
   openInLive: {
     en: "Open in Live coding",
@@ -688,8 +688,8 @@ export const ui = {
     ar: "ملعب",
   },
   lessonTabActivity: {
-    en: "Lesson activity",
-    ar: "نشاط الدرس",
+    en: "Activity",
+    ar: "نشاط",
   },
   lessonTabLevelQuiz: {
     en: "Level quiz",
@@ -718,7 +718,7 @@ export const ui = {
     en: "Pick a different answer and submit again.",
     ar: "اختر إجابة أخرى وأرسلها مجددًا.",
   },
-  levelQuizWhy: { en: "Why?", ar: "لماذا؟" },
+  levelQuizWhy: { en: "Why?", ar: "ليه؟" },
   levelQuizPagePreview: { en: "Page preview", ar: "معاينة الصفحة" },
   levelQuizTapElement: {
     en: "Or tap a tag name",
@@ -746,7 +746,7 @@ export const ui = {
     ar: "جاهز لاختبار المستوى؟ افتح تبويب اختبار المستوى",
   },
   lessonTabLiveEmpty: {
-    en: "No playground for this lesson yet — stay on Concept or jump to Lesson activity.",
+    en: "No playground for this lesson yet — stay on Concept or jump to Activity.",
     ar: "لا يوجد ملعب تطبيق لهذا الدرس بعد — ابقَ في المفهوم أو انتقل لنشاط الدرس.",
   },
   lessonTabActivityEmpty: {

@@ -96,7 +96,25 @@ export function tierEmoji(tier: Tier): string {
   }
 }
 
-/** Dot color for filter chips (CSS, not emoji). */
+/** Lucide-friendly text color for tier icons (not dots). */
+export function tierIconClass(tier: Tier | "all"): string {
+  switch (tier) {
+    case "all":
+      return "text-cyan-300";
+    case "beginner":
+      return "text-sky-400";
+    case "intermediate":
+      return "text-yellow-300";
+    case "advanced":
+      return "text-rose-400";
+    case "pro":
+      return "text-violet-400";
+    case "pitfalls":
+      return "text-orange-400";
+    case "cheatsheet":
+      return "text-[#e8a0d0]";
+  }
+}
 export function tierDotClass(tier: Tier | "all"): string {
   switch (tier) {
     case "all":
@@ -116,39 +134,62 @@ export function tierDotClass(tier: Tier | "all"): string {
   }
 }
 
-/** Nested tree spine under a level. */
+/** Nested tree spine under a level — same hue as the icon. */
 export function tierRailClass(tier: Tier): string {
   switch (tier) {
     case "beginner":
-      return "border-sky-400/50";
+      return "border-sky-400/55";
     case "intermediate":
-      return "border-yellow-300/50";
+      return "border-yellow-300/55";
     case "advanced":
-      return "border-rose-400/50";
+      return "border-rose-400/55";
     case "pro":
-      return "border-violet-400/50";
+      return "border-violet-400/55";
     case "pitfalls":
-      return "border-orange-400/50";
+      return "border-orange-400/55";
     case "cheatsheet":
-      return "border-[#a10078]/70";
+      return "border-[#e8a0d0]/60";
   }
 }
 
-/** Topic group labels in the curriculum tree. */
-export function tierTopicLabelClass(tier: Tier): string {
+/** Horizontal ticks off the tree rail. */
+export function tierTickClass(tier: Tier): string {
   switch (tier) {
     case "beginner":
-      return "text-sky-300";
+      return "bg-sky-400/55";
     case "intermediate":
-      return "text-yellow-200";
+      return "bg-yellow-300/55";
     case "advanced":
-      return "text-rose-300";
+      return "bg-rose-400/55";
     case "pro":
-      return "text-violet-300";
+      return "bg-violet-400/55";
     case "pitfalls":
-      return "text-orange-300";
+      return "bg-orange-400/55";
     case "cheatsheet":
-      return "text-[#a10078]";
+      return "bg-[#e8a0d0]/60";
+  }
+}
+
+/** Topic group labels in the curriculum tree — same as icon. */
+export function tierTopicLabelClass(tier: Tier): string {
+  return tierIconClass(tier);
+}
+
+/** Card / group chrome on the lessons sidebar. */
+export function tierCardBorderClass(tier: Tier): string {
+  switch (tier) {
+    case "beginner":
+      return "border-sky-400/30";
+    case "intermediate":
+      return "border-yellow-300/30";
+    case "advanced":
+      return "border-rose-400/30";
+    case "pro":
+      return "border-violet-400/30";
+    case "pitfalls":
+      return "border-orange-400/30";
+    case "cheatsheet":
+      return "border-[#a10078]/45";
   }
 }
 

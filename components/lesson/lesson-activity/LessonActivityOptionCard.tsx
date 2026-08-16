@@ -54,10 +54,10 @@ export function LessonActivityOptionCard({
       whileHover={disabled ? undefined : { y: -2 }}
       whileTap={disabled ? undefined : { scale: 0.985 }}
       onClick={onSelect}
-      className={`group relative flex w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-start transition disabled:cursor-default ${tone} ${glow}`}
+      className={`group relative flex w-full items-start gap-3 rounded-2xl border px-3.5 py-3 text-start transition disabled:cursor-default ${tone} ${glow}`}
     >
       <ActivityOptionLetter>{LETTERS[index] ?? index + 1}</ActivityOptionLetter>
-      <span className="min-w-0 flex-1 pt-0.5 text-base font-medium leading-relaxed text-slate-100">
+      <span className="min-w-0 flex-1 pt-0.5 text-base font-medium leading-snug text-slate-100">
         <RichText text={label} />
       </span>
       {answered && isCorrectOption ? (

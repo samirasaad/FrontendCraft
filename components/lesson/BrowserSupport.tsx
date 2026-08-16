@@ -54,7 +54,7 @@ export function BrowserSupport({
       </div>
 
       {!compact ? (
-        <p className="mb-3 text-xs text-slate-400">
+        <p className="mb-3 text-sm leading-relaxed text-slate-300">
           {t("browserSupportHint", locale)}
         </p>
       ) : null}
@@ -78,7 +78,7 @@ export function BrowserSupport({
       </div>
 
       {support.notes ? (
-        <p className={`text-xs leading-5 text-slate-400 ${compact ? "mt-2" : "mt-3"}`}>
+        <p className={`text-sm leading-6 text-slate-300 ${compact ? "mt-2" : "mt-3"}`}>
           <RichText text={loc(support.notes, locale)} />
         </p>
       ) : null}

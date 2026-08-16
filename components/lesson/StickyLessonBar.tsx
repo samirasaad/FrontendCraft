@@ -7,7 +7,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { t } from "@/content/i18n/ui-strings";
+import { loc, t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
@@ -19,11 +19,14 @@ export function StickyLessonBar({
   lesson,
   challengePassed,
   onOpenActivity,
+  activityOpen = false,
 }: {
   lesson: Lesson;
   /** Lesson activity is optional enrichment — nudge only, never blocks Next. */
   challengePassed?: boolean;
   onOpenActivity?: () => void;
+  /** Hide the “open activity” nudge while that tab is already showing. */
+  activityOpen?: boolean;
 }) {
   const router = useRouter();
   const { locale } = useLanguage();
@@ -41,6 +44,7 @@ export function StickyLessonBar({
   const next = index < lessons.length - 1 ? lessons[index + 1] : null;
   const prev = index > 0 ? lessons[index - 1] : null;
   const showActivityHint =
+    !activityOpen &&
     !challengePassed &&
     !isLevelQuizLesson(lesson) &&
     Boolean(lesson.content.challenge || lesson.content.activity);
@@ -66,7 +70,7 @@ export function StickyLessonBar({
               playClick();
               onOpenActivity?.();
             }}
-            className="hidden min-w-0 flex-1 whitespace-normal text-start text-[11px] leading-snug text-slate-300 transition hover:text-slate-100 sm:me-auto sm:block"
+            className="hidden min-w-0 flex-1 whitespace-normal text-start text-sm leading-snug text-slate-200 transition hover:text-white sm:me-auto sm:block"
           >
             {lesson.content.levelQuiz
               ? t("levelQuizHintBar", locale)
@@ -125,10 +129,18 @@ export function StickyLessonBar({
               goToLesson(next);
             }}
             aria-label={t("nextLessonArrow", locale)}
-            className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-3 py-2 text-xs font-bold text-slate-950 transition enabled:hover:brightness-110 disabled:opacity-40 sm:px-3.5"
+            className="inline-flex max-w-[14rem] items-center gap-1 rounded-full bg-gradient-to-r from-yellow-300 to-cyan-300 px-3 py-2 text-xs font-bold text-slate-950 transition enabled:hover:brightness-110 disabled:opacity-40 sm:max-w-xs sm:px-3.5"
           >
-            <span className="hidden sm:inline">{t("nextLessonArrow", locale)}</span>
-            <ChevronRight size={14} className={RTL_FLIP} />
+            <span className="hidden truncate sm:inline">
+              {t("nextLessonArrow", locale)}
+              {next ? (
+                <>
+                  <span className="mx-1 font-medium opacity-50">·</span>
+                  {loc(next.content.title, locale)}
+                </>
+              ) : null}
+            </span>
+            <ChevronRight size={14} className={`shrink-0 ${RTL_FLIP}`} />
           </button>
         </div>
       </motion.div>

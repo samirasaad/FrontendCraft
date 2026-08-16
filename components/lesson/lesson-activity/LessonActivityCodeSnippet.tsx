@@ -129,18 +129,15 @@ export function LessonActivityCodeSnippet({
     <div className="overflow-hidden rounded-2xl border border-cyan-400/25 bg-slate-950/90 shadow-[0_0_24px_rgba(34,211,238,0.08)]">
       <div
         dir="ltr"
-        className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2"
+        className="flex items-center border-b border-white/10 px-3.5 py-1.5"
       >
-        <span className="h-2 w-2 rounded-full bg-rose-400/70" />
-        <span className="h-2 w-2 rounded-full bg-amber-300/70" />
-        <span className="h-2 w-2 rounded-full bg-emerald-400/70" />
-        <span className="ml-2 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+        <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
           {label ?? language}
         </span>
       </div>
       <pre
         dir="ltr"
-        className="overflow-x-auto p-4 text-start font-mono text-[12.5px] leading-6 sm:text-[13px]"
+        className="overflow-x-auto px-3.5 py-3 text-start font-mono text-sm leading-5 sm:text-[15px]"
       >
         <code>
           {tokens.map((tok, i) => (
@@ -173,7 +170,7 @@ export function wrapActivityPreviewHtml(code: string): string {
 
 export function ActivityOptionLetter({ children }: { children: ReactNode }) {
   return (
-    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-bold text-slate-300">
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-sm font-bold text-slate-200">
       {children}
     </span>
   );

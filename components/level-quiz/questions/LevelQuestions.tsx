@@ -26,11 +26,11 @@ export interface LevelQuestionProps {
 function Prompt({ question }: { question: LevelQuestion }) {
   const { locale } = useLanguage();
   return (
-    <div className="mb-4 space-y-2">
-      <p className="text-sm leading-relaxed text-cyan-200/90">
+    <div className="mb-3">
+      <p className="text-sm leading-snug text-cyan-200/80">
         <RichText text={loc(levelQuizInstruction(question.type), locale)} />
       </p>
-      <p className="text-base font-semibold leading-relaxed text-white sm:text-lg">
+      <p className="mt-1 text-base font-semibold leading-snug text-white sm:text-lg">
         <RichText text={loc(question.prompt, locale)} />
       </p>
     </div>
@@ -125,7 +125,7 @@ function ClickElement({
   return (
     <div>
       <Prompt question={question} />
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <p className="mb-2 text-sm font-semibold text-slate-300">
         {t("levelQuizPagePreview", locale)}
       </p>
       <div
@@ -136,7 +136,7 @@ function ClickElement({
       {safeId ? (
         <style>{`.html-click-preview [data-target="${safeId}"]{outline-color:#0891b2;background:#ecfeff}`}</style>
       ) : null}
-      <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <p className="mb-2 text-sm font-semibold text-slate-300">
         {t("levelQuizTapElement", locale)}
       </p>
       <div className="flex flex-wrap gap-2">
@@ -854,7 +854,7 @@ function Mcq({
       ) : question.code ? (
         <LessonActivityCodeSnippet code={question.code} language={question.language ?? "html"} />
       ) : null}
-      <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
         {opts.map((opt, i) => (
           <LessonActivityOptionCard
             key={opt.id}
@@ -902,7 +902,7 @@ function ConsoleQ({
 function ShakeHint() {
   const { locale } = useLanguage();
   return (
-    <p className="mt-2 text-xs text-rose-300">
+    <p className="mt-2 text-base text-rose-300">
       {t("levelQuizShakeHint", locale)}
     </p>
   );
