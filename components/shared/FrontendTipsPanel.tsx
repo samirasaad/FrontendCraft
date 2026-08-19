@@ -712,9 +712,6 @@ export function FrontendTipsPanel() {
           const cardTone = isDo
             ? "border-emerald-300/35 bg-linear-to-br from-emerald-950/40 via-slate-900/75 to-cyan-950/35 hover:border-emerald-300/55"
             : "border-rose-300/35 bg-linear-to-br from-rose-950/40 via-slate-900/75 to-orange-950/35 hover:border-rose-300/55";
-          const footerTone = isDo
-            ? "border-emerald-300/20 bg-emerald-400/10 text-emerald-100"
-            : "border-rose-300/20 bg-rose-400/10 text-rose-100";
 
           return (
             <motion.article
@@ -767,15 +764,6 @@ export function FrontendTipsPanel() {
                 <p className="mt-2 text-sm leading-relaxed text-slate-200" dir="rtl">
                   <RichText text={tip.why.ar} />
                 </p>
-              </div>
-
-              <div className="mt-auto flex items-center justify-between gap-2 pt-3">
-                <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold ${footerTone}`}>
-                  {isDo ? "Recommended move" : "Common trap"}
-                </span>
-                <span className="shrink-0 rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-300">
-                  {pick(tip.difficulty, locale)}
-                </span>
               </div>
             </motion.article>
           );
