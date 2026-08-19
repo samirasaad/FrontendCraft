@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import type { LocalizedString } from "@/lib/types";
+import { RichText } from "@/components/shared/RichText";
 
 type TipAction = "DO" | "DONT";
 
@@ -734,15 +735,18 @@ export function FrontendTipsPanel() {
                 </span>
               </div>
 
-              <h3 className="mt-2 text-base font-bold leading-tight text-white">
-                {pick(tip.title, locale)}
+              <h3
+                className="mt-2 text-base font-bold leading-tight text-white"
+                dir={locale === "ar" ? "rtl" : "ltr"}
+              >
+                <RichText text={pick(tip.title, locale)} />
               </h3>
               <div className="mt-1 space-y-1">
-                <p className="text-sm leading-relaxed text-slate-100">
-                  {tip.explanation.en}
+                <p className="text-sm leading-relaxed text-slate-100" dir="ltr">
+                  <RichText text={tip.explanation.en} />
                 </p>
-                <p className="text-sm leading-relaxed text-slate-200">
-                  {tip.explanation.ar}
+                <p className="text-sm leading-relaxed text-slate-200" dir="rtl">
+                  <RichText text={tip.explanation.ar} />
                 </p>
               </div>
 
@@ -757,9 +761,12 @@ export function FrontendTipsPanel() {
 
               <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
                 <div className="text-sm font-semibold text-slate-100">💡 Why?</div>
-                <p className="mt-1 text-sm leading-relaxed text-slate-200">{tip.why.en}</p>
-                <div className="mt-2 text-sm font-semibold text-slate-100">💡 ليه؟</div>
-                <p className="mt-1 text-sm leading-relaxed text-slate-200">{tip.why.ar}</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-200" dir="ltr">
+                  <RichText text={tip.why.en} />
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-200" dir="rtl">
+                  <RichText text={tip.why.ar} />
+                </p>
               </div>
 
               <div className="mt-auto flex items-center justify-between gap-2 pt-3">
