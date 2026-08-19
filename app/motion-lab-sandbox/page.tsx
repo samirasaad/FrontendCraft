@@ -14,6 +14,7 @@ import { isHtmlHintLab, parseHtmlHintLabId } from "./html-hints/types";
 import { SandboxVisualizer } from "./SandboxVisualizer";
 import { TIKTOK_FRAME_H, TIKTOK_FRAME_W } from "./tiktok-frame";
 import "./sandbox-lab.css";
+import { FrontendTipsPanel } from "@/components/shared/FrontendTipsPanel";
 
 const LOCAL_ONLY = true;
 
@@ -392,38 +393,9 @@ function MotionLabSandboxInner() {
         ) : null}
       </div>
 
-      <section className="mt-8 rounded-2xl border border-white/10 bg-slate-900/40 p-4 sm:p-5">
-        <h2 className="mb-3 text-sm font-semibold text-slate-200">
-          {t("clipIdeas", locale)}
-        </h2>
-        <ul className="space-y-2">
-          {TIKTOK_CLIPS.map((clip) => (
-            <li
-              key={clip.lab}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-white/5 bg-slate-950/50 px-3 py-2.5"
-            >
-              <div className="min-w-0 text-sm">
-                <p className="font-medium text-slate-200">
-                  {ar ? clip.hook.ar : clip.hook.en}
-                </p>
-                <p className="text-xs text-slate-500">
-                  {clip.seconds} · {labLabel(clip.lab, locale)}
-                </p>
-                <p className="mt-0.5 text-xs text-slate-600" dir={ar ? "ltr" : "rtl"}>
-                  {ar ? clip.hook.en : clip.hook.ar}
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => enterRecordMode(clip.lab)}
-                className="shrink-0 rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold text-cyan-100 hover:bg-cyan-400/20"
-              >
-                {t("useClip", locale)}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <div className="mt-8">
+        <FrontendTipsPanel />
+      </div>
 
       <section className="mt-4 rounded-2xl border border-white/10 bg-slate-900/40 p-4 sm:p-5">
         <h2 className="mb-2 text-sm font-semibold text-slate-200">
@@ -432,28 +404,28 @@ function MotionLabSandboxInner() {
         <ol className="list-decimal space-y-2 ps-4 text-sm leading-relaxed text-slate-400">
           <li>
             {ar
-              ? "اختار EN أو عربي مصري من فوق — سجّل نسختين لنفس المقطع لو حابب."
-              : "Pick EN or Egyptian Arabic above — record the same clip twice for both audiences."}
+              ? "اختار EN أو عربي من فوق — استخدم نفس الـ Tip للنسختين."
+              : "Pick EN or Arabic above — use the same Tip for two versions."}
           </li>
           <li>
             {ar
-              ? "اضغط «وضع التسجيل» أو زر «استخدم للتسجيل» من قائمة الأفكار."
-              : "Hit Record view or Use for record on a clip idea."}
+              ? "اضغط «انسخ التلميح» أو «مشاركة» على أي كارت."
+              : "Press “Copy Tip” or “Share” on any card."}
           </li>
           <li>
             {ar
-              ? "فعّل «إطار نظيف» يخفي شريط الكود وقت التسجيل."
-              : "Turn on Clean frame to hide the code strip while recording."}
+              ? "فعّل «Clean frame» عشان لقطة أنضف."
+              : "Turn on Clean frame for a cleaner screenshot."}
           </li>
           <li>
             {ar
-              ? "سجّل الإطار المنقط فقط — OBS أو CapCut — 1080×1920."
-              : "Crop to the dashed frame in OBS or CapCut — export 1080×1920."}
+              ? "قص داخل الإطار المنقط 1080×1920."
+              : "Crop to the dashed frame (1080×1920)."}
           </li>
           <li>
             {ar
-              ? "كل خطوة ~٥ ثواني — خلّي ٢–٣ خطوات لكل مقطع."
-              : "Each step is ~5s — capture 2–3 steps per clip."}
+              ? "كل كارت ٥–١٠ ثواني — خليك سريع."
+              : "Each card is ~5–10s — keep it snappy."}
           </li>
         </ol>
         <p className="mt-3 font-mono text-[11px] text-slate-500" dir="ltr">

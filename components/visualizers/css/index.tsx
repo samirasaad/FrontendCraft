@@ -17,6 +17,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useSound } from "@/context/SoundContext";
 import { LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
 import type { Locale } from "@/lib/types";
+import { FrontendTipsPanel } from "@/components/shared/FrontendTipsPanel";
 
 type Cap = { en: string; ar: string };
 
@@ -56,9 +57,13 @@ function StepDots({
 function CssLab({
   title,
   steps,
+  footer,
+  showCaption = true,
 }: {
   title: Cap;
   steps: Step[];
+  footer?: ReactNode;
+  showCaption?: boolean;
 }) {
   const { locale } = useLanguage();
   const reduce = useReducedMotion();
@@ -81,7 +86,7 @@ function CssLab({
       playing={playing}
       onTogglePlay={toggle}
       title={pick(title, locale)}
-      caption={pick(current.caption, locale)}
+      caption={showCaption ? pick(current.caption, locale) : undefined}
     >
       <div className="flex min-h-0 flex-1 flex-col">
         <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden">
@@ -99,6 +104,9 @@ function CssLab({
           </AnimatePresence>
         </div>
         <StepDots count={steps.length} active={step} />
+        {footer ? (
+          <div className="min-h-0 flex-1 overflow-y-auto pt-2">{footer}</div>
+        ) : null}
       </div>
     </TrackStage>
   );
@@ -905,6 +913,8 @@ export function MotionLabVisualizer() {
           ),
         },
       ]}
+      footer={<FrontendTipsPanel />}
+      showCaption={false}
     />
   );
 }
