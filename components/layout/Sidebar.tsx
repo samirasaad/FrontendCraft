@@ -71,6 +71,7 @@ import {
 import { loc, t } from "@/content/i18n/ui-strings";
 import { getTrack } from "@/content/tracks";
 import { RichText } from "@/components/shared/RichText";
+import { TierIcon } from "@/components/shared/TierIcon";
 import { useLanguage } from "@/context/LanguageContext";
 import { useProgress } from "@/context/ProgressContext";
 import { useSound } from "@/context/SoundContext";
@@ -79,11 +80,12 @@ import {
   TIER_ORDER,
   tierBadgeClass,
   tierBlurb,
-  tierDotClass,
-  tierEmoji,
+  tierCardBorderClass,
   tierFilterActiveClass,
   tierFilterIdleClass,
+  tierIconClass,
   tierLabel,
+  tierRailClass,
   type TierFilter,
 } from "@/lib/tiers";
 import { isLevelQuizLesson } from "@/lib/level-quiz/capstones";
@@ -454,11 +456,10 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                           : tierFilterIdleClass(filter)
                       }`}
                     >
-                      <span
-                        className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                          active ? "bg-slate-950/45" : tierDotClass(filter)
-                        }`}
-                        aria-hidden
+                      <TierIcon
+                        tier={filter}
+                        size={12}
+                        className="text-current"
                       />
                       <span className="truncate">{label}</span>
                       <span
@@ -482,9 +483,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                     {completedCount}/{totalCount} · {progressPercent}%
                   </span>
                 </div>
-                <div className="h-2 overflow-hidden rounded-full bg-slate-800 rtl:rotate-180">
+                <div className="relative h-2 overflow-hidden rounded-full bg-slate-800">
                   <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-yellow-300 via-lime-300 to-cyan-400"
+                    className="absolute inset-y-0 start-0 rounded-full bg-gradient-to-r from-yellow-300 via-lime-300 to-cyan-400"
                     initial={false}
                     animate={{ width: `${progressPercent}%` }}
                     transition={{ type: "spring", stiffness: 120, damping: 20 }}
@@ -506,7 +507,7 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                 return (
                   <div
                     key={tier}
-                    className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]"
+                    className={`overflow-hidden rounded-2xl border bg-white/[0.02] ${tierCardBorderClass(tier)}`}
                   >
                     <button
                       type="button"
@@ -517,18 +518,21 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                     >
                       <ChevronDown
                         size={14}
-                        className={`shrink-0 text-slate-400 transition-transform ${
+                        className={`shrink-0 transition-transform ${tierIconClass(tier)} ${
                           openTier
                             ? "rotate-0"
                             : "ltr:-rotate-90 rtl:rotate-90"
                         }`}
                       />
                       <span className="min-w-0 flex-1">
-                        <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-200">
-                          {tierEmoji(tier)} {tierLabel(tier, locale)}
+                        <span
+                          className={`flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider ${tierIconClass(tier)}`}
+                        >
+                          <TierIcon tier={tier} size={13} className="text-current" />
+                          {tierLabel(tier, locale)}
                         </span>
-                        <span className="mt-0.5 block truncate text-[10px] text-slate-500">
-                          {tierBlurb(tier, locale)}
+                        <span className="mt-0.5 block text-[10px] leading-snug text-slate-400">
+                          {tierBlurb(tier, locale, trackId)}
                         </span>
                       </span>
                       <span
@@ -548,7 +552,9 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                           transition={{ duration: 0.2 }}
                           className="overflow-hidden"
                         >
-                          <div className="space-y-1 border-t border-white/5 px-1.5 py-1.5">
+                          <div
+                            className={`space-y-1 border-s-2 border-t px-1.5 py-1.5 ps-2 ${tierRailClass(tier)}`}
+                          >
                             {tierLessons.map((lesson) => {
                               const Icon = iconMap[lesson.icon] ?? Box;
                               const active = lesson.id === activeLessonId;
@@ -608,16 +614,6 @@ export function Sidebar({ open, onToggle }: SidebarProps) {
                                         />
                                       )}
                                     </span>
-                                    {active ? (
-                                      <span className="mt-0.5 line-clamp-1 text-[11px] text-slate-500">
-                                        <RichText
-                                          text={loc(
-                                            lesson.content.summary,
-                                            locale,
-                                          )}
-                                        />
-                                      </span>
-                                    ) : null}
                                   </span>
                                 </button>
                               );

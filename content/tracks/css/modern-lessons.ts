@@ -1,6 +1,8 @@
 import { L, hardCssFromFragment, hardExample, mediumExample, simpleExample } from "@/content/helpers";
 import type { LessonDraft } from "@/content/tracks/_insights";
 import type { Tier } from "@/lib/types";
+import type { CssVisualizerId } from "@/lib/visualizer-ids";
+import { LEVEL_QUIZ_VISUALIZER_ID } from "@/lib/visualizer-ids";
 
 type LessonSpec = {
   slug: string;
@@ -12,7 +14,7 @@ type LessonSpec = {
   paragraphs: [string, string][];
   points: [string, string][];
   icon: string;
-  visualizer: string;
+  visualizer: Exclude<CssVisualizerId, typeof LEVEL_QUIZ_VISUALIZER_ID>;
   simple: string;
   medium: string;
   hard: string;

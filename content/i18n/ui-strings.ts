@@ -23,12 +23,12 @@ export const ui = {
     ar: "اختر مسارك",
   },
   chooseTrackHint: {
-    en: "Build frontend skills that stick — lessons, challenges, playgrounds.",
-    ar: "ابنِ مهارات تطوير واجهات دائمة — دروس، تحديات، وملاعب تطبيقية.",
+    en: "Start with HTML, then CSS — both are open. The rest is not available yet.",
+    ar: "ابدأ من HTML بعدين CSS — الاتنين مفتوحين. الباقي لسه مش متاح.",
   },
   trackPathLabel: {
-    en: "Live now",
-    ar: "متاح الآن",
+    en: "Open now",
+    ar: "مفتوح دلوقتي",
   },
   trackUpcomingLabel: {
     en: "Coming up",
@@ -78,12 +78,12 @@ export const ui = {
   trackJobA11y: { en: "Inclusive UI", ar: "واجهة شاملة" },
   trackJobSeo: { en: "Discoverability", ar: "الظهور في البحث" },
   trackJobHtmlHint: {
-    en: "What the browser reads before anything looks good.",
-    ar: "ما يقرأه المتصفح قبل أن يبدو أي شيء جيدًا.",
+    en: "What the browser reads before CSS makes it look good.",
+    ar: "اللي المتصفح بيقرأه قبل ما CSS يخلّي الشكل حلو.",
   },
   trackJobCssHint: {
     en: "Why a page feels like a product, not a bare document.",
-    ar: "لماذا تبدو الصفحة كمنتج وليس كمستند فارغ.",
+    ar: "ليه الصفحة تحس كمنتج، مش مستند فاضي.",
   },
   trackJobJsHint: {
     en: "How clicks, forms, and live updates actually work.",
@@ -106,8 +106,8 @@ export const ui = {
     ar: "ساعد الأشخاص المناسبين في العثور على ما بنيته.",
   },
   trackJobHtmlBody: {
-    en: "HTML is the document. You place content in tags so the browser knows what is a heading, what is a paragraph, and what is a button — structure and meaning, with no styling yet.",
-    ar: "HTML هو المستند. تضع المحتوى في وسوم ليعرف المتصفح ما هو العنوان وما هي الفقرة وما هو الزر — بنية ومعنى، دون تنسيق بعد.",
+    en: "You put words in tags (`h1`, `p`, `button`). The browser learns: this is a heading, this is a paragraph, this is a button. No colors yet — meaning first.",
+    ar: "بتحط الكلام جوّه tags (`h1` و `p` و `button`). المتصفح بيفهم: ده عنوان، دي فقرة، ده زرار. مفيش ألوان لسه — المعنى الأول.",
   },
   trackJobCssBody: {
     en: "CSS is the look layer. Same HTML stays in place; you add color, spacing, type, and radius until the bare document feels like a real product UI.",
@@ -134,20 +134,28 @@ export const ui = {
     ar: "SEO هو كيف تقرأ محركات البحث صفحتك: عناوين واضحة وبيانات وصفية وبنية ذات معنى حتى يجد الأشخاص المناسبون ما بنيته.",
   },
   trackCapHtml0: {
-    en: "Start from an empty document…",
-    ar: "ابدأ من مستند فارغ…",
+    en: "An empty <body> — the browser shows a blank page.",
+    ar: "<body> فاضي — المتصفح بيعرض صفحة فاضية.",
   },
   trackCapHtml1: {
-    en: "Add a heading — meaning first.",
-    ar: "أضف عنوانًا — المعنى أولًا.",
+    en: "<h2> names a heading. The browser draws it big.",
+    ar: "<h2> بتسمّي عنوان. المتصفح بيرسمه كبير.",
   },
   trackCapHtml2: {
-    en: "Add supporting text under it.",
-    ar: "أضف نصًا توضيحيًا تحته.",
+    en: "<p> is a paragraph under the heading.",
+    ar: "<p> فقرة تحت العنوان.",
   },
   trackCapHtml3: {
-    en: "Add a control the user can press.",
-    ar: "أضف عنصر تحكم يمكن للمستخدم النقر عليه.",
+    en: "<button> is something people can click.",
+    ar: "<button> حاجة الناس تقدر تضغط عليها.",
+  },
+  trackHtmlBlankPage: {
+    en: "blank page",
+    ar: "صفحة فاضية",
+  },
+  trackHtmlEmpty: {
+    en: "empty",
+    ar: "فاضي",
   },
   trackCapCss0: {
     en: "Bones only — structure with no paint.",
@@ -250,8 +258,8 @@ export const ui = {
     ar: "كيف تُبنى واجهة حقيقية",
   },
   roadmapHint: {
-    en: "Structure → styling → behavior, then React components. Same UI grows in order.",
-    ar: "البنية → التنسيق → السلوك، ثم مكونات React. نفس الواجهة تنمو بالترتيب.",
+    en: "Watch one card grow in four layers: HTML names each piece, CSS gives it a look, JavaScript makes Save respond, then React wraps it as a reusable component.",
+    ar: "اتفرج على بطاقة واحدة وهي بتكبر على أربع طبقات: HTML بيسمّي كل جزء، CSS بيديها شكل، JavaScript بيخلّي زر Save يرد، بعدين React بيلفّها كمكون تقدر تعيد استخدامه.",
   },
   roadmapHtmlTitle: {
     en: "HTML — what the browser reads first",
@@ -286,20 +294,40 @@ export const ui = {
     ar: "لا يزال HTML و CSS و JS — منظّمين في مكونات قابلة لإعادة الاستخدام مع props و state، حتى يمكن استخدام نفس البطاقة في أي مكان بالتطبيق.",
   },
   roadmapPreviewHtml: {
-    en: "Step: structure. A title, a line of text, and a button — the browser knows what each piece means.",
-    ar: "الخطوة: البنية. عنوان وسطر نص وزر — المتصفح يعرف معنى كل جزء.",
+    en: "HTML names each piece: a heading, a paragraph, a button. The browser knows the meaning — still no look.",
+    ar: "HTML بيسمّي كل جزء: عنوان، فقرة، زر. المتصفح فاهم المعنى — لسه مفيش شكل.",
   },
   roadmapPreviewCss: {
-    en: "Step: styling. Spacing, color, and radius turn bare tags into a readable card.",
-    ar: "الخطوة: التنسيق. المسافات واللون والحواف تحوّل الوسوم إلى بطاقة مقروءة.",
+    en: "CSS dresses the same tags: padding, round corners, and a filled Save button.",
+    ar: "CSS بيلبس نفس الوسوم: padding، زوايا مدورة، وزر Save مليان لون.",
   },
   roadmapPreviewJs: {
-    en: "Step: behavior. A click runs JS, state flips to “Saved”, and the button label updates.",
-    ar: "الخطوة: السلوك. النقرة تشغّل JS، الحالة تصبح Saved، ونص الزر يتحدّث.",
+    en: "JavaScript listens. A click sets saved = true, and the button text becomes Saved.",
+    ar: "JavaScript بيسمع. نقرة بتخلي saved = true، ونص الزر يبقى Saved.",
   },
   roadmapPreviewReact: {
-    en: "Step: components. Same card and behavior — wrapped as <SaveCard /> with reusable props and state.",
-    ar: "الخطوة: المكونات. نفس البطاقة والسلوك — ملفوفة في <SaveCard /> مع props و state قابلة لإعادة الاستخدام.",
+    en: "React wraps that card as <SaveCard saved /> — one component you can drop anywhere.",
+    ar: "React بيلف البطاقة في <SaveCard saved /> — مكون واحد تحطه في أي حتة.",
+  },
+  roadmapVizAdding: {
+    en: "This layer writes",
+    ar: "الطبقة دي بتكتب",
+  },
+  roadmapVizClick: {
+    en: "click",
+    ar: "نقرة",
+  },
+  roadmapVizState: {
+    en: "saved = true",
+    ar: "saved = true",
+  },
+  roadmapVizTryClick: {
+    en: "Click Save to run the JavaScript.",
+    ar: "اضغط Save عشان JavaScript يشتغل.",
+  },
+  roadmapVizProp: {
+    en: "prop",
+    ar: "prop",
   },
   roadmapPreviewLabel: {
     en: "Watch the same UI grow",
@@ -367,13 +395,65 @@ export const ui = {
     en: "Lessons",
     ar: "الدروس",
   },
+  skipToLessons: {
+    en: "Skip to lessons",
+    ar: "انتقل للدروس",
+  },
   curriculumToc: {
-    en: "Table of contents",
-    ar: "جدول المحتويات",
+    en: "Your path",
+    ar: "مسارك",
+  },
+  tocDemoHint: {
+    en: "You write tags. The browser draws the page.",
+    ar: "بتكتب tags. المتصفح بيرسم الصفحة.",
+  },
+  htmlLearnPathLabel: {
+    en: "What you will learn",
+    ar: "هتتعلّم إيه",
+  },
+  htmlLearnPath0: {
+    en: "Page shell & tags",
+    ar: "هيكل الصفحة والـ tags",
+  },
+  htmlLearnPath1: {
+    en: "Text, links, lists",
+    ar: "نص، لينكات، قوائم",
+  },
+  htmlLearnPath2: {
+    en: "Forms & tables",
+    ar: "Forms وجداول",
+  },
+  htmlLearnPath3: {
+    en: "Accessibility, SEO & speed",
+    ar: "إمكانية الوصول و SEO والسرعة",
+  },
+  htmlTierBeginnerBlurb: {
+    en: "Page shell, tags, text, links, and lists",
+    ar: "هيكل الصفحة والـ tags والنص واللينكات والقوائم",
+  },
+  htmlTierIntermediateBlurb: {
+    en: "Forms, tables, and native open/close widgets",
+    ar: "Forms وجداول وودجت فتح/قفل أصلية",
+  },
+  htmlTierAdvancedBlurb: {
+    en: "Media, dialogs, accessibility, and SEO",
+    ar: "ميديا و dialogs وإمكانية الوصول و SEO",
+  },
+  htmlTierProBlurb: {
+    en: "Speed, security, RTL, and browser APIs",
+    ar: "سرعة وأمان و RTL و APIs المتصفح",
+  },
+  htmlTierPitfallsBlurb: {
+    en: "Classic HTML mistakes — wrong vs right",
+    ar: "أخطاء HTML الكلاسيكية — غلط مقابل صح",
+  },
+  htmlTierCheatsheetBlurb: {
+    en: "Quick cards you can scan later",
+    ar: "كروت سريعة ترجع ليها بعدين",
   },
   levelsTree: {
-    en: "Levels",
-    ar: "المستويات",
+    en: "Lessons",
+    ar: "الدروس",
   },
   expandAll: { en: "Expand all", ar: "توسيع الكل" },
   collapseAll: { en: "Collapse all", ar: "طيّ الكل" },
@@ -385,6 +465,7 @@ export const ui = {
     en: "Continue learning",
     ar: "تابع التعلّم",
   },
+  upNext: { en: "Next", ar: "التالي" },
   lessonsCount: {
     en: "lessons",
     ar: "دروس",
@@ -404,6 +485,7 @@ export const ui = {
   lessons: { en: "Lessons", ar: "الدروس" },
   progress: { en: "Your progress", ar: "تقدمك" },
   completed: { en: "completed", ar: "مكتمل" },
+  lessonDone: { en: "Done", ar: "تم" },
   markComplete: { en: "Mark as complete", ar: "علّم كمكتمل" },
   markIncomplete: { en: "Mark as incomplete", ar: "تعليم كغير مكتمل" },
   difficulty: { en: "Tier", ar: "المستوى" },
@@ -473,8 +555,8 @@ export const ui = {
     ar: "Accessibility (a11y) Best Practices",
   },
   accessibilityHint: {
-    en: "How NVDA / VoiceOver / TalkBack hear this — landmarks, names, keyboard, and focus",
-    ar: "كيف يسمع NVDA / VoiceOver / TalkBack هذا — المعالم والأسماء ولوحة المفاتيح والتركيز",
+    en: "Tips so people using a screen reader or only a keyboard can use this page",
+    ar: "نصائح عشان الناس اللي بتستخدم قارئ شاشة أو الكيبورد بس تقدر تستخدم الصفحة دي",
   },
   seoTitle: {
     en: "SEO Insights",
@@ -582,8 +664,8 @@ export const ui = {
   challengeCorrect: { en: "Correct!", ar: "صح!" },
   challengeWrong: { en: "Not quite.", ar: "ليس تمامًا." },
   challengeHintBar: {
-    en: "Optional: check your understanding in Lesson activity",
-    ar: "اختياري: راجع فهمك في نشاط الدرس",
+    en: "Check this in Activity",
+    ar: "راجع ده في نشاط الدرس",
   },
   openInLive: {
     en: "Open in Live coding",
@@ -606,8 +688,8 @@ export const ui = {
     ar: "ملعب",
   },
   lessonTabActivity: {
-    en: "Lesson activity",
-    ar: "نشاط الدرس",
+    en: "Activity",
+    ar: "نشاط",
   },
   lessonTabLevelQuiz: {
     en: "Level quiz",
@@ -636,9 +718,12 @@ export const ui = {
     en: "Pick a different answer and submit again.",
     ar: "اختر إجابة أخرى وأرسلها مجددًا.",
   },
-  levelQuizWhy: { en: "Why?", ar: "لماذا؟" },
+  levelQuizWhy: { en: "Why?", ar: "ليه؟" },
   levelQuizPagePreview: { en: "Page preview", ar: "معاينة الصفحة" },
-  levelQuizTapElement: { en: "Tap the element name", ar: "اضغط اسم العنصر" },
+  levelQuizTapElement: {
+    en: "Or tap a tag name",
+    ar: "أو اضغط اسم الوسم",
+  },
   levelQuizRevealHint: { en: "Reveal hint", ar: "إظهار تلميح" },
   levelQuizWatchExplanation: { en: "Watch explanation", ar: "شاهد الشرح" },
   levelQuizShowDemo: { en: "Show interactive demo", ar: "عرض العرض التفاعلي" },
@@ -661,7 +746,7 @@ export const ui = {
     ar: "جاهز لاختبار المستوى؟ افتح تبويب اختبار المستوى",
   },
   lessonTabLiveEmpty: {
-    en: "No playground for this lesson yet — stay on Concept or jump to Lesson activity.",
+    en: "No playground for this lesson yet — stay on Concept or jump to Activity.",
     ar: "لا يوجد ملعب تطبيق لهذا الدرس بعد — ابقَ في المفهوم أو انتقل لنشاط الدرس.",
   },
   lessonTabActivityEmpty: {
@@ -695,6 +780,10 @@ export const ui = {
   activityExplanation: {
     en: "Explanation",
     ar: "التفسير",
+  },
+  activityLooksLike: {
+    en: "What it looks like",
+    ar: "شكله في الصفحة",
   },
   activityHint: {
     en: "Hint",

@@ -2,6 +2,12 @@
 
 import type { ReactNode } from "react";
 import type { TrackId } from "@/lib/types";
+import type {
+  CssVisualizerId,
+  HtmlVisualizerId,
+  JavascriptVisualizerId,
+} from "@/lib/visualizer-ids";
+import { LEVEL_QUIZ_VISUALIZER_ID } from "@/lib/visualizer-ids";
 import { cssVisualizers } from "@/components/visualizers/css";
 import { javascriptVisualizers } from "@/components/visualizers/javascript";
 import {
@@ -32,7 +38,10 @@ import {
 } from "@/components/visualizers/html";
 import { LAB_FRAME_CLASS } from "@/components/visualizers/html/TrackStage";
 
-const htmlVisualizers: Record<string, () => ReactNode> = {
+/** Labs only — excludes the level-quiz sentinel (no Concept lab). */
+type HtmlLabId = Exclude<HtmlVisualizerId, typeof LEVEL_QUIZ_VISUALIZER_ID>;
+
+const htmlVisualizers = {
   "document-tree": () => <DocumentTreeVisualizer />,
   "semantic-blocks": () => <SemanticBlocksVisualizer />,
   "heading-ladder": () => <HeadingLadderVisualizer />,
@@ -57,9 +66,11 @@ const htmlVisualizers: Record<string, () => ReactNode> = {
   "html-speculation-lab": () => <HtmlSpeculationLabVisualizer />,
   "html-global-rtl-lab": () => <HtmlGlobalRtlLabVisualizer />,
   "html-pitfalls-lab": () => <HtmlPitfallsLabVisualizer />,
-};
+} as const satisfies Record<HtmlLabId, () => ReactNode>;
 
-const registries: Partial<Record<TrackId, Record<string, () => ReactNode>>> = {
+const registries: Partial<
+  Record<TrackId, Partial<Record<string, () => ReactNode>>>
+> = {
   javascript: javascriptVisualizers,
   html: htmlVisualizers,
   css: cssVisualizers,
@@ -72,6 +83,10 @@ export function Visualizer({
   trackId: TrackId;
   kind: string;
 }) {
+  if (kind === LEVEL_QUIZ_VISUALIZER_ID) {
+    return null;
+  }
+
   const render = registries[trackId]?.[kind];
   if (!render) {
     return (
@@ -90,3 +105,5 @@ export function Visualizer({
     </div>
   );
 }
+
+export type { CssVisualizerId, HtmlVisualizerId, JavascriptVisualizerId };

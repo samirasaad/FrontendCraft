@@ -30,8 +30,13 @@ export interface LocalizedString {
   ar: string;
 }
 
-/** Visualizer ids are plain strings per track. */
-export type VisualizerId = string;
+export type {
+  CssVisualizerId,
+  HtmlVisualizerId,
+  JavascriptVisualizerId,
+  VisualizerId,
+} from "@/lib/visualizer-ids";
+import type { VisualizerId } from "@/lib/visualizer-ids";
 
 export type ExampleKind = "simple" | "medium" | "hard";
 

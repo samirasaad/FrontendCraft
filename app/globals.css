@@ -8,6 +8,17 @@
   --font-display: "Space Grotesk", "Cairo", sans-serif;
   --font-body: "Cairo", "Space Grotesk", sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --fc-logo-bg-from: #0f172a;
+  --fc-logo-bg-to: #164e63;
+  --fc-logo-mark-from: #fde047;
+  --fc-logo-mark-to: #22d3ee;
+  --fc-logo-slash: #fde047;
+  --fc-logo-ring: rgb(34 211 238 / 0.35);
+}
+
+.fc-brand-logo {
+  border-radius: 8px;
+  box-shadow: 0 0 18px rgb(34 211 238 / 0.22);
 }
 
 @theme inline {
@@ -22,11 +33,55 @@ html {
   color-scheme: dark;
 }
 
+.fc-code-chip {
+  border-color: rgb(103 232 249 / 0.2);
+  background: rgb(34 211 238 / 0.1);
+  color: #cffafe;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
   line-height: 1.6;
+}
+
+/* Clickable controls use a pointer. Beats Tailwind preflight `cursor: default` on buttons. */
+@layer base {
+  a[href],
+  area[href],
+  button,
+  [role="button"],
+  [role="tab"],
+  [role="menuitem"],
+  [role="option"],
+  [role="radio"],
+  [role="checkbox"],
+  [role="switch"],
+  [role="link"],
+  [role="combobox"],
+  [role="treeitem"],
+  summary,
+  label,
+  select,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  input[type="checkbox"],
+  input[type="radio"],
+  input[type="file"],
+  input[type="range"],
+  input[type="color"],
+  input[type="image"],
+  [tabindex]:not([tabindex^="-"]) {
+    cursor: pointer;
+  }
+
+  :disabled,
+  [aria-disabled="true"],
+  [aria-disabled="true"] * {
+    cursor: not-allowed;
+  }
 }
 
 /* Longer Arabic reading sessions need extra leading. */

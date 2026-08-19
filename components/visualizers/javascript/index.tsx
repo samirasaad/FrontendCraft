@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import type { JavascriptVisualizerId } from "@/lib/visualizer-ids";
 import { MemoryLockVisualizer } from "./MemoryLockVisualizer";
 import { PrimitiveVsReferenceVisualizer } from "./PrimitiveVsReferenceVisualizer";
 import { EqualityVisualizer } from "./EqualityVisualizer";
@@ -14,7 +15,7 @@ import { EventLoopVisualizer } from "./EventLoopVisualizer";
 import { DebounceThrottleVisualizer } from "./DebounceThrottleVisualizer";
 import { MemoryLeaksVisualizer } from "./MemoryLeaksVisualizer";
 
-export const javascriptVisualizers: Record<string, () => ReactNode> = {
+export const javascriptVisualizers = {
   "memory-lock": () => <MemoryLockVisualizer />,
   "primitive-vs-reference": () => <PrimitiveVsReferenceVisualizer />,
   equality: () => <EqualityVisualizer />,
@@ -27,4 +28,4 @@ export const javascriptVisualizers: Record<string, () => ReactNode> = {
   "event-loop": () => <EventLoopVisualizer />,
   "debounce-throttle-lab": () => <DebounceThrottleVisualizer />,
   "memory-leaks-lab": () => <MemoryLeaksVisualizer />,
-};
+} as const satisfies Record<JavascriptVisualizerId, () => ReactNode>;

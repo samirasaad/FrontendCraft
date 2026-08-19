@@ -133,7 +133,7 @@ function fallbackOverlay(lesson: LegacyLesson): Overlay {
       `<!-- presentational markup with no meaning -->
 <div onclick="go()">Click</div>`,
       L(
-        "Non-button click targets hurt keyboard and SR users.",
+        "Non-button click targets hurt keyboard and screen-reader users.",
         "عنصر مش زر عليه click بيضر الكيبورد وقارئ الشاشة.",
       ),
       `<button type="button" onclick="go()">Click</button>`,
@@ -167,7 +167,7 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
     deepDive: [
       L(
-        "Heading levels communicate hierarchy to AT. Skipping levels (h1 → h4) confuses the outline.",
+        "Heading levels communicate hierarchy to screen readers. Skipping levels (h1 → h4) confuses the outline.",
         "مستويات العناوين بتوصف الهرم لأدوات الوصول. القفز (h1 → h4) بيشوّش الـ outline.",
       ),
     ],
@@ -210,8 +210,8 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
     deepDive: [
       L(
-        "`<strong>` and `<em>` change how AT announces text. `<b>` / `<i>` usually do not — use them only when the look is stylistic.",
-        "`<strong>` و `<em>` بيغيّروا إعلان AT. `<b>` / `<i>` غالبًا لأ؛ استخدمهم لما الشكل stylistic بس.",
+        "`<strong>` and `<em>` change how screen readers announces text. `<b>` / `<i>` usually do not — use them only when the look is stylistic.",
+        "`<strong>` و `<em>` بيغيّروا إعلان screen readers. `<b>` / `<i>` غالبًا لأ؛ استخدمهم لما الشكل stylistic بس.",
       ),
       L(
         "`<abbr title>` and `<time datetime>` add machine-readable meaning behind the visible text.",
@@ -221,8 +221,8 @@ const specific: Record<string, Partial<Overlay>> = {
     pitfalls: pitfall(
       `<span style="font-weight:bold">Important</span>`,
       L(
-        "CSS bold alone does not mark importance for AT.",
-        "الـ bold من CSS لوحده مش بيعلّم الأهمية لـ AT.",
+        "CSS bold alone does not mark importance for screen readers.",
+        "الـ bold من CSS لوحده مش بيعلّم الأهمية لـ screen readers.",
       ),
       `<strong>Important</strong>`,
       L(
@@ -304,7 +304,7 @@ const specific: Record<string, Partial<Overlay>> = {
       ),
       `<ul><li>Item</li></ul>`,
       L(
-        "Real lists expose list semantics to AT.",
+        "Real lists expose list semantics to screen readers.",
         "الـ lists الحقيقية بتدي semantics لقارئ الشاشة.",
       ),
     ),
@@ -327,7 +327,7 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
     deepDive: [
       L(
-        "Labels associate via wrapping or `for`/`id`. That hit target and accessible name are what make forms usable on mobile and with SR.",
+        "Labels associate via wrapping or `for`/`id`. That hit target and accessible name are what make forms usable on mobile and with a screen reader.",
         "الـ label بيتربط باللف أو `for`/`id`. ده بيوسّع منطقة الضغط وبيبني accessible name.",
       ),
     ],
@@ -367,7 +367,7 @@ const specific: Record<string, Partial<Overlay>> = {
     ),
     deepDive: [
       L(
-        "`scope` and `<th>` build the header/cell relationships AT announce while navigating tables.",
+        "`scope` and `<th>` build the header/cell relationships screen readers announce while navigating tables.",
         "`scope` و `<th>` بيبنوا علاقة الهيدر بالخلية اللي قارئ الشاشة بيعلنها.",
       ),
     ],

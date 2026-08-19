@@ -110,7 +110,7 @@ function ConceptPanel({
             {t("explanation", locale)}
           </div>
           <div
-            className={`space-y-4 text-[15px] text-slate-300 ${
+            className={`space-y-4 text-base text-slate-200 ${
               locale === "ar" ? "leading-[1.8]" : "leading-7"
             }`}
           >
@@ -121,14 +121,14 @@ function ConceptPanel({
             ))}
           </div>
           <div className="mt-6">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-cyan-300">
+            <p className="mb-3 text-sm font-semibold text-cyan-300">
               {t("keyPoints", locale)}
             </p>
             <ul className="space-y-2">
               {lesson.content.keyPoints.map((point, i) => (
                 <li
                   key={i}
-                  className={`flex items-start gap-2 rounded-2xl border border-white/5 bg-slate-950/40 px-3 py-2 text-sm text-slate-200 ${
+                  className={`flex items-start gap-2 rounded-2xl border border-white/5 bg-slate-950/40 px-3 py-2.5 text-base text-slate-100 ${
                     locale === "ar" ? "leading-[1.75]" : "leading-snug"
                   }`}
                 >
@@ -171,7 +171,7 @@ function ConceptPanel({
               {t("visualExperiments", locale)}
             </div>
             <p
-              className={`mb-3 text-sm text-slate-300 ${
+              className={`mb-3 text-base text-slate-200 ${
                 locale === "ar" ? "leading-relaxed" : "leading-snug"
               }`}
             >
@@ -270,9 +270,9 @@ function LevelQuizLessonBody({ lesson }: { lesson: Lesson }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.28 }}
-      className="space-y-5 pb-24"
+      className="space-y-4 pb-24"
     >
-      <header className="space-y-3">
+      <header className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <span
             className={`rounded-full border px-3 py-1 text-xs font-semibold ${tierBadgeClass(lesson.tier)}`}
@@ -298,7 +298,7 @@ function LevelQuizLessonBody({ lesson }: { lesson: Lesson }) {
           <RichText text={loc(lesson.content.title, locale)} />
         </h1>
         <p
-          className={`max-w-3xl text-base text-slate-300 sm:text-[17px] ${
+          className={`max-w-3xl text-base text-slate-200 sm:text-lg ${
             locale === "ar" ? "leading-[1.8]" : "leading-relaxed"
           }`}
         >
@@ -494,7 +494,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
           <RichText text={loc(lesson.content.title, locale)} />
         </h1>
         <p
-          className={`max-w-3xl text-base text-slate-300 sm:text-[17px] ${
+          className={`max-w-3xl text-base text-slate-200 sm:text-lg ${
             locale === "ar" ? "leading-[1.8]" : "leading-relaxed"
           }`}
         >
@@ -524,14 +524,14 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
               id={`lesson-tab-${item.id}`}
               aria-controls={`lesson-panel-${item.id}`}
               onClick={() => selectTab(item.id)}
-              className={`relative flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+              className={`relative flex shrink-0 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold whitespace-nowrap transition sm:flex-1 ${
                 active
                   ? "bg-gradient-to-r from-yellow-300 to-cyan-300 text-slate-950 shadow-[0_0_20px_rgba(34,211,238,0.25)]"
                   : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
               }`}
             >
-              <Icon size={15} />
-              <span className="truncate">{item.label}</span>
+              <Icon size={15} className="shrink-0" />
+              <span>{item.label}</span>
             </button>
           );
         })}
@@ -612,6 +612,7 @@ function LessonBody({ lesson }: { lesson: Lesson }) {
       <StickyLessonBar
         lesson={lesson}
         challengePassed={challengePassed}
+        activityOpen={tab === "activity"}
         onOpenActivity={hasActivity ? () => selectTab("activity") : undefined}
       />
 

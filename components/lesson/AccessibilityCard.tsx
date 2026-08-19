@@ -18,8 +18,8 @@ export function AccessibilityCard({ section }: { section: InsightSection }) {
         <Accessibility size={16} className="text-sky-300" />
         {t("accessibilityTitle", locale)}
       </div>
-      <p className="mb-3 text-xs text-slate-400">{t("accessibilityHint", locale)}</p>
-      <div className="space-y-3 text-[15px] leading-7 text-slate-300">
+      <p className="mb-3 text-sm leading-relaxed text-slate-300">{t("accessibilityHint", locale)}</p>
+      <div className="space-y-3 text-base leading-7 text-slate-200">
         {section.paragraphs.map((p, i) => (
           <p key={i}>
             <RichText text={loc(p, locale)} />

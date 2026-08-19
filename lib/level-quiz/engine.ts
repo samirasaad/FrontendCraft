@@ -90,6 +90,7 @@ export function evaluateLevelAnswer(
         "pairs" in answer
           ? (answer as { pairs: Record<string, string> }).pairs
           : (answer as Record<string, string>);
+      if (!pairs || typeof pairs !== "object") return false;
       return Object.entries(question.correctPairs).every(
         ([l, r]) => pairs[l] === r,
       );

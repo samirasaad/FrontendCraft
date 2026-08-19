@@ -21,29 +21,29 @@ export const extraLessons: LessonDraft[] = [
     content: {
       title: L("`Core Web Vitals`", "مؤشرات `Core Web Vitals`"),
       summary: L(
-        "Dedicated performance lesson — LCP, INP, and CLS as product metrics you ship and measure.",
-        "درس أداء مخصص — LCP و INP و CLS كمقاييس منتج بتنشرها وتقيسها.",
+        "LCP, INP, and CLS — speed numbers you measure like product bugs.",
+        "LCP و INP و CLS — أرقام سرعة تقيسها زي bugs المنتج.",
       ),
       paragraphs: [
         L(
-          "Core Web Vitals are field metrics, not SEO meta tricks: LCP (largest contentful paint), INP (interaction to next paint), and CLS (cumulative layout shift). Treat regressions like product bugs.",
-          "Core Web Vitals مقاييس ميدانية، مش حِيَل meta للـ SEO: LCP و INP و CLS. عامل الـ regressions زي bugs منتج.",
+          "Core Web Vitals are real-user speed numbers, not SEO tricks: `LCP` (largest contentful paint), `INP` (interaction to next paint), and `CLS` (cumulative layout shift). If they get worse, treat it like a product bug.",
+          "Core Web Vitals أرقام سرعة من ناس حقيقية، مش حيل SEO: `LCP` و `INP` و `CLS`. لو بقوا أسوأ، عاملهم زي bug في المنتج.",
         ),
         L(
-          "LCP is often a hero `<img>` or large text block. Size it, avoid `loading=\"lazy\"` above the fold, and consider `fetchpriority=\"high\"` / preload when you know the URL.",
-          "LCP غالبًا `<img>` hero أو بلوك نص كبير. حط له مقاس، ومتعملش `loading=\"lazy\"` فوق الشاشة، وفكّر في `fetchpriority=\"high\"` / preload لما تعرف الـ URL.",
+          "`LCP` is often a big hero `<img>` or a large heading. Give it width and height. Don’t use `loading=\"lazy\"` on that first-screen image. Use `fetchpriority=\"high\"` or preload when you know the URL.",
+          "`LCP` غالبًا صورة hero كبيرة أو عنوان كبير. حط `width` و `height`. متستخدمش `loading=\"lazy\"` على صورة أول الشاشة. استخدم `fetchpriority=\"high\"` أو preload لما تعرف الـ URL.",
         ),
         L(
-          "INP tracks how fast the UI responds after a tap or click. Keep event handlers light, break up long tasks, and defer non-critical JS so the main thread stays free.",
-          "INP بيقيس سرعة رد الـ UI بعد ضغطة. خلّي الـ handlers خفيفة، قطّع الـ long tasks، وأخّر JS غير الحرج عشان الـ main thread يفضل فاضي.",
+          "`INP` is how fast the page reacts after a tap or click. Keep click handlers small. Split long JavaScript work. Delay extra JS so the main thread stays free.",
+          "`INP` هو سرعة رد الصفحة بعد ضغطة. خلّي كود الضغطة صغير. قطّع شغل JavaScript الطويل. أخّر JS الزيادة عشان الـ main thread يفضل فاضي.",
         ),
         L(
-          "CLS spikes from unsized images, late ads, and web fonts that reflow text. Reserve space with `width`/`height` or CSS `aspect-ratio`, and avoid injecting banners above existing content.",
-          "CLS بيزيد من صور من غير مقاس وإعلانات متأخرة وخطوط بتعمل reflow. احجز مساحة بـ `width`/`height` أو `aspect-ratio`، ومتحقنش بنرات فوق محتوى موجود.",
+          "`CLS` jumps when images have no size, ads load late, or fonts change text size. Reserve space with `width`/`height` or CSS `aspect-ratio`. Don’t shove banners above content that is already on screen.",
+          "`CLS` بيحصل لما الصور من غير مقاس، أو الإعلان يجي متأخر، أو الخط يغيّر حجم النص. احجز مساحة بـ `width`/`height` أو `aspect-ratio`. متزقش بنرات فوق محتوى ظاهر.",
         ),
         L(
-          "Measure with CrUX / Search Console field data and lab tools (Lighthouse, Web Vitals). Media-specific tactics continue in Media & Loading Performance.",
-          "قِس بـ CrUX / Search Console field data وأدوات lab (Lighthouse و Web Vitals). تكتيكات الميديا في درس Media & Loading Performance.",
+          "Measure with CrUX / Search Console (real users) and lab tools (Lighthouse, Web Vitals). More media tips are in Media & Loading Performance.",
+          "قِس بـ CrUX / Search Console (ناس حقيقية) وأدوات lab (Lighthouse و Web Vitals). نصائح الميديا الزيادة في درس Media & Loading Performance.",
         ),
       ],
       keyPoints: [
@@ -272,25 +272,25 @@ export const extraLessons: LessonDraft[] = [
     content: {
       title: L("`Document` Architecture", "هندسة المستند"),
       summary: L(
-        "Think in reusable regions — header, main, templates — before you sprinkle divs.",
-        "فكّر بمناطق قابلة لإعادة الاستخدام — header و main وقوالب — قبل ما ترش `div`.",
+        "Think in page parts — header, main, footer — before you add many `<div>`s.",
+        "فكّر بأجزاء الصفحة — header و main و footer — قبل ما تكتر `<div>`.",
       ),
       paragraphs: [
         L(
-          "Keep exactly one `<main>` landmark per page and pull recurring chrome — header, nav, footer — into their own regions. That split keeps `<main>` scannable and gives assistive tech clear jump points.",
-          "خلّي `<main>` واحد بس في كل صفحة، وحطّ الـ chrome المتكرر — header و nav و footer — في مناطقه. الفصل ده بيخلي `<main>` سهل التصفح وبيدي التقنية المساعدة نقط قفز واضحة.",
+          "Keep one `<main>` per page. Put header, nav, and footer in their own tags. That split makes `<main>` easy to scan and gives screen readers places to jump.",
+          "خلّي `<main>` واحد في الصفحة. حط header و nav و footer في وسومهم. الفصل ده بيخلّي `<main>` سهل يتتصفح وبيدي قارئ الشاشة أماكن يقفز ليها.",
         ),
         L(
-          "Landmarks are only half the structure — headings need a logical rank too. One `<h1>` per page, then `<h2>`/`<h3>` nested by actual content hierarchy, not by the font size you want.",
-          "الـ landmarks نص الهيكل بس — العناوين لازم مرتبة منطقية كمان. `<h1>` واحد لكل صفحة، وبعدين `<h2>`/`<h3>` متداخلة حسب ترتيب المحتوى الحقيقي، مش حسب حجم الخط اللي عايزه.",
+          "Landmarks are only half the structure. Headings need a real order too. One `<h1>` per page, then `<h2>` / `<h3>` by the real outline — not by the font size you want.",
+          "الـ landmarks نص الهيكل بس. العناوين كمان محتاجة ترتيب حقيقي. `<h1>` واحد لكل صفحة، وبعدين `<h2>` / `<h3>` حسب الـ outline الحقيقي — مش حسب حجم الخط اللي عايزه.",
         ),
         L(
-          "In component frameworks the same rules apply — your component tree should still emit one main, sensible landmarks, and correct heading ranks, even when the markup is split across many files.",
-          "في أطر المكونات نفس القواعد سارية — الـ component tree لسه لازم يطلّع main واحد و landmarks معقولة ومراتب headings صح، حتى لو الـ markup متقسم على ملفات كتير.",
+          "In React or other components, the same rules apply. The finished page still needs one `<main>`, honest landmarks, and correct heading ranks — even if the markup lives in many files.",
+          "في React أو مكونات تانية، نفس القواعد. الصفحة النهائية لسه محتاجة `<main>` واحد و landmarks صادقة وترتيب عناوين صح — حتى لو الـ markup في ملفات كتير.",
         ),
         L(
-          "Prefer server-rendered, meaningful HTML for critical content. JavaScript should enhance an already-usable document — add interactivity — not invent the whole page from an empty shell.",
-          "فضّل HTML معنوي من السيرفر للمحتوى الحرج. الـ JavaScript المفروض يعزّز مستند شغال بالفعل — يضيف تفاعلية — مش يخترع الصفحة كلها من قالب فاضي.",
+          "Prefer HTML from the server for the main content. JavaScript should add extra interaction to a page that already works — not build the whole page from an empty box.",
+          "فضّل HTML من السيرفر للمحتوى الأساسي. JavaScript يزوّد تفاعل على صفحة شغالة أصلًا — مش يبني الصفحة كلها من صندوق فاضي.",
         ),
       ],
       keyPoints: [
@@ -381,8 +381,8 @@ export const extraLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Landmarks assemble step by step — tree, page preview, and AT roles stay in sync.",
-        "الـ landmarks بتتجمّع خطوة بخطوة — الشجرة ومعاينة الصفحة وأدوار التقنية المساعدة متزامنين.",
+        "Landmarks assemble step by step — tree, page preview, and screen-reader roles stay in sync.",
+        "الـ landmarks بتتجمّع خطوة بخطوة — الشجرة ومعاينة الصفحة وأدوار قارئ الشاشة مع بعض.",
       ),
     },
   },
@@ -397,13 +397,13 @@ export const extraLessons: LessonDraft[] = [
     content: {
       title: L("`HTML` `Security` Hardening", "تقوية أمان `HTML`"),
       summary: L(
-        "Ship-safe markup at trust boundaries: external tabs, embeds, forms, and browser-held data.",
-        "Markup آمن للإنتاج عند حدود الثقة: tabs خارجية و embeds و forms وبيانات المتصفح.",
+        "Safe HTML at the edges: new tabs, embeds, forms, and data in the browser.",
+        "HTML آمن على الحدود: تاب جديدة، embeds، forms، وبيانات جوّه المتصفح.",
       ),
       paragraphs: [
         L(
-          "HTML sits at your app's trust boundary — every URL, embedded document, and submitted field decides what another origin or server can receive. Review that contract before you touch the styling.",
-          "الـ HTML بيقعد عند حدود الثقة بتاعة تطبيقك — كل URL و document مضمّن وfield بيتبعت بيحدد إيه اللي origin أو server تاني ممكن يستقبله. راجع العقد ده قبل ما تلمس الستايل.",
+          "HTML sits at the edge of your app. Every URL, iframe, and form field decides what another site or server can see. Review that before you style the page.",
+          "HTML بيقعد على طرف التطبيق. كل URL و iframe وحقل فورم بيحدد إيه اللي موقع أو سيرفر تاني يقدر يشوفه. راجع كده قبل ما تظبط الستايل.",
         ),
         L(
           "For an external `target=\"_blank\"` link, always add `rel=\"noopener noreferrer\"`. `noopener` stops the new tab from controlling `window.opener`; `noreferrer` also drops the Referer header.",
@@ -533,29 +533,29 @@ export const extraLessons: LessonDraft[] = [
         "تنقّل فوري (Speculation Rules)",
       ),
       summary: L(
-        "Use modern prefetch and prerender rules to make the next intentional navigation feel instant—without speculating on unsafe routes.",
-        "استخدم قواعد prefetch و prerender الحديثة عشان التنقّل المقصود الجاي يحس instant — من غير ما تتوقع routes مش آمنة.",
+        "Prefetch and prerender so the next click feels fast — but not on unsafe URLs.",
+        "Prefetch و prerender عشان الضغطة الجاية تحس سريعة — بس مش على URLs مش آمنة.",
       ),
       paragraphs: [
         L(
-          "The Speculation Rules API lets a page hint at likely future navigations with `<script type=\"speculationrules\">`. It's a performance layer on top of ordinary `<a href>` links — unsupported browsers just ignore it, so every destination must still work on a direct visit.",
-          "Speculation Rules API بتخلي الصفحة تلمّح للتنقلات المحتملة بـ `<script type=\"speculationrules\">`. ده طبقة أداء فوق لينكات `<a href>` عادية — المتصفحات غير المدعومة بتتجاهلها ببساطة، فكل وجهة لازم تفضل شغالة في الزيارة المباشرة.",
+          "The Speculation Rules API lets the page hint at likely next pages with `<script type=\"speculationrules\">`. It sits on top of normal `<a href>` links. Browsers that do not support it ignore it — every URL must still work on a normal visit.",
+          "Speculation Rules API بتخلي الصفحة تلمّح للصفحات الجاية المحتملة بـ `<script type=\"speculationrules\">`. ده طبقة فوق لينكات `<a href>` العادية. المتصفح اللي مش بيدعمها بيتجاهلها — كل URL لازم يفضل شغال في زيارة عادية.",
         ),
         L(
-          "`prefetch` warms a page's response so navigation still renders normally. `prerender` goes further — the browser loads and renders the page in the background so activation feels instant. Prerender is more powerful but costs more CPU, memory, and bandwidth.",
-          "`prefetch` بيسخّن response الصفحة عشان التنقل يترسم عادي. `prerender` أعمق — المتصفح بيحمّل ويرسم الصفحة في الخلفية عشان التفعيل يحس فوري. Prerender أقوى لكن تكلفته أعلى CPU وmemory وbandwidth.",
+          "`prefetch` downloads the next page early, then the click still paints as usual. `prerender` goes further — the browser loads and draws the page in the background so the click feels instant. Prerender uses more CPU, memory, and data.",
+          "`prefetch` بينزّل الصفحة الجاية بدري، والضغطة لسه بترسم عادي. `prerender` أعمق — المتصفح بيحمّل ويرسم الصفحة في الخلفية عشان الضغطة تحس فورية. Prerender بيستخدم CPU و memory وبيانات أكتر.",
         ),
         L(
-          "Keep rules same-origin unless you have a tested cross-origin policy. Start with a short list of high-confidence, read-only destinations — a product page or the next lesson — not every link on the page.",
-          "خلّي القواعد same-origin إلا لو عندك policy مختبرة للـ cross-origin. ابدأ بقائمة قصيرة من وجهات read-only عالية الثقة — صفحة منتج أو الدرس الجاي — مش كل لينك في الصفحة.",
+          "Keep rules same-origin unless you tested cross-origin. Start with a short list of safe, read-only pages — a product page or the next lesson — not every link.",
+          "خلّي القواعد same-origin إلا لو اختبرت cross-origin. ابدأ بقائمة قصيرة من صفحات آمنة للقراءة — صفحة منتج أو الدرس الجاي — مش كل لينك.",
         ),
         L(
-          "Never prerender logout, checkout, delete, or any URL that mutates state or burns a one-time token — a prerender can run page code before the user commits to navigating. Keep destructive actions behind a real user gesture.",
-          "ماتعملش prerender لـ logout أو checkout أو delete أو أي URL بيغيّر state أو يستهلك token لمرة واحدة — الـ prerender ممكن يشغّل كود الصفحة قبل ما المستخدم يقرر يتنقل. خلّي الأفعال المدمرة ورا user gesture حقيقي.",
+          "Never prerender logout, checkout, delete, or any URL that changes data or burns a one-time token. A prerender can run page code before the user really navigates. Keep dangerous actions behind a real click.",
+          "متعملش prerender لـ logout أو checkout أو delete أو أي URL بيغيّر بيانات أو بيحرق token لمرة واحدة. الـ prerender ممكن يشغّل كود الصفحة قبل ما المستخدم يتنقل فعلًا. خلّي الأفعال الخطرة ورا ضغطة حقيقية.",
         ),
         L(
-          "Measure the next page's journey, not just a prettier waterfall — a well-targeted prerender improves the next LCP, but over-speculation competes with the current page and wastes data. Watch Core Web Vitals before widening the rules.",
-          "قِس رحلة الصفحة الجاية، مش waterfall أحلى بس — prerender مستهدف صح بيحسّن LCP الجاي، لكن speculation زيادة بتنافس الصفحة الحالية وتضيّع data. راقب Core Web Vitals قبل ما توسّع القواعد.",
+          "Measure the next page’s speed, not only a prettier waterfall. A good prerender can improve the next `LCP`, but too much speculation fights the current page and wastes data. Watch Core Web Vitals before you add more rules.",
+          "قِس سرعة الصفحة الجاية، مش waterfall أحلى بس. prerender مستهدف بيحسّن `LCP` الجاي، لكن speculation زيادة بيحارب الصفحة الحالية وبيضيع بيانات. راقب Core Web Vitals قبل ما تزود القواعد.",
         ),
       ],
       keyPoints: [
@@ -669,8 +669,8 @@ export const extraLessons: LessonDraft[] = [
         "HTML العالمي وثنائي الاتجاه (RTL)",
       ),
       summary: L(
-        "Ship bilingual and RTL-ready documents — `lang`, `dir`, bidi isolation, and forms that don’t break Arabic ↔ English mixed content.",
-        "انشر documents جاهزة لـ bilingual و RTL — `lang` و `dir` وعزل bidi و forms متتكسرش مع محتوى عربي ↔ إنجليزي مخلوط.",
+        "Bilingual and RTL-ready pages — `lang`, `dir`, mixed Arabic/English, and forms that stay readable.",
+        "صفحات ثنائية اللغة وجاهزة لـ RTL — `lang` و `dir` وعربي/إنجليزي مخلوط، و forms تفضل مقروءة.",
       ),
       paragraphs: [
         L(
@@ -917,6 +917,119 @@ export const extraLessons: LessonDraft[] = [
         "ابدأ من مستند أساسي — وبعدين اتفرّج على كل غلط وهو بيتحول للصح.",
       ),
       pitfalls: collectedHtmlPitfalls,
+    },
+  },
+  {
+    id: "html-pro-apis",
+    order: 25,
+    slug: "html-browser-apis",
+    tier: "pro",
+    readMinutes: 9,
+    icon: "Cpu",
+    visualizer: "baseline-compat",
+    content: {
+      title: L("HTML & browser APIs", "HTML و APIs المتصفح"),
+      summary: L(
+        "Geolocation, Drag and Drop, and Web Storage — browser features you call from JavaScript with HTML hooks.",
+        "Geolocation و Drag and Drop و Web Storage — مميزات متصفح بتناديها من JavaScript مع hooks من HTML.",
+      ),
+      paragraphs: [
+        L(
+          "These are **browser APIs**, not new HTML tags. Your HTML still provides the buttons, drop zones, and forms — JavaScript asks the browser for location, drag events, or saved data.",
+          "دول **browser APIs**، مش tags HTML جديدة. الـ HTML لسه بيدي الأزرار ومناطق السحب والفورم — و JavaScript بيطلب من المتصفح الموقع أو أحداث السحب أو بيانات محفوظة.",
+        ),
+        L(
+          "**Geolocation** (`navigator.geolocation`): ask the user for their location (with permission). Always explain why you need it, handle “denied”, and never assume GPS works offline or indoors.",
+          "**Geolocation** (`navigator.geolocation`): اطلب موقع المستخدم (بإذن). دايمًا وضّح ليه محتاجه، تعامل مع الرفض، ومتفترضش إن GPS شغال offline أو جوّه المباني.",
+        ),
+        L(
+          "**Drag and Drop**: mark something `draggable=\"true\"`, listen for `dragstart` / `drop`, and use `dataTransfer`. Pair with keyboard alternatives — not everyone can drag with a mouse.",
+          "**Drag and Drop**: خلّي العنصر `draggable=\"true\"`، اسمع `dragstart` / `drop`، واستخدم `dataTransfer`. وفّر بديل كيبورد — مش كل الناس تقدر تسحب بالماوس.",
+        ),
+        L(
+          "**Web Storage**: `localStorage` keeps data until cleared; `sessionStorage` lasts for the tab session. Store small strings only (stringify objects). Don’t put secrets or passwords here — storage is readable by any script on your origin.",
+          "**Web Storage**: `localStorage` بيفضل لحد ما يتمسح؛ `sessionStorage` لمدة جلسة التاب. خزّن نصوص صغيرة بس (stringify للـ objects). متخزنش أسرار أو كلمات مرور — أي سكربت على نفس الـ origin يقدر يقراها.",
+        ),
+      ],
+      keyPoints: [
+        L("Geolocation needs user permission — always handle deny", "Geolocation محتاج إذن — دايمًا تعامل مع الرفض"),
+        L("`draggable=\"true\"` + drop events · add a keyboard path", "`draggable=\"true\"` + أحداث drop · وفّر مسار كيبورد"),
+        L("`localStorage` persists · `sessionStorage` is per tab", "`localStorage` بيفضل · `sessionStorage` لكل تاب"),
+        L("Never store secrets in Web Storage", "متخزنش أسرار في Web Storage"),
+      ],
+      examples: [
+        simpleExample(
+          `<button type="button" id="locate">Share my city</button>
+<p id="status" role="status"></p>
+
+<script>
+  document.getElementById("locate").onclick = () => {
+    if (!navigator.geolocation) {
+      status.textContent = "Geolocation not supported";
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        status.textContent =
+          "Lat " + pos.coords.latitude.toFixed(2) +
+          ", Lng " + pos.coords.longitude.toFixed(2);
+      },
+      () => { status.textContent = "Permission denied or unavailable"; }
+    );
+  };
+</script>`,
+          "Ask for location with a clear button + status text",
+          "اطلب الموقع بزر واضح + نص حالة",
+        ),
+        mediumExample(
+          `<div id="bin" class="dropzone">Drop files or text here</div>
+<p id="item" draggable="true">Drag me</p>
+
+<script>
+  const item = document.getElementById("item");
+  const bin = document.getElementById("bin");
+
+  item.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("text/plain", item.id);
+  });
+
+  bin.addEventListener("dragover", (e) => e.preventDefault());
+  bin.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    bin.append(document.getElementById(id));
+  });
+</script>`,
+          "Minimal drag-and-drop with draggable + drop zone",
+          "سحب وإفلات بسيط بـ draggable + منطقة drop",
+        ),
+        hardExample(
+          `<label for="note">Quick note</label>
+<textarea id="note" rows="3"></textarea>
+<button type="button" id="save">Save</button>
+<button type="button" id="load">Load</button>
+
+<script>
+  const note = document.getElementById("note");
+  const KEY = "draft-note";
+
+  document.getElementById("save").onclick = () => {
+    localStorage.setItem(KEY, note.value);
+  };
+  document.getElementById("load").onclick = () => {
+    note.value = localStorage.getItem(KEY) || "";
+  };
+  // Auto-restore on visit
+  note.value = localStorage.getItem(KEY) || "";
+</script>`,
+          "Save a draft with localStorage",
+          "احفظ مسودة بـ localStorage",
+        ),
+      ],
+      visualHint: L(
+        "Permission → location · drag → drop · save → reload storage.",
+        "إذن → موقع · سحب → إفلات · حفظ → إعادة تحميل التخزين.",
+      ),
     },
   },
   {

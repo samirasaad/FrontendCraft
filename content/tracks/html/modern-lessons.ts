@@ -25,21 +25,21 @@ export const modernLessons: LessonDraft[] = [
         "تجربة النماذج: `inputmode` و `pattern` و `autocomplete`",
       ),
       summary: L(
-        "Shape mobile keyboards, speed autofill, and validate with attributes — before you reach for JS.",
-        "شكّل كيبورد الموبايل، سرّع الـ autofill، وتحقق بالـ attributes — قبل ما تلجأ لـ JS.",
+        "Show the right phone keyboard, speed autofill, and check values with attributes — before you write JavaScript.",
+        "ظهر كيبورد الموبايل الصح، سرّع الـ autofill، واتحقق من القيم بالـ attributes — قبل ما تكتب JavaScript.",
       ),
       paragraphs: [
         L(
-          "`inputmode` hints which soft keyboard to show (`email`, `tel`, `numeric`, `decimal`, `url`, `search`). It does not change the value type — keep a correct `type` as the real fallback.",
-          "`inputmode` بيلمّح للكيبورد المناسب (`email` و `tel` و `numeric`…). مش بيغيّر نوع القيمة — خلّي `type` الصحيح هو الـ fallback الحقيقي.",
+          "`inputmode` tells the phone which keyboard to show (`email`, `tel`, `numeric`, `decimal`, `url`, `search`). It does not change the value. Keep a correct `type` as the real fallback.",
+          "`inputmode` بيقول للموبايل أنهي كيبورد يظهر (`email` و `tel` و `numeric` و `decimal` و `url` و `search`). مش بيغيّر القيمة. خلّي `type` الصحيح هو الـ fallback الحقيقي.",
         ),
         L(
-          "`autocomplete` tokens (`name`, `email`, `tel`, `street-address`, `one-time-code`) let browsers and password managers fill fields safely. Wrong tokens frustrate users more than omitting them.",
-          "رموز `autocomplete` (`name` و `email` و `tel`…) بتخلّي المتصفح ومدير كلمات المرور يعبّوا الحقول بأمان. الرمز الغلط بيضايق أكتر من إنك متكتبوش.",
+          "`autocomplete` values (`name`, `email`, `tel`, `street-address`, `one-time-code`) let the browser and password manager fill fields safely. A wrong value is worse than leaving `autocomplete` off.",
+          "قيم `autocomplete` (`name` و `email` و `tel` و `street-address` و `one-time-code`) بتخلّي المتصفح ومدير كلمات المرور يملوا الحقول بأمان. القيمة الغلط أسوأ من إنك متكتبش `autocomplete`.",
         ),
         L(
-          "`pattern` adds a regex check on submit for `text`-like inputs. Pair it with a clear `title` / error message — regex alone is not accessible feedback.",
-          "`pattern` بيضيف فحص `regex` عند الإرسال. اربطه بـ `title` أو رسالة خطأ واضحة — الـ `regex` لوحده مش `feedback` وصول.",
+          "`pattern` checks the text with a `regex` when the form submits. Add a clear `title` or error message — a `regex` alone does not explain the mistake.",
+          "`pattern` بيفحص النص بـ `regex` لما الفورم تتبعت. حط `title` أو رسالة خطأ واضحة — الـ `regex` لوحده مش بيشرح الغلط.",
         ),
       ],
       keyPoints: [
@@ -142,29 +142,29 @@ export const modernLessons: LessonDraft[] = [
         "التوافق مع المتصفحات و `Baseline`",
       ),
       summary: L(
-        "Dedicated compatibility lesson — Chrome, Firefox, Safari, Edge versions, W3C Baseline, and when to ship a fallback.",
-        "درس توافق مخصص — إصدارات Chrome و Firefox و Safari و Edge، و W3C Baseline، وإمتى تعمل fallback.",
+        "Chrome, Firefox, Safari, Edge, W3C Baseline, and when you need a fallback.",
+        "Chrome و Firefox و Safari و Edge و W3C Baseline، وإمتى تحتاج fallback.",
       ),
       paragraphs: [
         L(
-          "Evergreen browsers auto-update, but that doesn't mean every API landed everywhere at once. W3C Baseline scores each feature as Widely available, Newly available, or Limited availability — check it before you design a UX around a tag or API.",
-          "المتصفحات بتحدّث نفسها لوحدها، بس ده مش معناه إن كل API وصل لكل حتة في نفس الوقت. W3C Baseline بيقيّم كل ميزة إنها Widely أو Newly أو Limited — راجعها قبل ما تبني UX على tag أو API.",
+          "Browsers update themselves, but every API does not arrive everywhere on the same day. W3C Baseline marks each feature as Widely available, Newly available, or Limited availability. Check that before you build a screen around a tag or API.",
+          "المتصفحات بتحدّث نفسها، بس كل API مش بيوصل كل حتة في نفس اليوم. W3C Baseline بيعلّم كل ميزة Widely available أو Newly available أو Limited availability. راجع كده قبل ما تبني شاشة على tag أو API.",
         ),
         L(
-          "Widely available means safe to use as a default for almost any product. Newly available (like reliable `<dialog>` `showModal()`) works in current browsers but still needs an explicit support policy, a polyfill, or a progressive-enhancement fallback for laggards.",
-          "Widely يعني آمن كافتراضي لأي منتج تقريبًا. Newly (زي `showModal()` الموثوق في `<dialog>`) شغال في المتصفحات الحالية لكن لسه محتاج سياسة دعم واضحة أو polyfill أو progressive enhancement للمتأخرين.",
+          "Widely available is safe as a default for most products. Newly available (like reliable `<dialog>` `showModal()`) works in current browsers, but you still need a plan: a `polyfill`, or a simple HTML fallback for older browsers.",
+          "Widely available آمن كافتراضي لمعظم المنتجات. Newly available (زي `showModal()` في `<dialog>`) شغال في المتصفحات الحالية، بس لسه محتاج خطة: `polyfill`، أو HTML fallback بسيط للمتصفحات الأقدم.",
         ),
         L(
-          "Detect features, don't sniff user agents: `if ('showModal' in HTMLDialogElement.prototype)`. Keep a usable HTML fallback path so a gap in Safari or a lagging corporate Chrome build never breaks the flow completely.",
-          "اعمل feature detection وسيبك من شمّ الـ user-agent: `if ('showModal' in HTMLDialogElement.prototype)`. سيّب معمل HTML fallback يشتغل عشان فجوة في Safari أو Chrome شركات متأخر ميكسرش التدفق خالص.",
+          "Detect the feature. Do not guess from the user-agent string: `if ('showModal' in HTMLDialogElement.prototype)`. Keep a usable HTML fallback so a gap in Safari or an old company Chrome does not break the whole flow.",
+          "اكشف الميزة. متخمّنش من نص الـ user-agent: `if ('showModal' in HTMLDialogElement.prototype)`. سيّب HTML fallback يشتغل عشان فجوة في Safari أو Chrome شركة قديم متكسرش التدفق كله.",
         ),
         L(
-          "Safari/WebKit ships fewer engines and often lags Chrome/Firefox on newer APIs, so it's the one path worth testing manually. The matrices below are the source of truth for this lab's high-stakes tags — dialog, details, picture, lazy media, forms hints, template, search, popover, inert, and media tracks.",
-          "Safari/WebKit بيطلع أقل نسخ وغالبًا بيتأخر عن Chrome/Firefox في الـ APIs الجديدة، فهو المسار اللي يستاهل تختبره يدويًا. المصفوفات تحت هي المصدر الموثوق لـ tags الحساسة في المعمل ده — dialog و details و picture و lazy media وتلميحات الفورم و template و search و popover و inert و media tracks.",
+          "Safari / WebKit often gets new APIs later than Chrome and Firefox — test it by hand. The tables below are the source of truth for this lab: `dialog`, `details`, `picture`, lazy media, form hints, `template`, `search`, `popover`, `inert`, and media tracks.",
+          "Safari / WebKit غالبًا بياخد الـ APIs الجديدة بعد Chrome و Firefox — اختبره بإيدك. الجداول تحت هي المصدر الموثوق للمعمل ده: `dialog` و `details` و `picture` و lazy media وتلميحات الفورم و `template` و `search` و `popover` و `inert` و media tracks.",
         ),
       ],
       keyPoints: [
-        L("Use `Baseline` + caniuse / MDN — not folklore", "استخدم `Baseline` + caniuse / MDN — مش الإشاعات"),
+        L("Use `Baseline` + caniuse / MDN — not rumors", "استخدم `Baseline` + caniuse / MDN — مش الإشاعات"),
         L("Widely = default; Newly = needs a fallback plan", "`Widely` = افتراضي؛ `Newly` = محتاج خطة `fallback`"),
         L("Feature-detect; progressive-enhance", "Feature-`detect`؛ بعدين progressive-enhance"),
         L("Test at least one WebKit (Safari) path", "اختبر مسار `WebKit` (`Safari`) واحد على الأقل"),
@@ -457,8 +457,8 @@ export const modernLessons: LessonDraft[] = [
           label: L("inert attribute", "inert attribute"),
           support: support("102+", "112+", "15.5+", "102+", "widely", {
             notes: L(
-              "Makes a subtree non-interactive and hidden from AT — pair carefully with dialogs/menus.",
-              "بيخلي subtree غير تفاعلي ومخفي عن AT — استخدمه بحذر مع dialogs/menus.",
+              "Makes a subtree non-interactive and hidden from screen readers — pair carefully with dialogs/menus.",
+              "بيخلي subtree غير تفاعلي ومخفي عن screen readers — استخدمه بحذر مع dialogs/menus.",
             ),
             fallback: L(
               "aria-hidden + tabindex=-1 on focusable children, or a small inert polyfill for forced legacy.",
@@ -493,25 +493,25 @@ export const modernLessons: LessonDraft[] = [
     content: {
       title: L("Native <dialog> Modals", "النوافذ الـ `modal` بـ `<dialog>` الأصلي"),
       summary: L(
-        "Ship modal dialogs with a native backdrop, focus trap, and Escape-to-close — without a UI library.",
-        "اعمل modals بـ backdrop أصلي و focus trap و Escape — من غير مكتبة UI.",
+        "Native modal: backdrop, focus stays inside, Escape closes — no UI library.",
+        "modal أصلي: backdrop، والـ focus جوّه، و Escape بيقفل — من غير مكتبة UI.",
       ),
       paragraphs: [
         L(
-          "`showModal()` opens the dialog in the top layer, dims the page with a `::backdrop`, and moves focus inside automatically. Pressing Escape closes it out of the box — no extra JS needed for that keyboard path.",
-          "`showModal()` بيفتح الـ dialog في الـ top layer، وبيعتّم الصفحة بـ `::backdrop`، وبينقل الـ focus لجواه تلقائي. الضغط على Escape بيقفله من غير ما تكتب كود إضافي لمسار الكيبورد ده.",
+          "`showModal()` opens the dialog on top, dims the page with `::backdrop`, and moves focus inside. Escape closes it — you do not need extra JavaScript for that keyboard path.",
+          "`showModal()` بيفتح الـ dialog فوق، وبيعتّم الصفحة بـ `::backdrop`، وبينقل الـ focus جوّه. Escape بيقفله — مش محتاج JavaScript زيادة لمسار الكيبورد ده.",
         ),
         L(
-          "Use `<form method=\"dialog\">` buttons to close and report a value without JS — the button's `value` becomes `dialog.returnValue`. `close()` and Escape both restore focus to whichever element opened the dialog.",
-          "استخدم أزرار `<form method=\"dialog\">` عشان تقفل وترجّع قيمة من غير JS — قيمة الزرار بتبقى `dialog.returnValue`. `close()` أو Escape الاتنين بيرجّعوا الـ focus للعنصر اللي فتح الـ dialog.",
+          "Use `<form method=\"dialog\">` buttons to close and send a value without JavaScript — the button `value` becomes `dialog.returnValue`. `close()` and Escape both send focus back to the button that opened the dialog.",
+          "استخدم أزرار `<form method=\"dialog\">` عشان تقفل وتبعت قيمة من غير JavaScript — `value` الزرار بيبقى `dialog.returnValue`. `close()` و Escape بيرجّعوا الـ focus للزرار اللي فتح الـ dialog.",
         ),
         L(
-          "Non-modal `show()` is rare — prefer `showModal()` for confirms and blocking flows. Style `dialog::backdrop` for dimming instead of inventing a second full-screen overlay.",
-          "`show()` غير الـ modal نادر — فضّل `showModal()` للتأكيد والتدفقات الحاجزة. ستايل `dialog::backdrop` للتعتيم بدل ما تخترع overlay تاني يغطي الشاشة.",
+          "Non-modal `show()` is rare. Prefer `showModal()` for “are you sure?” screens. Style `dialog::backdrop` to dim the page — don’t build a second full-screen overlay.",
+          "`show()` من غير modal نادر. فضّل `showModal()` لشاشات “متأكد؟”. ستايل `dialog::backdrop` عشان تعتّم الصفحة — متبنيش overlay تاني يغطي الشاشة.",
         ),
         L(
-          "Compatibility details live in the Browser Compatibility lesson — treat Safari below 15.4 as needing a fallback when `showModal()` is critical to the flow.",
-          "تفاصيل التوافق في درس Browser Compatibility — اعتبر Safari أقل من 15.4 محتاج fallback لما `showModal()` يكون حرج للتدفق.",
+          "Support details are in the Browser Compatibility lesson. If `showModal()` is required, plan a fallback for Safari below 15.4.",
+          "تفاصيل الدعم في درس Browser Compatibility. لو `showModal()` لازم، حط خطة fallback لـ Safari أقل من 15.4.",
         ),
       ],
       keyPoints: [
@@ -543,8 +543,8 @@ export const modernLessons: LessonDraft[] = [
 <dialog id="settings" aria-labelledby="settings-title">
   <h2 id="settings-title">Preferences</h2>
   <label>
-    <input type="checkbox" name="dark" />
-    Dark mode
+    <input type="checkbox" name="notify" />
+    Email updates
   </label>
   <form method="dialog">
     <button value="cancel">Cancel</button>
@@ -609,21 +609,21 @@ export const modernLessons: LessonDraft[] = [
         "أكورديون بـ `<details>` و `<summary>`",
       ),
       summary: L(
-        "Native, zero-JS disclosures for FAQs and progressive disclosure — keyboard-friendly by default.",
-        "`Disclosure` أصلي من غير `JS` للـ `FAQ` والكشف التدريجي — ودود للكيبورد افتراضيًا.",
+        "Open/close FAQ blocks with `<details>` — no JavaScript. Keyboard works by default.",
+        "افتح واقفل أسئلة FAQ بـ `<details>` — من غير JavaScript. الكيبورد شغال لوحده.",
       ),
       paragraphs: [
         L(
-          "`<details>` is closed until the user activates `<summary>` (or you set the `open` attribute). Screen readers expose it as a disclosure / button-like control with expanded state.",
-          "`<details>` مقفول لحد ما المستخدم يفعّل `<summary>` (أو تحط `open`). قارئات الشاشة بتعرضه كـ disclosure مع حالة expanded.",
+          "`<details>` stays closed until the user clicks `<summary>` (or you set `open`). Screen readers treat it like a button that can expand.",
+          "`<details>` بيفضل مقفول لحد ما المستخدم يضغط `<summary>` (أو تحط `open`). قارئ الشاشة بيتعامل معاه زي زرار بيتفتح.",
         ),
         L(
-          "Exclusive accordion groups can share a `name` attribute so opening one closes siblings (where supported). Don't nest interactive controls inside `<summary>` awkwardly.",
-          "مجموعات الـ accordion الحصرية تقدر تشارك `name` عشان فتح واحدة يقفل الباقي (حسب الدعم). متتحطّش controls تفاعلية جوه `<summary>` بشكل عبيط.",
+          "Accordion groups can share a `name` so opening one closes the others (where the browser supports it). Don’t put buttons or links inside `<summary>` in a messy way.",
+          "مجموعات الـ accordion تقدر تشارك `name` عشان فتح واحدة يقفل الباقي (لو المتصفح بيدعم). متحطش أزرار أو لينكات جوّه `<summary>` بشكل ملبّك.",
         ),
         L(
-          "For complex app panels that need animation orchestration or URL-synced tabs, a custom pattern may still win — but start with native details for content FAQs.",
-          "للوحات التطبيق المعقدة اللي محتاجة أنيميشن أو tabs مربوطة بالـ URL، pattern مخصص ممكن يفوز — بس ابدأ بـ details الأصلية لـ FAQ المحتوى.",
+          "For a complex app with animation or tabs tied to the URL, a custom pattern may still win. For content FAQs, start with native `<details>`.",
+          "لتطبيق معقّد فيه أنيميشن أو tabs مربوطة بالـ URL، pattern مخصص ممكن يبقى أحسن. لأسئلة المحتوى، ابدأ بـ `<details>` الأصلي.",
         ),
       ],
       keyPoints: [
@@ -704,8 +704,8 @@ export const modernLessons: LessonDraft[] = [
           "`<picture>` بيخلّيك تسرد مرشحي `<source>` (`type` و `media` و `srcset`). المتصفح بيختار أول مصدر متوافق وبعدين ينزل لـ `<img>`.",
         ),
         L(
-          "Use `type` for format negotiation (AVIF → WebP → JPEG) and `media` for art direction (different crops on mobile vs desktop). Width/height on `<img>` still matter for CLS.",
-          "استخدم `type` لتفاوض الصيغة (AVIF → WebP → JPEG) و `media` للتوجيه البصري (قصّة مختلفة على الموبايل). width/height على `<img>` لسه مهمين ضد CLS.",
+          "Use `type` to pick the file format (AVIF → WebP → JPEG). Use `media` for a different crop on phone vs desktop. `width` and `height` on `<img>` still stop the page from jumping (`CLS`).",
+          "استخدم `type` عشان تختار صيغة الملف (AVIF → WebP → JPEG). استخدم `media` لقصّة مختلفة على الموبايل والدسك توب. `width` و `height` على `<img>` لسه بيمنعوا الصفحة تقفز (`CLS`).",
         ),
         L(
           "`srcset` + `sizes` on a lone `<img>` is enough for resolution switching. Reach for `<picture>` when format or crop must change.",
@@ -777,8 +777,8 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "SVG or media art direction, then a trailing img with alt and dimensions.",
-        "تسلسل الصيغ (AVIF → WebP → JPEG)، وبعدين art direction للموبايل مقابل الديسكتوب — و img في الآخر دايمًا.",
+        "Format or crop first, then a last `<img>` with `alt` and size.",
+        "الصيغة أو القصّة الأول، وبعدين `<img>` في الآخر مع `alt` ومقاس.",
       ),
     },
   },
@@ -912,21 +912,21 @@ export const modernLessons: LessonDraft[] = [
         "غلط مقابل جاهز لقارئ الشاشة",
       ),
       summary: L(
-        "Advanced practice: bad vs screen-reader ready HTML — name, role, value, focus, and live updates.",
-        "تدريب Advanced: bad مقابل screen-reader ready HTML — name و role و value و focus و live updates.",
+        "Practice: bad HTML vs screen-reader ready — name, role, value, focus, and live updates.",
+        "تدريب: HTML غلط مقابل جاهز لقارئ الشاشة — name و role و value و focus و live updates.",
       ),
       paragraphs: [
         L(
-          "Other lessons teach one topic. This Advanced lesson is the full practice set after semantics, forms, dialog, and a11y basics — buttons vs links, images, landmarks, tables, forms, focus, dialogs, and live regions.",
-          "الدروس التانية بتعلّم موضوع واحد. درس Advanced ده هو مجموعة التدريب الكاملة بعد semantics و forms و dialog وأساسيات a11y — buttons مقابل links، صور، landmarks، tables، forms، focus، dialogs، و live regions.",
+          "Other lessons teach one topic. This lesson is the full practice set after semantics, forms, dialog, and a11y basics — buttons vs links, images, landmarks, tables, forms, focus, dialogs, and live regions.",
+          "الدروس التانية بتعلّم موضوع واحد. الدرس ده مجموعة التدريب الكاملة بعد semantics و forms و dialog وأساسيات a11y — buttons مقابل links، صور، landmarks، tables، forms، focus، dialogs، و live regions.",
         ),
         L(
-          "On each card, read the bad side first (what keyboard / NVDA / VoiceOver lose), then the ready side. Ask: does this control have a clear accessible name, the right role, and a value/state that matches the UI?",
-          "في كل card، اقرأ الجانب الغلط الأول (إيه اللي الكيبورد / NVDA / VoiceOver بيخسروه)، وبعدين الجانب الجاهز. اسأل: الـ control ده عنده accessible name واضح، و role صح، و value/state تطابق الـ UI؟",
+          "On each card, read the bad side first (what keyboard / NVDA / VoiceOver lose), then the ready side. Ask: does this control have a clear name, the right role, and a value that matches the screen?",
+          "في كل كارت، اقرأ الجانب الغلط الأول (إيه اللي الكيبورد / NVDA / VoiceOver بيخسروه)، وبعدين الجانب الجاهز. اسأل: الـ control ده عنده اسم واضح، و role صح، وقيمة تطابق الشاشة؟",
         ),
         L(
-          "Ship checklist: prefer native HTML, use ARIA only when needed, keep focus order = DOM order, and never leave Tab stops inside `aria-hidden`. When a card is clear, open the matching topic lesson and try the pattern there — then test with keyboard only and one screen reader.",
-          "Checklist للشحن: فضّل native HTML، استخدم ARIA عند الحاجة بس، خلّي ترتيب الـ focus = ترتيب الـ DOM، ومتسيبش Tab جوّه `aria-hidden`. لما الـ card يبقى واضح، افتح درس الموضوع وجرّب النمط هناك — وبعدين اختبر بالكيبورد بس + screen reader واحد.",
+          "Ship checklist: prefer native HTML, use ARIA only when needed, keep focus order = DOM order, and never leave Tab stops inside `aria-hidden`. When a card is clear, open the matching lesson and try it — then test with keyboard only and one screen reader.",
+          "Checklist للشحن: فضّل native HTML، استخدم ARIA عند الحاجة بس، خلّي ترتيب الـ focus = ترتيب الـ DOM، ومتسيبش Tab جوّه `aria-hidden`. لما الكارت يبقى واضح، افتح الدرس المناسب وجرّبه — وبعدين اختبر بالكيبورد بس + screen reader واحد.",
         ),
       ],
       keyPoints: [
@@ -998,10 +998,398 @@ export const modernLessons: LessonDraft[] = [
         ),
       ],
       visualHint: L(
-        "Warm-up: Bad vs Ready — hear what AT announces, then practice on the cards below.",
-        "تسخين: غلط مقابل جاهز — اسمع إيه اللي AT بتعلنه، وبعدين تدرّب على الكروت تحت.",
+        "Warm-up: Bad vs Ready — hear what a screen reader announces, then practice on the cards below.",
+        "تسخين: غلط مقابل جاهز — اسمع إيه اللي قارئ الشاشة بيعلنه، وبعدين تدرّب على الكروت تحت.",
       ),
       compareCards: screenReaderPracticeCards,
+    },
+  },
+  {
+    id: "html-18",
+    order: 5,
+    slug: "inline-vs-block",
+    tier: "beginner",
+    readMinutes: 6,
+    icon: "Columns2",
+    visualizer: "semantic-blocks",
+    content: {
+      title: L("Inline vs block elements", "عناصر inline مقابل block"),
+      summary: L(
+        "Block elements build page sections. Inline elements sit inside a line of text.",
+        "عناصر block بتبني أقسام الصفحة. عناصر inline بتقعد جوّه سطر النص.",
+      ),
+      paragraphs: [
+        L(
+          "**Block** elements start on a new line and take the full available width by default — like `<div>`, `<p>`, `<h1>`, `<ul>`, `<section>`, and `<main>`. Use them for structure and big pieces of content.",
+          "عناصر **block** بتبدأ في سطر جديد وبتاخد العرض المتاح كله افتراضيًا — زي `<div>` و `<p>` و `<h1>` و `<ul>` و `<section>` و `<main>`. استخدمها للبنية والقطع الكبيرة.",
+        ),
+        L(
+          "**Inline** elements flow inside text without forcing a new line — like `<span>`, `<a>`, `<strong>`, `<em>`, `<img>`, and `<code>`. Use them for words or small bits inside a paragraph.",
+          "عناصر **inline** بتمشي جوّه النص من غير سطر جديد — زي `<span>` و `<a>` و `<strong>` و `<em>` و `<img>` و `<code>`. استخدمها لكلمات أو قطع صغيرة جوّه الفقرة.",
+        ),
+        L(
+          "A common beginner mix-up: putting a block tag inside an inline tag (for example a `<div>` inside a `<span>` or `<a>`). Keep blocks for layout/sections and inline for text pieces. CSS can change display later — start with the natural HTML default.",
+          "خلط شائع للمبتدئ: تحط block جوّه inline (مثلاً `<div>` جوّه `<span>` أو `<a>`). خلّي block للبنية والأقسام، و inline لقطع النص. CSS يقدر يغيّر العرض بعدين — ابدأ بالافتراضي الطبيعي في HTML.",
+        ),
+      ],
+      keyPoints: [
+        L("Block = new line + full width (structure)", "Block = سطر جديد + عرض كامل (بنية)"),
+        L("Inline = inside the text line (pieces)", "Inline = جوّه سطر النص (قطع)"),
+        L("Don’t nest block inside inline", "متحطش block جوّه inline"),
+        L("`div` is a block box · `span` is an inline hook", "`div` صندوق block · `span` hook inline"),
+      ],
+      examples: [
+        simpleExample(
+          `<p>
+  Hello <strong>world</strong> —
+  <a href="/about">about us</a>
+</p>
+<div class="card">
+  <h2>Card title</h2>
+  <p>A whole section on its own line.</p>
+</div>`,
+          "Inline tags inside a paragraph · block card below",
+          "وسوم inline جوّه فقرة · كارت block تحتها",
+        ),
+        mediumExample(
+          `<!-- Good -->
+<p>Price: <span class="price">$19</span></p>
+
+<!-- Awkward: block inside inline -->
+<span>
+  <div>Don’t do this</div>
+</span>`,
+          "span for a price hook · avoid block-in-inline",
+          "span لسعر · تجنب block جوّه inline",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <h1>Inline vs block</h1>
+  <p>
+    This sentence has
+    <strong>important</strong> and
+    <a href="#more">inline</a> pieces.
+  </p>
+  <section>
+    <h2>Next section</h2>
+    <p>Sections are block-level regions.</p>
+  </section>
+</main>`,
+            { title: "Inline vs block demo" },
+          ),
+          "Full page: paragraph inlines + block section",
+          "صفحة كاملة: inline في فقرة + section بلوك",
+        ),
+      ],
+      visualHint: L(
+        "Watch what sits on one line (inline) vs what stacks as boxes (block).",
+        "اتفرّج على اللي بيقعد في سطر واحد (inline) مقابل اللي بيتكدّس كصناديق (block).",
+      ),
+    },
+  },
+  {
+    id: "html-19",
+    order: 7,
+    slug: "classes-and-ids",
+    tier: "beginner",
+    readMinutes: 6,
+    icon: "Blocks",
+    visualizer: "document-tree",
+    content: {
+      title: L("Classes and IDs", "الـ classes والـ IDs"),
+      summary: L(
+        "class groups many elements. id names one unique element — then CSS and JavaScript can find them.",
+        "`class` بيجمّع عناصر كتير. `id` بيسمّي عنصر واحد فريد — وبعدين CSS و JavaScript يلاقوهم.",
+      ),
+      paragraphs: [
+        L(
+          "`class=\"card\"` can appear on many elements. Classes are for shared styles and shared behavior — buttons, cards, badges.",
+          "`class=\"card\"` ممكن يظهر على عناصر كتير. الـ classes للستايل والسلوك المشترك — أزرار، كروت، بادجات.",
+        ),
+        L(
+          "`id=\"email\"` must be unique on the page. Use ids to connect a `<label for=\"...\">`, jump to a section with `href=\"#...\"`, or target one element in JavaScript.",
+          "`id=\"email\"` لازم يكون فريد في الصفحة. استخدم الـ ids لربط `<label for=\"...\">`، أو القفز لقسم بـ `href=\"#...\"`، أو استهداف عنصر واحد في JavaScript.",
+        ),
+        L(
+          "Beginner rules: prefer `class` for styling many things; use `id` when you need exactly one target. Don’t start class/id names with a number, and keep names short and clear (`btn-primary`, not `x1`).",
+          "قواعد للمبتدئ: فضّل `class` لتنسيق حاجات كتير؛ استخدم `id` لما محتاج هدف واحد بس. متبدأش الأسماء برقم، وخلّيها قصيرة وواضحة (`btn-primary` مش `x1`).",
+        ),
+      ],
+      keyPoints: [
+        L("`class` = many elements · `id` = one unique element", "`class` = عناصر كتير · `id` = عنصر واحد فريد"),
+        L("Match `label for` with the input `id`", "طابق `label for` مع `id` الـ input"),
+        L("Use clear names: `card`, `btn`, `hero` — not random letters", "أسماء واضحة: `card` و `btn` و `hero` — مش حروف عشوائية"),
+        L("CSS targets `.class` and `#id`", "CSS بيستهدف `.class` و `#id`"),
+      ],
+      examples: [
+        simpleExample(
+          `<button class="btn btn-primary">Save</button>
+<button class="btn">Cancel</button>
+
+<label for="email">Email</label>
+<input id="email" name="email" type="email" />`,
+          "Shared class on buttons · unique id for the label",
+          "class مشترك على الأزرار · id فريد للـ label",
+        ),
+        mediumExample(
+          `<nav>
+  <a href="#about">About</a>
+</nav>
+<main>
+  <section id="about">
+    <h2>About us</h2>
+    <p class="lead">We teach HTML by building.</p>
+  </section>
+</main>`,
+          "id for in-page jump · class for lead text style",
+          "id للقفز جوّه الصفحة · class لنص lead",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<header>
+  <p class="brand">FrontendCraft</p>
+</header>
+<main id="main">
+  <article class="card">
+    <h1 class="card-title">Lesson</h1>
+    <p class="card-body">Classes group styles. One id marks the main landmark.</p>
+  </article>
+</main>`,
+            { title: "Classes and IDs" },
+          ),
+          "Full page: brand/card classes + main id",
+          "صفحة كاملة: classes للبراند/الكارت + id للـ main",
+        ),
+      ],
+      visualHint: L(
+        "Spot what is shared (class) vs what is unique (id) on the page.",
+        "ميّز اللي مشترك (class) عن اللي فريد (id) في الصفحة.",
+      ),
+    },
+  },
+  {
+    id: "html-20",
+    order: 2,
+    slug: "html-comments",
+    tier: "beginner",
+    readMinutes: 5,
+    icon: "FileCode",
+    visualizer: "document-tree",
+    content: {
+      title: L("HTML comments", "تعليقات HTML"),
+      summary: L(
+        "Leave notes in the source with `<!-- -->`. They never show on the page — and they are not a place for secrets.",
+        "سيب ملاحظات في المصدر بـ `<!-- -->`. مش بتظهر في الصفحة — ومش مكان للأسرار.",
+      ),
+      paragraphs: [
+        L(
+          "Write a comment with `<!--` then your note then `-->`. The browser keeps it in the HTML source but does **not** draw it on the page. Use comments to explain *why* a block exists, or to temporarily hide markup while you experiment.",
+          "اكتب تعليق بـ `<!--` وبعدين ملاحظتك وبعدين `-->`. المتصفح بيسيبه في مصدر HTML لكن **مش** بيرسمه على الصفحة. استخدم التعليقات عشان تشرح *ليه* القطعة موجودة، أو تخفي markup مؤقت وأنت بتجرّب.",
+        ),
+        L(
+          "Rules: comments can sit between tags (in `<head>` or `<body>`). Do not nest comments (`<!-- <!-- no --> -->` breaks). Avoid `--` in the middle of a comment. Never put passwords, API keys, or private URLs in comments — anyone can View Source.",
+          "القواعد: التعليق يقدر يقعد بين الوسوم (في `<head>` أو `<body>`). متعملش تعليقات جوّه بعض (`<!-- <!-- no --> -->` بيتكسر). تجنّب `--` في نص التعليق. متحطش كلمات مرور أو API keys أو روابط خاصة — أي حد يقدر يعمل View Source.",
+        ),
+        L(
+          "Related source skill: the characters `<`, `>`, and `&` start markup. To show them as text, write `&lt;`, `&gt;`, and `&amp;`. `&nbsp;` is a non-breaking space. Comments are for humans; entities are for characters the parser would otherwise treat as code.",
+          "مهارة مصدر مرتبطة: الحروف `<` و `>` و `&` بتفتح markup. عشان تظهر كنص اكتب `&lt;` و `&gt;` و `&amp;`. `&nbsp;` مسافة مش بتتكسر. التعليقات للبشر؛ الـ entities للحروف اللي الـ parser هيتعامل معاها ككود.",
+        ),
+      ],
+      keyPoints: [
+        L("`<!-- note -->` is invisible on the page", "`<!-- note -->` مش ظاهر في الصفحة"),
+        L("Do not nest comments · avoid `--` inside", "متعشّشش تعليقات · تجنّب `--` جوّه"),
+        L("Never store secrets in comments", "متخزنش أسرار في التعليقات"),
+        L("Show `<` `>` `&` as `&lt;` `&gt;` `&amp;`", "اظهر `<` `>` `&` كـ `&lt;` `&gt;` `&amp;`"),
+      ],
+      examples: [
+        simpleExample(
+          `<!-- Site header: logo + main nav -->
+<header>
+  <p>FrontendCraft</p>
+</header>
+
+<!-- <p>Old hero — kept for reference</p> -->
+<p>New hero copy.</p>`,
+          "A note above a header · commented-out old paragraph",
+          "ملاحظة فوق الهيدر · فقرة قديمة متعطّلة بتعليق",
+        ),
+        mediumExample(
+          `<p>Write tags as text: <code>&lt;section&gt;</code></p>
+<p>Tom &amp; Jerry</p>
+<!-- Safe: explains the entity, not a secret -->`,
+          "Entities for special characters · comment explains why",
+          "Entities للحروف الخاصة · تعليق بيشرح السبب",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<!-- Doctype and lang are required — see document anatomy -->
+<main>
+  <h1>Comments</h1>
+  <p>Notes in source. Nothing secret here.</p>
+</main>`,
+            { title: "HTML comments" },
+          ),
+          "Full page with a useful source comment",
+          "صفحة كاملة بتعليق مفيد في المصدر",
+        ),
+      ],
+      visualHint: L(
+        "Find the comment in Elements — it is in the tree, not painted on the page.",
+        "لاقي التعليق في Elements — موجود في الشجرة، مش مرسوم على الصفحة.",
+      ),
+    },
+  },
+  {
+    id: "html-21",
+    order: 8,
+    slug: "global-attributes",
+    tier: "beginner",
+    readMinutes: 6,
+    icon: "Sparkles",
+    visualizer: "document-tree",
+    content: {
+      title: L("Global attributes", "الخصائص العامة"),
+      summary: L(
+        "`hidden`, `title`, `lang`, `data-*`, and boolean attributes work on almost every element.",
+        "`hidden` و `title` و `lang` و `data-*` والخصائص البوليانية بتشتغل على أغلب العناصر.",
+      ),
+      paragraphs: [
+        L(
+          "Some attributes are **global** — you can put them on most tags. `hidden` hides the element from the page (and from screen readers). `title` is a native tooltip — never use it as the only label. `lang` on a child overrides the page language for that subtree (useful for a French quote on an English page).",
+          "في خصائص **عامة** — تقدر تحطها على أغلب الوسوم. `hidden` بيخفي العنصر من الصفحة (ومن قارئات الشاشة). `title` tooltip أصلي — متستخدمهوش كـ label الوحيد. `lang` على عنصر ابن بيغيّر لغة الجزء ده (مفيد لاقتباس فرنسي في صفحة إنجليزي).",
+        ),
+        L(
+          "`data-*` attributes store extra info for CSS or JavaScript (`data-category=\"sale\"`, `data-price=\"19\"`). They are not secrets. Boolean attributes like `hidden`, `disabled`, and `required` are true when present — write `hidden`, not `hidden=\"false\"` (that still hides).",
+          "خصائص `data-*` بتخزّن معلومات زيادة لـ CSS أو JavaScript (`data-category=\"sale\"` و `data-price=\"19\"`). مش أسرار. الخصائص البوليانية زي `hidden` و `disabled` و `required` تبقى true لما تكون موجودة — اكتب `hidden`، مش `hidden=\"false\"` (برضه هيخفي).",
+        ),
+        L(
+          "Be careful with `tabindex`. `0` puts an element in the natural Tab order; `-1` makes it focusable from script only. Do not use `tabindex=\"1\"` or higher — it hijacks keyboard order. Prefer real `<button>` and `<a>` over making a `<div>` focusable.",
+          "خد بالك من `tabindex`. `0` بيحط العنصر في ترتيب Tab الطبيعي؛ `-1` يخليه قابل للتركيز من السكربت بس. متستخدمش `tabindex=\"1\"` أو أعلى — بيبوّظ ترتيب الكيبورد. فضّل `<button>` و `<a>` الحقيقيين عن إنك تخلي `<div>` قابل للتركيز.",
+        ),
+      ],
+      keyPoints: [
+        L("`hidden` hides from the page and from screen readers", "`hidden` بيخفي من الصفحة ومن قارئ الشاشة"),
+        L("`data-*` = extra data for CSS/JS — not secrets", "`data-*` = بيانات زيادة لـ CSS/JS — مش أسرار"),
+        L("Boolean attrs: present = true (`hidden`, not `hidden=\"false\"`)", "خصائص بوليانية: موجودة = true (`hidden` مش `hidden=\"false\"`)"),
+        L("`tabindex=\"0\"` or `-1` only — skip positive numbers", "`tabindex=\"0\"` أو `-1` بس — متستخدمش أرقام موجبة"),
+      ],
+      examples: [
+        simpleExample(
+          `<p hidden>Draft — not ready</p>
+<p title="Updated today">Live copy</p>
+<p lang="fr">Bonjour</p>`,
+          "hidden · title tooltip · lang override",
+          "hidden · title tooltip · تغيير lang",
+        ),
+        mediumExample(
+          `<article class="card" data-lesson="html-15" data-tier="beginner">
+  <h2>Global attributes</h2>
+  <button type="button" disabled>Soon</button>
+</article>`,
+          "data-* on a card · disabled boolean attribute",
+          "data-* على كارت · disabled كخاصية بوليانية",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main id="main" tabindex="-1">
+  <p data-status="ok">Ready for keyboard users.</p>
+  <button type="button">Focus me with Tab</button>
+</main>`,
+            { title: "Global attributes" },
+          ),
+          "tabindex -1 on main for skip-link targets",
+          "tabindex -1 على main لأهداف skip-link",
+        ),
+      ],
+      visualHint: L(
+        "Inspect attributes in Elements — toggle hidden and watch the node stay in the tree.",
+        "افحص الخصائص في Elements — شغّل hidden وشوف العنصر لسه في الشجرة.",
+      ),
+    },
+  },
+  {
+    id: "html-22",
+    order: 16,
+    slug: "html-native-interactive",
+    tier: "advanced",
+    readMinutes: 8,
+    icon: "AppWindow",
+    visualizer: "native-dialog",
+    content: {
+      title: L("Template, popover & inert", "`<template>` و popover و inert"),
+      summary: L(
+        "Native HTML for cloneable markup, lightweight overlays, and making a subtree non-interactive — often without a JS library.",
+        "HTML أصلي لـ markup قابل للنسخ، طبقات خفيفة، وتعطيل تفاعل جزء من الصفحة — غالبًا من غير مكتبة JS.",
+      ),
+      paragraphs: [
+        L(
+          "`<template>` holds HTML that does **not** render until JavaScript clones it (`template.content.cloneNode(true)`). Scripts and images inside stay inert. Use it for cards, rows, or client-rendered bits you do not want in the first paint.",
+          "`<template>` بيحمل HTML **مش** بيترسم لحد ما JavaScript ينسخه (`template.content.cloneNode(true)`). السكربتات والصور جوّه تفضل inert. استخدمه للكروت أو الصفوف أو قطع الـ client اللي مش عايزها في أول رسم.",
+        ),
+        L(
+          "`popover` on an element plus `popovertarget` on a button opens a lightweight overlay (menus, tips) with built-in light-dismiss and top-layer stacking. Pair with a real `<button type=\"button\">`. Check Baseline — this is newer than `<dialog>` in some browsers; keep a fallback when you must support older Safari.",
+          "`popover` على عنصر مع `popovertarget` على زرار بيفتح طبقة خفيفة (قوائم، تلميحات) مع إغلاق بالضغط برة و top-layer جاهز. استخدم `<button type=\"button\">` حقيقي. راجع Baseline — أحدث من `<dialog>` في بعض المتصفحات؛ خلّي fallback لما لازم تدعم Safari الأقدم.",
+        ),
+        L(
+          "`inert` on a container makes everything inside non-clickable and hidden from screen readers — useful behind a modal. Prefer native `<dialog>` `showModal()`, which does this for you. Don’t leave focusable controls inside `inert` or `aria-hidden` by accident.",
+          "`inert` على حاوية بيخلّي اللي جوّه مش قابل للضغط ومخفي عن قارئ الشاشة — مفيد ورا الـ modal. فضّل `<dialog>` `showModal()` الأصلي لأنه بيعمل كده لوحده. متسيبش عناصر قابلة للتركيز جوّه `inert` أو `aria-hidden` بالغلط.",
+        ),
+      ],
+      keyPoints: [
+        L("`<template>` = inert clone source until JS copies it", "`<template>` = مصدر inert لحد ما JS ينسخه"),
+        L("`popover` + `popovertarget` for light overlays", "`popover` + `popovertarget` للطبقات الخفيفة"),
+        L("`inert` disables a subtree — dialogs often do this for you", "`inert` بيعطّل جزء من الشجرة — الـ dialog غالبًا بيعملها لوحده"),
+        L("Check Baseline; keep a fallback for older browsers", "راجع Baseline؛ خلّي fallback للمتصفحات الأقدم"),
+      ],
+      examples: [
+        simpleExample(
+          `<template id="card">
+  <article class="card">
+    <h2></h2>
+    <p></p>
+  </article>
+</template>
+<p>Nothing from the template appears until you clone it.</p>`,
+          "Template content is not visible yet",
+          "محتوى الـ template لسه مش ظاهر",
+        ),
+        mediumExample(
+          `<button type="button" popovertarget="tips">Tips</button>
+<div id="tips" popover>
+  <p>Use a real button. Esc and click-outside dismiss.</p>
+  <button type="button" popovertarget="tips" popovertargetaction="hide">
+    Close
+  </button>
+</div>`,
+          "Native popover menu with a close button",
+          "قائمة popover أصلية بزر إغلاق",
+        ),
+        hardExample(
+          hardHtmlDoc(
+            `<main>
+  <p>Page content stays here while a dialog is open.</p>
+</main>
+<dialog id="confirm">
+  <form method="dialog">
+    <p>Reset progress?</p>
+    <button value="cancel">Cancel</button>
+    <button value="ok">Reset</button>
+  </form>
+</dialog>
+<button type="button" onclick="document.getElementById('confirm').showModal()">
+  Open
+</button>`,
+            { title: "Dialog applies inert for you" },
+          ),
+          "Prefer dialog showModal over hand-rolled inert",
+          "فضّل dialog showModal عن inert يدوي",
+        ),
+      ],
+      visualHint: L(
+        "Inspect template in Elements (inert). Toggle a popover and watch the top layer.",
+        "افحص الـ template في Elements (inert). شغّل popover وراقب الـ top layer.",
+      ),
     },
   },
 ];

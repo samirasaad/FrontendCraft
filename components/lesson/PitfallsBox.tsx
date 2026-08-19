@@ -35,7 +35,7 @@ function SidePanel({
         }`}
       >
         <p
-          className={`inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] ${
+          className={`inline-flex items-center gap-1.5 text-sm font-bold ${
             isWrong ? "text-rose-100" : "text-emerald-100"
           }`}
         >

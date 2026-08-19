@@ -157,7 +157,10 @@ function PathRail({
                     {body}
                   </Link>
                 ) : (
-                  <div aria-label={label} className={className}>
+                  <div
+                    aria-label={`${label}. ${t("trackLockedHint", locale)}`}
+                    className={className}
+                  >
                     {body}
                   </div>
                 )}
@@ -167,9 +170,13 @@ function PathRail({
         </ol>
       </div>
 
-      <ol className="relative mx-auto hidden max-w-3xl items-start justify-between sm:flex lg:max-w-4xl">
+      <ol className="relative hidden w-full items-start sm:flex">
         <div
-          className="pointer-events-none absolute inset-x-8 top-[1.125rem] h-px bg-gradient-to-r from-orange-400/50 via-white/15 to-amber-300/40"
+          className="pointer-events-none absolute inset-x-[4%] top-[1.125rem] h-px bg-white/12"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute start-[4%] top-[1.125rem] h-px w-[14%] bg-orange-300/50"
           aria-hidden
         />
         {pathTracks.map((track, index) => {
@@ -179,7 +186,7 @@ function PathRail({
           const job = t(TRACK_JOB_KEYS[track.id].job, locale);
           const label = `${index + 1}. ${node.short} — ${job}`;
           const className =
-            "relative z-10 flex w-[4.75rem] flex-col items-center gap-2 rounded-xl px-1 py-1 text-center outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-300/40 lg:w-[5.25rem]";
+            "relative z-10 flex w-full min-w-0 flex-col items-center gap-2 rounded-xl px-1 py-1 text-center outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-300/40";
 
           const body = (
             <>
@@ -188,32 +195,42 @@ function PathRail({
                 icon={Icon}
                 available={available}
               />
-              <span className="flex flex-col items-center gap-0.5">
+              <span className="flex min-w-0 flex-col items-center gap-0.5">
                 <span
-                  className={`font-[family-name:var(--font-display)] text-xs font-bold tracking-tight ${
+                  className={`whitespace-nowrap font-display text-xs font-bold tracking-tight ${
                     available ? "text-white" : "text-slate-500"
                   }`}
                 >
                   {node.short}
                 </span>
-                <span className="text-[10px] text-slate-600">{job}</span>
+                <span
+                  className={`whitespace-nowrap text-xs ${
+                    available ? "text-slate-400" : "text-slate-600"
+                  }`}
+                >
+                  {job}
+                </span>
               </span>
             </>
           );
 
           return (
-            <li key={track.id} className="flex justify-center">
+            <li key={track.id} className="min-w-0 flex-1">
               {available ? (
                 <Link
                   href={`/${track.id}`}
                   onClick={() => playClick()}
                   aria-label={label}
-                  className={`${className} hover:bg-white/[0.04]`}
+                  className={`${className} hover:bg-white/4`}
                 >
                   {body}
                 </Link>
               ) : (
-                <div aria-label={label} className={`${className} cursor-default`}>
+                <div
+                  aria-label={`${label}. ${t("trackLockedHint", locale)}`}
+                  title={t("trackLockedHint", locale)}
+                  className={`${className} cursor-default`}
+                >
                   {body}
                 </div>
               )}
@@ -239,14 +256,14 @@ function TrackPickerInner() {
   const upcomingTracks = pathTracks.filter((tr) => tr.status !== "available");
 
   return (
-    <HubShell>
+    <HubShell showHomeLink>
       <div className="flex flex-col gap-7 py-1 sm:gap-10 sm:py-4">
         <header className="flex flex-col gap-5 sm:gap-6">
           <div>
             <h1 className="font-[family-name:var(--font-display)] text-[1.75rem] font-bold leading-tight tracking-tight text-white sm:text-4xl">
               {t("chooseTrack", locale)}
             </h1>
-            <p className="mt-2 text-sm leading-relaxed text-slate-400 sm:mt-2.5 sm:text-[17px] sm:whitespace-nowrap">
+            <p className="mt-2 whitespace-nowrap text-sm leading-normal text-slate-400 sm:mt-2.5 sm:text-[17px]">
               {t("chooseTrackHint", locale)}
             </p>
           </div>
@@ -282,8 +299,8 @@ function TrackPickerInner() {
                       onClick={() => playClick()}
                       className={`group flex h-full flex-col justify-between gap-5 rounded-[1.35rem] border p-5 outline-none transition focus-visible:ring-2 focus-visible:ring-cyan-300/50 sm:p-6 ${
                         startHere
-                          ? "border-orange-300/40 bg-gradient-to-br from-orange-400/12 via-white/[0.02] to-transparent hover:border-orange-300/55"
-                          : "border-cyan-300/25 bg-gradient-to-br from-sky-400/10 via-white/[0.02] to-transparent hover:border-cyan-300/40"
+                          ? "border-orange-300/45 bg-gradient-to-br from-orange-400/14 via-white/[0.03] to-transparent shadow-[0_0_40px_rgba(251,146,60,0.08)] hover:border-orange-300/60"
+                          : "border-white/12 bg-white/[0.03] hover:border-cyan-300/35 hover:bg-sky-400/[0.06]"
                       }`}
                     >
                       <div className="flex items-start gap-3.5">
@@ -307,11 +324,11 @@ function TrackPickerInner() {
                               </span>
                             ) : null}
                           </div>
-                          <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                          <p className="mt-1 text-xs font-medium text-slate-400">
                             {t(copy.job, locale)}
                           </p>
                           <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                            {t(copy.hint, locale)}
+                            {t(copy.body, locale)}
                           </p>
                         </div>
                       </div>
@@ -321,8 +338,10 @@ function TrackPickerInner() {
                           {track.lessons.length} {t("lessonsCount", locale)}
                         </span>
                         <span
-                          className={`inline-flex items-center gap-1.5 text-sm font-bold ${
-                            startHere ? "text-yellow-200" : "text-cyan-200"
+                          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold transition ${
+                            startHere
+                              ? "bg-orange-300 text-slate-950 group-hover:brightness-110"
+                              : "border border-white/15 bg-white/5 text-slate-100 group-hover:border-cyan-300/40 group-hover:text-cyan-100"
                           }`}
                         >
                           {startHere
@@ -353,25 +372,38 @@ function TrackPickerInner() {
             >
               {t("trackUpcomingLabel", locale)}
             </h2>
-            <ul className="flex flex-wrap gap-2">
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
               {upcomingTracks.map((track) => {
                 const Icon = iconMap[track.icon] ?? Braces;
                 const copy = TRACK_JOB_KEYS[track.id];
                 return (
                   <li key={track.id}>
-                    <div className="inline-flex items-center gap-2.5 rounded-full border border-white/8 bg-white/[0.02] py-1.5 pe-3.5 ps-1.5">
-                      <TrackMark
-                        trackId={track.id as PathId}
-                        icon={Icon}
-                        available={false}
-                        size="sm"
-                      />
-                      <span className="font-[family-name:var(--font-display)] text-sm font-semibold text-slate-400">
-                        {loc(track.title, locale)}
-                      </span>
-                      <span className="hidden text-[11px] text-slate-600 sm:inline">
-                        {t(copy.job, locale)}
-                      </span>
+                    <div
+                      className="flex h-full flex-col justify-between gap-4 rounded-[1.35rem] border border-white/8 bg-white/[0.02] p-5"
+                      title={t("trackLockedHint", locale)}
+                    >
+                      <div className="flex items-start gap-3">
+                        <TrackMark
+                          trackId={track.id as PathId}
+                          icon={Icon}
+                          available={false}
+                          size="md"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-display text-lg font-bold tracking-tight text-slate-300">
+                            {loc(track.title, locale)}
+                          </h3>
+                          <p className="mt-1 text-xs font-medium text-slate-500">
+                            {t(copy.job, locale)}
+                          </p>
+                          <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                            {t(copy.hint, locale)}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="border-t border-white/6 pt-3 text-xs font-medium text-slate-600">
+                        {t("trackLockedHint", locale)}
+                      </p>
                     </div>
                   </li>
                 );

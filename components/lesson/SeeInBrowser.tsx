@@ -28,7 +28,7 @@ export function SeeInBrowser({
           <RichText text={loc(walkthrough.intro, locale)} />
         </p>
       ) : null}
-      <p className="text-xs text-slate-500">
+      <p className="text-sm leading-relaxed text-slate-300">
         <RichText text={t("seeInBrowserShortcut", locale)} />
       </p>
       <ol className="space-y-3">
@@ -68,7 +68,7 @@ export function SeeInBrowser({
           <Monitor size={16} />
           {t("seeInBrowser", locale)}
         </div>
-        <p className="mb-4 text-xs text-slate-400">{t("seeInBrowserHint", locale)}</p>
+        <p className="mb-4 text-sm leading-relaxed text-slate-300">{t("seeInBrowserHint", locale)}</p>
         {body}
       </section>
     );
@@ -80,7 +80,7 @@ export function SeeInBrowser({
         <Monitor size={16} />
         {t("seeInBrowser", locale)}
       </div>
-      <p className="mb-4 text-xs text-slate-400">{t("seeInBrowserHint", locale)}</p>
+      <p className="mb-4 text-sm leading-relaxed text-slate-300">{t("seeInBrowserHint", locale)}</p>
       {body}
     </section>
   );

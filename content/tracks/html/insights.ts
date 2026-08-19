@@ -6,16 +6,16 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "Blink and Gecko turn your HTML into a DOM tree — not a simple string. The doctype switches the page into standards mode; without it, quirks mode keeps legacy box-model rules that break modern CSS.",
-          "Blink و Gecko بيحوّلوا HTML لشجرة DOM — مش مجرد نص. الـ doctype بيشغّل standards mode؛ من غيره quirks mode بيخلي قواعد الـ box model القديمة تكسر CSS الحديث.",
+          "Blink and Gecko turn your HTML into a DOM tree — not a simple string. The doctype puts the page in standards mode. Without it, quirks mode keeps old box-model rules that can break modern CSS.",
+          "Blink و Gecko بيحوّلوا HTML لشجرة DOM — مش مجرد نص. الـ doctype بيشغّل standards mode. من غيره quirks mode بيخلي قواعد الـ box model القديمة تكسر CSS الحديث.",
         ),
         L(
-          "Parsing happens in chunks. Scripts and styles in <head> can pause the parser — that is why charset and viewport should appear early, before the first paint.",
-          "الـ parsing بيحصل على دفعات. Scripts و styles في <head> ممكن توقف الـ parser — عشان كده charset و viewport لازم ييجوا بدري، قبل أول paint.",
+          "The parser reads the file in chunks. Scripts and styles in `<head>` can pause parsing — that is why `charset` and `viewport` should appear early, before the first paint.",
+          "الـ parser بيقرأ الملف على دفعات. Scripts و styles في `<head>` ممكن يوقفوا القراءة — عشان كده `charset` و `viewport` لازم ييجوا بدري، قبل أول paint.",
         ),
         L(
-          "The DOM pairs with the CSSOM to build the render tree. Bad nesting (like <div> inside <p>) gets silently repaired — you will not always see an error, but the tree may surprise you.",
-          "الـ DOM بيتزاوج مع CSSOM عشان يبني render tree. التداخل الغلط (زي <div> جوه <p>) بيتصلح في الخفاء — مش دايمًا هتشوف error، لكن الشجرة ممكن تفاجئك.",
+          "The DOM plus the CSSOM build the render tree. Bad nesting (like a `<div>` inside a `<p>`) gets silently repaired. You may not see an error, but the tree can surprise you.",
+          "الـ DOM مع CSSOM بيبنوا الـ render tree. التداخل الغلط (زي `<div>` جوّه `<p>`) بيتصلح في الخفاء. ممكن متشوفش error، بس الشجرة تفاجئك.",
         ),
       ],
       {
@@ -40,12 +40,12 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "`lang` on `<html>` sets VoiceOver/NVDA pronunciation and hyphenation — wrong language makes content unreadable. Document title is the first announcement when the page loads.",
-          "`lang` على `<html>` بيحدد نطق `VoiceOver`/`NVDA` و `hyphenation` — `language` غلط بيخلي المحتوى مش مقروء. `Document title` أول إعلان لما الصفحة تحمّل.",
+          "`lang` on `<html>` tells VoiceOver and NVDA how to speak the page. The wrong language makes Arabic or English sound broken. The document `<title>` is the first thing announced when the page loads.",
+          "`lang` على `<html>` بيقول لـ VoiceOver و NVDA ينطقوا الصفحة إزاي. اللغة الغلط بتخلي العربي أو الإنجليزي يبان مكسور. `<title>` أول حاجة بتتنادي لما الصفحة تحمل.",
         ),
         L(
-          "Skip links belong at the top of `<body>` before chrome — keyboard users Tab once to bypass repeated nav. Without landmarks, screen readers cannot jump to main content efficiently.",
-          "`Skip links` في أول `<body>` قبل `chrome` — `keyboard users` `Tab` مرة واحدة يتخطوا `nav` المتكرر. من غير `landmarks`، `screen readers` مش هتقدر تقفز للـ `main content` بسرعة.",
+          "Put a skip link at the top of `<body>`, before header and nav. Keyboard users Tab once and jump past repeated menus. Without landmarks, screen readers cannot jump to the main content quickly.",
+          "حط skip link في أول `<body>`، قبل الهيدر والقائمة. مستخدم الكيبورد يضغط Tab مرة ويتخطى القوائم المتكررة. من غير landmarks، قارئ الشاشة مش هيقدر يقفز للمحتوى الأساسي بسرعة.",
         ),
       ],
       {
@@ -66,12 +66,12 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     seo: insight(
       [
         L(
-          "Googlebot reads the initial HTML response — `<title>`, canonical, meta description, and body copy in the first payload are indexed reliably. Client-rendered shells delay discovery.",
-          "`Googlebot` بيقرأ `HTML response` الأولي — `<title>` و `canonical` و `meta description` و `body copy` في أول `payload` بتتفهرس بثبات. `Shells` `client-rendered` بتأخر `discovery`.",
+          "Googlebot reads the first HTML response. `<title>`, canonical, meta description, and body text in that first payload get indexed reliably. An empty client-rendered shell delays discovery.",
+          "Googlebot بيقرأ أول رد HTML. `<title>` و canonical و meta description ونص الـ body في أول حمولة بيتفهرسوا بثبات. shell فاضي مترسوم على الـ client بيأخّر الاكتشاف.",
         ),
         L(
-          "Viewport meta enables mobile-first indexing — missing viewport can classify pages as non-mobile-friendly. Charset misplacement causes mojibake in snippets.",
-          "`Viewport meta` بيفعّل `mobile-first indexing` — `viewport` ناقص ممكن يصنّف الصفحات `non-mobile-friendly`. `charset` في مكان غلط بيسبب `mojibake` في `snippets`.",
+          "Viewport meta helps mobile-first indexing. A missing viewport can mark the page as not mobile-friendly. A late `charset` can scramble Arabic in search snippets.",
+          "Viewport meta بيساعد mobile-first indexing. لو الـ viewport ناقص، الصفحة ممكن تتعلّم إنها مش للموبايل. `charset` متأخر يقدر يبوّظ العربي في snippets البحث.",
         ),
       ],
       {
@@ -101,8 +101,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "متعتمدش على فكرة HTML5 القديمة عن document outline (إن الـ sections تخترع مراتب عناوين). المتصفحات عمرها ما شحنت UI outline يعتمد على الخوارزمية دي، والـ spec تراجع عنها. الهيكل الحقيقي النهاردة = مراتب `h1`–`h6` صريحة + مناطق landmarks. `<section>` فاضي من غير اسم وصول غالبًا مش بيتعرض كـ landmark أصلًا.",
         ),
         L(
-          "Native semantics are assigned at parse time with almost no runtime cost. A soup of `<div class=\"header\">` / `<div class=\"nav\">` stays `generic` in the accessibility tree — AT has nothing to jump to, and reader-mode / extraction heuristics must guess harder.",
-          "الـ semantics الأصلية بتتحدد وقت الـ parse وتكلفتها تقريبًا صفر. شوربة `<div class=\"header\">` / `<div class=\"nav\">` بتفضل `generic` في accessibility tree — مفيش حاجة تقفز ليها التقنية المساعدة، وheuristics بتاعة Reader Mode والاستخراج بتتخمّن أصعب.",
+          "Native tags get their meaning at parse time, almost for free. A soup of `<div class=\"header\">` / `<div class=\"nav\">` stays `generic` in the accessibility tree — screen readers have nothing to jump to, and reader mode must guess harder.",
+          "الوسوم الأصلية بتاخد معناها وقت الـ parse، شبه ببلاش. شوربة `<div class=\"header\">` / `<div class=\"nav\">` بتفضل `generic` في accessibility tree — قارئ الشاشة مالوش حاجة يقفز ليها، ووضع القراءة بيتخمّن أصعب.",
         ),
       ],
       {
@@ -143,8 +143,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "Landmark navigation is a primary SR skill: VoiceOver rotor, NVDA Elements List / landmark key, TalkBack reading controls. With real `<main>`, `<nav>`, `<aside>`, users skip chrome in one jump. `role=\"main\"` on a `<div>` is a last resort for legacy markup — native `<main>` is clearer and harder to get wrong.",
-          "التنقل بالـ landmarks مهارة أساسية لقارئ الشاشة: VoiceOver rotor، و NVDA Elements List / مفتاح landmarks، و TalkBack. مع `<main>` و `<nav>` و `<aside>` حقيقيين، المستخدم يتخطى الـ chrome بقفزة واحدة. `role=\"main\"` على `<div>` حل أخير للـ markup القديم — `<main>` الأصلي أوضح وأصعب تتلخبط فيه.",
+          "Landmark navigation is a core screen-reader skill: VoiceOver rotor, NVDA Elements List, TalkBack. With real `<main>`, `<nav>`, and `<aside>`, users skip header and footer in one jump. `role=\"main\"` on a `<div>` is a last resort — native `<main>` is clearer.",
+          "التنقل بالـ landmarks مهارة أساسية لقارئ الشاشة: VoiceOver rotor و NVDA Elements List و TalkBack. مع `<main>` و `<nav>` و `<aside>` حقيقيين، المستخدم يتخطى الهيدر والفوتر بقفزة واحدة. `role=\"main\"` على `<div>` حل أخير — `<main>` الأصلي أوضح.",
         ),
         L(
           "When a page has more than one `<nav>`, label each with `aria-label` or `aria-labelledby` (“Primary”, “Footer”, “Breadcrumb”). Unlabeled duplicates all announce as generic “navigation”, which wastes the landmark list.",
@@ -155,8 +155,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "`<section>` بيبقى landmark من نوع `region` بس لما يكون ليه accessible name (غالبًا heading ظاهر مربوط بـ `aria-labelledby`، أو `aria-label`). الـ sections من غير اسم مقبولة كغلاف تنسيق — بس مش هتظهر في قائمة landmarks. متلفّش الصفحة كلها في sections من غير اسم وتستنى هيكل ببلاش.",
         ),
         L(
-          "Pair landmarks with a skip link as the first focusable control in `<body>`: `Skip to content` → `#main` (on `<main id=\"main\" tabindex=\"-1\">` if you need a focus target). Landmarks help SR users; skip links help sighted keyboard users who Tab through chrome.",
-          "اربط الـ landmarks بـ skip link كأول عنصر قابل للتركيز في `<body>`: `Skip to content` → `#main` (على `<main id=\"main\" tabindex=\"-1\">` لو محتاج هدف focus). الـ landmarks بتساعد مستخدمي قارئ الشاشة؛ الـ skip links بتساعد مستخدمي الكيبورد اللي بيشوفوا الشاشة وبيعدّوا على الـ chrome بـ Tab.",
+          "Pair landmarks with a skip link as the first focusable control in `<body>`: `Skip to content` → `#main` (on `<main id=\"main\" tabindex=\"-1\">` if you need a focus target). Landmarks help screen-reader users. Skip links help keyboard users who Tab through header and nav.",
+          "اربط الـ landmarks بـ skip link كأول عنصر قابل للتركيز في `<body>`: `Skip to content` → `#main` (على `<main id=\"main\" tabindex=\"-1\">` لو محتاج هدف focus). الـ landmarks بتساعد قارئ الشاشة. الـ skip links بتساعد مستخدم الكيبورد اللي بيعدّي على الهيدر والقائمة بـ Tab.",
         ),
       ],
       {
@@ -164,7 +164,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("Label every `<nav>` (and distinct `<aside>`) when duplicates exist", "سمّي كل `<nav>` (و `<aside>` المميزة) لما يتكرروا"),
           L("Name a `<section>` if it should appear as a region landmark", "سمّي `<section>` لو المفروض يظهر كـ region landmark"),
           L("Headings describe sections — never fake a title with styled `<div>`/`<p>`", "العناوين بتوصف الأقسام — متزوّرش عنوان بـ `<div>`/`<p>` مستايل"),
-          L("Skip link + one `<main>` = fastest path past repeated chrome", "Skip link + `<main>` واحد = أسرع طريق بعد الـ chrome المتكرر"),
+          L("Skip link + one `<main>` = fastest path past repeated header and nav", "Skip link + `<main>` واحد = أسرع طريق بعد الهيدر والقائمة المتكررين"),
           L("Do not re-apply ARIA landmark roles on native landmark elements", "متعيدش أدوار ARIA landmark على عناصر landmark أصلية"),
         ],
         code: `<a class="skip-link" href="#main">Skip to content</a>
@@ -189,8 +189,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     seo: insight(
       [
         L(
-          "Crawlers and snippet systems still lean on clear HTML structure. Putting primary copy inside `<main>`, self-contained posts/products inside `<article>`, and chrome/legal links in `<header>` / `<footer>` helps extraction separate “the page” from “the template”. Semantics are not a ranking hack — they reduce ambiguity.",
-          "الزواحف وأنظمة الـ snippets لسه بتعتمد على هيكل HTML واضح. حط النسخ الأساسي جوّه `<main>`، والبوستات/المنتجات المستقلة جوّه `<article>`، والـ chrome/اللينكات القانونية في `<header>` / `<footer>` — ده بيساعد الاستخراج يفصل “الصفحة” عن “القالب”. الـ semantics مش حيلة ترتيب — بتقلل الغموض.",
+          "Crawlers and snippet tools still need a clear HTML structure. Put the main text in `<main>`, posts or products in `<article>`, and header/footer links in `<header>` / `<footer>`. That helps tools split “the page” from “the template”. Semantics are not a ranking hack — they make meaning clearer.",
+          "الـ crawlers وأدوات الـ snippets لسه محتاجين هيكل HTML واضح. حط النص الأساسي جوّه `<main>`، والبوستات أو المنتجات جوّه `<article>`، ولينكات الهيدر والفوتر في `<header>` / `<footer>`. ده بيساعد الأدوات تفصل “الصفحة” عن “القالب”. الـ semantics مش حيلة ترتيب — بتوضّح المعنى.",
         ),
         L(
           "Reader mode (Safari, Firefox, etc.) uses heuristics on headings, articles, and boilerplate density. A clean `<article>` with a real heading hierarchy inside `<main>` is far more likely to extract cleanly than a card grid of anonymous `<div>`s with the same visual design.",
@@ -201,8 +201,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "الـ structured data (`JSON-LD` Article و BreadcrumbList و…) لازم تطابق الـ HTML الظاهر — `<article>` الـ `<h1>` بتاعه يختلف عن `headline` في JSON-LD علامة ثقة وحشة. الـ breadcrumbs أفضل كـ `<nav aria-label=\"Breadcrumb\">` list حقيقية + BreadcrumbList مطابق، مش JSON لوحده.",
         ),
         L(
-          "Do not chase “outline SEO” myths from the abandoned HTML5 outline algorithm. One clear visible `<h1>` that names the page topic, then honest `h2`/`h3` under it, inside landmark regions, is the durable pattern for humans, AT, and crawlers.",
-          "متطاردش خرافات “outline SEO” من خوارزمية HTML5 outline المتخلى عنها. `<h1>` ظاهر واضح بيسمّي موضوع الصفحة، وبعدين `h2`/`h3` صادقين تحته، جوّه مناطق landmarks — ده النمط الثابت للبشر والتقنية المساعدة والزواحف.",
+          "Do not chase “outline SEO” myths from the old HTML5 outline algorithm. One clear visible `<h1>` that names the page, then honest `h2`/`h3` under it, inside landmarks — that pattern works for people, screen readers, and crawlers.",
+          "متطاردش خرافات “outline SEO” من خوارزمية HTML5 outline القديمة. `<h1>` ظاهر واضح بيسمّي الصفحة، وبعدين `h2`/`h3` صادقين تحته، جوّه landmarks — ده النمط اللي ينفع للناس وقارئ الشاشة والـ crawlers.",
         ),
       ],
       {
@@ -246,8 +246,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "Text nodes بتflow لـ line boxes أثناء layout — strings طويلة من غير break (URLs, Arabic من غير spaces) ممكن overflow إلا لو `overflow-wrap: break-word`. Subpixel rounding بيأثر line heights عبر engines.",
         ),
         L(
-          "`<strong>` and `<em>` carry semantic weight for AT and reader mode — `<b>`/`<i>` are stylistic defaults without emphasis semantics unless redefined in CSS.",
-          "`<strong>` و `<em>` لوزن semantic لـ AT و reader mode — `<b>`/`<i>` stylistic defaults من غير emphasis semantics إلا لو redefined في CSS.",
+          "`<strong>` and `<em>` carry meaning for screen readers and reader mode. `<b>` / `<i>` are look-only unless you add meaning yourself.",
+          "`<strong>` و `<em>` ليهم معنى لقارئ الشاشة ووضع القراءة. `<b>` / `<i>` للشكل بس إلا لو إنت ضفت معنى.",
         ),
       ],
       {
@@ -327,15 +327,15 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "`<strong>` / `<em>` بيروحوا importance/emphasis في accessibility tree. `<b>` / `<i>` presentational افتراضيًا إلا لو ضفت معنى بحذر.",
         ),
         L(
-          "`<time datetime>` and `<abbr title>` store machine-readable values beside visible text — useful for parsers, browsers, and AT expansion.",
-          "`<time datetime>` و `<abbr title>` بيخزنوا قيم مقروءة للآلة جنب النص الظاهر — مفيدة للـ parsers والمتصفح و AT.",
+          "`<time datetime>` and `<abbr title>` store machine-readable values next to visible text — useful for parsers, browsers, and screen-reader expansion.",
+          "`<time datetime>` و `<abbr title>` بيخزنوا قيم للآلة جنب النص الظاهر — مفيدة للـ parsers والمتصفح وتوسيع قارئ الشاشة.",
         ),
       ],
       {
         bullets: [
           L("Inline tags annotate spans inside one paragraph flow — they do not break the block box", "وسوم inline بتعلّم spans جوه flow واحد — ما بتكسرش block box الفقرة"),
           L("Machine-readable values live in datetime and abbr title attributes", "القيم المقروءة للآلة في datetime و title على abbr"),
-          L("Reader mode and AT use semantic emphasis — decorative bold spans add noise", "Reader mode و AT بيستخدموا emphasis الـ semantic — bold الديكور بيزود ضوضاء"),
+          L("Reader mode and screen readers use semantic emphasis — decorative bold adds noise", "وضع القراءة وقارئ الشاشة بيستخدموا emphasis له معنى — الـ bold الديكور بيزود ضوضاء"),
           L("blockquote creates a block; q stays inline inside a paragraph", "blockquote بلوك؛ q يفضل inline جوه الفقرة"),
         ],
         code: `<p>
@@ -388,16 +388,16 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "`<a href>` creates a hyperlink relationship in the DOM — prefetch/preconnect hints and click navigate through the network stack. `href=\"#\"` still resolves and may scroll to top; use `<button>` for actions.",
-          "`<a href>` بتعمل hyperlink relationship في DOM — prefetch/preconnect hints و click navigate عبر network stack. `href=\"#\"` لسه بيresolve ويمscroll top؛ استخدم `<button>` للـ actions.",
+          "`<a href>` is a real link in the DOM. Prefetch hints and clicks go through the network. `href=\"#\"` still jumps (often to the top) — use `<button>` for actions.",
+          "`<a href>` لينك حقيقي في الـ DOM. تلميحات prefetch والضغطة بتمشي في الشبكة. `href=\"#\"` لسه بيقفز (غالبًا لفوق) — استخدم `<button>` للأفعال.",
         ),
         L(
-          "Images are replaced elements — layout reserves space only when width/height attributes or CSS aspect-ratio exist. Without dimensions, reflow after decode hurts CLS as the render tree repaints.",
-          "Images replaced elements — layout بيحجز مساحة لما width/height attributes أو CSS aspect-ratio موجودين. من غير dimensions، reflow بعد decode بيضر CLS لما render tree يrepaint.",
+          "Images are replaced elements. The layout keeps space only when you set `width`/`height` or CSS `aspect-ratio`. Without size, the page jumps after the image loads (`CLS`).",
+          "الصور عناصر replaced. الصفحة بتحجز مساحة بس لما تحط `width`/`height` أو `aspect-ratio`. من غير مقاس، الصفحة بتقفز بعد تحميل الصورة (`CLS`).",
         ),
         L(
-          "Lazy loading (`loading=\"lazy\"`) deferrs fetch until near viewport — LCP image must NOT be lazy. Decode happens on main thread; large images block paint without proper sizing.",
-          "Lazy loading (`loading=\"lazy\"`) بيأجل fetch لحد near viewport — LCP image مايتlazyش. Decode على main thread؛ images كبيرة بتblock paint من غير sizing صح.",
+          "`loading=\"lazy\"` waits to fetch until the image is near the screen. Never lazy-load the `LCP` hero. Decode runs on the main thread — huge images delay paint if they have no size.",
+          "`loading=\"lazy\"` بيستنى ينزّل الصورة لحد ما تقرب من الشاشة. متعملش lazy لصورة `LCP`. الـ decode على الـ main thread — صور ضخمة بتأخّر الـ paint لو مفيش مقاس.",
         ),
       ],
       {
@@ -420,8 +420,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     accessibility: insight(
       [
         L(
-          "Link purpose must be clear from text or `aria-label` — lists of \"Read more\" fail WCAG 2.4.4. Image links use `alt` as the link name when no text sibling exists.",
-          "Link purpose لازم يكون واضح من text أو `aria-label` — lists من \"Read more\" بتفشل WCAG 2.4.4. Image links بتستخدم `alt` كـ link name لما مفيش text sibling.",
+          "Link text must be clear from the words or `aria-label`. A list of “Read more” fails WCAG 2.4.4. If an image is the only link content, `alt` becomes the link name.",
+          "نص اللينك لازم يكون واضح من الكلام أو `aria-label`. قائمة “Read more” بتفشل WCAG 2.4.4. لو الصورة هي محتوى اللينك الوحيد، `alt` يبقى اسم اللينك.",
         ),
         L(
           "Keyboard: Tab focuses links; Enter activates. Do not remove focus outlines on `<a>` — VoiceOver reads \"link\" plus accessible name; empty alt on informative images hides content from blind users.",
@@ -439,7 +439,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
   View pricing for FrontendCraft Pro
 </a>
 <a href="/docs" aria-label="Documentation (opens in new tab)">Docs ↗</a>`,
-        codeCaption: L("`Descriptive` `links` for `AT` and `SEO`", "`Links` وصفية لـ `AT` و `SEO`"),
+        codeCaption: L("Clear links for screen readers and SEO", "لينكات واضحة لقارئ الشاشة و SEO"),
       },
     ),
     seo: insight(
@@ -468,8 +468,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "`<ul>`, `<ol>`, and `<dl>` generate list boxes in the render tree — list-style and counters come from CSS. Removing bullets with CSS does not remove list semantics for AT unless `list-style: none` pairs with proper roles (avoid stripping semantics accidentally).",
-          "`<ul>`, `<ol>`, `<dl>` بتولّد list boxes في render tree — list-style و counters من CSS. شيل bullets بـ CSS مايشيلش list semantics لـ AT إلا لو `list-style: none` مع roles صح (تجنب strip semantics بالغلط).",
+          "`<ul>`, `<ol>`, and `<dl>` make list boxes in the render tree. Bullet style comes from CSS. Hiding bullets with CSS does **not** remove list meaning for screen readers.",
+          "`<ul>` و `<ol>` و `<dl>` بيعملوا صناديق قائمة في الـ render tree. شكل النقط من CSS. إخفاء النقط بـ CSS **مش** بيشيل معنى القائمة عن قارئ الشاشة.",
         ),
         L(
           "Only `<li>` should be direct children of `<ul>/<ol>` — parser will repair invalid markup but accessibility tree item counts may wrong-foot screen readers.",
@@ -483,7 +483,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       {
         bullets: [
           L("list-style: none in CSS does not remove list role — only changes bullets visually", "list-style: none في CSS ما بيشيلش list role — بيغيّر الشكل بس"),
-          L("Invalid children inside ul/ol get repaired — item counts in AT may be wrong", "أطفال غلط جوه ul/ol بيتصلحوا — عدد العناصر في AT ممكن يبقى غلط"),
+          L("Invalid children inside ul/ol get repaired — item counts for screen readers may be wrong", "أطفال غلط جوّه ul/ol بيتصلحوا — عدد العناصر لقارئ الشاشة ممكن يبقى غلط"),
           L("Nested lists encode level in the DOM — flat divs lose “item 2 of 5, level 2”", "القوائم المتداخلة بتحفظ المستوى في DOM — divs مسطّحة بتفقد “item 2 of 5, level 2”"),
           L("dl pairs dt/dd — broken pairs confuse screen reader pronunciation", "dl بيربط dt/dd — أزواج مكسورة بتلخبط نطق قارئ الشاشة"),
         ],
@@ -523,7 +523,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     <li><a href="/tracks">Labs</a></li>
   </ul>
 </nav>`,
-        codeCaption: L("`Semantic` `nav` list for `AT`", "`Nav` list `semantic` لـ `AT`"),
+        codeCaption: L("Semantic nav list for screen readers", "قائمة nav واضحة لقارئ الشاشة"),
       },
     ),
     seo: insight(
@@ -686,7 +686,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
         code: `<th scope="col" aria-sort="ascending">
   Price
 </th>`,
-        codeCaption: L("Sort `state` exposed to `AT`", "Sort `state` معروض لـ `AT`"),
+        codeCaption: L("Sort state exposed to screen readers", "حالة الترتيب ظاهرة لقارئ الشاشة"),
       },
     ),
     seo: insight(
@@ -715,8 +715,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     underTheHood: insight(
       [
         L(
-          "The accessibility tree is built from DOM + CSS — `display: none` and `visibility: hidden` remove nodes from AT; `aria-hidden=\"true\"` hides subtrees while leaving visual paint. Both differ from off-screen positioning.",
-          "Accessibility tree مبني من DOM + CSS — `display: none` و `visibility: hidden` بيشيلوا nodes من AT؛ `aria-hidden=\"true\"` بيخفي subtrees والـ visual paint لسه موجود. الاتنين مختلفين عن off-screen positioning.",
+          "The accessibility tree is built from DOM + CSS — `display: none` and `visibility: hidden` remove nodes from screen readers; `aria-hidden=\"true\"` hides subtrees while leaving visual paint. Both differ from off-screen positioning.",
+          "Accessibility tree مبني من DOM + CSS — `display: none` و `visibility: hidden` بيشيلوا nodes من screen readers؛ `aria-hidden=\"true\"` بيخفي subtrees والـ visual paint لسه موجود. الاتنين مختلفين عن off-screen positioning.",
         ),
         L(
           "Accessible name computation combines label, aria-label, aria-labelledby, and text content — role comes from implicit HTML semantics or explicit ARIA. Mismatch between visual and computed name fails audits.",
@@ -732,7 +732,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("display:none and visibility:hidden remove nodes from the accessibility tree", "display:none و visibility:hidden بيشيلوا العقد من accessibility tree"),
           L("Accessible name merges label, aria-label, and visible text", "الاسم الوصولي بيدمج label و aria-label والنص الظاهر"),
           L(":focus-visible shows rings for keyboard users, not every mouse click", ":focus-visible بيعرض حلقة لمستخدمي الكيبورد، مش كل كليك ماوس"),
-          L("aria-hidden hides subtrees from AT while pixels may still paint", "aria-hidden بيخفي أجزاء من AT والبيكسلات ممكن تفضل ظاهرة"),
+          L("aria-hidden hides a subtree from screen readers while pixels may still paint", "aria-hidden بيخفي جزء عن قارئ الشاشة والبيكسلات ممكن تفضل ظاهرة"),
         ],
         code: `/* Show focus for keyboard, subtle for mouse */
 :focus-visible {
@@ -763,7 +763,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("Color contrast ≥ 4.5:1 for `body` text (AA)", "Color contrast ≥ 4.5:1 لـ `body` text (AA)"),
           L("`aria`-live=\"polite|assertive\" for dynamic updates", "`aria`-live=\"polite|assertive\" للـ dynamic updates"),
           L("Manage `focus` on `route change` and `modal` open/close", "أدِر `focus` على `route change` و `modal` open/close"),
-          L("`Skip link` → #main before repeated `chrome`", "`Skip link` → #main قبل الـ `chrome` المتكرر"),
+          L("`Skip link` → #main before repeated header and nav", "`Skip link` → #main قبل الهيدر والقائمة المتكررين"),
         ],
         code: `<button type="button" aria-expanded="false" aria-controls="menu">
   Menu
@@ -780,13 +780,13 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "Accessibility overlaps SEO — semantic headings و alt text و descriptive links و valid HTML بيساعدوا crawlers و users. Google ما بتستخدم WCAG score ranking factor مباشر لكن usable pages بت correlate مع engagement.",
         ),
         L(
-          "Hidden content (`display:none`) is often de-emphasized in indexing — do not hide keyword blocks; `aria-hidden` on decorative chrome is fine when primary copy remains visible in DOM.",
-          "Hidden content (`display:none`) غالبًا de-emphasized في indexing — متخبيش keyword blocks؛ `aria-hidden` على decorative chrome عادي لما primary copy ظاهر في DOM.",
+          "Hidden content (`display:none`) is often weaker in indexing — do not hide keyword blocks. `aria-hidden` on decorative header bits is fine when the main text stays visible in the DOM.",
+          "المحتوى المخفي (`display:none`) غالبًا أضعف في الفهرسة — متخبيش كتل keywords. `aria-hidden` على زينة الهيدر عادي لما النص الأساسي ظاهر في الـ DOM.",
         ),
       ],
       {
         bullets: [
-          L("Same `HTML` `improvements` help `AT` and `crawlers`", "نفس `HTML` `improvements` بتساعد `AT` و `crawlers`"),
+          L("Same HTML improvements help screen readers and crawlers", "نفس تحسينات HTML بتساعد قارئ الشاشة والـ crawlers"),
           L("`Visible` main `content` — not only `aria` `labels`", "Main `content` ظاهر — مش `aria` `labels` بس"),
           L("Mobile usability and a11y share tap `target` sizing", "Mobile usability و a11y بيشاركوا tap `target` sizing"),
           L("Avoid `cloaking` — different `content` for `bots` vs `users`", "تجنب `cloaking` — `content` مختلف للـ `bots` vs `users`"),
@@ -800,15 +800,15 @@ export const htmlInsights: Record<string, ProductionInsights> = {
       [
         L(
           "Assistive tech reads the accessibility tree (name, role, value/state) — not your CSS paint. Bad markup can “look fine” while the tree is empty, wrong, or out of sync with the UI.",
-          "الـ `assistive tech` بتقرأ الـ accessibility tree (name و role و value/state) — مش رسم CSS. الـ markup الغلط ممكن “شكله حلو” والشجرة فاضية أو غلط أو مش متزامنة مع الـ UI.",
+          "قارئ الشاشة بيقرأ الـ accessibility tree (name و role و value/state) — مش رسم CSS. الـ markup الغلط ممكن “شكله حلو” والشجرة فاضية أو غلط أو مش متزامنة مع الـ UI.",
         ),
         L(
           "Accessible name order is usually: associated `<label>`, then `aria-labelledby`, then `aria-label`, then text contents. Fake controls make you rebuild focus, keys, and naming — native elements already do that.",
           "ترتيب الـ accessible name غالبًا: `<label>` مرتبط، بعدين `aria-labelledby`، بعدين `aria-label`، بعدين النص. الـ controls المزيفة بتخليك تعيد focus والمفاتيح والـ naming — الـ native elements بتعمل ده أصلًا.",
         ),
         L(
-          "`aria-hidden=\"true\"` hides a subtree from AT, but Tab can still land there unless you also hide/remove the controls. Positive `tabindex` almost always fights the DOM order people expect.",
-          "`aria-hidden=\"true\"` بيخفي subtree عن AT، بس Tab لسه ممكن يوقع هناك إلا لو خفيت/شلّت الـ controls كمان. `tabindex` الموجب غالبًا بيحارب ترتيب الـ DOM اللي الناس متوقعاه.",
+          "`aria-hidden=\"true\"` hides a subtree from screen readers, but Tab can still land there unless you also hide/remove the controls. Positive `tabindex` almost always fights the DOM order people expect.",
+          "`aria-hidden=\"true\"` بيخفي subtree عن screen readers، بس Tab لسه ممكن يوقع هناك إلا لو خفيت/شلّت الـ controls كمان. `tabindex` الموجب غالبًا بيحارب ترتيب الـ DOM اللي الناس متوقعاه.",
         ),
       ],
       {
@@ -822,8 +822,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
             "ترتيب accessible name: label مرتبط، بعدين aria-labelledby، بعدين aria-label، بعدين النص",
           ),
           L(
-            "aria-hidden removes a subtree from AT but does not remove elements from the tab order",
-            "aria-hidden بيشيل subtree من AT لكن ما بيشيلش العناصر من ترتيب Tab",
+            "aria-hidden removes a subtree from screen readers but does not remove elements from the tab order",
+            "aria-hidden بيشيل subtree من screen readers لكن ما بيشيلش العناصر من ترتيب Tab",
           ),
           L(
             "Positive tabindex reorders focus away from DOM sequence — breaking predictable keyboard traversal",
@@ -852,8 +852,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "فحوصات WCAG سريعة وأنت بتتفرّج: names مفهومة (2.4.4 / 4.1.2)، الكيبورد يشتغل (2.1.1)، focus ظاهر (2.4.7 / 2.4.11)، تخطّي البلوكات (2.4.1)، status messages (4.1.3).",
         ),
         L(
-          "If stuck: open the matching topic lesson, rebuild the pattern there, Tab through it, then try NVDA or VoiceOver. If AT and the visual disagree, fix the markup before adding more ARIA.",
-          "لو تلخبطت: افتح درس الموضوع، ابنِ النمط هناك، لف بـ Tab، وبعدين جرّب NVDA أو VoiceOver. لو AT والشكل مختلفين، صلّح الـ markup قبل ما تزود ARIA.",
+          "If stuck: open the matching topic lesson, rebuild the pattern there, Tab through it, then try NVDA or VoiceOver. If screen readers and the visual disagree, fix the markup before adding more ARIA.",
+          "لو تلخبطت: افتح درس الموضوع، ابنِ النمط هناك، لف بـ Tab، وبعدين جرّب NVDA أو VoiceOver. لو قارئ الشاشة والشكل مختلفين، صلّح الـ markup قبل ما تزود ARIA.",
         ),
       ],
       {
@@ -880,15 +880,15 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "الـ semantic HTML بيساعد الناس والـ crawlers: `<main>` واحد، headings صادقة، links حقيقية، و `alt` مفيد بيحسّنوا a11y والفهم.",
         ),
         L(
-          "Don’t cloak content. The same clear HTML should serve users, AT, and bots. Labels added only in the client often never help the first HTML response.",
-          "متعملش cloaking. نفس HTML الواضح يخدم المستخدمين و AT والـ bots. الـ labels اللي بتتضاف في الـ client بس غالبًا مش بتساعد أول استجابة HTML.",
+          "Don’t cloak content. The same clear HTML should serve users, screen readers, and bots. Labels added only in the client often never help the first HTML response.",
+          "متعملش cloaking. نفس HTML الواضح يخدم المستخدمين و screen readers والـ bots. الـ labels اللي بتتضاف في الـ client بس غالبًا مش بتساعد أول استجابة HTML.",
         ),
       ],
       {
         bullets: [
           L(
-            "Real links and headings help indexing and SR outlines",
-            "Links و headings حقيقية بتساعد indexing و SR outlines",
+            "Real links and headings help indexing and screen-reader outlines",
+            "Links و headings حقيقية بتساعد indexing و screen-reader outlines",
           ),
           L(
             "alt and lang help understanding — not only SEO tricks",
@@ -992,8 +992,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "النموذج الذهني: crawl → render → index. الاكتشاف بيستخدم sitemaps ولينكات داخلية و backlinks. الـ renderer ممكن يشغّل JS بعدين، لكن النص الأساسي اللي بيظهر بعد fetch من الـ client بس بيخاطر بفهرسة متأخرة أو نحيفة — خصوصًا على الموبايل.",
         ),
         L(
-          "SSR/SSG vs CSR: ship the document shell and primary content from the server; hydrate enhancements after. A client-only `<div id=\"root\">` delays discovery of titles, headings, and equity-passing links.",
-          "SSR/SSG مقابل CSR: اطلع document shell والمحتوى الأساسي من السيرفر؛ وبعدين hydrate للتحسينات. `<div id=\"root\">` فاضي على الـ client بيأخّر اكتشاف العناوين والـ headings واللينكات اللي بتمرّر equity.",
+          "SSR/SSG vs CSR: send the page shell and main text from the server; add extra UI after. A client-only `<div id=\"root\">` delays titles, headings, and real links.",
+          "SSR/SSG مقابل CSR: ابعت هيكل الصفحة والنص الأساسي من السيرفر؛ وبعدين زوّد الـ UI. `<div id=\"root\">` فاضي على الـ client بيأخّر العناوين والـ headings واللينكات الحقيقية.",
         ),
         L(
           "`rel=\"canonical\"` consolidates duplicates (params, trailing slash, mirrors). JSON-LD clarifies entity type for rich results but must mirror visible content. Page experience (LCP, INP, CLS) lives in Core Web Vitals.",
@@ -1023,8 +1023,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "تغيير عنوان المستند في SPA لازم يحدّث `<title>` — VoiceOver بتعلن التغيير؛ titles قديمة بعد client routing بتلخبط المستخدمين وكمان snippets البحث.",
         ),
         L(
-          "`lang` (and `hreflang` for locales) must match the real page language — wrong language hurts AT pronunciation and can confuse international targeting.",
-          "`lang` (و `hreflang` للغات) لازم يطابق لغة الصفحة الحقيقية — اللغة الغلط بتضر نطق AT وممكن تلخبط الاستهداف الدولي.",
+          "`lang` (and `hreflang` for locales) must match the real page language — wrong language hurts screen-reader pronunciation and can confuse international targeting.",
+          "`lang` (و `hreflang` للغات) لازم يطابق لغة الصفحة الحقيقية — اللغة الغلط بتضر نطق قارئ الشاشة وممكن تلخبط الاستهداف الدولي.",
         ),
         L(
           "`theme-color` and meta viewport affect readability — user zoom must remain enabled (`maximum-scale=1` disables pinch zoom and fails WCAG).",
@@ -1036,8 +1036,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           L("Update title on `route change` for `SPAs`", "حدّث title على `route change` للـ `SPAs`"),
           L("Never disable `zoom` in `viewport meta`", "متعطّلش `zoom` في `viewport meta`"),
           L("lang + hreflang match actual page language", "lang + hreflang يطابقوا لغة الصفحة الفعلية"),
-          L("`Meta` refresh redirects confuse `users` and `AT` — use `HTTP` 301", "`Meta` refresh بتلخبط `users` و `AT` — استخدم `HTTP` 301"),
-          L("`Descriptive` link text helps `AT` and `SEO` together", "نص اللينك الوصفي بيساعد `AT` و `SEO` مع بعض"),
+          L("`Meta` refresh redirects confuse users and screen readers — use `HTTP` 301", "`Meta` refresh بتلخبط المستخدمين وقارئ الشاشة — استخدم `HTTP` 301"),
+          L("Descriptive link text helps screen readers and SEO together", "نص اللينك الوصفي بيساعد قارئ الشاشة و SEO مع بعض"),
         ],
         code: `<meta name="viewport" content="width=device-width, initial-scale=1" />`,
         codeCaption: L("`Accessible` `viewport` — `zoom` allowed", "`Viewport` `accessible` — `zoom` مسموح"),
@@ -1046,8 +1046,8 @@ export const htmlInsights: Record<string, ProductionInsights> = {
     seo: insight(
       [
         L(
-          "Googlebot reads the initial HTML — `<title>`, canonical, meta description, and body copy in the first payload index reliably. Semantic landmarks and real `<a href>` links pass crawl equity; `javascript:` / `#` stubs and soft 404s (200 + “not found”) do not.",
-          "Googlebot بيقرأ أول HTML — `<title>` و canonical و meta description ونص الـ body في أول حمولة بيتفهرسوا بموثوقية. Landmarks و `<a href>` حقيقية بتمرّر crawl equity؛ stubs من نوع `javascript:` / `#` و soft 404s (200 + “not found”) لأ.",
+          "Googlebot reads the initial HTML — `<title>`, canonical, meta description, and body copy in the first payload index reliably. Semantic landmarks and real `<a href>` links help crawlers; `javascript:` / `#` stubs and fake 404s (200 + “not found”) do not.",
+          "Googlebot بيقرأ أول HTML — `<title>` و canonical و meta description ونص الـ body في أول حمولة بيتفهرسوا بموثوقية. Landmarks و `<a href>` حقيقية بتساعد الـ crawlers؛ stubs من نوع `javascript:` / `#` و صفحات 404 مزيفة (200 + “not found”) لأ.",
         ),
         L(
           "Title crafts the SERP headline; meta description often becomes the snippet (CTR, not a direct ranking factor). Keep both unique, honest, and aligned with the visible `<h1>` and opening paragraph.",
@@ -1230,7 +1230,7 @@ export const htmlInsights: Record<string, ProductionInsights> = {
           "الأداء والوصول متداخلين — الـ layout shifts بتلخبط مستخدمي الكيبورد و screen readers وسط القراءة. ترتيب focus ثابت محتاج layout ثابت.",
         ),
         L(
-          "Slow INP feels like a broken control. Users who rely on `assistive tech` already wait for announcements — do not add multi-hundred-ms input lag on top.",
+          "Slow INP feels like a broken control. Users who rely on screen readers already wait for announcements — do not add extra lag on top.",
           "INP البطيء بيحسّس إن الـ control مكسور. مستخدمو التقنيات المساعدة أصلًا بيستنوا إعلانات — متزودش تأخير إدخال بمئات الميلي ثانية.",
         ),
       ],
@@ -1493,8 +1493,8 @@ main.querySelector("h1")?.focus();`,
     accessibility: insight(
       [
         L(
-          "Security hardening must not make forms unusable. Precise `autocomplete` values let password managers and `assistive tech`nology identify a username, current password, new password, or one-time code without guessing.",
-          "تقوية الأمان مينفعش تخلي الـ forms غير قابلة للاستخدام. قيم `autocomplete` الدقيقة بتخلي password managers و`assistive tech`nology يميّزوا username أو current password أو new password أو one-time code من غير تخمين.",
+          "Security hardening must not make forms unusable. Precise `autocomplete` values let password managers and screen readers identify a username, current password, new password, or one-time code without guessing.",
+          "تقوية الأمان مينفعش تخلي الـ forms غير قابلة للاستخدام. قيم `autocomplete` الدقيقة بتخلي password managers وقارئ الشاشة يميّزوا username أو current password أو new password أو one-time code من غير تخمين.",
         ),
         L(
           "A sandboxed iframe still needs a descriptive `title`, and external links that open a new tab should communicate that change in visible context when it could surprise the user.",
@@ -1661,18 +1661,18 @@ main.querySelector("h1")?.focus();`,
     accessibility: insight(
       [
         L(
-          "Screen readers use `lang` for voice and pronunciation. Mark language switches on quotations and embedded English lessons so AT does not Arabic-pronounce English API names.",
-          "قارئات الشاشة بتستخدم `lang` للصوت والنطق. علّم تغيّر اللغة على الاقتباسات ودروس الإنجليزي المضمّنة عشان AT متنطقش أسماء API بالعربي.",
+          "Screen readers use `lang` for voice and pronunciation. Mark language switches on quotations and embedded English lessons so screen readers do not Arabic-pronounce English API names.",
+          "قارئات الشاشة بتستخدم `lang` للصوت والنطق. علّم تغيّر اللغة على الاقتباسات ودروس الإنجليزي المضمّنة عشان قارئ الشاشة متنطقش أسماء API بالعربي.",
         ),
         L(
-          "Caret movement and announcement order follow bidi. LTR inputs for email/OTP inside RTL pages keep digit reading and editing predictable for keyboard and AT users.",
-          "حركة الـ caret وترتيب الإعلان بيتبعوا bidi. حقول LTR للإيميل/OTP جوّه صفحات RTL بتخلي قراءة الأرقام والتعديل متوقعين للكيبورد و AT.",
+          "Caret movement and announcement order follow bidi. LTR inputs for email/OTP inside RTL pages keep digit reading and editing predictable for keyboard and screen-reader users.",
+          "حركة الـ caret وترتيب الإعلان بيتبعوا bidi. حقول LTR للإيميل/OTP جوّه صفحات RTL بتخلي قراءة الأرقام والتعديل متوقعين للكيبورد و screen readers.",
         ),
       ],
       {
         bullets: [
           L("lang on `root` + on language switches", "lang على الـ `root` وعلى تغيّرات اللغة"),
-          L("Don’t rely on visual `CSS` mirroring for `AT` order", "متعتمدش على عكس `CSS` البصري لترتيب `AT`"),
+          L("Don’t rely on visual CSS mirroring for screen-reader order", "متعتمدش على عكس CSS البصري لترتيب قارئ الشاشة"),
           L("Keep `focus` order matching reading order after dir flips", "خلّي ترتيب الـ `focus` يطابق القراءة بعد تقلّب dir"),
           L("Test with `NVDA`/`VoiceOver` in both EN and AR documents", "اختبر بـ `NVDA`/`VoiceOver` في مستندات EN و AR"),
         ],
@@ -1708,8 +1708,8 @@ main.querySelector("h1")?.focus();`,
           "HTML invalid بيشغّل parser repair — `<p><div></div></p>` بيقفل `<p>` بدري؛ `<a><button></button></a>` focus targets unpredictable. Validator errors بتتوقع DOM differences cross-browser.",
         ),
         L(
-          "Multiple `<main>` or skipped heading levels confuse accessibility tree builders — browsers do not error, but AT document maps become unreliable.",
-          "`<main>` متعددة أو skipped heading levels بتلخبط accessibility tree builders — browsers ما بتerrorش، لكن AT document maps بتبقى unreliable.",
+          "Multiple `<main>` or skipped heading levels confuse accessibility tree builders — browsers do not error, but screen-reader document maps become unreliable.",
+          "`<main>` متعددة أو skipped heading levels بتلخبط accessibility tree builders — browsers ما بتerrorش، لكن خرائط قارئ الشاشة تبقى مش موثوقة.",
         ),
         L(
           "Inline styles and presentational tags (`<font>`, `<center>`) still parse but fight CSS cascade — semantic HTML plus external CSS keeps render tree predictable.",
@@ -1731,8 +1731,8 @@ main.querySelector("h1")?.focus();`,
             "عناصر main متعددة بتلخبط landmark mapping في accessibility tree — المتصفحات ما بتطلعش error",
           ),
           L(
-            "Skipped heading levels break the document outline that AT uses for navigation",
-            "قفز في مستويات العناوين بيكسر document outline اللي AT بتستخدمه للتنقل",
+            "Skipped heading levels break the document outline that screen readers use for navigation",
+            "قفز في مستويات العناوين بيكسر document outline اللي screen readers بتستخدمه للتنقل",
           ),
         ],
         code: `<!-- Wrong -->
@@ -1774,8 +1774,8 @@ main.querySelector("h1")?.focus();`,
           "Client root فاضي `<div id=\"root\"></div>` من غير SSR classic SEO pitfall — Googlebot ممكن يفهرس thin pages. Duplicate `<title>`/description عبر routes يخفّ relevance.",
         ),
         L(
-          "Href=\"#\" and javascript: links do not pass crawl equity — use real URLs. Hidden H1 stacks or keyword stuffing in `<meta keywords>` (ignored) waste effort.",
-          "Href=\"#\" و javascript: links ما بيمرروش crawl equity — URLs حقيقية. Hidden H1 stacks أو keyword stuffing في `<meta keywords>` (ignored) مجهود ضايع.",
+          "Href=\"#\" and javascript: links do not help ranking — use real URLs. Hidden H1 stacks or keyword stuffing in `<meta keywords>` (ignored) waste effort.",
+          "Href=\"#\" و javascript: links مش بيساعدوا الترتيب — استخدم URLs حقيقية. Hidden H1 stacks أو keyword stuffing في `<meta keywords>` (ignored) مجهود ضايع.",
         ),
       ],
       {
@@ -1812,8 +1812,8 @@ main.querySelector("h1")?.focus();`,
             "الـ parse بيحوّل HTML لـ DOM و CSS لـ CSSOM، وبعدين يدمجهم في render tree للـ layout والرسم",
           ),
           L(
-            "Semantic landmarks become nodes in the accessibility tree that AT exposes as navigation shortcuts",
-            "landmarks الدلالية بتبقى nodes في accessibility tree اللي AT بتعرضها كاختصارات تنقل",
+            "Semantic landmarks become nodes in the accessibility tree that screen readers exposes as navigation shortcuts",
+            "landmarks الدلالية بتبقى nodes في accessibility tree اللي screen readers بتعرضها كاختصارات تنقل",
           ),
           L(
             "Native form controls wire directly to the browser submission and validation pipeline",
@@ -2259,6 +2259,316 @@ main.querySelector("h1")?.focus();`,
           L("`SSR` social `tags`", "وسوم سوشيال من السيرفر"),
           L("Unique title + `description` + `canonical`", "title + `description` + `canonical` فريدين"),
           L("Test with unfurl debuggers before launch", "اختبر بمعالجات unfurl قبل الإطلاق"),
+        ],
+      },
+    ),
+  },
+
+  "inline-vs-block": {
+    underTheHood: insight(
+      [
+        L(
+          "In CSS terms, block boxes participate in block layout (stacking vertically). Inline boxes join line boxes inside a paragraph. HTML’s default `display` for each tag is what beginners feel first.",
+          "بمصطلحات CSS، صناديق block بتدخل في block layout (تكديس رأسي). صناديق inline بتدخل في line boxes جوّه الفقرة. الـ `display` الافتراضي لكل tag هو اللي المبتدئ بيحسّه أول.",
+        ),
+        L(
+          "You can change display with CSS later (`inline-block`, flex, grid) — but start by picking the right HTML default so the document makes sense without stylesheets.",
+          "تقدر تغيّر العرض بـ CSS بعدين (`inline-block` و flex و grid) — لكن ابدأ بالافتراضي الصح في HTML عشان المستند يفضل مفهوم من غير ستايلشيت.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Block stacks · inline flows in a line", "Block بيتكدّس · inline بيمشي في سطر"),
+          L("Don’t put block tags inside inline tags", "متحطش وسوم block جوّه inline"),
+          L("`div` block box · `span` inline hook", "`div` صندوق block · `span` hook inline"),
+        ],
+        code: `<p>Text <a href="/">link</a> and <strong>stress</strong>.</p>
+<section><h2>Block section</h2></section>`,
+        codeCaption: L("Inline inside `p` · block `section`", "Inline جوّه `p` · `section` بلوك"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Screen readers mostly care about roles and names, not block vs inline. Still, broken nesting can confuse the accessibility tree after parser repair.",
+          "قارئات الشاشة بتهتم بالأدوار والأسماء أكتر من block مقابل inline. لكن التداخل الغلط ممكن يلغبط accessibility tree بعد إصلاح الـ parser.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Prefer semantic tags over empty `div`/`span` soup", "فضّل وسوم semantic عن شوربة `div`/`span`"),
+          L("Links and buttons should stay focusable interactive elements", "اللينكات والأزرار تفضل عناصر تفاعلية قابلة للتركيز"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Crawlers read the DOM. Clear block structure with headings helps outline detection more than decorative spans.",
+          "الزواحف بتقرأ الـ DOM. بنية block واضحة بعناوين بتساعد الـ outline أكتر من spans ديكور.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Use headings and landmarks for structure", "استخدم عناوين و landmarks للبنية"),
+          L("Don’t fake sections with only styled spans", "متعملش أقسام وهمية بـ spans متسيّقة بس"),
+        ],
+      },
+    ),
+  },
+
+  "classes-and-ids": {
+    underTheHood: insight(
+      [
+        L(
+          "`id` must be unique in the document — duplicate ids break `getElementById`, fragment links, and label association. Classes are a set of tokens for styling and querying many nodes.",
+          "`id` لازم يكون فريد في المستند — تكرار الـ ids بيكسر `getElementById` وروابط الأقسام وربط الـ label. الـ classes مجموعة tokens للتنسيق والاستعلام عن nodes كتير.",
+        ),
+        L(
+          "CSS specificity: `#id` beats `.class` beats element selectors. Prefer classes for reusable UI so you don’t paint yourself into an `#id` corner.",
+          "خصوصية CSS: `#id` أقوى من `.class` أقوى من element. فضّل classes لواجهة قابلة لإعادة الاستخدام عشان متتحشرش في `#id`.",
+        ),
+      ],
+      {
+        bullets: [
+          L("One unique `id` per page", "`id` واحد فريد لكل صفحة"),
+          L("Reuse `class` for shared look and behavior", "أعد استخدام `class` للشكل والسلوك المشترك"),
+          L("`label for` must match the control `id`", "`label for` لازم يطابق `id` الـ control"),
+        ],
+        code: `<label for="q">Search</label>
+<input id="q" class="input" name="q" />`,
+        codeCaption: L("`for`/`id` pair + shared class", "زوج `for`/`id` + class مشترك"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Ids glue labels to inputs and skip targets to landmarks. Missing or duplicated ids hurt keyboard and screen reader users first.",
+          "الـ ids بتربط labels بالـ inputs وأهداف التخطي بالـ landmarks. الـ ids الناقصة أو المكررة بتضر مستخدمي الكيبورد وقارئ الشاشة أول.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Never duplicate an `id`", "متكررش `id`"),
+          L("Keep names readable for teammates and screen readers testing", "خلّي الأسماء مقروءة للفريق واختبار screen readers"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Fragment ids (`#section`) help share deep links. Stable, meaningful ids beat auto-generated gibberish when content is cited.",
+          "معرفات الأقسام (`#section`) بتساعد مشاركة روابط عميقة. ids ثابتة ومعناها أوضح من نصوص عشوائية مولّدة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Use clear fragment ids for important sections", "استخدم ids واضحة للأقسام المهمة"),
+          L("Don’t rely on presentational class names for meaning", "معتمدش على أسماء class شكلية كمعنى"),
+        ],
+      },
+    ),
+  },
+
+  "html-browser-apis": {
+    underTheHood: insight(
+      [
+        L(
+          "Geolocation, Drag and Drop, and Web Storage are browser capabilities exposed to JavaScript. HTML supplies the controls and `draggable` hooks; permissions and quotas are enforced by the browser.",
+          "Geolocation و Drag and Drop و Web Storage قدرات متصفح متعرّضة لـ JavaScript. HTML بيدي عناصر التحكم و hooks الـ `draggable`؛ الأذونات والحصص بيفرضها المتصفح.",
+        ),
+        L(
+          "`localStorage` is synchronous and origin-scoped (~5MB typical). Large writes can jank the main thread — keep payloads small or move heavy data to IndexedDB later.",
+          "`localStorage` متزامن ومحدود بالـ origin (حوالي 5MB غالبًا). الكتابات الكبيرة ممكن تعلّق الـ main thread — خلّي البيانات صغيرة أو انقل التقيل لـ IndexedDB بعدين.",
+        ),
+      ],
+      {
+        bullets: [
+          L("APIs need feature detection + permission handling", "الـ APIs محتاجة feature detection + التعامل مع الإذن"),
+          L("`draggable` is HTML · events are JavaScript", "`draggable` من HTML · الأحداث من JavaScript"),
+          L("Web Storage is not encrypted — never store secrets", "Web Storage مش مشفّر — متخزنش أسرار"),
+        ],
+        code: `localStorage.setItem("username", "samira");
+const username = localStorage.getItem("username");`,
+        codeCaption: L("Tiny `localStorage` read/write", "قراءة/كتابة `localStorage` صغيرة"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Drag-and-drop UIs need keyboard and button alternatives. Geolocation prompts should explain purpose in visible UI copy, not only the browser chrome dialog.",
+          "واجهات السحب والإفلات محتاجة بدائل كيبورد وأزرار. طلبات الموقع لازم توضّح الغرض في نص ظاهر، مش في حوار المتصفح بس.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Provide non-drag ways to complete the same task", "وفّر طرق من غير سحب لنفس المهمة"),
+          L("Announce status updates with `role=\"status\"` when helpful", "أعلن تحديثات الحالة بـ `role=\"status\"` لما يفيد"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "These APIs don’t replace crawlable HTML content. Prefer progressive enhancement — core info in markup, APIs as extras.",
+          "الـ APIs دي مش بديل لمحتوى HTML قابل للزحف. فضّل التحسين التدريجي — المعلومات الأساسية في الـ markup، والـ APIs كإضافة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Keep critical content in HTML first", "خلّي المحتوى الحرج في HTML أولًا"),
+          L("Don’t gate SEO text behind storage or GPS", "متقفلش نص SEO ورا التخزين أو GPS"),
+        ],
+      },
+    ),
+  },
+
+  "html-comments": {
+    underTheHood: insight(
+      [
+        L(
+          "HTML comments are tokens the tokenizer recognizes (`<!--` … `-->`). They become Comment nodes in the DOM — visible in Elements, omitted from the rendered box tree. Nested `<!--` is a parse trap: the first `-->` closes the comment.",
+          "تعليقات HTML tokens الـ tokenizer بيعرفها (`<!--` … `-->`). بتبقى Comment nodes في الـ DOM — ظاهرة في Elements، ومش داخلة في شجرة الرسم. التعليق المتداخل فخ: أول `-->` بيقفل التعليق.",
+        ),
+        L(
+          "Character references (`&lt;`, `&amp;`) are decoded during parsing. Unescaped `<` in text can start a tag and silently eat content.",
+          "مراجع الحروف (`&lt;` و `&amp;`) بتتفك أثناء الـ parsing. `<` من غير escape في النص ممكن يفتح tag ويبلع محتوى.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Comment nodes exist in the DOM, not on screen", "Comment nodes في الـ DOM مش على الشاشة"),
+          L("Do not nest comments", "متعشّشش تعليقات"),
+          L("Escape `<` `&` in text with entities", "اعمل escape لـ `<` و `&` في النص بـ entities"),
+        ],
+        code: `<!-- Explain why, not what -->
+<p>Use &lt;section&gt; for sections.</p>`,
+        codeCaption: L("Comment + entity in the same source", "تعليق و entity في نفس المصدر"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Comments are not announced by screen readers. Do not hide required instructions in comments. `hidden` content is also skipped — put user-facing help in visible text or a real `<label>`.",
+          "التعليقات مش بتعلنها قارئات الشاشة. متخفيش تعليمات مهمة في تعليقات. المحتوى `hidden` كمان بيتتخطى — حط المساعدة في نص ظاهر أو `<label>` حقيقي.",
+        ),
+      ],
+      {
+        bullets: [
+          L("User help belongs in visible HTML", "مساعدة المستخدم في HTML ظاهر"),
+          L("Comments are for developers, not screen readers", "التعليقات للمطورين مش لـ screen readers"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Crawlers generally ignore comments. Do not stuff keywords in comments. Large commented-out blocks still download — delete dead markup instead of commenting megabytes.",
+          "الزواحف غالبًا بتجاهل التعليقات. متحشّيش keywords فيها. البلوكات المتعليقة الكبيرة لسه بتتحمّل — امسح الـ markup الميت بدل ما تعلّق ميجابايتات.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Comments do not rank pages", "التعليقات مش بترتب الصفحات"),
+          L("Delete unused markup rather than commenting it forever", "امسح الـ markup الغير مستخدم بدل تعليقه للأبد"),
+        ],
+      },
+    ),
+  },
+
+  "global-attributes": {
+    underTheHood: insight(
+      [
+        L(
+          "`hidden` maps to the CSS `display: none` used internally — the node stays in the DOM. `data-*` attributes become `dataset` in JavaScript (`data-lesson` → `element.dataset.lesson`). Boolean attributes are true if present, even as `hidden=\"false\"`.",
+          "`hidden` بيتوافق مع `display: none` داخليًا — العنصر يفضل في الـ DOM. خصائص `data-*` بتبقى `dataset` في JavaScript (`data-lesson` → `element.dataset.lesson`). الخصائص البوليانية true لو موجودة، حتى `hidden=\"false\"`.",
+        ),
+      ],
+      {
+        bullets: [
+          L("`hidden` keeps the node; CSS can still override in some cases", "`hidden` بيسيب العنصر؛ CSS أحيانًا يقدر يغلّب"),
+          L("`dataset` camelCases `data-foo-bar` → `fooBar`", "`dataset` بيحول `data-foo-bar` → `fooBar`"),
+          L("Positive `tabindex` creates a custom Tab sequence — avoid it", "`tabindex` موجب بيعمل ترتيب Tab مخصص — تجنّبه"),
+        ],
+        code: `<div hidden data-state="draft">…</div>`,
+        codeCaption: L("`hidden` + `data-*` on one node", "`hidden` + `data-*` على عنصر واحد"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "`title` tooltips are mouse- and often keyboard-unreliable — not a substitute for a `<label>`. `lang` on a subtree fixes pronunciation. `tabindex` on non-interactive `<div>`s creates fake controls without roles.",
+          "تلميحات `title` ضعيفة بالماوس والكيبورد — مش بديل لـ `<label>`. `lang` على جزء من الصفحة بيظبط النطق. `tabindex` على `<div>` غير تفاعلي بيعمل controls وهمية من غير roles.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Visible labels beat `title`", "الـ labels الظاهرة أحسن من `title`"),
+          L("Set `lang` on foreign-language quotes", "حط `lang` على الاقتباسات بلغة تانية"),
+          L("Prefer native controls over `tabindex` on divs", "فضّل controls أصلية عن `tabindex` على divs"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "`hidden` content is usually not treated as primary ranking copy. Don’t hide the real H1. `data-*` is ignored by search — fine for app state, useless as a ranking signal.",
+          "المحتوى `hidden` غالبًا مش بيتعتبر نص ترتيب أساسي. متخفيش الـ H1 الحقيقي. `data-*` بيتتجاهل في البحث — مناسب لحالة التطبيق، مش إشارة ترتيب.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Keep primary copy visible in HTML", "خلّي النص الأساسي ظاهر في HTML"),
+          L("`data-*` is for your app, not crawlers", "`data-*` لتطبيقك مش للزواحف"),
+        ],
+      },
+    ),
+  },
+
+  "html-native-interactive": {
+    underTheHood: insight(
+      [
+        L(
+          "`<template>` content lives in a DocumentFragment — not in the rendered tree. `popover` uses the top layer (like modal dialogs) with light dismiss. `inert` sets a subtree inert flag so hit-testing and screen readers skip it.",
+          "محتوى `<template>` يعيش في DocumentFragment — مش في شجرة الرسم. `popover` بيستخدم الـ top layer (زي الـ dialog المودال) مع إغلاق خفيف. `inert` بيعلّم جزء من الشجرة عشان الضغط و screen readers يتخطوه.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Clone `template.content` — do not innerHTML the template tag blindly", "انسخ `template.content` — متinnerHTML الـ template بعشوائية"),
+          L("Popover is top-layer; dialogs are still the right modal primitive", "Popover في الـ top layer؛ الـ dialog لسه الأداة الصح للمودال"),
+          L("`inert` is a blunt instrument — prefer dialog for modals", "`inert` أداة حادة — فضّل dialog للمودال"),
+        ],
+        code: `<button type="button" popovertarget="p">Open</button>
+<div id="p" popover>Hello</div>`,
+        codeCaption: L("Minimal native popover", "popover أصلي مختصر"),
+      },
+    ),
+    accessibility: insight(
+      [
+        L(
+          "Popovers still need a named button and a keyboard path (Esc, Tab). `inert` on the wrong ancestor can trap or skip users. Templates are invisible to screen readers until cloned into the document.",
+          "الـ popovers لسه محتاجة زرار باسم ومسار كيبورد (Esc و Tab). `inert` على جد أعلى غلط ممكن يحبس أو يتخطى المستخدم. الـ templates مش ظاهرة لـ screen readers لحد ما تتنسخ للمستند.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Use a real button to open popovers", "استخدم زرار حقيقي لفتح الـ popover"),
+          L("Don’t inert the control that must remain usable", "متعطلش الـ control اللي لازم يفضل شغال"),
+        ],
+      },
+    ),
+    seo: insight(
+      [
+        L(
+          "Content only inside `<template>` is not in the initial rendered document — crawlers may miss it. Prefer server-rendered HTML for indexable copy; use templates for repeated UI chrome.",
+          "المحتوى جوّه `<template>` بس مش في المستند المرسوم أولًا — الزواحف ممكن تضيعه. فضّل HTML من السيرفر للنص القابل للفهرسة؛ استخدم templates لواجهة متكررة.",
+        ),
+      ],
+      {
+        bullets: [
+          L("Indexable text belongs outside `<template>`", "النص القابل للفهرسة برة `<template>`"),
+          L("Popovers are UI chrome, not primary content", "الـ popovers واجهة مش محتوى أساسي"),
         ],
       },
     ),

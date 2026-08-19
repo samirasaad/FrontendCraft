@@ -12,7 +12,7 @@ export const legacyLessons: LegacyLesson[] = [
     content: {
       title: {
         en: "Document Anatomy",
-        ar: "تشريح المستند",
+        ar: "شكل صفحة HTML",
       },
       summary: {
         en: "Every page starts with `<!DOCTYPE html>`, then `<html>`, `<head>`, and `<body>`.",
@@ -20,16 +20,16 @@ export const legacyLessons: LegacyLesson[] = [
       },
       paragraphs: [
         {
-          en: "`<!DOCTYPE html>` must be the very first line — it tells the browser to use `modern HTML mode`. Without it, `quirks mode` can break `layout`.",
-          ar: "`<!DOCTYPE html>` لازم يكون أول سطر في الملف — بيقول للمتصفح يستخدم `modern HTML mode`. من غيره ممكن يدخل `quirks mode` ويكسر الـ `layout`.",
+          en: "`<!DOCTYPE html>` must be line 1. It tells the browser to use modern HTML. Skip it, and the page can look broken (`quirks mode`).",
+          ar: "`<!DOCTYPE html>` لازم يكون السطر الأول. بيقول للمتصفح يستخدم HTML الحديث. من غيره الصفحة ممكن تبوظ (`quirks mode`).",
         },
         {
-          en: "Inside `<head>`, two `<meta>` tags matter early: `charset=\"UTF-8\"` so text (including Arabic and emoji) reads correctly, and `name=\"viewport\"` so the page scales properly on phones.",
-          ar: "جوّه الـ `<head>`، وسمين `<meta>` مهمين بدري: `charset=\"UTF-8\"` عشان النص (بالعربي والإيموجي كمان) يتقرا صح، و `name=\"viewport\"` عشان الصفحة تتظبط على الموبايل.",
+          en: "Inside `<head>`, put two `<meta>` tags early: `charset=\"UTF-8\"` so Arabic and emoji read right, and `name=\"viewport\"` so the page fits phones.",
+          ar: "جوّه `<head>`، حط وسمين `<meta>` بدري: `charset=\"UTF-8\"` عشان العربي والإيموجي يتقروا صح، و `name=\"viewport\"` عشان الصفحة تتظبط على الموبايل.",
         },
         {
-          en: "`<html>` is the `root` — set `lang` on it (`lang=\"en\"` / `lang=\"ar\"`) so screen readers pick the right pronunciation. `<head>` holds `metadata`; `<body>` holds one `<h1>` plus everything users actually see.",
-          ar: "`<html>` هو الـ `root` — حط عليه `lang` (`lang=\"en\"` / `lang=\"ar\"`) عشان قارئات الشاشة تنطق صح. `<head>` للـ `metadata`؛ `<body>` فيه `<h1>` واحد وكل حاجة المستخدم بيشوفها.",
+          en: "`<html>` is the root. Set `lang` on it (`lang=\"en\"` or `lang=\"ar\"`) so screen readers speak the right language. `<head>` is extra info (title, meta). `<body>` is what people see — including one `<h1>`.",
+          ar: "`<html>` هو جذر الصفحة. حط عليه `lang` (`lang=\"en\"` أو `lang=\"ar\"`) عشان قارئ الشاشة ينطق صح. `<head>` معلومات زيادة (title و meta). `<body>` اللي الناس بتشوفه — وفيه `<h1>` واحد.",
         },
       ],
       keyPoints: [
@@ -54,6 +54,7 @@ export const legacyLessons: LegacyLesson[] = [
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- Page title shows in the tab -->
     <title>Hello HTML</title>
   </head>
   <body>
@@ -62,12 +63,12 @@ export const legacyLessons: LegacyLesson[] = [
   </body>
 </html>`,
       expectedOutput: {
-        en: "A page titled Hello HTML with heading Welcome",
-        ar: "صفحة عنوانها Hello HTML وفيها heading Welcome",
+        en: "A page titled Hello HTML with the heading Welcome",
+        ar: "صفحة عنوانها Hello HTML وفيها عنوان Welcome",
       },
       visualHint: {
-        en: "Build the shell: doctype → lang → charset → viewport → title → body.",
-        ar: "ابنِ الهيكل: doctype → lang → charset → viewport → title → body.",
+        en: "Build the page shell: doctype → lang → charset → viewport → title → body.",
+        ar: "ابنِ هيكل الصفحة: doctype → lang → charset → viewport → title → body.",
       },
     },
   },
@@ -82,42 +83,50 @@ export const legacyLessons: LegacyLesson[] = [
     content: {
       title: {
         en: "Semantic Structure",
-        ar: "البنية الـ `semantic`",
+        ar: "البنية الـ semantic",
       },
       summary: {
-        en: "`header`, `nav`, `main`, `section`, `article`, `footer` describe meaning — not just boxes.",
-        ar: "`header` و `nav` و `main` و `section` و `article` و `footer` بتوصف المعنى — مش بس صناديق.",
+        en: "`header`, `nav`, `main`, `section`, `article`, and `footer` name what a part of the page *is* — not only how it looks.",
+        ar: "`header` و `nav` و `main` و `section` و `article` و `footer` بيسمّوا جزء الصفحة إيه — مش الشكل بس.",
       },
       paragraphs: [
         {
-          en: "`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, and `<footer>` describe what a region *is* — not just how it looks. Browsers, screen readers, and search engines all read this structure.",
-          ar: "`<header>` و `<nav>` و `<main>` و `<section>` و `<article>` و `<footer>` بتوصف إيه طبيعة المنطقة — مش شكلها بس. المتصفح وقارئات الشاشة ومحركات البحث كلهم بيقروا البنية دي.",
+          en: "`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, and `<footer>` tell the browser what that part of the page is. Screen readers and search engines read this too.",
+          ar: "`<header>` و `<nav>` و `<main>` و `<section>` و `<article>` و `<footer>` بيقولوا للمتصفح الجزء ده إيه. قارئ الشاشة ومحرك البحث بيقروا كده كمان.",
         },
         {
-          en: "Use exactly one `<main>` per page for the primary content. `<section>` groups related content under a heading; `<article>` wraps something self-contained like a blog post or card.",
-          ar: "استخدم `<main>` واحد بس لكل صفحة للمحتوى الأساسي. `<section>` بتجمع محتوى مرتبط تحت `heading`؛ `<article>` بتلف حاجة مستقلة زي بوست أو كارت.",
+          en: "Use one `<main>` per page for the main content. `<section>` groups related things under a heading. `<article>` wraps something that can stand alone — like a post or a card.",
+          ar: "استخدم `<main>` واحد في الصفحة للمحتوى الأساسي. `<section>` بيجمّع حاجات ليها علاقة تحت عنوان. `<article>` بيلف حاجة تقدر تقف لوحدها — زي بوست أو كارت.",
         },
         {
-          en: "Don’t build a soup of nested `<div>`s when a semantic tag already fits — it costs nothing extra and gives screen reader users free navigation landmarks.",
-          ar: "متعملش شوربة `<div>` متداخلة لو في `semantic tag` مناسب أصلًا — مش هيكلفك حاجة زيادة، وهيدّي لمستخدمي قارئات الشاشة `landmarks` للتنقل ببلاش.",
+          en: "Don’t stack many `<div>`s when a real semantic tag fits. Semantic tags give screen readers free `landmarks` to jump around the page.",
+          ar: "متكترش `<div>` لو في tag semantic مناسب. الوسوم دي بتدي قارئ الشاشة `landmarks` يقفز بيها في الصفحة ببلاش.",
+        },
+        {
+          en: "Most of these tags are **block** — they start on a new line and take the full width (`div`, `p`, `header`, `main`). **Inline** tags sit inside a line of text (`span`, `a`, `strong`). Use block for page parts, inline for bits of text.",
+          ar: "معظم الوسوم دي **block** — بتبدأ سطر جديد وبتاخد العرض كله (`div` و `p` و `header` و `main`). وسوم **inline** بتقعد جوّه سطر النص (`span` و `a` و `strong`). استخدم block لأجزاء الصفحة، و inline لقطع النص.",
         },
       ],
       keyPoints: [
         {
-          en: "Semantics = meaning for tools and people",
-          ar: "`Semantics` = معنى للأدوات والناس",
+          en: "Semantic = meaning for tools and people",
+          ar: "Semantic = معنى للأدوات وللناس",
         },
         {
           en: "One `<main>` per page",
           ar: "`<main>` واحد لكل صفحة",
         },
         {
-          en: "Choose tags by role, not by looks",
-          ar: "اختار الـ `tags` حسب الدور، مش الشكل",
+          en: "Pick tags by job, not by looks",
+          ar: "اختار الـ tags حسب الشغل، مش الشكل",
         },
         {
-          en: "Semantic tags give screen readers free navigation landmarks",
-          ar: "الـ `semantic tags` بتدّي قارئات الشاشة `landmarks` تنقل ببلاش",
+          en: "Semantic tags give screen readers free landmarks",
+          ar: "الوسوم الـ semantic بتدي قارئ الشاشة landmarks ببلاش",
+        },
+        {
+          en: "Block = sections of the page · Inline = pieces of text",
+          ar: "Block = أقسام الصفحة · Inline = قطع النص",
         },
       ],
       code: `<body>
@@ -156,27 +165,27 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "النص والعناوين",
       },
       summary: {
-        en: "Headings make hierarchy. Paragraphs and inline tags shape readable text.",
-        ar: "الـ `headings` بتعمل `hierarchy`. الـ `paragraphs` ووسوم الـ `inline` بتشكّل نص مقروء.",
+        en: "Headings make the page outline. Paragraphs hold the story.",
+        ar: "العناوين بتعمل outline الصفحة. الفقرات بتشيل الكلام.",
       },
       paragraphs: [
         {
-          en: "`<h1>` through `<h6>` build the page outline, from most to least important. Use them in order — don’t skip from `<h1>` to `<h4>` just to get a smaller size; that’s a job for CSS.",
-          ar: "من `<h1>` لـ `<h6>` بيبنوا `outline` الصفحة، من الأهم للأقل. استخدمهم بالترتيب — متقفزش من `<h1>` لـ `<h4>` عشان بس الحجم يصغر؛ ده شغل الـ `CSS`.",
+          en: "`<h1>` to `<h6>` go from most important to least. Use them in order. Don’t jump from `<h1>` to `<h4>` only to make text smaller — that is a CSS job.",
+          ar: "من `<h1>` لـ `<h6>` من الأهم للأقل. استخدمهم بالترتيب. متقفزش من `<h1>` لـ `<h4>` عشان الخط يصغر بس — ده شغل CSS.",
         },
         {
-          en: "`<p>` wraps a paragraph of text. Keep one idea per paragraph so both the reading flow and the document outline stay easy to follow.",
-          ar: "`<p>` بتلف فقرة نص. خلّي فكرة واحدة لكل فقرة عشان القراءة والـ `outline` يفضلوا سهل متابعتهم.",
+          en: "`<p>` is one paragraph. Keep one idea in each `<p>` so the page is easy to read.",
+          ar: "`<p>` فقرة واحدة. خلّي فكرة واحدة في كل `<p>` عشان الصفحة تتقرا بسهولة.",
         },
         {
-          en: "Headings and paragraphs are the skeleton of readable content — inline formatting tags like `<strong>` and `<em>` build on top of them in the next lesson.",
-          ar: "الـ `headings` والـ `paragraphs` هما هيكل المحتوى المقروء — وسوم التنسيق الـ `inline` زي `<strong>` و `<em>` بتبني عليهم في الدرس اللي بعده.",
+          en: "Headings and paragraphs are the skeleton. Next lesson adds inline tags like `<strong>` and `<em>`.",
+          ar: "العناوين والفقرات هما الهيكل. الدرس الجاي بيضيف وسوم inline زي `<strong>` و `<em>`.",
         },
       ],
       keyPoints: [
         {
-          en: "Heading order = document outline",
-          ar: "ترتيب الـ `headings` = `document outline`",
+          en: "Heading order = page outline",
+          ar: "ترتيب العناوين = outline الصفحة",
         },
         {
           en: "Style with CSS, structure with HTML",
@@ -218,21 +227,25 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "تنسيق النص",
       },
       summary: {
-        en: "Common inline (and quote) tags that add meaning — not only bold or italic looks.",
-        ar: "أشهر وسوم الـ `inline` (والاقتباس) اللي بتضيف معنى — مش شكل `bold` أو `italic` بس.",
+        en: "Inline tags that add meaning — not only bold or italic looks.",
+        ar: "وسوم inline بتضيف معنى — مش شكل bold أو italic بس.",
       },
       paragraphs: [
         {
-          en: "Prefer semantic tags: `<strong>` for importance, `<em>` for stress. `<b>` and `<i>` are purely stylistic — use them only when there is no extra meaning to convey.",
-          ar: "فضّل وسوم الـ `semantic`: `<strong>` للأهمية، `<em>` للتشديد. `<b>` و `<i>` للشكل بس — استخدمهم لما مفيش معنى زيادة عايز توصله.",
+          en: "Use `<strong>` when the words are important. Use `<em>` when you stress a word. `<b>` and `<i>` are look-only — use them when there is no extra meaning.",
+          ar: "استخدم `<strong>` لما الكلام مهم. استخدم `<em>` لما بتشدّد على كلمة. `<b>` و `<i>` للشكل بس — استخدمهم لما مفيش معنى زيادة.",
         },
         {
-          en: "Edits and highlights: `<mark>` highlights relevance, `<del>` / `<ins>` show removals and additions, and `<s>` marks text that’s no longer accurate. Avoid `<u>` for plain styling — an underline usually reads as a link.",
-          ar: "تعديلات وتمييز: `<mark>` للتمييز، `<del>` / `<ins>` للحذف والإضافة، و `<s>` لنص بقى غير صحيح. تجنّب `<u>` للتزيين بس — الخط تحت النص بيتقرا غالبًا كإنه `link`.",
+          en: "`<mark>` highlights text. `<del>` / `<ins>` show delete and add. `<s>` marks text that is no longer true. Don’t use `<u>` just for style — underline looks like a link.",
+          ar: "`<mark>` بيظلّل النص. `<del>` / `<ins>` بيبينوا حذف وإضافة. `<s>` لنص بقى غلط. متستخدمش `<u>` للشكل بس — الخط تحت النص باين زي لينك.",
         },
         {
-          en: "For quotes, `<q>` handles a short inline quote and `<blockquote>` a longer one, both paired with `<cite>` for the source. For technical bits, `<code>` and `<abbr title=\"...\">` add real meaning beyond plain text.",
-          ar: "للاقتباس، `<q>` لاقتباس قصير جوّه السطر، و `<blockquote>` للأطول، واتنينهم بيترافقوا مع `<cite>` للمصدر. وللحاجات التقنية، `<code>` و `<abbr title=\"...\">` بيضيفوا معنى حقيقي أكتر من نص عادي.",
+          en: "`<q>` is a short quote in a line. `<blockquote>` is a longer quote. Add `<cite>` for the source. `<code>` and `<abbr title=\"...\">` mark code and short names.",
+          ar: "`<q>` اقتباس قصير جوّه السطر. `<blockquote>` اقتباس أطول. ضيف `<cite>` للمصدر. `<code>` و `<abbr title=\"...\">` للكود والأسماء المختصرة.",
+        },
+        {
+          en: "`<span>` has no meaning by itself. Use it only as a hook for CSS or JavaScript. Prefer `<strong>`, `<em>`, `<mark>`, or `<code>` when the words mean something.",
+          ar: "`<span>` ملهوش معنى لوحده. استخدمه بس كـ hook لـ CSS أو JavaScript. فضّل `<strong>` و `<em>` و `<mark>` أو `<code>` لما الكلام ليه معنى.",
         },
       ],
       keyPoints: [
@@ -250,7 +263,11 @@ export const legacyLessons: LegacyLesson[] = [
         },
         {
           en: "Don’t underline plain text to look like a link",
-          ar: "متظللش نص عادي عشان يبان `link`",
+          ar: "متحطش خط تحت نص عادي عشان يبان لينك",
+        },
+        {
+          en: "`<span>` = styling hook · semantic tags = meaning",
+          ar: "`<span>` = hook للتنسيق · الوسوم الـ semantic = المعنى",
         },
       ],
       code: `<p>
@@ -266,6 +283,10 @@ export const legacyLessons: LegacyLesson[] = [
 <p>
   <mark>Remember</mark>: <del>old copy</del> <ins>new copy</ins>.
   <q>Short quote</q> — <cite>MDN</cite>
+</p>
+<p>
+  Price: <span class="price">$19</span>
+  <!-- span only for CSS — no extra meaning -->
 </p>
 <blockquote>
   <p>Longer quoted passage for articles and docs.</p>
@@ -301,16 +322,16 @@ export const legacyLessons: LegacyLesson[] = [
       },
       paragraphs: [
         {
-          en: "Use descriptive link text — avoid “click here”. `target=\"_blank\"` should include `rel=\"noopener noreferrer\"`.",
-          ar: "اكتب نص لينك واضح — متكتبش “اضغط هنا”. لو `target=\"_blank\"` حط `rel=\"noopener noreferrer\"`.",
+          en: "Write clear link text — not “click here”. If you use `target=\"_blank\"`, also add `rel=\"noopener noreferrer\"`.",
+          ar: "اكتب نص اللينك واضح — مش “اضغط هنا”. لو استخدمت `target=\"_blank\"`، حط كمان `rel=\"noopener noreferrer\"`.",
         },
         {
-          en: "`alt` describes the image for accessibility and when the image fails to load. Decorative images can use `alt=\"\"`.",
-          ar: "`alt` بيوصف الصورة للـ `accessibility` ولما الصورة متتحملش. الصور الديكور ممكن `alt=\"\"`.",
+          en: "`alt` describes the image for screen readers and when the image fails to load. Pure decoration can use `alt=\"\"`.",
+          ar: "`alt` بيوصف الصورة لقارئ الشاشة ولما الصورة متتحملش. الصورة الديكور بس ممكن `alt=\"\"`.",
         },
         {
-          en: "Prefer modern formats (`webp`/`avif`) when you control assets, and always set width/height or CSS to reduce layout shift.",
-          ar: "فضّل صيغ حديثة (`webp`/`avif`) لما تتحكم في الأصول، وحدد `width`/`height` أو `CSS` تقلل `layout shift`.",
+          en: "If you pick the file, prefer `webp` or `avif`. Always set `width` and `height` (or CSS) so the page does not jump (`layout shift`).",
+          ar: "لو إنت اللي بتختار الملف، فضّل `webp` أو `avif`. دايمًا حط `width` و `height` (أو CSS) عشان الصفحة متقفزش (`layout shift`).",
         },
       ],
       keyPoints: [
@@ -319,8 +340,8 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "`href` ونص لينك ليهم معنى",
         },
         {
-          en: "`alt` is required thinking, not optional decoration",
-          ar: "`alt` تفكير أساسي، مش زينة اختيارية",
+          en: "Always think about `alt` — it is not extra decoration",
+          ar: "فكّر في `alt` دايمًا — مش زينة زيادة",
         },
         {
           en: "Secure external tabs with `rel`",
@@ -366,34 +387,34 @@ export const legacyLessons: LegacyLesson[] = [
       },
       paragraphs: [
         {
-          en: "`<ul>` makes an unordered (bulleted) list — use it when order doesn’t matter, like a set of features. `<ol>` makes an ordered (numbered) list — use it when order matters, like steps in a recipe. Either way, each item is an `<li>`.",
-          ar: "`<ul>` بتعمل قائمة `unordered` (نقط) — استخدمها لما الترتيب مش مهم، زي مجموعة مميزات. `<ol>` بتعمل قائمة `ordered` (أرقام) — استخدمها لما الترتيب مهم، زي خطوات وصفة. في الحالتين، كل عنصر `<li>`.",
+          en: "`<ul>` is a bullet list — use it when order does not matter. `<ol>` is a numbered list — use it for steps. Each item is an `<li>`.",
+          ar: "`<ul>` قائمة نقط — استخدمها لما الترتيب مش مهم. `<ol>` قائمة أرقام — استخدمها للخطوات. كل عنصر `<li>`.",
         },
         {
-          en: "Nest a list inside an `<li>` when you need sub-steps, but keep nesting shallow. The `start` attribute on `<ol>` can change where numbering begins.",
-          ar: "تقدر تعشّش `list` جوّه `<li>` لما تحتاج خطوات فرعية، بس خليه `shallow`. خاصية `start` على `<ol>` تقدر تغيّر بداية الترقيم.",
+          en: "You can put a list inside an `<li>` for sub-steps, but don’t nest too deep. On `<ol>`, `start` can change the first number.",
+          ar: "تقدر تحط قائمة جوّه `<li>` لخطوات فرعية، بس متعمّقش أوي. على `<ol>`، `start` يقدر يغيّر أول رقم.",
         },
         {
-          en: "`<dl>`, `<dt>`, `<dd>` are a third kind of list — built for term/definition pairs, like a glossary.",
-          ar: "`<dl>` و `<dt>` و `<dd>` نوع تالت من القوائم — مصمم لأزواج مصطلح/تعريف، زي القاموس.",
+          en: "`<dl>`, `<dt>`, and `<dd>` are for a word and its meaning — like a small glossary.",
+          ar: "`<dl>` و `<dt>` و `<dd>` للكلمة ومعناها — زي قاموس صغير.",
         },
       ],
       keyPoints: [
         {
-          en: "`ul` = unordered, `ol` = ordered",
-          ar: "`ul` = `unordered`، `ol` = `ordered`",
+          en: "`ul` = bullets, `ol` = numbers",
+          ar: "`ul` = نقط، `ol` = أرقام",
         },
         {
           en: "Only `<li>` directly inside `ul`/`ol`",
           ar: "جوّه `ul`/`ol` حط `<li>` مباشرة بس",
         },
         {
-          en: "`dl` for term → definition pairs",
-          ar: "`dl` لأزواج `term` → `definition`",
+          en: "`dl` for a word and its meaning",
+          ar: "`dl` للكلمة ومعناها",
         },
         {
-          en: "Keep nested lists shallow",
-          ar: "خلّي القوائم المتداخلة `shallow`",
+          en: "Don’t nest lists too deep",
+          ar: "متعمّقش القوائم أوي",
         },
       ],
       code: `<ul>
@@ -432,61 +453,88 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "النماذج والـ `inputs`",
       },
       summary: {
-        en: "Forms collect data. Labels, names, and input types make them usable and accessible.",
-        ar: "الـ `forms` بتجمع `data`. الـ `labels` والـ `names` وأنواع الـ `input` بتخليها `usable` و `accessible`.",
+        en: "Forms collect data. A `<label>`, a `name`, and the right `type` make them easy to use.",
+        ar: "الـ form بتجمع بيانات. `<label>` و `name` و `type` الصح بيخلّوها سهلة.",
       },
       paragraphs: [
         {
-          en: "Wrap controls in `<form>`. Every control needs a `<label>` — connect it with matching `for`/`id`, or wrap the input inside the `<label>` itself.",
-          ar: "حط الـ `controls` جوّه `<form>`. كل `control` محتاج `<label>` — اربطه بـ `for`/`id` متطابقين، أو لف الـ `input` جوّه الـ `<label>` نفسه.",
+          en: "Put fields inside `<form>`. Every field needs a `<label>` — match `for` with the input `id`, or wrap the input inside the `<label>`.",
+          ar: "حط الحقول جوّه `<form>`. كل حقل محتاج `<label>` — طابق `for` مع `id` الـ input، أو لف الـ input جوّه الـ `<label>`.",
         },
         {
-          en: "`name` is what actually gets submitted, so don’t skip it. Choose `type` on purpose too — `email`, `password`, `number`, `checkbox`, `radio`, `file`… each changes the keyboard and behavior users get.",
-          ar: "`name` هو اللي فعلًا بيتبعت، فمتنساهوش. واختار `type` بوعي كمان — `email` و `password` و `number` و `checkbox` و `radio` و `file`… كل واحد بيغيّر الكيبورد والسلوك اللي المستخدم بيشوفه.",
+          en: "`name` is what the server receives — don’t skip it. Pick `type` on purpose: `email`, `password`, `number`, `checkbox`, `radio`, `file`. Each one changes the keyboard and how the field works.",
+          ar: "`name` هو اللي السيرفر بياخده — متنساهوش. اختار `type` بوعي: `email` و `password` و `number` و `checkbox` و `radio` و `file`. كل واحد بيغيّر الكيبورد وطريقة الشغل.",
         },
         {
           en: "Buttons need a `type` too: `submit` sends the form (the default inside `<form>`), `button` does nothing on its own and waits for JavaScript, and `reset` clears every field back to its default.",
           ar: "الأزرار كمان محتاجة `type`: `submit` بيبعت الفورم (وهو الافتراضي جوّه `<form>`)، `button` مبيعملش حاجة لوحده ومستني `JavaScript`، و `reset` بيمسح كل الحقول لقيمتها الافتراضية.",
         },
         {
-          en: "Attributes like `required`, `min`, `max`, and `pattern` give free, built-in validation before any JavaScript runs.",
-          ar: "خصائص زي `required` و `min` و `max` و `pattern` بتديك التحقق من البيانات (Input Validation) جاهز ببلاش قبل أي `JavaScript`.",
+          en: "Handy beginner attributes: `placeholder` (hint text), `value` (starting value), `checked` (for checkboxes/radios), `disabled` / `readonly`, `maxlength` / `minlength`, and `required`. On the form itself, `action` is where data goes and `method` is usually `get` or `post`.",
+          ar: "خصائص مفيدة للمبتدئ: `placeholder` (نص تلميح)، `value` (قيمة البداية)، `checked` (للـ checkbox/radio)، `disabled` / `readonly`، `maxlength` / `minlength`، و `required`. على الفورم نفسه، `action` هو مكان البيانات و `method` غالبًا `get` أو `post`.",
+        },
+        {
+          en: "Group related radios or checkboxes with `<fieldset>` and a `<legend>` — screen readers announce the group name. Next lesson goes deeper on `inputmode`, `autocomplete`, and `pattern` for better mobile UX.",
+          ar: "جمّع الـ radios أو checkboxes المرتبطة بـ `<fieldset>` و `<legend>` — قارئ الشاشة بيعلن اسم المجموعة. الدرس الجاي بيتعمّق في `inputmode` و `autocomplete` و `pattern` لتجربة موبايل أحسن.",
         },
       ],
       keyPoints: [
         {
-          en: "Label every input",
-          ar: "اعمل `label` لكل `input`",
+          en: "Label every input (`for` + `id` or wrap)",
+          ar: "اعمل `label` لكل `input` (`for` + `id` أو لف)",
         },
         {
-          en: "`name` matters for submission, `type` matters for behavior",
-          ar: "`name` مهم في الـ `submission`، و `type` مهم في السلوك",
+          en: "`name` for submit · `type` for behavior",
+          ar: "`name` للإرسال · `type` للسلوك",
         },
         {
-          en: "Buttons need an explicit `type`: `submit`, `button`, or `reset`",
-          ar: "الأزرار محتاجة `type` واضح: `submit` أو `button` أو `reset`",
+          en: "Buttons need `type`: `submit`, `button`, or `reset`",
+          ar: "الأزرار محتاجة `type`: `submit` أو `button` أو `reset`",
         },
         {
-          en: "Native validation attributes help before JavaScript",
-          ar: "خصائص التحقق من البيانات الأصلية بتساعد قبل `JavaScript`",
+          en: "Learn `placeholder`, `value`, `checked`, `disabled`, `maxlength`, `required`",
+          ar: "اتعلّم `placeholder` و `value` و `checked` و `disabled` و `maxlength` و `required`",
+        },
+        {
+          en: "`action` + `method` on `<form>` control where data goes",
+          ar: "`action` + `method` على `<form>` بيحددوا فين بتروح البيانات",
+        },
+        {
+          en: "Related radios/checkboxes: `<fieldset>` + `<legend>`",
+          ar: "Radios/checkboxes مرتبطة: `<fieldset>` + `<legend>`",
         },
       ],
       code: `<form action="/signup" method="post">
   <label for="email">Email</label>
-  <input id="email" name="email" type="email" required />
+  <input
+    id="email"
+    name="email"
+    type="email"
+    placeholder="you@example.com"
+    maxlength="120"
+    required
+  />
 
-  <label for="pass">Password</label>
-  <input id="pass" name="password" type="password" minlength="8" required />
+  <fieldset>
+    <legend>Plan</legend>
+    <label><input type="radio" name="plan" value="free" /> Free</label>
+    <label><input type="radio" name="plan" value="pro" /> Pro</label>
+  </fieldset>
+
+  <label>
+    <input type="checkbox" name="terms" value="yes" required />
+    I agree to the terms
+  </label>
 
   <button type="submit">Create account</button>
 </form>`,
       expectedOutput: {
-        en: "Accessible signup form with email + password",
-        ar: "فورم تسجيل accessible فيه email + password",
+        en: "Signup form with email, plan radios, and a checkbox",
+        ar: "فورم تسجيل فيه email و radios للخطة و checkbox",
       },
       visualHint: {
-        en: "Watch focus move label → email → password → checkbox → submit.",
-        ar: "اتفرّج على الـ `focus` وهو بيمشي `label` → `email` → `password` → `checkbox` → `submit`.",
+        en: "Watch focus move label → email → plan → checkbox → submit.",
+        ar: "اتفرّج على الـ focus وهو بيمشي label → email → الخطة → checkbox → submit.",
       },
     },
   },
@@ -513,12 +561,16 @@ export const legacyLessons: LegacyLesson[] = [
           ar: "البنية: `<table>` و `<thead>` و `<tbody>` و `<tr>` و `<th>` و `<td>`. استخدم `<caption>` لعنوان الجدول.",
         },
         {
-          en: "`scope=\"col\"` / `scope=\"row\"` on `<th>` clarifies headers for `assistive tech`.",
-          ar: "`scope=\"col\"` / `scope=\"row\"` على `<th>` بيوضّح الـ `headers` لتقنيات المساعدة.",
+          en: "`scope=\"col\"` / `scope=\"row\"` on `<th>` tells screen readers which header goes with which cell.",
+          ar: "`scope=\"col\"` / `scope=\"row\"` على `<th>` بيقول لقارئ الشاشة أنهي عنوان مع أنهي خلية.",
         },
         {
-          en: "For layout grids, use CSS — tables for comparing rows of related values.",
-          ar: "لـ `layout grids` استخدم `CSS` — الـ `tables` لمقارنة صفوف قيم مرتبطة.",
+          en: "For page layout, use CSS. Use tables only to compare rows of related data.",
+          ar: "لتخطيط الصفحة استخدم CSS. استخدم tables بس عشان تقارن صفوف بيانات ليها علاقة.",
+        },
+        {
+          en: "Beginner styling tips (CSS, not more HTML): use `border-collapse: collapse` so cell borders look clean, add padding on `th`/`td`, and give `th` a light background. Wrap wide tables in a scrollable container so mobile users can still read them. Don’t use tables to build your whole page layout.",
+          ar: "نصائح تنسيق للمبتدئ (CSS مش HTML زيادة): استخدم `border-collapse: collapse` عشان الحدود تبقى مرتبة، زوّد padding على `th`/`td`، وادي `th` خلفية فاتحة. لف الجداول العريضة في حاوية scroll عشان الموبايل يقراها. متستخدمش tables لبناء layout الصفحة كلها.",
         },
       ],
       keyPoints: [
@@ -534,8 +586,18 @@ export const legacyLessons: LegacyLesson[] = [
           en: "Separate head and body sections",
           ar: "افصل أقسام `head` و `body`",
         },
+        {
+          en: "Style with CSS: `border-collapse`, padding, header background",
+          ar: "ستايل بـ CSS: `border-collapse` و padding وخلفية الهيدر",
+        },
       ],
-      code: `<table>
+      code: `<style>
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #cbd5e1; padding: 0.5rem 0.75rem; }
+  th { background: #e2e8f0; text-align: start; }
+</style>
+
+<table>
   <caption>Scoreboard</caption>
   <thead>
     <tr>
@@ -574,25 +636,25 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "إمكانية الوصول (`a11y`) وقارئات الشاشة",
       },
       summary: {
-        en: "Dedicated a11y lesson — how NVDA/VoiceOver hear your HTML, plus ARIA, keyboard, and focus rules you can ship.",
-        ar: "درس `a11y` مخصص — إزاي `NVDA`/`VoiceOver` بيسمعوا `HTML`، وكمان قواعد `ARIA` والكيبورد والـ `focus` تقدر تنشرها.",
+        en: "How screen readers hear your HTML — plus ARIA, keyboard, and focus rules you can ship.",
+        ar: "إزاي قارئ الشاشة بيسمع HTML — وكمان قواعد ARIA والكيبورد والـ focus تقدر تنشرها.",
       },
       paragraphs: [
         {
-          en: "Screen readers (NVDA, VoiceOver, JAWS) walk the accessibility tree built from your DOM — not from what CSS paints. Native elements (`button`, `a`, `label`, landmarks) expose name, role, and value for free.",
-          ar: "قارئات الشاشة (`NVDA` و `VoiceOver` و `JAWS`) بتمشي على `accessibility tree` من الـ `DOM` — مش من شكل `CSS`. العناصر الأصلية (`button` و `a` و `label` والـ `landmarks`) بتعرض الاسم والدور والقيمة ببلاش.",
+          en: "Screen readers (NVDA, VoiceOver, JAWS) read the accessibility tree from your DOM — not from CSS looks. Native tags (`button`, `a`, `label`, landmarks) already give name, role, and value.",
+          ar: "قارئ الشاشة (NVDA و VoiceOver و JAWS) بيقرأ accessibility tree من الـ DOM — مش من شكل CSS. الوسوم الأصلية (`button` و `a` و `label` و landmarks) بتدي الاسم والدور والقيمة جاهزين.",
         },
         {
-          en: "The keyboard path is non-negotiable: `Tab` order, `Enter`/`Space` to activate, `Escape` to dismiss dialogs. Every mouse action needs a keyboard equivalent and a visible focus style.",
-          ar: "مسار الكيبورد أساسي: ترتيب `Tab`، `Enter`/`Space` للتفعيل، `Escape` لقفل الـ `dialogs`. كل فعل ماوس محتاج بديل كيبورد و `focus` ظاهر.",
+          en: "Keyboard must work: `Tab` order, `Enter`/`Space` to activate, `Escape` to close a dialog. Every mouse action needs a keyboard way, and a visible focus style.",
+          ar: "الكيبورد لازم يشتغل: ترتيب `Tab`، `Enter`/`Space` للتفعيل، `Escape` لقفل الـ dialog. كل حركة ماوس محتاجة طريقة كيبورد، و focus ظاهر.",
         },
         {
-          en: "ARIA supplements native HTML — it never replaces it. Reach for `aria-expanded`, `aria-live`, or `aria-labelledby` only when no native element fits, and keep one `<main>` with honest heading ranks.",
-          ar: "`ARIA` بتكمّل `HTML` الأصلي — مش بتستبدله. استخدم `aria-expanded` أو `aria-live` أو `aria-labelledby` لما مفيش عنصر أصلي يأدي الغرض، وخلّي `<main>` واحد بمراتب `headings` صادقة.",
+          en: "ARIA adds to native HTML — it does not replace it. Use `aria-expanded`, `aria-live`, or `aria-labelledby` only when no native tag fits. Keep one `<main>` and honest heading order.",
+          ar: "ARIA بتزوّد على HTML الأصلي — مش بتبدّله. استخدم `aria-expanded` أو `aria-live` أو `aria-labelledby` بس لما مفيش tag أصلي ينفع. خلّي `<main>` واحد وترتيب عناوين صادق.",
         },
         {
-          en: "Manage focus after view changes — opening a dialog moves focus inside it, closing returns focus to the button that opened it. Announce async results with a polite `aria-live` region instead of a silent swap.",
-          ar: "أدِر الـ `focus` بعد تغيّر الشاشة — فتح `dialog` بينقل الـ `focus` جوّه، وقفله بيرجّعه للزر اللي فتحه. أعلن نتائج `async` بـ `aria-live` مهذب بدل تغيير صامت.",
+          en: "After the screen changes, move focus. Opening a dialog moves focus inside. Closing it sends focus back to the button that opened it. Tell users about live updates with `aria-live` — don’t swap text in silence.",
+          ar: "بعد ما الشاشة تتغيّر، حرّك الـ focus. فتح dialog بينقل الـ focus جوّه. قفله بيرجّع الـ focus للزرار اللي فتحه. قول للمستخدم التحديثات بـ `aria-live` — متغيّرش النص في صمت.",
         },
       ],
       keyPoints: [
@@ -650,35 +712,35 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "رؤى `SEO`",
       },
       summary: {
-        en: "Advanced SEO for HTML — how crawlers discover, render, and index pages; SSR vs CSR; titles, descriptions, canonicals, links, and structured data. Core Web Vitals live in Pro.",
-        ar: "`SEO` متقدم للـ `HTML` — إزاي الـ `crawlers` بتكتشف الصفحة وترندرها وتفهرسها؛ `SSR` مقابل `CSR`؛ `titles` و `descriptions` و `canonicals` واللينكات و `structured data`. `Core Web Vitals` في Pro.",
+        en: "How Google finds your page: HTML in the first response, a unique `<title>`, links, and honest structured data. Core Web Vitals are in Pro.",
+        ar: "إزاي Google بيلاقي صفحتك: HTML في أول رد، `<title>` فريد، لينكات، و structured data صادق. Core Web Vitals في Pro.",
       },
       paragraphs: [
         {
-          en: "Search engines do not “see” your CSS paint first — they fetch a URL, parse HTML, follow links, and build an index. Crawl → render → index is the mental model, and Googlebot strongly prefers meaningful markup already in the first HTTP response: real headings, paragraphs, and `<a href>` links, not an empty `<div id=\"root\">` waiting for JavaScript.",
-          ar: "محركات البحث مش بتشوف رسم `CSS` الأول — بتجيب `URL`، بتحلل `HTML`، بتتبع اللينكات، وبتبني فهرس. `Crawl` → `render` → `index` هو النموذج الذهني، و`Googlebot` بيفضّل `markup` معنوي موجود في أول استجابة `HTTP`: `headings` وفقرات و`<a href>` حقيقية، مش `<div id=\"root\">` فاضي مستني `JavaScript`.",
+          en: "Search engines fetch a URL, read HTML, follow links, then index. They do not look at CSS first. Put real headings, paragraphs, and `<a href>` links in the first HTML. An empty `<div id=\"root\">` waiting for JavaScript is hard to index.",
+          ar: "محرك البحث بيجيب URL، بيقرأ HTML، بيتبع اللينكات، وبعدين بيعمل index. مش بيبص على CSS الأول. حط عناوين وفقرات و `<a href>` حقيقية في أول HTML. `<div id=\"root\">` فاضي مستني JavaScript صعب يتفهرس.",
         },
         {
-          en: "Primary copy that only appears after a slow client-side fetch is at risk, especially on mobile. Treat SSR or SSG as the default for marketing and docs pages — ship the document shell and main content from the server, then hydrate UI enhancements after. Don’t invent the whole article inside `useEffect`.",
-          ar: "النص الأساسي اللي بيظهر بس بعد `fetch` بطيء على الـ `client` في خطر، خصوصًا على الموبايل. اعتبر `SSR` أو `SSG` الافتراضي لصفحات التسويق والـ `docs` — اطلع `document shell` والمحتوى الأساسي من السيرفر، وبعدين `hydrate` تحسينات الـ `UI`. متخترعش المقال كله جوّه `useEffect`.",
+          en: "If the main text appears only after a slow `fetch` on the phone, Google may miss it. For marketing and docs, prefer `SSR` or `SSG`: send the page shell and main text from the server, then add extra UI. Don’t write the whole article inside `useEffect`.",
+          ar: "لو النص الأساسي بيظهر بس بعد `fetch` بطيء على الموبايل، Google ممكن يفوته. لصفحات التسويق والدروس، فضّل `SSR` أو `SSG`: ابعت هيكل الصفحة والنص من السيرفر، وبعدين زوّد الـ UI. متكتبش المقال كله جوّه `useEffect`.",
         },
         {
-          en: "`<title>` is the strongest on-page signal you control: unique per URL, human-readable, matching the visible `<h1>`, roughly 50–60 characters. Meta `description` doesn’t rank pages directly but usually becomes the search snippet, so write one honest ~150–160 character sentence per page. `rel=\"canonical\"` (absolute HTTPS URL) tells search engines the preferred version when the same content is reachable multiple ways.",
-          ar: "`<title>` أقوى إشارة بتتحكم فيها: فريد لكل `URL`، مقروء للبشر، ومتوافق مع `<h1>` الظاهر، وحوالي 50–60 حرف. الـ `Meta description` مش بترتب الصفحة مباشرة لكنها غالبًا بتبقى `snippet` النتيجة، فاكتب جملة صادقة حوالي 150–160 حرف لكل صفحة. و `rel=\"canonical\"` (رابط `HTTPS` مطلق) بيقول لمحركات البحث النسخة المفضّلة لما نفس المحتوى يوصل بأكتر من طريقة.",
+          en: "`<title>` is the strongest tag you control: unique per URL, easy to read, matching the visible `<h1>`, about 50–60 characters. Meta `description` is not a ranking score, but it often becomes the search snippet — write one honest sentence (~150–160 characters). `rel=\"canonical\"` (full HTTPS URL) says which copy of the page is the main one.",
+          ar: "`<title>` أقوى tag بتتحكم فيه: فريد لكل URL، سهل يتقرا، مطابق لـ `<h1>` الظاهر، حوالي 50–60 حرف. Meta `description` مش درجة ترتيب، بس غالبًا بتبقى جملة نتيجة البحث — اكتب جملة صادقة (~150–160 حرف). `rel=\"canonical\"` (رابط HTTPS كامل) بيقول أنهي نسخة هي الأساسية.",
         },
         {
-          en: "Internal links with descriptive anchor text pass crawl paths and context (`Learn HTML forms` beats `click here`). One logical `<h1>`, honest heading ranks, and landmarks (`<main>`, `<nav>`, `<article>`) help both users and crawlers read the outline. Soft 404s and `javascript:`/`#` stubs don’t pass any equity.",
-          ar: "اللينكات الداخلية بنص `anchor` وصفي بتمرّر مسارات الزحف والسياق (`Learn HTML forms` أحسن من `click here`). `<h1>` منطقي واحد ومراتب `headings` صادقة و`landmarks` (`<main>` و`<nav>` و`<article>`) بتساعد المستخدمين والـ `crawlers` يفهموا الـ `outline`. Soft 404s و stubs من نوع `javascript:`/`#` مش بتمرّر أي `equity`.",
+          en: "Internal links with clear text help crawlers (`Learn HTML forms` is better than `click here`). Use one `<h1>`, honest heading order, and landmarks (`<main>`, `<nav>`, `<article>`). Fake 404 pages (status 200 + “not found”) and `javascript:` / `#` links do not help ranking.",
+          ar: "اللينكات الداخلية بنص واضح بتساعد الـ crawlers (`Learn HTML forms` أحسن من `click here`). استخدم `<h1>` واحد، ترتيب عناوين صادق، و landmarks (`<main>` و `<nav>` و `<article>`). صفحات 404 مزيفة (status 200 + “not found”) ولينكات `javascript:` / `#` مش بتساعد الترتيب.",
         },
         {
-          en: "Structured data (JSON-LD) can clarify type — Article, Course, FAQ — but only when it matches visible content; fake rich results get ignored or penalized. After every deploy, sanity-check unique titles/descriptions, working canonicals, and no accidental `noindex` in Search Console — indexing isn’t instant.",
-          ar: "`Structured data` (`JSON-LD`) بيوضّح النوع — `Article` أو `Course` أو `FAQ` — بس لما يطابق المحتوى الظاهر؛ النتائج الغنية المزيفة بتتتجاهل أو تتعاقب. بعد كل `deploy`، افحص إن الـ `titles`/`descriptions` فريدة والـ `canonicals` شغالة ومفيش `noindex` بالغلط في `Search Console` — الفهرسة مش فورية.",
+          en: "`JSON-LD` can say the page is an Article, Course, or FAQ — only if it matches what people see. Fake rich results get ignored. After each deploy, check unique titles, working canonicals, and no accidental `noindex` in Search Console. Indexing is not instant.",
+          ar: "`JSON-LD` يقدر يقول الصفحة Article أو Course أو FAQ — بس لو مطابق اللي الناس بتشوفه. النتائج الغنية المزيفة بتتتجاهل. بعد كل deploy، اتأكد من titles فريدة و canonicals شغالة ومفيش `noindex` بالغلط في Search Console. الـ index مش فوري.",
         },
       ],
       keyPoints: [
         {
-          en: "Indexable HTML in the first response — not an empty mount node",
-          ar: "`HTML` قابل للفهرسة في أول استجابة — مش `mount node` فاضي",
+          en: "Indexable HTML in the first response — not an empty `<div id=\"root\">`",
+          ar: "HTML يتفهرس في أول رد — مش `<div id=\"root\">` فاضي",
         },
         {
           en: "SSR/SSG for primary copy — CSR enhances after",
@@ -746,25 +808,25 @@ export const legacyLessons: LegacyLesson[] = [
         ar: "الوسائط والـ `embeds`",
       },
       summary: {
-        en: "`audio`, `video`, and `iframe` bring rich media — responsibly.",
-        ar: "`audio` و `video` و `iframe` بيجيبوا media غني — بمسؤولية.",
+        en: "`audio`, `video`, and `iframe` add media — with controls, captions, and no surprise sound.",
+        ar: "`audio` و `video` و `iframe` بيضيفوا media — مع controls و captions ومن غير صوت مفاجئ.",
       },
       paragraphs: [
         {
-          en: "Both `<video>` and `<audio>` need the `controls` attribute — without it, users get a silent element with no way to play, pause, or adjust volume themselves.",
-          ar: "`<video>` و `<audio>` الاتنين محتاجين خاصية `controls` — من غيرها المستخدم بياخد عنصر ساكت من غير أي طريقة يشغّل أو يوقّف أو يظبط الصوت بنفسه.",
+          en: "`<video>` and `<audio>` need `controls`. Without it, people cannot play, pause, or change volume.",
+          ar: "`<video>` و `<audio>` محتاجين `controls`. من غيرها الناس مش هتقدر تشغّل أو توقّف أو تغيّر الصوت.",
         },
         {
-          en: "Provide multiple `<source>`s so the browser picks a format it supports, and add `<track kind=\"captions\">` so video content works for deaf and hard-of-hearing users (and anyone watching on mute).",
-          ar: "وفّر أكتر من `<source>` عشان المتصفح يختار الصيغة اللي بيدعمها، وضيف `<track kind=\"captions\">` عشان محتوى الفيديو يشتغل للصم وضعاف السمع (وأي حد بيتفرج بصوت مقفول).",
+          en: "Add more than one `<source>` so the browser can pick a format it knows. Add `<track kind=\"captions\">` so video works for people who cannot hear — and anyone watching on mute.",
+          ar: "حط أكتر من `<source>` عشان المتصفح يختار صيغة بيعرفها. حط `<track kind=\"captions\">` عشان الفيديو يشتغل للي مش بيسمعوا — ولأي حد بيتفرج والصوت مقفول.",
         },
         {
-          en: "`<iframe>` embeds third-party content — always give it a `title` so screen readers can announce what it is, add `sandbox` to limit what the embedded page can do, and use `loading=\"lazy\"` so off-screen embeds don’t slow the initial page load.",
-          ar: "`<iframe>` بيضم محتوى طرف تالت — دايمًا حط له `title` عشان قارئات الشاشة تعلن إيه هو، وضيف `sandbox` عشان تحدد الصفحة المضمّنة تعمل إيه، واستخدم `loading=\"lazy\"` عشان الـ `embeds` البعيدة عن الشاشة متبطئش تحميل الصفحة الأول.",
+          en: "`<iframe>` puts another page inside yours. Always give it a `title` for screen readers. Add `sandbox` to limit what that page can do. Use `loading=\"lazy\"` so off-screen frames do not slow the first load.",
+          ar: "`<iframe>` بيحط صفحة تانية جوّه صفحتك. دايمًا حط `title` لقارئ الشاشة. حط `sandbox` عشان تحدد الصفحة دي تعمل إيه. استخدم `loading=\"lazy\"` عشان الإطارات برة الشاشة متبطّأش أول تحميل.",
         },
         {
-          en: "Never autoplay sound — it’s jarring and often against browser policy anyway. Media should be opt-in: the user presses play, not the page.",
-          ar: "متشغّلش صوت تلقائي — ده مزعج، وغالبًا ضد سياسة المتصفح أصلًا. الـ `media` لازم تكون باختيار المستخدم: هو اللي بيضغط `play`، مش الصفحة.",
+          en: "Never autoplay sound. It is rude, and browsers often block it. The user should press play — not the page.",
+          ar: "متشغّلش صوت لوحدك. ده مزعج، والمتصفح غالبًا بيمنعه. المستخدم هو اللي يضغط play — مش الصفحة.",
         },
       ],
       keyPoints: [

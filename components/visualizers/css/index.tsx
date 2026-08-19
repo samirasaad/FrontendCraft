@@ -1368,7 +1368,7 @@ export function CssCheatsheetLabVisualizer() {
   );
 }
 
-export const cssVisualizers: Record<string, () => ReactNode> = {
+export const cssVisualizers = {
   "cascade-lab": () => <CascadeLabVisualizer />,
   "box-model-lab": () => <BoxModelLabVisualizer />,
   "sizing-lab": () => <SizingLabVisualizer />,
@@ -1385,4 +1385,7 @@ export const cssVisualizers: Record<string, () => ReactNode> = {
   "logical-layout-lab": () => <LogicalLayoutLabVisualizer />,
   "css-pitfalls-lab": () => <CssPitfallsLabVisualizer />,
   "css-cheatsheet-lab": () => <CssCheatsheetLabVisualizer />,
-};
+} as const satisfies Record<
+  Exclude<import("@/lib/visualizer-ids").CssVisualizerId, "level-quiz">,
+  () => ReactNode
+>;

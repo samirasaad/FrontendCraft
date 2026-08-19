@@ -67,7 +67,7 @@ export function Header({ track, onToggleLessons, lessonsOpen }: HeaderProps) {
             title={`${t("progress", locale)} ${completedCount}/${totalCount}`}
           >
             <span
-              className="relative hidden h-1.5 w-12 overflow-hidden rounded-full bg-slate-800 sm:block rtl:rotate-180"
+              className="relative hidden h-1.5 w-12 overflow-hidden rounded-full bg-slate-800 sm:block"
               aria-hidden
             >
               <span

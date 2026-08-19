@@ -129,18 +129,15 @@ export function LessonActivityCodeSnippet({
     <div className="overflow-hidden rounded-2xl border border-cyan-400/25 bg-slate-950/90 shadow-[0_0_24px_rgba(34,211,238,0.08)]">
       <div
         dir="ltr"
-        className="flex items-center gap-1.5 border-b border-white/10 px-3.5 py-2"
+        className="flex items-center border-b border-white/10 px-3.5 py-1.5"
       >
-        <span className="h-2 w-2 rounded-full bg-rose-400/70" />
-        <span className="h-2 w-2 rounded-full bg-amber-300/70" />
-        <span className="h-2 w-2 rounded-full bg-emerald-400/70" />
-        <span className="ml-2 font-mono text-[11px] uppercase tracking-wider text-slate-500">
+        <span className="font-mono text-[11px] uppercase tracking-wider text-slate-500">
           {label ?? language}
         </span>
       </div>
       <pre
         dir="ltr"
-        className="overflow-x-auto p-4 text-start font-mono text-[12.5px] leading-6 sm:text-[13px]"
+        className="overflow-x-auto px-3.5 py-3 text-start font-mono text-sm leading-5 sm:text-[15px]"
       >
         <code>
           {tokens.map((tok, i) => (
@@ -154,9 +151,26 @@ export function LessonActivityCodeSnippet({
   );
 }
 
+export function htmlLooksPreviewable(code: string): boolean {
+  const hasVisibleTag =
+    /<(p|h[1-6]|ul|ol|li|a|img|button|nav|main|header|footer|strong|em|b|i|mark|table|label|input|details|section|article|blockquote)\b/i.test(
+      code,
+    );
+  const hasVisibleText = />\s*[^<\s][\s\S]*?</.test(code) || /<img\b/i.test(code);
+  return hasVisibleTag && hasVisibleText;
+}
+
+export function wrapActivityPreviewHtml(code: string): string {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+    html,body{margin:0;padding:12px;font:16px/1.45 system-ui,sans-serif;color:#0f172a;background:#fff}
+    img{max-width:100%;height:auto}
+    ul,ol{margin:0;padding-inline-start:1.25rem}
+  </style></head><body>${code}</body></html>`;
+}
+
 export function ActivityOptionLetter({ children }: { children: ReactNode }) {
   return (
-    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-[11px] font-bold text-slate-300">
+    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-sm font-bold text-slate-200">
       {children}
     </span>
   );

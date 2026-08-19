@@ -1,3 +1,4 @@
+import { assertLessonActivityCoverage } from "@/content/tracks/_assemble-lessons";
 import { L } from "@/content/helpers";
 import type { LessonActivity, ActivityOption, ActivityQuestion } from "@/lib/types";
 
@@ -26,162 +27,144 @@ function q(
 /** Multi-question lesson activities keyed by lesson slug — every lesson gets 3–6 questions. */
 export const htmlLessonActivities: Record<string, LessonActivity> = {
   "document-anatomy": {
-    title: L("Document anatomy check", "نشاط تشريح المستند"),
+    title: L("Document anatomy check", "نشاط شكل الصفحة"),
     questions: [
       q(
         "q1",
         L(
-          "What does this opening line unlock in the browser?",
-          "السطر ده بيفعّل إيه في المتصفح؟",
+          "What does this first line do?",
+          "السطر ده بيعمل إيه؟",
         ),
         [
-          opt("a", "Quirks mode forever", "Quirks mode للأبد"),
-          opt(
-            "b",
-            "Standards mode for modern HTML",
-            "Standards mode لـ HTML الحديث",
-          ),
-          opt("c", "Only needed for XHTML", "محتاجينه لـ XHTML بس"),
-          opt(
-            "d",
-            "It loads JavaScript automatically",
-            "بيحمّل JavaScript لوحده",
-          ),
+          opt("a", "Makes the page look old on purpose", "بيخلي الصفحة شكلها قديم"),
+          opt("b", "Tells the browser: this is modern HTML", "بيقول للمتصفح: ده HTML حديث"),
+          opt("c", "Needed only for XML files", "محتاجينه لملفات XML بس"),
+          opt("d", "It loads JavaScript by itself", "بيحمّل JavaScript لوحده"),
         ],
         "b",
         L(
-          "`<!DOCTYPE html>` tells the browser to use standards mode — the modern HTML parsing rules.",
-          "`<!DOCTYPE html>` بيقول للمتصفح يستخدم standards mode — قواعد HTML الحديثة.",
+          "`<!DOCTYPE html>` is line 1. It tells the browser to read the file as modern HTML.",
+          "`<!DOCTYPE html>` هو السطر الأول. بيقول للمتصفح يقرأ الملف كـ HTML حديث.",
         ),
         {
           code: `<!DOCTYPE html>`,
           language: "html",
           hint: L(
-            "Open your file and put `<!DOCTYPE html>` on line 1 — above `<html>`, with nothing before it.",
-            "افتح الملف وحط `<!DOCTYPE html>` في السطر الأول — فوق `<html>` ومفيش حاجة قبله.",
+            "Put it above `<html>`, with nothing before it.",
+            "حطه فوق `<html>`، ومفيش حاجة قبله.",
           ),
         },
       ),
       q(
         "q2",
         L(
-          "Which shell is the modern baseline?",
-          "أنهي هيكل هو الأساس الحديث؟",
+          "A real page needs which extra bits on this empty shell?",
+          "الصفحة الحقيقية محتاجة إيه زيادة على الهيكل الفاضي ده؟",
         ),
         [
           opt(
             "a",
-            "Add DOCTYPE + lang + charset",
-            "ضيف DOCTYPE و lang و charset",
+            "`<!DOCTYPE html>`, `lang` on `<html>`, and charset in `<head>`",
+            "`<!DOCTYPE html>` و `lang` على `<html>` و charset في `<head>`",
           ),
           opt(
             "b",
-            'Wrap everything in <div id="root">',
-            'لف كله في <div id="root">',
+            'Wrap everything in <div id="root"> only',
+            'لف كله في <div id="root"> بس',
           ),
-          opt("c", "Replace <head> with <meta>", "بدّل <head> بـ <meta>"),
-          opt(
-            "d",
-            "Skip <body> on landing pages",
-            "شيل <body> في الـ landing pages",
-          ),
+          opt("c", "Delete <head>", "امسح <head>"),
+          opt("d", "Skip <body> to go faster", "شيل <body> عشان الصفحة تسرع"),
         ],
         "a",
         L(
-          "A real document needs `<!DOCTYPE html>`, `lang` on `<html>`, and charset early in `<head>`.",
-          "المستند الحقيقي محتاج `<!DOCTYPE html>` و `lang` على `<html>` و charset بدري في `<head>`.",
+          "Start with `<!DOCTYPE html>`, set `lang` on `<html>`, and put charset early in `<head>`.",
+          "ابدأ بـ `<!DOCTYPE html>`، حط `lang` على `<html>`، و charset بدري في `<head>`.",
         ),
         {
           code: `<html>\n  <head></head>\n  <body></body>\n</html>`,
           language: "html",
           hint: L(
-            "Pick the option that adds three things: `<!DOCTYPE html>`, `lang` on `<html>`, and early `charset` in `<head>`.",
-            "اختار اللي بيضيف تلات حاجات: `<!DOCTYPE html>` و `lang` على `<html>` و `charset` بدري في `<head>`.",
+            "Three extras: DOCTYPE, lang, charset.",
+            "تلات زيادات: DOCTYPE و lang و charset.",
           ),
         },
       ),
       q(
         "q3",
-        L("Where should charset live?", "الـ charset المفروض يعيش فين؟"),
+        L("Where does charset go?", "الـ charset يتحط فين؟"),
         [
           opt("a", "Anywhere in <body>", "في أي حتة في <body>"),
-          opt(
-            "b",
-            "After the first 1024 bytes is fine",
-            "بعد أول 1024 bytes عادي",
-          ),
-          opt(
-            "c",
-            "In <head>, as early as possible",
-            "في <head> بدري قد ما تقدر",
-          ),
-          opt("d", "Only in CSS @charset", "في CSS @charset بس"),
+          opt("b", "At the bottom of the file", "في آخر الملف"),
+          opt("c", "Near the top of <head>", "في أول <head>"),
+          opt("d", "Only in a CSS file", "في ملف CSS بس"),
         ],
         "c",
         L(
-          'Browsers sniff encoding early — put `<meta charset="UTF-8">` near the top of `<head>`.',
-          'المتصفحات بتقرأ الـ encoding بدري — حط `<meta charset="UTF-8">` في أول `<head>`.',
+          'Put `<meta charset="UTF-8">` near the top of `<head>` so Arabic and emoji read right.',
+          'حط `<meta charset="UTF-8">` في أول `<head>` عشان العربي والإيموجي يتقروا صح.',
         ),
         {
-          code: `<head>\n  <title>FrontendCraft</title>\n  <meta charset="UTF-8" />\n</head>`,
+          code: `<head>\n  <meta charset="UTF-8" />\n  <title>My page</title>\n</head>`,
           language: "html",
           hint: L(
-            "Move `<meta charset=\"UTF-8\">` to the top of `<head>` — before title and other tags.",
-            "انقل `<meta charset=\"UTF-8\">` لأول `<head>` — قبل `title` وباقي الوسوم.",
+            "Charset first in `<head>`, then the title.",
+            "الـ charset الأول في `<head>`، بعدين الـ title.",
           ),
         },
       ),
       q(
         "q4",
         L(
-          "Why put `lang` on the `<html>` element?",
-          "ليه تحط `lang` على عنصر `<html>`؟",
+          "Why put `lang` on `<html>`?",
+          "ليه `lang` على `<html>`؟",
         ),
         [
           opt(
             "a",
-            "Helps AT pick pronunciation and spell-check language",
-            "بيساعد AT يختار النطق ولغة التدقيق",
+            "So the browser and screen reader know the page language",
+            "عشان المتصفح وقارئ الشاشة يعرفوا لغة الصفحة",
           ),
-          opt("b", "Required for CSS Grid only", "مطلوب لـ CSS Grid بس"),
-          opt("c", "It sets the favicon", "بيحدد الـ favicon"),
-          opt("d", "It disables JavaScript", "بيعطّل JavaScript"),
+          opt("b", "So CSS Grid can work", "عشان CSS Grid يشتغل"),
+          opt("c", "It sets the site icon", "بتحدد أيقونة الموقع"),
+          opt("d", "It turns JavaScript off", "بتطفي JavaScript"),
         ],
         "a",
         L(
-          "`lang` tells assistive tech and browsers which language the page uses.",
-          "`lang` بيقول لـ assistive tech والمتصفحات لغة الصفحة.",
+          "`lang=\"ar\"` or `lang=\"en\"` tells tools which language to use.",
+          "`lang=\"ar\"` أو `lang=\"en\"` بيقول للأدوات لغة الصفحة.",
         ),
         {
           code: `<html lang="ar">`,
           language: "html",
           hint: L(
-            "Edit the opening tag to `<html lang=\"ar\">` (or `en`) — not on `<body>`.",
-            "عدّل تاج الفتح لـ `<html lang=\"ar\">` (أو `en`) — مش على `<body>`.",
+            "Put it on the opening `<html>` tag, not on `<body>`.",
+            "حطه على تاج `<html>` الفتح، مش على `<body>`.",
           ),
         },
       ),
       q(
         "q5",
         L(
-          "Where does the page title shown in the browser tab belong?",
-          "عنوان الصفحة اللي في تاب المتصفح مكانه فين؟",
+          "Where does the name in the browser tab come from?",
+          "اسم الصفحة في تاب المتصفح جاي منين؟",
         ),
         [
-          opt("a", "In <body> as the first h1", "في <body> كأول h1"),
-          opt("b", "In <head> inside <title>", "في <head> جوّه <title>"),
-          opt("c", "In a CSS file", "في ملف CSS"),
-          opt("d", "In a meta og:title only", "في meta og:title بس"),
+          opt("a", "The first <h1> in <body>", "أول <h1> في <body>"),
+          opt("b", "<title> inside <head>", "<title> جوّه <head>"),
+          opt("c", "A CSS file", "ملف CSS"),
+          opt("d", "The file name only", "اسم الملف بس"),
         ],
         "b",
         L(
-          "`<title>` lives in `<head>` — it drives tabs, bookmarks, and search snippets.",
-          "`<title>` مكانه في `<head>` — بيخدم التابات والـ bookmarks ونتائج البحث.",
+          "`<title>` lives in `<head>`. That text is the tab name.",
+          "`<title>` في `<head>`. النص ده اسم التاب.",
         ),
         {
+          code: `<head>\n  <title>My first page</title>\n</head>\n<body>\n  <h1>Hello</h1>\n</body>`,
+          language: "html",
           hint: L(
-            "Add `<title>Your page name</title>` inside `<head>` — that text is what the browser tab shows.",
-            "ضيف `<title>اسم صفحتك</title>` جوّه `<head>` — ده النص اللي بيظهر في تاب المتصفح.",
+            "Tab name = `<title>`. Big heading on the page = `<h1>`.",
+            "اسم التاب = `<title>`. العنوان الكبير في الصفحة = `<h1>`.",
           ),
         },
       ),
@@ -194,22 +177,22 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
       q(
         "q1",
         L(
-          "Pick the landmark shell screen readers can jump through:",
-          "اختار هيكل landmarks قارئات الشاشة تقدر تقفز عليه:",
+          "Which tags make a page easy to jump around — header, menu, main, footer?",
+          "أنهي وسوم بتخلي الصفحة سهلة: الهيدر، القائمة، المحتوى، الفوتر؟",
         ),
         [
-          opt("a", "Div soup with classes", "Div soup بـ classes"),
-          opt("b", "header + nav + main + footer", "هيكل من header و nav و main و footer"),
-          opt("c", "Only nested spans", "spans متداخلة بس"),
-          opt("d", "One giant section for everything", "section واحدة لكل حاجة"),
+          opt("a", "Only <div> boxes with class names", "صناديق <div> بـ class بس"),
+          opt("b", "<header> + <nav> + <main> + <footer>", "<header> + <nav> + <main> + <footer>"),
+          opt("c", "Only <span> tags", "وسوم <span> بس"),
+          opt("d", "One big <section> for the whole site", "<section> واحدة لكل الموقع"),
         ],
         "b",
         L(
-          "Native landmarks give assistive tech jump targets without ARIA gymnastics.",
-          "الـ landmarks الأصلية بتدي assistive tech قفزات من غير ARIA زيادة.",
+          "Use real tags: `<header>`, `<nav>`, `<main>`, `<footer>`. A `<div class=\"header\">` is just a box.",
+          "استخدم الوسوم الحقيقية: `<header>` و `<nav>` و `<main>` و `<footer>`. `<div class=\"header\">` صندوق بس.",
         ),
         {
-          code: `<div class="header"></div>\n<div class="main"></div>`,
+          code: `<header>Site</header>\n<nav>Menu</nav>\n<main>Article</main>\n<footer>©</footer>`,
           language: "html",
           hint: L(
             "Replace outer `<div class=\"header\">` / `main` wrappers with real `<header>`, `<nav>`, `<main>`, and `<footer>` tags.",
@@ -248,7 +231,7 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           opt("a", "Whenever you need a box", "لما تحتاج صندوق"),
           opt(
             "b",
-            "For self-contained content that could stand alone",
+            "For content that can stand alone (a post or card)",
             "لمحتوى مستقل يقدر يعيش لوحده",
           ),
           opt("c", "Only inside tables", "جوّه tables بس"),
@@ -256,7 +239,7 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "b",
         L(
-          "`<article>` is for self-contained pieces (posts, cards) — choose by meaning, not looks.",
+          "`<article>` is for pieces that can stand alone (posts, cards) — choose by meaning, not looks.",
           "`<article>` للمحتوى المستقل (posts و cards) — اختار بالمعنى مش بالشكل.",
         ),
         {
@@ -284,12 +267,12 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "`<section>` groups related content with a heading; `<article>` is self-contained.",
+          "`<section>` groups related content with a heading; `<article>` can stand alone.",
           "`<section>` بيجمّع محتوى مرتبط بعنوان؛ `<article>` محتوى مستقل.",
         ),
         {
           hint: L(
-            "`<section>` groups related chunks; `<article>` is self-contained.",
+            "`<section>` groups related chunks; `<article>` can stand alone.",
             "`<section>` بيجمّع أجزاء مرتبطة؛ `<article>` محتوى مستقل.",
           ),
         },
@@ -359,8 +342,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           opt("a", "Browsers refuse to render it", "المتصفح مش هيعرضه"),
           opt(
             "b",
-            "It breaks a logical outline for readers and AT",
-            "بيكسر outline منطقي للقراء و AT",
+            "It breaks a logical outline for readers and screen readers",
+            "بيكسر outline منطقي للقراء و screen readers",
           ),
           opt("c", "CSS cannot style h4 after h1", "CSS مش بيشتغل على h4 بعد h1"),
           opt("d", "Nothing — levels are only visual", "مفيش — المستويات شكل بس"),
@@ -427,8 +410,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "AT users jump by heading level — a logical outline is a navigation map.",
-          "مستخدمي AT بيقفزوا بالـ heading level — outline منطقي خريطة تنقل.",
+          "screen-reader users jump by heading level — a logical outline is a navigation map.",
+          "مستخدمي screen readers بيقفزوا بالـ heading level — outline منطقي خريطة تنقل.",
         ),
         {
           hint: L(
@@ -478,8 +461,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
       q(
         "q1",
         L(
-          "Which tag marks strong importance for assistive tech?",
-          "أنهي tag بيعلّم أهمية قوية لـ assistive tech؟",
+          "Which tag marks strong importance for screen readers?",
+          "أنهي tag بيعلّم أهمية قوية لـ screen readers؟",
         ),
         [
           opt("a", "CSS-only bold", "bold بـ CSS بس"),
@@ -569,8 +552,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "`datetime` gives browsers, search engines, and AT a parseable value while the visible text stays human-friendly.",
-          "`datetime` بيدي المتصفح ومحركات البحث و AT قيمة قابلة للقراءة الآلية، والنص الظاهر يفضل واضح للبني آدم.",
+          "`datetime` gives browsers, search engines, and screen readers a parseable value while the visible text stays human-friendly.",
+          "`datetime` بيدي المتصفح ومحركات البحث و screen readers قيمة قابلة للقراءة الآلية، والنص الظاهر يفضل واضح للبني آدم.",
         ),
         {
           code: `<time datetime="2026-08-02">Aug 2, 2026</time>`,
@@ -611,6 +594,36 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           ),
         },
       ),
+      q(
+        "q6",
+        L(
+          "When should you use `<span>`?",
+          "إمتى تستخدم `<span>`؟",
+        ),
+        [
+          opt(
+            "a",
+            "To wrap a word for CSS/JS with no extra meaning",
+            "علّف كلمة لـ CSS/JS من غير معنى زيادة",
+          ),
+          opt("b", "Instead of a heading", "بدل عنوان"),
+          opt("c", "As a page section container", "كصندوق قسم للصفحة"),
+          opt("d", "To make text bold by itself", "عشان تخلي النص عريض لوحدها"),
+        ],
+        "a",
+        L(
+          "`<span>` is a neutral inline hook for styling or scripting. Prefer `<strong>`/`<em>` when meaning matters, and `<div>` for block boxes.",
+          "`<span>` hook inline محايد للتنسيق أو السكربت. فضّل `<strong>`/`<em>` لما المعنى مهم، و `<div>` لصناديق block.",
+        ),
+        {
+          code: `<p>Price: <span class="price">$19</span></p>`,
+          language: "html",
+          hint: L(
+            "`span` adds no meaning — it just marks a piece of text.",
+            "`span` مش بيضيف معنى — بيسِم قطعة نص بس.",
+          ),
+        },
+      ),
     ],
   },
 
@@ -619,19 +632,21 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
     questions: [
       q(
         "q1",
-        L("Which link is usable and crawlable?", "أنهي لينك قابل للاستخدام والزحف؟"),
+        L("Which link actually goes somewhere?", "أنهي لينك فعلًا بيروح حتة؟"),
         [
-          opt("a", "onclick-only span", "span بـ onclick بس"),
-          opt("b", "Real <a href=\"...\">", "<a href=\"...\"> حقيقي"),
-          opt("c", "div with role=link and no href", "div بـ role=link من غير href"),
-          opt("d", "button that fakes navigation only", "button بيعمل navigation وهمي بس"),
+          opt("a", "A <span> with a click in JavaScript", "<span> بضغط JavaScript"),
+          opt("b", '<a href="/about">About</a>', '<a href="/about">About</a>'),
+          opt("c", "A <div> that looks like a link", "<div> شكلها لينك"),
+          opt("d", "A <button> that only looks like a page change", "<button> شكلها بتغيّر الصفحة"),
         ],
         "b",
         L(
-          "Real `<a href>` works with keyboard, middle-click, and crawlers.",
-          "`<a href>` الحقيقي بيشتغل مع الكيبورد و middle-click والزواحف.",
+          "Real `<a href=\"...\">` is a link. A span or div that only looks clickable is not.",
+          "`<a href=\"...\">` الحقيقي لينك. الـ span أو div اللي شكلها قابلة للضغط مش لينك.",
         ),
         {
+          code: `<p>Read the <a href="/about">About</a> page.</p>`,
+          language: "html",
           hint: L(
             "Real links need a working `href`.",
             "اللينكات الحقيقية محتاجة `href` شغال.",
@@ -718,58 +733,56 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
       q(
         "q5",
         L(
-          "When using `target=\"_blank\"`, what should you add?",
-          "لما تستخدم `target=\"_blank\"`، إيه اللي تضيفه؟",
+          "What should people read on a link?",
+          "الناس تقرأ إيه على اللينك؟",
         ),
         [
           opt(
             "a",
-            "rel=\"noopener noreferrer\" (and warn users in context)",
-            "rel=\"noopener noreferrer\" (وحذّر المستخدم في السياق)",
+            "Where it goes, like “View pricing plans”",
+            "هيروح فين، زي «شوف الأسعار»",
           ),
-          opt("b", "download attribute always", "download attribute دايمًا"),
-          opt("c", "role=\"link\"", "role=\"link\""),
-          opt("d", "Nothing — _blank is always safe", "ولا حاجة — _blank آمن دايمًا"),
+          opt("b", "Only “click here”", "«click here» بس"),
+          opt("c", "Only “read more” with no extra words", "«اقرأ المزيد» من غير توضيح"),
+          opt("d", "The raw URL only", "الرابط الطويل بس"),
         ],
         "a",
         L(
-          "`noopener noreferrer` closes a tab-napping hole and limits referrer leakage.",
-          "`noopener noreferrer` بيسدّ ثغرة tab-napping ويقلّل تسريب الـ referrer.",
+          "Write the destination in the link: “Summer sale”, not “click here”.",
+          "اكتب الوجهة في اللينك: «تخفيضات الصيف»، مش «click here».",
         ),
         {
-          code: `<a href="https://example.com" target="_blank" rel="noopener noreferrer">Docs</a>`,
+          code: `<p><a href="/sale">Summer sale</a></p>`,
           language: "html",
           hint: L(
-            "A new tab that keeps a JS handle on the opener is the real risk here.",
-            "الخطر هنا إن التاب الجديدة تفضل ماسكة handle JS على الصفحة اللي فتحتها.",
+            "If you cover the rest of the page, can you still tell where the link goes?",
+            "لو غطّيت باقي الصفحة، هتعرف اللينك رايح فين؟",
           ),
         },
       ),
       q(
         "q6",
         L(
-          "Why set width and height on `<img>`?",
-          "ليه تحط width و height على `<img>`؟",
+          "A photo of a cat needs which two things?",
+          "صورة قطة محتاجة أنهي حاجتين؟",
         ),
         [
-          opt(
-            "a",
-            "Reserve layout space and reduce CLS",
-            "تحجز مساحة layout وتقلّل CLS",
-          ),
-          opt("b", "HTML requires square images", "HTML بيفرض صور مربعة"),
-          opt("c", "It replaces alt text", "بديل alt text"),
-          opt("d", "It forces lazy loading", "بيفرض lazy loading"),
+          opt("a", "`src` (the file) and `alt` (short description)", "`src` (الملف) و `alt` (وصف قصير)"),
+          opt("b", "Only a CSS background", "background في CSS بس"),
+          opt("c", "An empty `alt` on every photo", "`alt` فاضي على كل الصور"),
+          opt("d", "A `title` instead of `alt`", "`title` بدل `alt`"),
         ],
         "a",
         L(
-          "Intrinsic dimensions let the browser paint a placeholder before the image loads.",
-          "المقاسات الداخلية بتخلي المتصفح يرسم placeholder قبل تحميل الصورة.",
+          "`src` loads the picture. `alt` is the short text if the picture cannot be seen.",
+          "`src` بيحمّل الصورة. `alt` النص القصير لو الصورة مش ظاهرة.",
         ),
         {
+          code: `<img src="cat.jpg" alt="Orange cat on a chair" />`,
+          language: "html",
           hint: L(
-            "Reserved space before load is a layout-shift fix, not an alt-text one.",
-            "حجز المساحة قبل التحميل حل لـ layout shift، مش موضوع alt text.",
+            "If the image tells something, `alt` should say it in a short sentence.",
+            "لو الصورة بتقول حاجة، `alt` يقولها في جملة قصيرة.",
           ),
         },
       ),
@@ -786,14 +799,16 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           opt("a", "<ul>", "<ul>"),
           opt("b", "<ol>", "<ol>"),
           opt("c", "<dl> only", "<dl> بس"),
-          opt("d", "Divs with numbers painted in CSS", "divs وأرقام بـ CSS"),
+          opt("d", "Boxes with numbers drawn in CSS", "صناديق وأرقام مرسومة بـ CSS"),
         ],
         "b",
         L(
-          "`<ol>` is for ordered sequences where order matters.",
-          "`<ol>` للتسلسل المرتب لما الترتيب يهم.",
+          "A recipe has a first step, then a second step. That is `<ol>` (ordered list).",
+          "الوصفة فيها خطوة 1 بعدين 2. دي `<ol>` (قائمة مترتبة).",
         ),
         {
+          code: `<ol>\n  <li>Mix</li>\n  <li>Bake</li>\n</ol>`,
+          language: "html",
           hint: L(
             "Real lists use `<ul>`, `<ol>`, or `<dl>` — not fake bullets.",
             "القوائم الحقيقية بـ `<ul>` أو `<ol>` أو `<dl>` — مش نقط مزيفة.",
@@ -892,8 +907,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "`<nav><ul><li><a>…` gives AT a clear menu structure.",
-          "`<nav><ul><li><a>…` بيدي AT هيكل menu واضح.",
+          "`<nav><ul><li><a>…` gives screen readers a clear menu structure.",
+          "`<nav><ul><li><a>…` بيدي screen readers هيكل menu واضح.",
         ),
         {
           code: `<nav aria-label="Main">\n  <ul>\n    <li><a href="/">Home</a></li>\n  </ul>\n</nav>`,
@@ -1045,6 +1060,38 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           ),
         },
       ),
+      q(
+        "q6",
+        L(
+          "What do `action` and `method` on `<form>` control?",
+          "`action` و `method` على `<form>` بيتحكّموا في إيه؟",
+        ),
+        [
+          opt(
+            "a",
+            "Where the form submits and which HTTP method to use",
+            "فين الفورم هتتبعت وأنهي HTTP method",
+          ),
+          opt("b", "Only the button color", "لون الزرار بس"),
+          opt("c", "The label text", "نص الـ label"),
+          opt("d", "Whether inputs are required", "هل الـ inputs مطلوبة"),
+        ],
+        "a",
+        L(
+          "`action` is the URL; `method` is usually `get` or `post`. Beginner attributes like `placeholder`, `disabled`, and `maxlength` shape UX — they don’t replace labels or names.",
+          "`action` هو الـ URL؛ `method` غالبًا `get` أو `post`. خصائص المبتدئ زي `placeholder` و `disabled` و `maxlength` بتشكّل UX — مش بديل للـ labels أو الـ names.",
+        ),
+        {
+          code: `<form action="/search" method="get">
+  <input name="q" placeholder="Search…" maxlength="80" />
+</form>`,
+          language: "html",
+          hint: L(
+            "`action` = where · `method` = how · `placeholder` is a hint, not a label.",
+            "`action` = فين · `method` = إزاي · `placeholder` تلميح مش label.",
+          ),
+        },
+      ),
     ],
   },
 
@@ -1079,8 +1126,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           opt("a", "It makes text bold only", "بيخلي النص عريض بس"),
           opt(
             "b",
-            "It associates headers with data for AT",
-            "بيربط الرؤوس بالبيانات لـ AT",
+            "It associates headers with data for screen readers",
+            "بيربط الرؤوس بالبيانات لـ screen readers",
           ),
           opt("c", "Browsers require it for borders", "المتصفح بيفرضه للحدود"),
           opt("d", "It enables colspan automatically", "بيفعّل colspan لوحده"),
@@ -1131,8 +1178,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         [
           opt(
             "a",
-            "Clear header/body structure for AT and styling",
-            "structure رأس/جسم واضح لـ AT والستايل",
+            "Clear header/body structure for screen readers and styling",
+            "structure رأس/جسم واضح لـ screen readers والستايل",
           ),
           opt("b", "Required for borders only", "مطلوب للحدود بس"),
           opt("c", "It enables sorting automatically", "بيفعّل sorting لوحده"),
@@ -1173,8 +1220,40 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ),
         {
           hint: L(
-            "`scope` tells AT which axis (column or row) a header describes.",
-            "`scope` بيقول لـ AT الرأس ده بيوصف عمود ولا صف.",
+            "`scope` tells screen readers which axis (column or row) a header describes.",
+            "`scope` بيقول لـ screen readers الرأس ده بيوصف عمود ولا صف.",
+          ),
+        },
+      ),
+      q(
+        "q6",
+        L(
+          "Which CSS tip helps beginner tables look cleaner?",
+          "أنهي نصيحة CSS بتخلّي جداول المبتدئ أنضف؟",
+        ),
+        [
+          opt(
+            "a",
+            "`border-collapse: collapse` plus cell padding",
+            "`border-collapse: collapse` مع padding للخلايا",
+          ),
+          opt("b", "Use tables for the whole page layout", "استخدم جداول لتخطيط الصفحة كلها"),
+          opt("c", "Remove `<th>` so borders look thinner", "شيل `<th>` عشان الحدود تبقى أرفع"),
+          opt("d", "Skip captions to save space", "اتخطى الـ caption عشان توفّر مساحة"),
+        ],
+        "a",
+        L(
+          "`border-collapse: collapse` merges double borders; padding and a light `th` background improve readability. Wrap wide tables for horizontal scroll on small screens.",
+          "`border-collapse: collapse` بيدمج الحدود المزدوجة؛ الـ padding وخلفية خفيفة لـ `th` بتحسّن القراءة. لف الجداول العريضة عشان scroll أفقي على الشاشات الصغيرة.",
+        ),
+        {
+          code: `table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid #ccc; padding: 0.5rem; }
+th { background: #f5f5f5; text-align: left; }`,
+          language: "css",
+          hint: L(
+            "Styling is CSS — keep the HTML semantic (`th`, `caption`, etc.).",
+            "التنسيق من CSS — سيّب HTML semantic (`th` و `caption` إلخ).",
           ),
         },
       ),
@@ -1491,8 +1570,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
           opt("a", "It sets the visual font", "بيحدد الخط"),
           opt(
             "b",
-            "It names the frame for assistive tech",
-            "بيسمّي الإطار لـ assistive tech",
+            "It names the frame for screen readers",
+            "بيسمّي الإطار لـ screen readers",
           ),
           opt("c", "Browsers block untitled iframes", "المتصفح بيمنع iframes من غير title"),
           opt("d", "It enables fullscreen", "بيفعّل fullscreen"),
@@ -1524,7 +1603,7 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "b",
         L(
-          "Unexpected sound fails accessibility expectations — opt-in playback.",
+          "Unexpected sound is bad for accessibility — the user should press play.",
           "الصوت المفاجئ بيكسر توقعات الوصولية — خلّي التشغيل اختياري.",
         ),
         {
@@ -2072,8 +2151,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         [
           opt(
             "a",
-            "Accessible name is how AT announces the control",
-            "الاسم الـ accessible هو اللي AT بتعلن بيه الـ control",
+            "Accessible name is how screen readers announces the control",
+            "الاسم الـ accessible هو اللي screen readers بتعلن بيه الـ control",
           ),
           opt("b", "Role replaces the need for labels", "الـ role بيلغي اللابلز"),
           opt("c", "Only color conveys name", "اللون لوحده بيوصل الاسم"),
@@ -2081,8 +2160,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "Labels (and names) tell assistive tech what the control is called.",
-          "اللابلز (والأسماء) بتقول لـ assistive tech اسم الـ control.",
+          "Labels (and names) tell screen readers what the control is called.",
+          "اللابلز (والأسماء) بتقول لـ screen readers اسم الـ control.",
         ),
         {
           hint: L(
@@ -2191,7 +2270,7 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
             "توجيه الزواحف للـ URL المفضّل",
           ),
           opt("b", "Compressing images", "ضغط الصور"),
-          opt("c", "Enabling dark mode", "تفعيل الوضع الداكن"),
+          opt("c", "Enabling cookies", "تفعيل الكوكيز"),
           opt("d", "Replacing h1", "بدل h1"),
         ],
         "a",
@@ -2499,8 +2578,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         [
           opt(
             "a",
-            "Users can Tab to something AT cannot announce",
-            "المستخدم يقدر Tab لحاجة AT مش هتعلنها",
+            "Users can Tab to something screen readers cannot announce",
+            "المستخدم يقدر Tab لحاجة screen readers مش هتعلنها",
           ),
           opt("b", "It crashes Chrome", "بيكرّش كروم"),
           opt("c", "It disables CSS", "بيعطّل CSS"),
@@ -2508,8 +2587,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "Hidden from AT but still focusable is a classic trap — hide or inert the whole path.",
-          "مخفي من AT ولسه عليه focus فخ كلاسيكي — اخفي أو inert المسار كله.",
+          "Hidden from screen readers but still focusable is a classic trap — hide or inert the whole path.",
+          "مخفي من screen readers ولسه عليه focus فخ كلاسيكي — اخفي أو inert المسار كله.",
         ),
         {
           hint: L(
@@ -2536,8 +2615,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "First focusable link → `#main` saves AT and keyboard users from tabbing through chrome.",
-          "أول لينك focusable → `#main` بيوفر على AT والكيبورد tabbing في الـ chrome.",
+          "First focusable link → `#main` saves screen-reader and keyboard users from tabbing through header and nav.",
+          "أول لينك focusable → `#main` بيوفر على قارئ الشاشة والكيبورد tabbing في الهيدر والقائمة.",
         ),
         {
           code: `<a href="#main" class="skip-link">Skip to content</a>`,
@@ -2899,8 +2978,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         [
           opt(
             "a",
-            "It keeps `<main>` scannable and gives assistive tech clear jump points",
-            "بيخلي `<main>` سهل التصفح وبيدي assistive tech نقط قفز واضحة",
+            "It keeps `<main>` scannable and gives screen readers clear jump points",
+            "بيخلي `<main>` سهل التصفح وبيدي screen readers نقط قفز واضحة",
           ),
           opt("b", "Browsers require header/footer in separate files", "المتصفح بيفرض header/footer في ملفات منفصلة"),
           opt("c", "It disables CSS inheritance", "بيعطّل وراثة CSS"),
@@ -2908,7 +2987,7 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "That split keeps `<main>` scannable and gives assistive tech clear jump points.",
+          "That split keeps `<main>` scannable and gives screen readers clear jump points.",
           "الفصل ده بيخلي `<main>` سهل التصفح وبيدي التقنية المساعدة نقط قفز واضحة.",
         ),
         {
@@ -3214,8 +3293,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ],
         "a",
         L(
-          "Root `lang` and `dir` declare the document default for browsers and AT.",
-          "Root `lang` و `dir` بيعلنوا افتراضي المستند للمتصفحات و AT.",
+          "Root `lang` and `dir` declare the document default for browsers and screen readers.",
+          "Root `lang` و `dir` بيعلنوا افتراضي المستند للمتصفحات و screen readers.",
         ),
         {
           hint: L(
@@ -3368,8 +3447,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         [
           opt(
             "a",
-            "AT users miss the information in the image",
-            "مستخدمي AT بيضيعوا معلومة الصورة",
+            "screen-reader users miss the information in the image",
+            "مستخدمي screen readers بيضيعوا معلومة الصورة",
           ),
           opt("b", "CSS cannot load the file", "CSS مش بيقدر يحمّل الملف"),
           opt("c", "It breaks flexbox", "بيكسر flexbox"),
@@ -3382,8 +3461,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         ),
         {
           hint: L(
-            "No alt means AT users get nothing where the image was meant to say something.",
-            "من غير alt، مستخدمي AT مش هياخدوا حاجة مكان الصورة اللي كانت المفروض توصل معلومة.",
+            "No alt means screen-reader users get nothing where the image was meant to say something.",
+            "من غير alt، مستخدمي screen readers مش هياخدوا حاجة مكان الصورة اللي كانت المفروض توصل معلومة.",
           ),
         },
       ),
@@ -3452,8 +3531,8 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
         [
           opt(
             "a",
-            "It misrepresents document structure to AT",
-            "بيمثّل structure الـ document غلط لـ AT",
+            "It misrepresents document structure to screen readers",
+            "بيمثّل structure الـ document غلط لـ screen readers",
           ),
           opt("b", "Browsers refuse to render h3", "المتصفح بيرفض يعرض h3"),
           opt("c", "CSS cannot style h3", "CSS مش بيقدر يستايل h3"),
@@ -3619,20 +3698,640 @@ export const htmlLessonActivities: Record<string, LessonActivity> = {
       ),
     ],
   },
+
+  "inline-vs-block": {
+    title: L("Inline vs block check", "نشاط inline مقابل block"),
+    questions: [
+      q(
+        "q1",
+        L("Which tags are block by default?", "أنهي tags block افتراضيًا؟"),
+        [
+          opt("a", "<span> and <a>", "<span> و <a>"),
+          opt("b", "<div>, <p>, and <section>", "<div> و <p> و <section>"),
+          opt("c", "<strong> and <em>", "<strong> و <em>"),
+          opt("d", "<code> only", "<code> بس"),
+        ],
+        "b",
+        L(
+          "Block tags like `<div>`, `<p>`, and `<section>` start on a new line and take full width by default.",
+          "وسوم block زي `<div>` و `<p>` و `<section>` بتبدأ سطر جديد وبتاخد العرض الكامل افتراضيًا.",
+        ),
+        {
+          hint: L(
+            "Think “big pieces of the page” vs “bits inside a sentence.”",
+            "فكّر “قطع كبيرة من الصفحة” مقابل “قطع جوّه الجملة.”",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("What do inline elements do?", "عناصر inline بتعمل إيه؟"),
+        [
+          opt("a", "Always force a new page section", "دايمًا بتفتح قسم صفحة جديد"),
+          opt(
+            "b",
+            "Flow inside a line of text without a forced new line",
+            "بتمشي جوّه سطر النص من غير سطر جديد إجباري",
+          ),
+          opt("c", "Replace CSS Grid", "بدل CSS Grid"),
+          opt("d", "Hide content from screen readers", "بتخفي المحتوى من قارئات الشاشة"),
+        ],
+        "b",
+        L(
+          "Inline tags like `<span>`, `<a>`, and `<strong>` sit inside text.",
+          "وسوم inline زي `<span>` و `<a>` و `<strong>` بتقعد جوّه النص.",
+        ),
+        {
+          hint: L(
+            "Inline = inside the sentence · block = its own chunk.",
+            "Inline = جوّه الجملة · block = قطعة لوحدها.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L("Which nesting is a common beginner mistake?", "أنهي تداخل غلط شائع للمبتدئ؟"),
+        [
+          opt("a", "<p> with <strong> inside", "<p> وفيها <strong>"),
+          opt("b", "<div> containing <p>", "<div> فيها <p>"),
+          opt(
+            "c",
+            "Putting a <div> inside a <span>",
+            "تحط <div> جوّه <span>",
+          ),
+          opt("d", "<ul> containing <li>", "<ul> فيها <li>"),
+        ],
+        "c",
+        L(
+          "Don’t put block tags inside inline tags. Keep structure in blocks and text pieces inline.",
+          "متحطش وسوم block جوّه inline. خلّي البنية في block وقطع النص inline.",
+        ),
+        {
+          code: `<!-- avoid -->\n<span><div>Oops</div></span>`,
+          language: "html",
+          hint: L(
+            "Block inside inline is the mix-up to avoid.",
+            "Block جوّه inline هو الخلط اللي تتجنّبه.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L(
+          "`div` vs `span` — what’s the simple rule?",
+          "`div` مقابل `span` — القاعدة البسيطة؟",
+        ),
+        [
+          opt(
+            "a",
+            "`div` = block box · `span` = inline hook",
+            "`div` = صندوق block · `span` = hook inline",
+          ),
+          opt("b", "They mean the same thing", "نفس المعنى"),
+          opt("c", "`span` is only for forms", "`span` للفورم بس"),
+          opt("d", "`div` is always better for bold text", "`div` دايمًا أحسن للنص العريض"),
+        ],
+        "a",
+        L(
+          "Both are neutral (no special meaning). Choose by layout need: block box vs inline piece.",
+          "الاتنين محايدين (من غير معنى خاص). اختار حسب الحاجة: صندوق block ولا قطعة inline.",
+        ),
+        {
+          hint: L(
+            "Same “no meaning” idea — different default display.",
+            "نفس فكرة “من غير معنى” — عرض افتراضي مختلف.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "classes-and-ids": {
+    title: L("Classes & IDs check", "نشاط الـ classes والـ ids"),
+    questions: [
+      q(
+        "q1",
+        L("How many elements can share the same `id`?", "كام عنصر يقدروا يشاركوا نفس الـ `id`؟"),
+        [
+          opt("a", "As many as you want", "قد ما تحب"),
+          opt("b", "Only one per page", "واحد بس في الصفحة"),
+          opt("c", "Two — one for CSS, one for JS", "اتنين — واحد لـ CSS وواحد لـ JS"),
+          opt("d", "Only inside forms", "جوّه الفورم بس"),
+        ],
+        "b",
+        L(
+          "`id` must be unique in the document. Reuse styles with `class` instead.",
+          "`id` لازم يكون فريد في المستند. أعد استخدام التنسيق بـ `class`.",
+        ),
+        {
+          hint: L(
+            "Think of `id` like a unique name tag.",
+            "فكّر في `id` زي اسم فريد على تاج.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("What is `class` best for?", "`class` أنسب لإيه؟"),
+        [
+          opt(
+            "a",
+            "Shared styling or behavior on many elements",
+            "تنسيق أو سلوك مشترك على عناصر كتير",
+          ),
+          opt("b", "Replacing the `name` attribute on inputs", "بدل خاصية `name` على الـ inputs"),
+          opt("c", "Making text semantic like `<strong>`", "تخلي النص semantic زي `<strong>`"),
+          opt("d", "Only one element ever", "عنصر واحد بس للأبد"),
+        ],
+        "a",
+        L(
+          "Classes can repeat. Use them for reusable look and JS hooks.",
+          "الـ classes تتكرر. استخدمها للشكل القابل لإعادة الاستخدام و hooks الـ JS.",
+        ),
+        {
+          code: `<button class="btn btn-primary">Save</button>`,
+          language: "html",
+          hint: L(
+            "One class name can style many buttons the same way.",
+            "اسم class واحد يقدر ينسّق أزرار كتير بنفس الطريقة.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L(
+          "Why must `<label for=\"email\">` match the input’s `id`?",
+          "ليه `<label for=\"email\">` لازم يطابق `id` الـ input؟",
+        ),
+        [
+          opt(
+            "a",
+            "So clicking the label focuses the input",
+            "عشان الضغط على الـ label يركّز على الـ input",
+          ),
+          opt("b", "So CSS Grid works", "عشان CSS Grid يشتغل"),
+          opt("c", "So the form uses GET", "عشان الفورم تستخدم GET"),
+          opt("d", "It is optional decoration", "ديكور اختياري"),
+        ],
+        "a",
+        L(
+          "`for` + matching `id` links the label to the control for mouse, keyboard, and screen readers.",
+          "`for` + `id` مطابق بيربط الـ label بالـ control للماوس والكيبورد وقارئ الشاشة.",
+        ),
+        {
+          code: `<label for="email">Email</label>\n<input id="email" name="email" type="email" />`,
+          language: "html",
+          hint: L(
+            "Match the strings exactly — `for` and `id` are a pair.",
+            "طابق النصوص بالظبط — `for` و `id` زوج.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L(
+          "Which is a good beginner habit for CSS?",
+          "أنهي عادة كويسة للمبتدئ مع CSS؟",
+        ),
+        [
+          opt(
+            "a",
+            "Prefer classes for reusable UI; keep ids rare and unique",
+            "فضّل classes للواجهة القابلة لإعادة الاستخدام؛ خلّي الـ ids نادرة وفريدة",
+          ),
+          opt("b", "Style everything with `#id` only", "نسّق كل حاجة بـ `#id` بس"),
+          opt("c", "Skip classes and use inline styles everywhere", "اتخطى الـ classes واستخدم inline styles في كل حتة"),
+          opt("d", "Put the same id on every button", "حط نفس الـ id على كل زرار"),
+        ],
+        "a",
+        L(
+          "`#id` selectors are very specific. Classes scale better for shared components.",
+          "محددات `#id` قوية جدًا. الـ classes بتتكيّف أحسن للمكوّنات المشتركة.",
+        ),
+        {
+          hint: L(
+            "Reuse → class · unique target / label link → id.",
+            "إعادة استخدام → class · هدف فريد / ربط label → id.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "html-browser-apis": {
+    title: L("Browser APIs check", "نشاط APIs المتصفح"),
+    questions: [
+      q(
+        "q1",
+        L("What must Geolocation do before reading location?", "Geolocation لازم يعمل إيه قبل قراءة الموقع؟"),
+        [
+          opt("a", "Ask the user for permission", "اطلب إذن المستخدم"),
+          opt("b", "Write the GPS to localStorage first", "يكتب GPS في localStorage أول"),
+          opt("c", "Disable all CSS", "يقفل كل CSS"),
+          opt("d", "Open a new tab automatically", "يفتح تاب جديد لوحده"),
+        ],
+        "a",
+        L(
+          "Browsers require an explicit permission prompt. Always handle “denied” and explain why you need location.",
+          "المتصفحات بتطلب إذن واضح. دايمًا تعامل مع الرفض ووضّح ليه محتاج الموقع.",
+        ),
+        {
+          hint: L(
+            "Location is private — the browser asks first.",
+            "الموقع خاص — المتصفح بيسأل أول.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L(
+          "What HTML attribute starts a drag-and-drop source?",
+          "أنهي خاصية HTML بتبدأ مصدر السحب والإفلات؟",
+        ),
+        [
+          opt("a", "contenteditable", "contenteditable"),
+          opt("b", "draggable=\"true\"", "draggable=\"true\""),
+          opt("c", "autocomplete=\"on\"", "autocomplete=\"on\""),
+          opt("d", "hidden", "hidden"),
+        ],
+        "b",
+        L(
+          "Mark the element `draggable=\"true\"`, then handle drag/drop events in JavaScript. Offer a keyboard alternative too.",
+          "علّم العنصر `draggable=\"true\"`، وبعدين عالج أحداث السحب/الإفلات في JavaScript. وفّر بديل كيبورد كمان.",
+        ),
+        {
+          code: `<p id="item" draggable="true">Drag me</p>`,
+          language: "html",
+          hint: L(
+            "HTML marks it draggable — JS listens for the events.",
+            "HTML بيعلّمه قابل للسحب — JS بيسمع الأحداث.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L(
+          "`localStorage` vs `sessionStorage` — what’s the difference?",
+          "`localStorage` مقابل `sessionStorage` — الفرق إيه؟",
+        ),
+        [
+          opt(
+            "a",
+            "`localStorage` keeps data until cleared; `sessionStorage` lasts for the tab session",
+            "`localStorage` بيفضل لحد ما يتمسح؛ `sessionStorage` لمدة جلسة التاب",
+          ),
+          opt("b", "They are the same API with two names", "نفس الـ API باسمين"),
+          opt("c", "`sessionStorage` is encrypted; `localStorage` is not", "`sessionStorage` مشفّر؛ `localStorage` لأ"),
+          opt("d", "Only `sessionStorage` can store passwords safely", "`sessionStorage` بس يقدر يخزّن كلمات مرور بأمان"),
+        ],
+        "a",
+        L(
+          "Both store small strings on the origin. Neither is safe for secrets.",
+          "الاتنين بيخزّنوا نصوص صغيرة على الـ origin. ولا واحد آمن للأسرار.",
+        ),
+        {
+          hint: L(
+            "Persist across visits → local · tab session → session.",
+            "يفضل بين الزيارات → local · جلسة التاب → session.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L("What should you never put in Web Storage?", "إيه اللي متخزنوش في Web Storage؟"),
+        [
+          opt("a", "A display name like \"Alex\"", "اسم عرض زي \"Alex\""),
+          opt("b", "Passwords, tokens, or other secrets", "كلمات مرور أو tokens أو أسرار"),
+          opt("c", "A small UI flag", "flag صغير للواجهة"),
+          opt("d", "A cached language code", "كود لغة محفوظ"),
+        ],
+        "b",
+        L(
+          "Any script on your origin can read storage. Keep secrets on the server.",
+          "أي سكربت على نفس الـ origin يقدر يقرأ التخزين. خلّي الأسرار على السيرفر.",
+        ),
+        {
+          hint: L(
+            "If it’s sensitive, don’t leave it in the browser’s storage APIs.",
+            "لو حساس، متسيبهوش في APIs تخزين المتصفح.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "html-comments": {
+    title: L("Comments check", "نشاط التعليقات"),
+    questions: [
+      q(
+        "q1",
+        L("How do you write an HTML comment?", "إزاي تكتب تعليق HTML؟"),
+        [
+          opt("a", "// this is a comment", "// this is a comment"),
+          opt("b", "<!-- this is a comment -->", "<!-- this is a comment -->"),
+          opt("c", "/* this is a comment */", "/* this is a comment */"),
+          opt("d", "# this is a comment", "# this is a comment"),
+        ],
+        "b",
+        L(
+          "HTML comments use `<!--` and `-->`. `//` is JavaScript; `/* */` is CSS.",
+          "تعليقات HTML بـ `<!--` و `-->`. `//` لـ JavaScript؛ `/* */` لـ CSS.",
+        ),
+        {
+          code: `<!-- Header: logo + nav -->`,
+          language: "html",
+          hint: L(
+            "Think HTML, not JS or CSS comment syntax.",
+            "فكّر في HTML، مش صيغة تعليق JS أو CSS.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("What do users see on the page from a comment?", "المستخدم بيشوف إيه على الصفحة من التعليق؟"),
+        [
+          opt("a", "The comment text in gray", "نص التعليق بالرمادي"),
+          opt("b", "Nothing — it is not rendered", "ولا حاجة — مش بيترسم"),
+          opt("c", "A tooltip on hover", "tooltip عند المرور"),
+          opt("d", "It replaces the next heading", "بيبدل العنوان اللي بعده"),
+        ],
+        "b",
+        L(
+          "Comments stay in the source and the DOM tree. They are not painted.",
+          "التعليقات تفضل في المصدر وشجرة الـ DOM. مش بتتترسم.",
+        ),
+        {
+          hint: L(
+            "View Source can see it. The page cannot.",
+            "View Source يشوفه. الصفحة لأ.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L("What should you never put in an HTML comment?", "إيه اللي متتحطوش في تعليق HTML؟"),
+        [
+          opt("a", "A note about why a section exists", "ملاحظة ليه القسم موجود"),
+          opt("b", "API keys, passwords, or private URLs", "API keys أو كلمات مرور أو روابط خاصة"),
+          opt("c", "A reminder to add alt text later", "تذكير تضيف alt بعدين"),
+          opt("d", "The name of a nearby component", "اسم مكوّن قريب"),
+        ],
+        "b",
+        L(
+          "Anyone can View Source. Comments are not encryption.",
+          "أي حد يعمل View Source. التعليقات مش تشفير.",
+        ),
+        {
+          hint: L(
+            "If it is a secret, it does not belong in HTML at all.",
+            "لو سر، ملوش مكان في HTML أصلًا.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L("How do you show a `<` character as text?", "إزاي تظهر حرف `<` كنص؟"),
+        [
+          opt("a", "Put it in a comment", "حطه في تعليق"),
+          opt("b", "Write `&lt;`", "اكتب `&lt;`"),
+          opt("c", "Write `\\<`", "اكتب `\\<`"),
+          opt("d", "Use a `<span>` around it", "لفه في `<span>`"),
+        ],
+        "b",
+        L(
+          "`&lt;` is the entity for `<`. `&amp;` is for `&`. `&gt;` is for `>`.",
+          "`&lt;` هي الـ entity لـ `<`. `&amp;` لـ `&`. `&gt;` لـ `>`.",
+        ),
+        {
+          code: `<code>&lt;section&gt;</code>`,
+          language: "html",
+          hint: L(
+            "The parser treats a raw `<` as the start of a tag.",
+            "الـ parser بيعتبر `<` الخام بداية tag.",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "global-attributes": {
+    title: L("Global attributes check", "نشاط الخصائص العامة"),
+    questions: [
+      q(
+        "q1",
+        L("What does the `hidden` attribute do?", "خاصية `hidden` بتعمل إيه؟"),
+        [
+          opt("a", "Deletes the element from the file", "بتمسح العنصر من الملف"),
+          opt(
+            "b",
+            "Hides it from the page and from screen readers",
+            "بتخفيه من الصفحة ومن أدوات الوصول",
+          ),
+          opt("c", "Makes it bold", "بتخليه عريض"),
+          opt("d", "Only hides it from search engines", "بتخفيه من محركات البحث بس"),
+        ],
+        "b",
+        L(
+          "`hidden` keeps the node in the DOM but it is not shown or announced.",
+          "`hidden` بيسيب العنصر في الـ DOM لكنه مش ظاهر ومش بيتعلن.",
+        ),
+        {
+          hint: L(
+            "Think “not displayed”, not “deleted”.",
+            "فكّر “مش معروض”، مش “اتمسح”.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("What are `data-*` attributes for?", "خصائص `data-*` معمولة لإيه؟"),
+        [
+          opt(
+            "a",
+            "Extra data for your CSS or JavaScript",
+            "بيانات زيادة لـ CSS أو JavaScript",
+          ),
+          opt("b", "Encrypting passwords", "تشفير كلمات المرور"),
+          opt("c", "Replacing the `id` attribute", "بدل خاصية `id`"),
+          opt("d", "Making text semantic like `<strong>`", "تخلي النص semantic زي `<strong>`"),
+        ],
+        "a",
+        L(
+          "`data-lesson=\"html-15\"` is a hook for your app — not a secret store.",
+          "`data-lesson=\"html-15\"` hook لتطبيقك — مش مخزن أسرار.",
+        ),
+        {
+          code: `<article data-tier="beginner">…</article>`,
+          language: "html",
+          hint: L(
+            "Custom data, not meaning for screen readers.",
+            "بيانات مخصصة، مش معنى لقارئ الشاشة.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L("What does `hidden=\"false\"` do?", "`hidden=\"false\"` بيعمل إيه؟"),
+        [
+          opt("a", "Shows the element", "بيظهر العنصر"),
+          opt(
+            "b",
+            "Still hides it — the attribute is boolean (present = true)",
+            "برضه بيخفيه — الخاصية بوليانية (موجودة = true)",
+          ),
+          opt("c", "Throws a parse error", "بيرمي parse error"),
+          opt("d", "Toggles every second", "بيقلّب كل ثانية"),
+        ],
+        "b",
+        L(
+          "Write `hidden` to hide. Remove the attribute to show. Do not use `=\"false\"`.",
+          "اكتب `hidden` عشان تخفي. شيل الخاصية عشان تظهر. متستخدمش `=\"false\"`.",
+        ),
+        {
+          hint: L(
+            "Boolean HTML attributes care about presence, not the word false.",
+            "الخصائص البوليانية بتهمها الوجود، مش كلمة false.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L("Which `tabindex` values are the safe beginner defaults?", "أنهي قيم `tabindex` الآمنة للمبتدئ؟"),
+        [
+          opt("a", "`tabindex=\"1\"` on every heading", "`tabindex=\"1\"` على كل عنوان"),
+          opt(
+            "b",
+            "`0` for extra Tab stops, `-1` for script-only focus",
+            "`0` لتوقفات Tab زيادة، `-1` لتركيز من السكربت بس",
+          ),
+          opt("c", "Any number from 1 to 99", "أي رقم من 1 لـ 99"),
+          opt("d", "Skip tabindex — never use it", "اتخطى tabindex — متستخدمهوش أبدًا"),
+        ],
+        "b",
+        L(
+          "Positive tabindex hijacks order. Prefer real buttons and links.",
+          "الـ tabindex الموجب بيبوّظ الترتيب. فضّل أزرار ولينكات حقيقية.",
+        ),
+        {
+          hint: L(
+            "0 and -1 only. Avoid 1, 2, 3…",
+            "0 و -1 بس. تجنّب 1 و 2 و 3…",
+          ),
+        },
+      ),
+    ],
+  },
+
+  "html-native-interactive": {
+    title: L("Template & popover check", "نشاط template و popover"),
+    questions: [
+      q(
+        "q1",
+        L("What is `<template>` for?", "`<template>` معمولة لإيه؟"),
+        [
+          opt(
+            "a",
+            "Hold HTML that does not render until JavaScript clones it",
+            "تحفظ HTML مش بيترسم لحد ما JavaScript ينسخه",
+          ),
+          opt("b", "A visible page section like `<main>`", "قسم صفحة ظاهر زي `<main>`"),
+          opt("c", "Styling only", "تنسيق بس"),
+          opt("d", "Replacing `<head>`", "بدل `<head>`"),
+        ],
+        "a",
+        L(
+          "Template contents stay inert — clone with `template.content.cloneNode(true)`.",
+          "محتوى الـ template بيفضل inert — انسخه بـ `template.content.cloneNode(true)`.",
+        ),
+        {
+          hint: L(
+            "If you can see it on first paint, it is not still in the template.",
+            "لو باين من أول رسم، يبقى مش لسه جوّه الـ template.",
+          ),
+        },
+      ),
+      q(
+        "q2",
+        L("How do you open a native popover with HTML?", "إزاي تفتح popover أصلي بـ HTML؟"),
+        [
+          opt("a", "Only with a CSS hover menu", "بـ CSS hover بس"),
+          opt(
+            "b",
+            "`popover` on the panel + `popovertarget` on a button",
+            "`popover` على اللوحة + `popovertarget` على زرار",
+          ),
+          opt("c", "`<div onclick>` with no attributes", "`<div onclick>` من غير خصائص"),
+          opt("d", "`target=\"_blank\"`", "`target=\"_blank\"`"),
+        ],
+        "b",
+        L(
+          "Use a real `<button type=\"button\">`. Esc and click-outside dismiss.",
+          "استخدم `<button type=\"button\">` حقيقي. Esc والضغط برة بيقفلوا.",
+        ),
+        {
+          code: `<button type="button" popovertarget="tips">Tips</button>\n<div id="tips" popover>…</div>`,
+          language: "html",
+          hint: L(
+            "Match the button’s popovertarget to the panel’s id.",
+            "طابق popovertarget الزرار مع id اللوحة.",
+          ),
+        },
+      ),
+      q(
+        "q3",
+        L("What does `inert` do to a subtree?", "`inert` بيعمل إيه لجزء من الصفحة؟"),
+        [
+          opt(
+            "a",
+            "Makes it non-interactive and hidden from screen readers",
+            "بيخلّيه مش تفاعلي ومخفي عن أدوات الوصول",
+          ),
+          opt("b", "Encrypts the HTML", "بيشفّر الـ HTML"),
+          opt("c", "Lazy-loads images inside", "بيعمل lazy-load للصور جوّه"),
+          opt("d", "Turns text into a comment", "بيحوّل النص لتعليق"),
+        ],
+        "a",
+        L(
+          "Modal `<dialog showModal()>` applies this for you. Don’t trap focus inside inert.",
+          "`<dialog showModal()>` بيعمل كده لوحده. متحبسش الـ focus جوّه inert.",
+        ),
+        {
+          hint: L(
+            "Inert = skip for mouse, keyboard, and screen readers.",
+            "Inert = تخطّي للماوس والكيبورد وقارئ الشاشة.",
+          ),
+        },
+      ),
+      q(
+        "q4",
+        L("Why not put indexable article text only inside `<template>`?", "ليه متحطش نص المقال القابل للفهرسة جوّه `<template>` بس؟"),
+        [
+          opt(
+            "a",
+            "It is not in the first rendered document — crawlers may miss it",
+            "مش في أول مستند مترسوم — الزواحف ممكن تضيعه",
+          ),
+          opt("b", "Google forbids the template tag", "جوجل منعت وسم template"),
+          opt("c", "It makes CSS illegal", "بيخلّي CSS غير قانوني"),
+          opt("d", "Comments replace templates for SEO", "التعليقات بتبدل templates للـ SEO"),
+        ],
+        "a",
+        L(
+          "Use templates for repeated UI. Keep primary copy in normal HTML.",
+          "استخدم templates لواجهة متكررة. خلّي النص الأساسي في HTML عادي.",
+        ),
+        {
+          hint: L(
+            "If it is not cloned yet, it is not really on the page.",
+            "لو لسه متنسخش، يبقى مش على الصفحة فعلًا.",
+          ),
+        },
+      ),
+    ],
+  },
 };
 
-/** Runtime guard used by the HTML lesson assembler. */
+/** Runtime guard — prefer assembleTrackLessons; kept for direct callers/tests. */
 export function assertHtmlLessonActivityCoverage(slugs: readonly string[]) {
-  for (const slug of slugs) {
-    const activity = htmlLessonActivities[slug];
-    if (
-      !activity ||
-      activity.questions.length < 3 ||
-      activity.questions.length > 6
-    ) {
-      throw new Error(
-        `HTML lesson activity missing or invalid length for lesson "${slug}" (need 3–6 questions, got ${activity?.questions.length ?? 0})`,
-      );
-    }
-  }
+  assertLessonActivityCoverage("HTML", slugs, htmlLessonActivities);
 }

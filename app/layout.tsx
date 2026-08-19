@@ -1,4 +1,12 @@
 import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
+import { LanguageProvider } from "@/context/LanguageContext";
+import {
+  LOCALE_BOOTSTRAP_SCRIPT,
+  LOCALE_COOKIE,
+  localeDir,
+  parseLocale,
+} from "@/lib/locale";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -9,21 +17,27 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#020617" },
-    { media: "(prefers-color-scheme: light)", color: "#020617" },
-  ],
+  themeColor: "#020617",
   colorScheme: "dark",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const locale = parseLocale(cookieStore.get(LOCALE_COOKIE)?.value);
+
   return (
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={localeDir(locale)}
+      className="h-full antialiased"
+      suppressHydrationWarning
+    >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: LOCALE_BOOTSTRAP_SCRIPT }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -36,7 +50,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full bg-slate-950 text-slate-100">{children}</body>
+      <body className="min-h-full bg-slate-950 text-slate-100">
+        <LanguageProvider initialLocale={locale}>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

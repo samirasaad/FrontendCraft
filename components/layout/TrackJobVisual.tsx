@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 import {
   PlayPauseButton,
   useAutoPlay,
@@ -9,6 +10,7 @@ import {
 import { t } from "@/content/i18n/ui-strings";
 import { useLanguage } from "@/context/LanguageContext";
 import { LAB_ENTER_S, LAB_LOOP_S, LAB_STEP_MS } from "@/lib/motion-pace";
+import { RTL_FLIP } from "@/lib/rtl";
 import type { Locale, TrackId } from "@/lib/types";
 
 export const TRACK_JOB_KEYS: Record<
@@ -206,28 +208,19 @@ function HtmlScene({
       tag: "<h2>",
       close: "</h2>",
       text: "Welcome back",
-      role: "heading",
       tint: "text-orange-300",
-      ring: "rgba(251,146,60,0.55)",
-      glow: "0 0 20px rgba(251,146,60,0.18)",
     },
     {
       tag: "<p>",
       close: "</p>",
       text: "Save your progress…",
-      role: "text",
       tint: "text-cyan-300",
-      ring: "rgba(34,211,238,0.4)",
-      glow: "0 0 16px rgba(34,211,238,0.12)",
     },
     {
       tag: "<button>",
       close: "</button>",
       text: "Save",
-      role: "control",
       tint: "text-amber-200",
-      ring: "rgba(251,191,36,0.45)",
-      glow: "0 0 18px rgba(251,191,36,0.16)",
     },
   ] as const;
   const visible = Math.min(step, 3);
@@ -238,6 +231,7 @@ function HtmlScene({
     t("trackCapHtml2", locale),
     t("trackCapHtml3", locale),
   ];
+  const typeSize = hero ? "text-[13px]" : "text-[10px]";
 
   return (
     <Stage
@@ -248,310 +242,181 @@ function HtmlScene({
       controls={controls}
     >
       <div
-        className={`mx-auto grid h-full max-w-4xl gap-3 ${
+        className={`mx-auto grid h-full max-w-5xl ${
           hero
-            ? "sm:grid-cols-[1.15fr_auto_1fr] sm:items-stretch sm:gap-4"
-            : ""
+            ? "grid-rows-[1fr_auto] gap-3 sm:grid-rows-1 sm:grid-cols-[1fr_auto_1fr] sm:items-stretch sm:gap-3"
+            : "gap-2"
         }`}
       >
-        {/* Markup source */}
         <div
-          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950/70 ${
+          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-950/90 ${
             hero ? "p-3.5" : "p-2"
           }`}
         >
-          <div className="mb-2 flex items-center gap-2">
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-slate-500">
-              index.html
-            </span>
-            <motion.span
-              key={step}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="rounded-full bg-orange-400/15 px-1.5 py-0.5 font-mono text-[8px] text-orange-200/90"
-            >
-              {step === 0 ? "empty" : `${visible} node${visible === 1 ? "" : "s"}`}
-            </motion.span>
-          </div>
-
-          <AnimatePresence mode="popLayout">
-            {step === 0 ? (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className={`flex flex-1 flex-col justify-center gap-1.5 font-mono text-slate-600 ${
-                  hero ? "text-[12px]" : "text-[9px]"
-                }`}
-              >
-                <p>&lt;!DOCTYPE html&gt;</p>
-                <p>&lt;html&gt;</p>
-                <p className="ps-3 text-slate-700">&lt;body&gt;</p>
-                <motion.p
-                  animate={
-                    animate
-                      ? { opacity: [0.35, 1, 0.35] }
-                      : { opacity: 0.5 }
-                  }
-                  transition={{
-                    duration: LAB_LOOP_S,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="ps-6 text-orange-300/70"
-                >
-                  ▍
-                </motion.p>
-                <p className="ps-3 text-slate-700">&lt;/body&gt;</p>
-                <p>&lt;/html&gt;</p>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="rows"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className={`flex flex-1 flex-col justify-center ${
-                  hero ? "gap-2" : "gap-1"
-                }`}
-              >
-                {rows.map((row, i) => {
-                  const on = i < visible;
-                  const lit = i === active;
-                  return (
-                    <motion.div
-                      key={row.tag}
-                      initial={false}
-                      animate={{
-                        opacity: on ? 1 : 0.2,
-                        y: on ? 0 : 6,
-                        scale: lit ? 1.02 : 1,
-                        borderColor: lit
-                          ? row.ring
-                          : on
-                            ? "rgba(255,255,255,0.14)"
-                            : "rgba(255,255,255,0.05)",
-                        boxShadow: lit ? row.glow : "0 0 0 transparent",
-                        backgroundColor: lit
-                          ? "rgba(255,255,255,0.04)"
-                          : "rgba(0,0,0,0)",
-                      }}
-                      transition={{
-                        duration: LAB_ENTER_S,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className={`flex items-center gap-1.5 rounded-lg border border-dashed font-mono ${
-                        hero
-                          ? "px-2.5 py-2 text-[12px]"
-                          : "px-1.5 py-1 text-[9px]"
-                      }`}
-                    >
-                      <span className={on ? row.tint : "text-slate-700"}>
-                        {row.tag}
-                      </span>
-                      <span
-                        className={`min-w-0 truncate ${
-                          on ? "text-slate-100" : "text-slate-700"
-                        }`}
-                      >
-                        {row.text}
-                      </span>
-                      <span className={on ? "text-slate-600" : "text-slate-800"}>
-                        {row.close}
-                      </span>
-                      {on ? (
-                        <motion.span
-                          layout
-                          className={`ms-auto rounded px-1 py-0.5 font-mono uppercase tracking-wide ${
-                            lit
-                              ? "bg-white/10 text-slate-200"
-                              : "text-slate-500"
-                          } ${hero ? "text-[9px]" : "text-[7px]"}`}
-                        >
-                          {row.role}
-                        </motion.span>
-                      ) : null}
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {hero ? (
-          <>
-            {/* Flow arrow */}
-            <div className="hidden flex-col items-center justify-center sm:flex">
-              <motion.div
+          <span className="mb-2 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-500">
+            index.html
+          </span>
+          <div
+            className={`flex flex-1 flex-col justify-center font-mono ${typeSize} ${
+              hero ? "gap-1.5" : "gap-1"
+            }`}
+          >
+            <p className="text-slate-500">&lt;body&gt;</p>
+            <AnimatePresence initial={false}>
+              {rows.map((row, i) => {
+                const on = i < visible;
+                const lit = i === active;
+                if (!on) return null;
+                return (
+                  <motion.p
+                    key={row.tag}
+                    initial={{ opacity: 0, x: -12, filter: "blur(6px)" }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      filter: "blur(0px)",
+                      backgroundColor: lit
+                        ? "rgba(251,146,60,0.14)"
+                        : "rgba(0,0,0,0)",
+                    }}
+                    exit={{ opacity: 0, x: -8 }}
+                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    className="ms-4 rounded-md px-1.5 py-0.5"
+                  >
+                    <span className={row.tint}>{row.tag}</span>
+                    <span className="text-slate-100">{row.text}</span>
+                    <span className="text-slate-500">{row.close}</span>
+                  </motion.p>
+                );
+              })}
+            </AnimatePresence>
+            {visible === 0 ? (
+              <motion.p
+                key="caret"
                 animate={
-                  animate
-                    ? {
-                        x: [0, 4, 0],
-                        opacity: [0.4, 1, 0.4],
-                      }
-                    : { opacity: 0.5 }
+                  animate ? { opacity: [0.25, 1, 0.25] } : { opacity: 0.5 }
                 }
                 transition={{
-                  duration: LAB_LOOP_S,
+                  duration: LAB_LOOP_S * 0.45,
                   repeat: Infinity,
                   ease: "easeInOut",
                 }}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-orange-300/25 bg-orange-400/10 text-orange-200"
+                className="ms-4 text-orange-300"
               >
-                <span className="text-sm rtl:rotate-180">→</span>
-              </motion.div>
-              <p className="mt-1.5 font-mono text-[8px] uppercase tracking-wider text-slate-500">
-                parse
-              </p>
-            </div>
+                ▍
+                <span className="ms-2 font-sans text-[10px] text-slate-500">
+                  {t("trackHtmlEmpty", locale)}
+                </span>
+              </motion.p>
+            ) : null}
+            <p className="text-slate-500">&lt;/body&gt;</p>
+          </div>
+        </div>
 
-            {/* Live page + DOM */}
-            <div className="grid min-h-0 grid-rows-[1fr_auto] gap-2.5">
-              <div className="relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950">
-                <div className="flex items-center gap-1 border-b border-white/10 px-2.5 py-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-rose-400/50" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-300/50" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/50" />
-                  <span className="ms-1.5 font-mono text-[8px] text-slate-500">
-                    preview
-                  </span>
-                </div>
-                <div className="flex h-[104px] flex-col justify-center gap-2 px-4 sm:h-[118px]">
-                  <AnimatePresence mode="popLayout">
-                    {visible === 0 ? (
-                      <motion.p
-                        key="blank"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="text-center font-mono text-[11px] text-slate-600"
-                      >
-                        blank page
-                      </motion.p>
-                    ) : null}
-                    {visible > 0 ? (
-                      <motion.h2
-                        key="h2"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                          color:
-                            active === 0
-                              ? "rgb(254 215 170)"
-                              : "rgb(248 250 252)",
-                        }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: LAB_ENTER_S }}
-                        className="font-[family-name:var(--font-display)] text-base font-bold tracking-tight"
-                      >
-                        Welcome back
-                      </motion.h2>
-                    ) : null}
-                    {visible > 1 ? (
-                      <motion.p
-                        key="p"
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                          color:
-                            active === 1
-                              ? "rgb(165 243 252)"
-                              : "rgb(148 163 184)",
-                        }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: LAB_ENTER_S }}
-                        className="text-[12px] leading-snug"
-                      >
-                        Save your progress…
-                      </motion.p>
-                    ) : null}
-                    {visible > 2 ? (
-                      <motion.button
-                        key="btn"
-                        type="button"
-                        tabIndex={-1}
-                        initial={{ opacity: 0, y: 8, scale: 0.94 }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                          scale: active === 2 ? [1, 1.04, 1] : 1,
-                          boxShadow:
-                            active === 2
-                              ? [
-                                  "0 0 0 rgba(251,146,60,0)",
-                                  "0 0 18px rgba(251,146,60,0.45)",
-                                  "0 0 0 rgba(251,146,60,0)",
-                                ]
-                              : "0 0 0 rgba(0,0,0,0)",
-                        }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{
-                          duration: active === 2 ? LAB_LOOP_S : LAB_ENTER_S,
-                          repeat: active === 2 && animate ? Infinity : 0,
-                          ease: "easeInOut",
-                        }}
-                        className="w-fit rounded-full bg-gradient-to-r from-orange-400 to-amber-300 px-3 py-1 text-[11px] font-bold text-slate-950"
-                      >
-                        Save
-                      </motion.button>
-                    ) : null}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
-                <p className="font-mono text-[8px] uppercase tracking-[0.16em] text-slate-500">
-                  DOM outline
-                </p>
-                <ul className="mt-1.5 space-y-1 font-mono text-[11px]">
-                  {rows.map((row, i) => {
-                    const on = i < visible;
-                    const lit = i === active;
-                    return (
-                      <motion.li
-                        key={row.role}
-                        initial={false}
-                        animate={{
-                          opacity: on ? 1 : 0.25,
-                          x: on ? 0 : -4,
-                          color: lit
-                            ? i === 0
-                              ? "rgb(254 215 170)"
-                              : i === 1
-                                ? "rgb(165 243 252)"
-                                : "rgb(253 230 138)"
-                            : on
-                              ? "rgb(203 213 225)"
-                              : "rgb(71 85 105)",
-                        }}
-                        transition={{ duration: LAB_ENTER_S }}
-                        className="flex items-center gap-1.5"
-                      >
-                        <span className="text-slate-600">└</span>
-                        <span>{row.role}</span>
-                        {lit ? (
-                          <motion.span
-                            layoutId="dom-pulse"
-                            className="ms-auto h-1.5 w-1.5 rounded-full bg-orange-300"
-                            animate={{ scale: [1, 1.35, 1], opacity: [0.6, 1, 0.6] }}
-                            transition={{
-                              duration: LAB_LOOP_S,
-                              repeat: Infinity,
-                              ease: "easeInOut",
-                            }}
-                          />
-                        ) : null}
-                      </motion.li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </div>
-          </>
+        {hero ? (
+          <div className="hidden flex-col items-center justify-center gap-1 sm:flex">
+            <span className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-300/30 bg-orange-300/10 text-orange-200">
+              <ArrowRight size={16} className={RTL_FLIP} />
+            </span>
+            <span className="max-w-[4.5rem] text-center font-mono text-[9px] uppercase tracking-wider text-slate-500">
+              {t("preview", locale)}
+            </span>
+          </div>
         ) : null}
+
+        <div
+          className={`relative flex min-h-0 flex-col overflow-hidden rounded-xl border border-white/10 bg-[#0b1220] ${
+            hero ? "" : "hidden"
+          }`}
+        >
+          <div className="flex items-center border-b border-white/10 bg-slate-950/80 px-3 py-1.5">
+            <span className="min-w-0 flex-1 truncate rounded-full bg-white/5 px-2.5 py-0.5 text-center font-mono text-[9px] text-slate-500">
+              example.com
+            </span>
+          </div>
+          <div className="relative flex flex-1 flex-col justify-center gap-2.5 bg-gradient-to-b from-slate-900/40 to-slate-950 px-5 py-4">
+            <AnimatePresence mode="popLayout">
+              {visible === 0 ? (
+                <motion.div
+                  key="ghost"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="flex flex-col items-center justify-center gap-3"
+                >
+                  <div className="w-full max-w-[12rem] space-y-2">
+                    <div className="h-5 w-2/3 rounded bg-white/8" />
+                    <div className="h-2.5 w-full rounded bg-white/6" />
+                    <div className="h-2.5 w-4/5 rounded bg-white/6" />
+                    <div className="h-7 w-16 rounded-full bg-white/8" />
+                  </div>
+                  <p className="font-mono text-[11px] text-slate-500">
+                    {t("trackHtmlBlankPage", locale)}
+                  </p>
+                </motion.div>
+              ) : null}
+              {visible > 0 ? (
+                <motion.h2
+                  key="h2"
+                  layout
+                  initial={{ opacity: 0, y: 16, scale: 0.96 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    boxShadow:
+                      active === 0
+                        ? "0 0 0 1px rgba(251,146,60,0.7)"
+                        : "0 0 0 0px rgba(251,146,60,0)",
+                  }}
+                  className="w-fit rounded-md px-1 font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-white"
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  Welcome back
+                </motion.h2>
+              ) : null}
+              {visible > 1 ? (
+                <motion.p
+                  key="p"
+                  layout
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    boxShadow:
+                      active === 1
+                        ? "0 0 0 1px rgba(34,211,238,0.7)"
+                        : "0 0 0 0px rgba(34,211,238,0)",
+                  }}
+                  className="w-fit max-w-[16rem] rounded-md px-1 text-[13px] leading-snug text-slate-300"
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  Save your progress…
+                </motion.p>
+              ) : null}
+              {visible > 2 ? (
+                <motion.span
+                  key="btn"
+                  layout
+                  initial={{ opacity: 0, y: 16, scale: 0.9 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: active === 2 && animate ? [1, 1.05, 1] : 1,
+                  }}
+                  transition={{
+                    duration: active === 2 ? LAB_LOOP_S : 0.5,
+                    repeat: active === 2 && animate ? Infinity : 0,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  className="w-fit rounded-full bg-orange-300 px-3.5 py-1 text-[12px] font-bold text-slate-950"
+                >
+                  Save
+                </motion.span>
+              ) : null}
+            </AnimatePresence>
+          </div>
+        </div>
       </div>
     </Stage>
   );
