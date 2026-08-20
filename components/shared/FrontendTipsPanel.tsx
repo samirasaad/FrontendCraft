@@ -6,8 +6,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import type { LocalizedString } from "@/lib/types";
 import { RichText } from "@/components/shared/RichText";
 
-type TipAction = "DO" | "DONT";
-
 type TipCategoryId =
   | "HTML"
   | "CSS"
@@ -15,22 +13,20 @@ type TipCategoryId =
   | "React"
   | "Git"
   | "UI/UX"
-  | "General Frontend";
+  | "General";
 
-type Tip = {
-  id: string;
-  action: TipAction;
-  category: TipCategoryId;
-  difficulty: LocalizedString;
+type TipSide = {
   title: LocalizedString;
   explanation: LocalizedString;
   code?: string;
-  why: LocalizedString;
 };
 
-const DIFFICULTY_BEGINNER: LocalizedString = {
-  en: "Beginner",
-  ar: "مبتدئ",
+type TipPair = {
+  id: string;
+  category: TipCategoryId;
+  dont: TipSide;
+  do: TipSide;
+  why: LocalizedString;
 };
 
 function pick(value: LocalizedString, locale: "en" | "ar") {
@@ -43,595 +39,943 @@ const CATEGORY_LABELS: Record<TipCategoryId, LocalizedString> = {
   JavaScript: { en: "JavaScript", ar: "JavaScript" },
   React: { en: "React", ar: "React" },
   Git: { en: "Git", ar: "Git" },
-  "UI/UX": { en: "UI/UX", ar: "واجهة المستخدم/تجربة المستخدم" },
-  "General Frontend": {
-    en: "General Frontend",
-    ar: "عام (Frontend)",
-  },
+  "UI/UX": { en: "UI/UX", ar: "UI/UX" },
+  General: { en: "General", ar: "عام" },
 };
 
-const TIPS: Tip[] = [
+/** Related DO / DON'T pairs — senior mentoring a junior, spoken Egyptian Arabic. */
+const TIP_PAIRS: TipPair[] = [
   {
-    id: "html-main-landmark",
-    action: "DO",
+    id: "buttons",
     category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use one `<main>`", ar: "استخدم `<main>` واحد" },
-    explanation: {
-      en: "Put your primary content in a single `<main>` landmark. It makes navigation predictable for everyone.",
-      ar: "ضع المحتوى الأساسي داخل `<main>` واحد. ده بيخلي التصفح واضح ومُتوقع.",
+    dont: {
+      title: {
+        en: "Clickable `<div>` as a button",
+        ar: "تعمل زرار بـ `<div>` قابل للنقر",
+      },
+      explanation: {
+        en: "I know it feels faster, but a div doesn’t know it’s a button — keyboard and screen readers get lost.",
+        ar: "فاهم إن دي أسرع، بس الـ div مش عارف إنه زرار — الكيبورد وقارئات الشاشة بتتوه.",
+      },
+      code: `<div onClick={save}>Save</div>`,
     },
-    code: `<main>\n  <!-- primary content -->\n</main>`,
+    do: {
+      title: {
+        en: "Use a real `<button>`",
+        ar: "استخدم `<button>` حقيقي",
+      },
+      explanation: {
+        en: "If someone can click it like a button, give them a real button. Browser already did the hard work.",
+        ar: "لو اليوزر بيضغطه زي الزرار، اديله زرار حقيقي. المتصفح خلّص الشغل الصعب.",
+      },
+      code: `<button type="button">Save</button>`,
+    },
     why: {
-      en: "Screen readers can jump to landmarks fast.",
-      ar: "قارئات الشاشة تقدر تقفز للـ landmarks بسرعة.",
+      en: "You get Enter/Space, focus, and accessibility without writing extra code.",
+      ar: "هتاخد Enter/Space والـ focus والـ accessibility من غير كود زيادة.",
     },
   },
   {
-    id: "html-button-not-div",
-    action: "DONT",
+    id: "links",
     category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't use `<div>` for buttons", ar: "ماتستخدمش `<div>` كزر" },
-    explanation: {
-      en: "If it acts like a button, use `<button>`. Clickable `<div>` breaks keyboard + accessibility.",
-      ar: "لو بيشتغل كزر، استخدم `<button>`. `<div>` قابل للنقر بيبوّظ الكيبورد والـ accessibility.",
+    dont: {
+      title: {
+        en: "Vague “click here” links",
+        ar: "لينك غامض زي “click here”",
+      },
+      explanation: {
+        en: "“Click here” tells nobody the destination — especially someone jumping link-to-link with a screen reader.",
+        ar: "“click here” مش بتقول لحد رايح فين — خصوصًا اللي بيعدّي لينك ورا لينك بقارئ شاشة.",
+      },
+      code: `<a href="/sale">click here</a>`,
     },
-    code: `<button type="button">Save</button>`,
+    do: {
+      title: {
+        en: "Put the destination in the text",
+        ar: "حط الوجهة جوّه النص",
+      },
+      explanation: {
+        en: "Write the link like you’d tell a teammate where to go: “Summer sale”, not “click here”.",
+        ar: "اكتب اللينك كأنك بتقول لزميلك رايح فين: “عرض الصيف”، مش “اضغط هنا”.",
+      },
+      code: `<a href="/sale">Summer sale</a>`,
+    },
     why: {
-      en: "Buttons already support Enter/Space and focus states.",
-      ar: "الأزرار أصلًا مدعومة للـ Enter/Space وحالة focus.",
+      en: "People decide faster, and assistive tools announce something useful.",
+      ar: "الناس تقرر أسرع، والأدوات المساعدة تقول حاجة مفيدة.",
     },
   },
   {
-    id: "ux-loading-state",
-    action: "DO",
-    category: "UI/UX",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Show a loading state", ar: "اعرض حالة التحميل" },
-    explanation: {
-      en: "While data loads, show a skeleton or spinner instead of a blank area.",
-      ar: "وقت ما البيانات بتتحمّل، اعرض skeleton أو spinner بدل فراغ.",
-    },
-    code: `{isLoading ? <Spinner /> : <List />}`,
-    why: {
-      en: "Users understand something is happening.",
-      ar: "المستخدم يفهم إن في حاجة ماشية.",
-    },
-  },
-  {
-    id: "ux-empty-state",
-    action: "DONT",
-    category: "UI/UX",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't leave empty screens", ar: "ماسيبش شاشة فاضية" },
-    explanation: {
-      en: "If there are no results, show a friendly message and a next step.",
-      ar: "لو مفيش نتائج، اعرض رسالة واضحة وخطوة تالية.",
-    },
-    code: `<p>No results. Try again.</p>`,
-    why: {
-      en: "It prevents confusion and dead ends.",
-      ar: "ده بيقلل اللبس ويمنع طريق مسدود.",
-    },
-  },
-  {
-    id: "html-link-text",
-    action: "DO",
+    id: "images",
     category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use descriptive link text", ar: "اكتب نص لينك وصفي" },
-    explanation: {
-      en: "Put the destination inside the `<a>` text. Avoid vague “click here”.",
-      ar: "حط الوجهة جوّه نص `<a>`. بلاش “click here”.",
+    dont: {
+      title: {
+        en: "Empty or useless `alt`",
+        ar: "`alt` فاضي أو مالوش لازمة",
+      },
+      explanation: {
+        en: "`alt=\"image\"` is like saying “there’s a thing” — it doesn’t help anyone understand the photo.",
+        ar: "`alt=\"image\"` زي ما تقول “في حاجة” — مش بتساعد حد يفهم الصورة.",
+      },
+      code: `<img src="bag.jpg" alt="image" />`,
     },
-    code: `<a href="/sale">Summer sale</a>`,
+    do: {
+      title: {
+        en: "Write `alt` that describes it",
+        ar: "اكتب `alt` يوصف الصورة",
+      },
+      explanation: {
+        en: "Describe what’s useful in the image. If it’s only decoration, empty alt is fine.",
+        ar: "وصف اللي مفيد في الصورة. لو ديكور بس، `alt` فاضي تمام.",
+      },
+      code: `<img src="bag.jpg" alt="Brown leather bag" />`,
+    },
     why: {
-      en: "Screen readers announce where the link goes.",
-      ar: "قارئات الشاشة تقول رايح فين.",
+      en: "Screen readers can share the meaning you’d see with your eyes.",
+      ar: "قارئات الشاشة تقدر توصّل المعنى اللي انت شايفه بعينك.",
     },
   },
   {
-    id: "html-label-input",
-    action: "DO",
+    id: "forms-labels",
     category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Always link labels to inputs", ar: "اربِط الـ label بالـ input" },
-    explanation: {
-      en: "Use `<label for=\"...\">` + an input `id` so focusing works correctly.",
-      ar: "استخدم `<label for=\"...\">` مع input `id` عشان الفوكس يشتغل صح.",
+    dont: {
+      title: {
+        en: "Label floating with no link",
+        ar: "label عايم من غير ربط",
+      },
+      explanation: {
+        en: "A plain span next to an input looks labeled, but the browser doesn’t connect them.",
+        ar: "الـ span جنب الـ input شكله label، بس المتصفح مش رابطهم ببعض.",
+      },
+      code: `<span>Email</span>\n<input />`,
     },
-    code: `<label htmlFor="email">Email</label>\n<input id="email" />`,
+    do: {
+      title: {
+        en: "Glue `label` to the input",
+        ar: "اربط الـ `label` بالـ input",
+      },
+      explanation: {
+        en: "Hook `htmlFor` to the input `id`. Then tapping the text focuses the field — that’s the habit.",
+        ar: "اربط `htmlFor` بـ `id` بتاع الـ input. الضغط على الكلام بيركّز الحقل — دي العادة الصح.",
+      },
+      code: `<label htmlFor="email">Email</label>\n<input id="email" />`,
+    },
     why: {
-      en: "It improves focus and form usability.",
-      ar: "بيحسن استخدام الفورم.",
+      en: "Forms feel bigger and kinder — especially on mobile and with assistive tech.",
+      ar: "الفورم يحس أكبر وأرحم — خصوصًا على الموبايل ومع الأدوات المساعدة.",
     },
   },
   {
-    id: "html-form-button-type",
-    action: "DONT",
+    id: "form-button-type",
     category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't forget `type` in forms", ar: "ما تنساش `type` جوّه الفورم" },
-    explanation: {
-      en: "Inside `<form>`, a `<button>` defaults to submit. Use `type=\"button\"` for non-submit actions.",
-      ar: "جوّه `<form>`, الزر الافتراضي submit. استخدم `type=\"button\"` للي مش-submit.",
+    dont: {
+      title: {
+        en: "Bare `<button>` inside a form",
+        ar: "`<button>` من غير type جوّه فورم",
+      },
+      explanation: {
+        en: "Inside a form, a button submits by default. That’s why your “Preview” suddenly reloads the page.",
+        ar: "جوّه الفورم الزرار بيعمل submit لوحده. عشان كده “Preview” فجأة بيعمل ريلود.",
+      },
+      code: `<form>\n  <button>Preview</button>\n</form>`,
     },
-    code: `<button type="button">Preview</button>`,
+    do: {
+      title: {
+        en: "Set `type=\"button\"` when needed",
+        ar: "حط `type=\"button\"` لما تحتاج",
+      },
+      explanation: {
+        en: "Be explicit: submit buttons submit, action buttons stay `type=\"button\"`.",
+        ar: "كن صريح: زرار الإرسال يعمل submit، وزرار الأكشن يفضل `type=\"button\"`.",
+      },
+      code: `<button type="button">Preview</button>`,
+    },
     why: {
-      en: "Prevents accidental submissions.",
-      ar: "بيمنع الإرسال بالغلط.",
+      en: "You stop those mystery reloads while people are still editing.",
+      ar: "هتوقف الريلود الغريب والناس لسه بتعدّل.",
     },
   },
   {
-    id: "html-image-alt",
-    action: "DO",
+    id: "semantic-html",
     category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Write meaningful `alt` text", ar: "اكتب `alt` بمعنى" },
-    explanation: {
-      en: "Use `alt` that describes the image when it matters. Decorative images can use `alt=\"\"`.",
-      ar: "اكتب `alt` يشرح الصورة لو ليها معنى. الصور الزخرفية ممكن `alt=\"\"`.",
+    dont: {
+      title: {
+        en: "A wall of random `<div>`s",
+        ar: "حائط من `<div>` عشوائي",
+      },
+      explanation: {
+        en: "Divs are boxes. If everything is a box, nothing has meaning — not for you, not for tools.",
+        ar: "الـ div علبة. لو كل حاجة علبة، مفيش معنى — لا ليك ولا للأدوات.",
+      },
+      code: `<div>\n  <div>Title</div>\n  <div>…</div>\n</div>`,
     },
-    code: `<img src="product.jpg" alt="Product photo" />`,
+    do: {
+      title: {
+        en: "Use real landmarks",
+        ar: "استخدم تاجات حقيقية",
+      },
+      explanation: {
+        en: "Reach for `header`, `main`, `nav`, `button` when that’s what the piece actually is.",
+        ar: "استخدم `header` و `main` و `nav` و `button` لما القطعة تكون كده فعلًا.",
+      },
+      code: `<header>…</header>\n<main>…</main>\n<footer>…</footer>`,
+    },
     why: {
-      en: "Screen readers get the missing context.",
-      ar: "قارئات الشاشة تاخد السياق.",
+      en: "Structure helps humans skim and helps tools navigate.",
+      ar: "الهيكل بيساعد الناس تقرأ بسرعة والأدوات تتنقل.",
     },
   },
   {
-    id: "html-aria-hidden-focus",
-    action: "DONT",
-    category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't hide focused elements", ar: "ما تخفيش عنصر عليه focus" },
-    explanation: {
-      en: "If an element can be focused, don't set `aria-hidden` on it.",
-      ar: "لو عنصر قابل للتركيز، بلاش `aria-hidden` عليه.",
-    },
-    why: {
-      en: "Focus and screen-reader state must stay consistent.",
-      ar: "لازم حالة الفوكس والـ screen reader تبقى متوافقة.",
-    },
-  },
-  {
-    id: "css-variables-colors",
-    action: "DO",
+    id: "css-colors",
     category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use CSS variables for colors", ar: "استخدم CSS variables للألوان" },
-    explanation: {
-      en: "Define repeated colors once in `:root` and reuse them everywhere.",
-      ar: "اعرف الألوان المتكررة مرة واحدة في `:root` وابعتها في كل مكان.",
+    dont: {
+      title: {
+        en: "Hardcode the same color 40 times",
+        ar: "تكتب نفس اللون 40 مرة بإيدك",
+      },
+      explanation: {
+        en: "Copying `#38bdf8` everywhere works… until design changes the brand and you chase forty places.",
+        ar: "نسخ `#38bdf8` في كل حتة بتمشي… لحد ما الديزاين يغيّر البراند وتلف ورا أربعين مكان.",
+      },
+      code: `.btn { color: #38bdf8; }\n.link { color: #38bdf8; }`,
     },
-    code: `:root { --brand: #38bdf8; }\n.button { color: var(--brand); }`,
+    do: {
+      title: {
+        en: "One CSS variable, reuse everywhere",
+        ar: "متغير CSS واحد واستخدمه في كل حتة",
+      },
+      explanation: {
+        en: "Put the brand color in `:root` once, then reference it. That’s how seniors keep themes sane.",
+        ar: "حط لون البراند في `:root` مرة، وبعدين استدعيه. كده الثيم بيفضل مرتب.",
+      },
+      code: `:root { --brand: #38bdf8; }\n.btn { color: var(--brand); }`,
+    },
     why: {
-      en: "One change updates the whole UI.",
-      ar: "تغيير واحد يعدّل الواجهة كلها.",
+      en: "One change updates the whole UI — no treasure hunt.",
+      ar: "تعديل واحد يعدّل الواجهة كلها — من غير لعبة كنز.",
     },
   },
   {
-    id: "css-avoid-important",
-    action: "DONT",
+    id: "css-important",
     category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't overuse `!important`", ar: "ما تكثرش `!important`" },
-    explanation: {
-      en: "Avoid `!important` everywhere. Fix the cascade with clear selectors and component classes.",
-      ar: "تجنب `!important` طول الوقت. أصلح الـ cascade بـ selectors واضحة وcomponent classes.",
+    dont: {
+      title: {
+        en: "`!important` everywhere",
+        ar: "`!important` في كل سطر",
+      },
+      explanation: {
+        en: "`!important` is a fire extinguisher, not a daily tool. Spray it everywhere and CSS becomes a fight.",
+        ar: "`!important` طفاية حريق، مش أداة يومية. لو رشيته في كل حتة، الـ CSS يبقى خناقة.",
+      },
+      code: `.card { margin: 0 !important; }`,
+    },
+    do: {
+      title: {
+        en: "Fix the cascade cleanly",
+        ar: "صلّح الـ cascade بهدوء",
+      },
+      explanation: {
+        en: "Make the selector clearer or give the component its own class. Win the cascade without yelling.",
+        ar: "خلي الـ selector أوضح أو ادي للمكوّن class خاصة. اكسب الـ cascade من غير صياح.",
+      },
+      code: `.card { margin: 0; }\n.card--tight { margin: 0; }`,
     },
     why: {
-      en: "CSS becomes predictable instead of a fight.",
-      ar: "الـ CSS بيبقى متوقع بدل مايبقى صراع.",
+      en: "Future changes stay predictable instead of “who wins this war?”",
+      ar: "التعديلات الجاية تبقى متوقعة بدل “مين هيكسب الخناقة؟”.",
     },
   },
   {
-    id: "css-modular-files",
-    action: "DO",
+    id: "box-sizing",
     category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Split CSS by feature", ar: "قسّم CSS حسب الميزة" },
-    explanation: {
-      en: "Don't dump all CSS into one huge file. Split styles so they stay understandable.",
-      ar: "ما تكدّسش كل CSS في ملف واحد كبير. قسمه عشان يبقى مفهوم.",
+    dont: {
+      title: {
+        en: "Widths that ignore padding",
+        ar: "عرض بيتجاهل الـ padding",
+      },
+      explanation: {
+        en: "You set width 300px, add padding, and suddenly it’s wider. That’s not you — that’s content-box math.",
+        ar: "حاطط عرض 300px، تزود padding، يطلع أعرض. مش غلطتك — دي حسابات content-box.",
+      },
+      code: `.box { width: 300px; padding: 20px; }`,
+    },
+    do: {
+      title: {
+        en: "Turn on `border-box` once",
+        ar: "شغّل `border-box` مرة واحدة",
+      },
+      explanation: {
+        en: "Set `box-sizing: border-box` globally so width means “the whole box,” padding included.",
+        ar: "شغّل `box-sizing: border-box` مرة لكل المشروع عشان العرض يبقى “العلبة كلها” شامل الـ padding.",
+      },
+      code: `*, *::before, *::after {\n  box-sizing: border-box;\n}`,
     },
     why: {
-      en: "Less scrolling, faster changes, fewer mistakes.",
-      ar: "أقل تمرير، تغييرات أسرع، أخطاء أقل.",
+      en: "Layout math stops surprising you every afternoon.",
+      ar: "حسابات اللayout هتبطل تفاجئك كل شوية.",
     },
   },
   {
-    id: "css-mobile-first",
-    action: "DO",
+    id: "mobile-first",
     category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Mobile-first your styles", ar: "ابدأ بـ mobile-first" },
-    explanation: {
-      en: "Write the base styles for small screens, then enhance with `@media (min-width: ...)`.",
-      ar: "اكتب الأساس للموبايل، وبعدها حسّن بـ `@media (min-width: ...)`.",
+    dont: {
+      title: {
+        en: "Desktop first, phone later… maybe",
+        ar: "ديسكتوب الأول والموبايل… بعدين يمكن",
+      },
+      explanation: {
+        en: "Building huge then shrinking is like packing a suitcase then sitting on it — messy and fragile.",
+        ar: "تبني كبير وبعدين تصغّر زي ما تعبّي شنطة وتقعد عليها — فوضى وسهلة تبوظ.",
+      },
+      code: `/* desktop styles… */\n@media (max-width: 640px) { … }`,
     },
-    code: `/* base */\n@media (min-width: 640px) {\n  /* enhance */\n}`,
+    do: {
+      title: {
+        en: "Phone first, then grow up",
+        ar: "موبايل الأول، وبعدين كبّر",
+      },
+      explanation: {
+        en: "Write the small-screen base first, then enhance with `min-width`. Growing is easier than shrinking.",
+        ar: "اكتب أساس الموبايل الأول، وبعدين حسّن بـ `min-width`. التكبير أسهل من التصغير.",
+      },
+      code: `/* mobile base */\n@media (min-width: 640px) {\n  /* desktop boost */\n}`,
+    },
     why: {
-      en: "Phones work first, not as an afterthought.",
-      ar: "الموبايل بيشتغل أولًا مش بعد ما تخلص.",
+      en: "Most people meet your UI on a phone — start where they start.",
+      ar: "أغلب الناس بتشوف الواجهة من الموبايل — ابدأ من مكانهم.",
     },
   },
   {
-    id: "css-font-size-sanity",
-    action: "DONT",
-    category: "UI/UX",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't randomize font sizes", ar: "ما تخلّيش أحجام الخط عشوائية" },
-    explanation: {
-      en: "Use a small, consistent type scale. It makes reading easier and layouts calmer.",
-      ar: "استخدم scale ثابت وخفيف. ده بيخلي القراءة أريح.",
-    },
-    why: {
-      en: "Consistency improves both UX and accessibility.",
-      ar: "الثبات يحسن UX والـ accessibility.",
-    },
-  },
-  {
-    id: "css-border-box",
-    action: "DO",
-    category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use `border-box`", ar: "استخدم `border-box`" },
-    explanation: {
-      en: "Set `box-sizing: border-box` so widths include padding + borders.",
-      ar: "فعّل `box-sizing: border-box` عشان العرض يشمل padding وborder.",
-    },
-    code: `*, *::before, *::after { box-sizing: border-box; }`,
-    why: {
-      en: "Fewer layout surprises.",
-      ar: "مفاجآت أقل في التصميم.",
-    },
-  },
-  {
-    id: "css-reduced-motion",
-    action: "DO",
-    category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Respect reduced motion", ar: "احترم `prefers-reduced-motion`" },
-    explanation: {
-      en: "Pause decorative animations when motion should be reduced.",
-      ar: "وقف الحركات الزخرفية لما لازم نقلل الحركة.",
-    },
-    code: `@media (prefers-reduced-motion: reduce) {\n  * { animation: none; }\n}`,
-    why: {
-      en: "It helps motion-sensitive users.",
-      ar: "بيساعد اللي حساسين للحركة.",
-    },
-  },
-  {
-    id: "js-const-default",
-    action: "DO",
+    id: "js-const",
     category: "JavaScript",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use `const` by default", ar: "استخدم `const` افتراضيًا" },
-    explanation: {
-      en: "Prefer `const` unless you need to reassign a value.",
-      ar: "يفضل `const` إلا لو محتاج تغيّر قيمة.",
+    dont: {
+      title: {
+        en: "`let` for everything",
+        ar: "`let` على كل حاجة",
+      },
+      explanation: {
+        en: "If everything is `let`, anything can get overwritten by accident — including the values you meant to keep.",
+        ar: "لو كل حاجة `let`، أي قيمة ممكن تتكتب فوقها بالغلط — حتى اللي كنت عايز تثبتها.",
+      },
+      code: `let userId = "42";\nuserId = null; // oops`,
     },
-    code: `const items = [];\nlet i = 0;`,
+    do: {
+      title: {
+        en: "Start with `const`",
+        ar: "ابدأ بـ `const`",
+      },
+      explanation: {
+        en: "Default to `const`. Reach for `let` only when you truly need to reassign. Small habit, big safety.",
+        ar: "ابدأ بـ `const`. استخدم `let` بس لما تحتاج تعيد التعيين فعلًا. عادة صغيرة وحماية كبيرة.",
+      },
+      code: `const userId = "42";\nlet retries = 0;`,
+    },
     why: {
-      en: "It prevents accidental reassignments.",
-      ar: "ده بيمنع إعادة تعيين بالغلط.",
+      en: "The language helps catch mistakes before users do.",
+      ar: "اللغة نفسها تساعدك تمسك الغلط قبل ما اليوزر يشوفه.",
     },
   },
   {
-    id: "js-strict-equals",
-    action: "DONT",
+    id: "js-equals",
     category: "JavaScript",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't use `==`", ar: "ما تستخدمش `==`" },
-    explanation: {
-      en: "Use `===` so comparisons don't silently coerce types.",
-      ar: "استخدم `===` عشان المقارنات ما تبهدلش الأنواع بشكل سري.",
+    dont: {
+      title: {
+        en: "Compare with sneaky `==`",
+        ar: "تقارن بـ `==` الماكر",
+      },
+      explanation: {
+        en: "`==` quietly converts types. That’s how you get “why is this true?” bugs at 1am.",
+        ar: "`==` بيحوّل الأنواع في السكوت. كده تطلع باجز “ازاي دي true؟” الساعة 1 بالليل.",
+      },
+      code: `if (value == "0") { … }`,
     },
-    code: `if (a === b) {\n  // OK\n}`,
+    do: {
+      title: {
+        en: "Always prefer `===`",
+        ar: "دايمًا فضّل `===`",
+      },
+      explanation: {
+        en: "Use `===` so the comparison is honest: same type, same value. No silent conversions.",
+        ar: "استخدم `===` عشان المقارنة تكون صريحة: نفس النوع ونفس القيمة. من غير تحويل سري.",
+      },
+      code: `if (value === "ready") {\n  start();\n}`,
+    },
     why: {
-      en: "Fewer weird bugs.",
-      ar: "أخطاء غريبة أقل.",
+      en: "You’ll spend less time chasing weird equality bugs.",
+      ar: "هتضيع وقت أقل ورا باجز المساواة الغريبة.",
     },
   },
   {
-    id: "js-meaningful-names",
-    action: "DO",
+    id: "js-names",
     category: "JavaScript",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Name things clearly", ar: "سمِّ الأشياء بوضوح" },
-    explanation: {
-      en: "Choose variable names that describe the data, not `x` or `thing`.",
-      ar: "اختار أسماء توضح البيانات، مش `x` أو `thing`.",
+    dont: {
+      title: {
+        en: "Names like `x`, `data`, `thing`",
+        ar: "أسماء زي `x` و `data` و `thing`",
+      },
+      explanation: {
+        en: "Vague names force your brain to remember context. Two weeks later, even you won’t know what `data` is.",
+        ar: "الأسماء الغامضة بتخلي دماغك تحفظ السياق. بعد أسبوعين حتى انت مش هتعرف `data` دي إيه.",
+      },
+      code: `const data = getStuff();\nconst x = data.y;`,
     },
-    code: `const userId = params.get("userId");`,
+    do: {
+      title: {
+        en: "Name it like a human",
+        ar: "سمّيها زي بني آدم",
+      },
+      explanation: {
+        en: "Name the thing after what it holds: `cartTotal`, `userId`. Your future self will thank you.",
+        ar: "سمّي الحاجة على اللي جوّها: `cartTotal`، `userId`. انت في المستقبل هتشكرك.",
+      },
+      code: `const cartTotal = items.reduce(...);`,
+    },
     why: {
-      en: "Reviews get faster and safer.",
-      ar: "المراجعة بتبقى أسرع وأأمن.",
+      en: "Readable names make reviews faster and bugs rarer.",
+      ar: "الأسماء الواضحة بتخلي المراجعة أسرع والباجز أقل.",
     },
   },
   {
-    id: "js-extract-function",
-    action: "DONT",
+    id: "js-dry",
     category: "JavaScript",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't repeat logic", ar: "ما تكررش نفس المنطق" },
-    explanation: {
-      en: "If you paste the same steps twice, extract a function instead.",
-      ar: "لو بتلصق نفس الخطوات مرتين، استخرج دالة بدل التكرار.",
+    dont: {
+      title: {
+        en: "Paste the same logic twice",
+        ar: "تلصق نفس المنطق مرتين",
+      },
+      explanation: {
+        en: "Copy-paste feels quick, then you fix a bug in one place and forget the other. Classic junior trap.",
+        ar: "اللصق بيحس سريع، بعدين تصلّح باج في مكان وتنسى التاني. فخ كلاسيكي.",
+      },
+      code: `// same 8 lines… twice`,
     },
-    code: `function formatTitle(t) {\n  return t.trim();\n}`,
+    do: {
+      title: {
+        en: "Extract one reusable function",
+        ar: "طلّع فانكشن واحدة تتعاد استخدامها",
+      },
+      explanation: {
+        en: "If you pasted it twice, pull it into a function. One brain, one fix.",
+        ar: "لو لصقتها مرتين، طلّعها في فانكشن. عقل واحد، تصليح واحد.",
+      },
+      code: `function formatPrice(n) {\n  return n.toFixed(2);\n}`,
+    },
     why: {
-      en: "One fix updates everywhere.",
-      ar: "تعديل واحد يعدّل في كل مكان.",
+      en: "Duplication is where bugs hide and grow.",
+      ar: "التكرار هو المكان اللي الباجز بتتكبّر فيه.",
     },
   },
   {
-    id: "react-stable-keys",
-    action: "DO",
+    id: "react-keys",
     category: "React",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use stable React keys", ar: "استخدم keys ثابتة" },
-    explanation: {
-      en: "Use an `id` as the key, not the array index, when items can reorder.",
-      ar: "استخدم `id` كمفتاح بدل index لو العناصر بتتغير/تتترتب.",
+    dont: {
+      title: {
+        en: "Array index as `key`",
+        ar: "الـ index كـ `key`",
+      },
+      explanation: {
+        en: "Index keys look fine until the list reorders — then React reuses the wrong row’s state.",
+        ar: "الـ index keys شكلها تمام لحد ما الليست تترتّب — ساعتها React بيعيد استخدام state الصف الغلط.",
+      },
+      code: `{items.map((item, i) => (\n  <Row key={i} />\n))}`,
     },
-    code: `{items.map(item => (\n  <Row key={item.id} {...item} />\n))}`,
+    do: {
+      title: {
+        en: "Stable ID as `key`",
+        ar: "`key` بـ ID ثابت",
+      },
+      explanation: {
+        en: "Give each item a stable id key so React can track the real item, not its temporary position.",
+        ar: "ادي لكل عنصر key بـ id ثابت عشان React يتابع العنصر الحقيقي، مش مكانه المؤقت.",
+      },
+      code: `{items.map((item) => (\n  <Row key={item.id} {...item} />\n))}`,
+    },
     why: {
-      en: "Prevents UI mismatches when lists change.",
-      ar: "بيمنع مشاكل في الـ UI لما القائمة تتغير.",
+      en: "You avoid silent UI mix-ups that are painful to debug.",
+      ar: "هتتجنب خلط واجهة صامت وصعب يتتتبع.",
     },
   },
   {
-    id: "react-small-components",
-    action: "DO",
+    id: "react-components",
     category: "React",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Keep components focused", ar: "خلي كل Component له شغلته" },
-    explanation: {
-      en: "Make smaller components instead of one mega component for the whole page.",
-      ar: "اعمل Components أصغر بدل Mega واحد لكل الصفحة.",
+    dont: {
+      title: {
+        en: "One mega component for the page",
+        ar: "component عملاق لكل الصفحة",
+      },
+      explanation: {
+        en: "A 400-line page component is hard to read, hard to test, and scary to touch.",
+        ar: "component الصفحة بـ 400 سطر صعب يتقرأ، صعب يتختبر، ومخيف تتلمسه.",
+      },
+      code: `function Page() {\n  // 400 lines…\n}`,
+    },
+    do: {
+      title: {
+        en: "One job per component",
+        ar: "كل component لها شغلة واحدة",
+      },
+      explanation: {
+        en: "Split the page into pieces with one clear job each. Small components age better.",
+        ar: "قسّم الصفحة لقطع، كل واحدة ليها شغلة واضحة. الـ components الصغيرة بتعيش أحسن.",
+      },
+      code: `<Header />\n<ProductList />\n<CartSummary />`,
     },
     why: {
-      en: "Easier to read, reuse, and test.",
-      ar: "بيسهل القراءة وإعادة الاستخدام والاختبار.",
+      en: "Changes stay local — you edit one piece without breaking five others.",
+      ar: "التعديل يفضل محلي — تعدّل حتة من غير ما تبوّظ خمسة تانيين.",
     },
   },
   {
-    id: "react-reusable-ui",
-    action: "DONT",
+    id: "react-lists",
     category: "React",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't duplicate UI markup", ar: "ما تكررش نفس الـ markup" },
-    explanation: {
-      en: "If multiple places render the same UI, extract a reusable component.",
-      ar: "لو أكتر من مكان بيعرض نفس الواجهة، استخرج Component reusable.",
+    dont: {
+      title: {
+        en: "Hand-write 20 list items",
+        ar: "تكتب 20 عنصر في الليست بإيدك",
+      },
+      explanation: {
+        en: "Hand-writing every card means one typo becomes twenty bugs waiting to happen.",
+        ar: "كتابة كل كارت بإيدك معناها غلطة واحدة تبقى عشرين باج مستنيينك.",
+      },
+      code: `<UserCard … />\n<UserCard … />\n<UserCard … />`,
+    },
+    do: {
+      title: {
+        en: "Render with `map()`",
+        ar: "اعرض بـ `map()`",
+      },
+      explanation: {
+        en: "Keep the data in an array and map it to components. One pattern, any length.",
+        ar: "خلي الداتا في array واعمل لها map لـ components. نمط واحد، أي طول.",
+      },
+      code: `{users.map((u) => (\n  <UserCard key={u.id} user={u} />\n))}`,
     },
     why: {
-      en: "Less duplication = fewer UI bugs.",
-      ar: "تكرار أقل = أخطاء واجهة أقل.",
+      en: "Lists stay clean when the data grows — and it always grows.",
+      ar: "الليست تفضل نظيفة لما الداتا تكبر — وهي دايمًا هتكبر.",
     },
   },
   {
-    id: "frontend-devtools",
-    action: "DO",
-    category: "General Frontend",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use DevTools first", ar: "استخدم DevTools أولًا" },
-    explanation: {
-      en: "Before guessing, check Console errors and the Network tab.",
-      ar: "قبل ما تفترض، شوف أخطاء الـ Console وتبويب Network.",
+    id: "ux-loading",
+    category: "UI/UX",
+    dont: {
+      title: {
+        en: "Blank screen while loading",
+        ar: "شاشة فاضية وهي بتحميل",
+      },
+      explanation: {
+        en: "A blank wait feels like a freeze. People don’t know if they should wait or refresh.",
+        ar: "الانتظار الفاضي بيحس فرِيز. الناس مش عارفة تستنى ولا تعمل ريفرش.",
+      },
+      code: `{isLoading ? null : <List />}`,
+    },
+    do: {
+      title: {
+        en: "Show spinner or skeleton",
+        ar: "وري spinner أو skeleton",
+      },
+      explanation: {
+        en: "Show a spinner or skeleton so users see “we’re working on it” while data loads.",
+        ar: "وري spinner أو skeleton عشان اليوزر يشوف “احنا شغالين” والداتا بتتحمّل.",
+      },
+      code: `{isLoading ? <Spinner /> : <List />}`,
     },
     why: {
-      en: "You’ll find the real cause faster.",
-      ar: "هتلاقي السبب الحقيقي أسرع.",
+      en: "Trust goes up when people can see progress.",
+      ar: "الثقة بتزيد لما الناس تشوف إن في تقدم.",
     },
   },
   {
-    id: "frontend-dont-ignore-errors",
-    action: "DONT",
-    category: "General Frontend",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't ignore console errors", ar: "ما تتجاهلش أخطاء Console" },
-    explanation: {
-      en: "If you see red errors, fix them before shipping.",
-      ar: "لو في Errors حمراء، أصلحها قبل ما تسيبها.",
+    id: "ux-empty",
+    category: "UI/UX",
+    dont: {
+      title: {
+        en: "Empty results = silence",
+        ar: "مفيش نتائج = سكوت",
+      },
+      explanation: {
+        en: "Silence looks broken. Users think the feature failed, not that the list is empty.",
+        ar: "السكوت شكله بايظ. اليوزر يفتكر الميزة وقعت، مش إن الليست فاضية.",
+      },
+      code: `{items.length === 0 ? null : <List />}`,
+    },
+    do: {
+      title: {
+        en: "Say it + give a next step",
+        ar: "قول كده + ادي خطوة تانية",
+      },
+      explanation: {
+        en: "Tell them there’s nothing yet, and suggest what to try next. Guide, don’t abandon.",
+        ar: "قول مفيش حاجة لسه، واقترح يجربوا إيه بعدين. وجّه، متسيبش.",
+      },
+      code: `<p>No results. Try another filter.</p>`,
     },
     why: {
-      en: "Errors often mean broken features.",
-      ar: "الأخطاء غالبًا معناها ميزات بتبوظ.",
+      en: "Empty states are part of the product, not an afterthought.",
+      ar: "الحالة الفاضية جزء من المنتج، مش حاجة بنفتكرها آخر لحظة.",
     },
   },
   {
-    id: "frontend-mobile-test",
-    action: "DO",
-    category: "General Frontend",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Test on mobile early", ar: "جرّب على الموبايل بدري" },
-    explanation: {
-      en: "Open mobile sizes in DevTools and check tap targets + scrolling.",
-      ar: "افتح أحجام الموبايل في DevTools وتأكد من لمس الشاشة والـ scrolling.",
+    id: "ux-errors",
+    category: "UI/UX",
+    dont: {
+      title: {
+        en: "Scary / useless error text",
+        ar: "رسالة خطأ مخيفة أو مالهاش لازمة",
+      },
+      explanation: {
+        en: "`Error 500` scares people and teaches them nothing about how to recover.",
+        ar: "`Error 500` بتخوّف الناس ومش بتعلّمهم يعملوا إيه بعد كده.",
+      },
+      code: `<p>Error 500</p>`,
+    },
+    do: {
+      title: {
+        en: "Helpful errors with a next move",
+        ar: "خطأ مفيد وفيه خطوة تانية",
+      },
+      explanation: {
+        en: "Say what failed in human words, then give one clear next step.",
+        ar: "قول إيه اللي وقع بكلام بني آدم، وبعدين ادي خطوة واضحة.",
+      },
+      code: `<p>Couldn’t save. Check your connection.</p>`,
     },
     why: {
-      en: "Many layout bugs show up immediately.",
-      ar: "أغلب مشاكل التصميم بتبان بسرعة.",
+      en: "Good errors turn panic into action.",
+      ar: "رسالة الخطأ الكويسة بتحوّل الفزع لفعل.",
     },
   },
   {
-    id: "frontend-test-a11y",
-    action: "DO",
-    category: "General Frontend",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Check accessibility basics", ar: "اتأكد من أساسيات الـ accessibility" },
-    explanation: {
-      en: "Use keyboard navigation and verify focus outlines are visible.",
-      ar: "استخدم التنقل بالكيبورد وتأكد إن focus واضح.",
+    id: "ux-colors",
+    category: "UI/UX",
+    dont: {
+      title: {
+        en: "12 random colors on one screen",
+        ar: "12 لون عشوائي على شاشة واحدة",
+      },
+      explanation: {
+        en: "Too many colors make everything shout. When everything shouts, nothing important wins.",
+        ar: "ألوان كتير بتخلي كل حاجة تعيط. لما الكل بيعيط، مفيش حاجة مهمة بتكسب.",
+      },
+    },
+    do: {
+      title: {
+        en: "Tiny palette, reuse it",
+        ar: "باليت صغيرة وامسك فيها",
+      },
+      explanation: {
+        en: "Pick a small palette and stick to it. Restraint is what makes UI look senior.",
+        ar: "اختار باليت صغيرة وامسك فيها. الانتظام ده اللي بيخلي الواجهة شكلها سنيور.",
+      },
     },
     why: {
-      en: "A UI isn’t finished until it works without a mouse.",
-      ar: "ماينفعش تعتبر الواجهة “خلصت” قبل ما تشتغل من غير موباوس.",
+      en: "Hierarchy becomes obvious when color isn’t fighting itself.",
+      ar: "الترتيب بيبان لما الألوان مش بتتخانق مع بعض.",
     },
   },
   {
-    id: "git-gitignore-secrets",
-    action: "DO",
+    id: "ux-spacing",
+    category: "UI/UX",
+    dont: {
+      title: {
+        en: "Random gaps everywhere",
+        ar: "مسافات عشوائية في كل حتة",
+      },
+      explanation: {
+        en: "8px here and 23px there looks “fine” until you notice the whole page feels uneven.",
+        ar: "8px هنا و23px هناك شكلها “ماشية” لحد ما تلاحظ الصفحة كلها مبعترة.",
+      },
+    },
+    do: {
+      title: {
+        en: "Keep spacing consistent",
+        ar: "خلي المسافات ثابتة",
+      },
+      explanation: {
+        en: "Pick a spacing scale and reuse it. Rhythm is quiet design work that people feel.",
+        ar: "اختار مقياس مسافات وامسك فيه. الإيقاع شغل هادي بس الناس بتحسّه.",
+      },
+    },
+    why: {
+      en: "Consistent spacing makes reading calmer and scanning faster.",
+      ar: "المسافات الثابتة بتخلي القراءة أهدى والمسح أسرع.",
+    },
+  },
+  {
+    id: "git-secrets",
     category: "Git",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use `.gitignore` for secrets", ar: "استخدم `.gitignore` للـ أسرار" },
-    explanation: {
-      en: "Add `.env` and local credential files to `.gitignore`.",
-      ar: "أضف `.env` وملفات بيانات الدخول المحلية لـ `.gitignore`.",
+    dont: {
+      title: {
+        en: "Commit API keys / `.env`",
+        ar: "تعمل كوميت لـ API keys أو `.env`",
+      },
+      explanation: {
+        en: "One accidental commit can put secrets in Git history forever — even if you delete the file later.",
+        ar: "كوميت بالغلط واحد يقدر يحط الأسرار في تاريخ Git للأبد — حتى لو مسحت الملف بعدين.",
+      },
+      code: `git add .env.local`,
     },
-    code: `.env.local\n*.pem`,
+    do: {
+      title: {
+        en: "Hide secrets with `.gitignore`",
+        ar: "خبّي الأسرار بـ `.gitignore`",
+      },
+      explanation: {
+        en: "Put secrets in env files, ignore them in Git, and load them at runtime. That’s the safe default.",
+        ar: "حط الأسرار في ملفات env، تجاهلها في Git، وحمّلها وقت التشغيل. ده الافتراضي الآمن.",
+      },
+      code: `.env.local\n*.pem`,
+    },
     why: {
-      en: "Prevents accidental leaks to GitHub.",
-      ar: "بيمنع تسريب بيانات بالغلط على GitHub.",
+      en: "Leaks are expensive, public, and hard to fully undo.",
+      ar: "التسريب غالي، بيبان، وصعب يتصلح بالكامل.",
     },
   },
   {
-    id: "git-dont-commit-keys",
-    action: "DONT",
-    category: "Git",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't commit API keys", ar: "ما تحطّش API keys في Git" },
-    explanation: {
-      en: "Never push real keys to the repo. Use environment variables instead.",
-      ar: "ما ترفعش مفاتيح حقيقية للريبو. استخدم environment variables بدل كده.",
+    id: "devtools",
+    category: "General",
+    dont: {
+      title: {
+        en: "Guess for an hour",
+        ar: "تخمّن ساعة كاملة",
+      },
+      explanation: {
+        en: "Random code changes without looking at tools burn time. Seniors check the evidence first.",
+        ar: "تغييرات عشوائية من غير أدوات بتضيّع وقت. السنيور بيشوف الدليل الأول.",
+      },
+    },
+    do: {
+      title: {
+        en: "Open DevTools first",
+        ar: "افتح DevTools الأول",
+      },
+      explanation: {
+        en: "Before guessing, open Console and Network. Half the answers are already waiting there.",
+        ar: "قبل ما تخمّن، افتح Console و Network. نص الإجابات قاعدة مستنياك هناك.",
+      },
     },
     why: {
-      en: "Protects you from security incidents.",
-      ar: "بيحميك من حوادث أمنية.",
+      en: "Debugging is detective work — start with the clues.",
+      ar: "الديباج شغل تحقيق — ابدأ من الأدلة.",
     },
   },
   {
-    id: "ui-useful-errors",
-    action: "DO",
-    category: "UI/UX",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Show helpful error messages", ar: "اعرض رسائل خطأ مفيدة" },
-    explanation: {
-      en: "When something fails, tell users what happened and what to do next.",
-      ar: "لو في مشكلة، قول للمستخدم حصل إيه و يعمل إيه بعد كده.",
+    id: "console-errors",
+    category: "General",
+    dont: {
+      title: {
+        en: "Ignore red console errors",
+        ar: "تتجاهل أخطاء الـ console الحمرا",
+      },
+      explanation: {
+        en: "Shipping with red console errors is like leaving warning lights on and hoping for the best.",
+        ar: "تشيب والـ console أحمر زي ما تسيب لمبة التحذير شغالة وتتمنّى خير.",
+      },
     },
-    code: `<p>Could not save. Try again.</p>`,
+    do: {
+      title: {
+        en: "Fix red before you call it done",
+        ar: "صلّح الأحمر قبل ما تقول خلصت",
+      },
+      explanation: {
+        en: "Treat console errors as blockers. Clear them before you say the feature is finished.",
+        ar: "اعتبِر أخطاء الـ console مانع. صلّحها قبل ما تقول الميزة خلصت.",
+      },
+    },
     why: {
-      en: "Users recover faster.",
-      ar: "المستخدمين بيرجعوا بسرعة.",
+      en: "Those red lines are usually broken behavior waiting to surprise users.",
+      ar: "السطور الحمرا غالبًا سلوك بايظ مستني يفاجئ اليوزر.",
     },
   },
   {
-    id: "html-keep-spacing",
-    action: "DO",
-    category: "HTML",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Use spacing classes consistently", ar: "استخدم spacing بشكل ثابت" },
-    explanation: {
-      en: "Keep vertical rhythm consistent so cards and text feel calm and readable.",
-      ar: "خلّي الإيقاع العمودي ثابت عشان النص والـ cards يبقوا هاديين وسهلين.",
+    id: "mobile-test",
+    category: "General",
+    dont: {
+      title: {
+        en: "Only check desktop, then ship",
+        ar: "تشيك ديسكتوب بس وبعدين شيب",
+      },
+      explanation: {
+        en: "Desktop-perfect can still be unusable on a phone. Don’t discover that after release.",
+        ar: "الديسكتوب ممكن يكون تمام والموبايل بايظ. متكتشفش ده بعد الريليز.",
+      },
+    },
+    do: {
+      title: {
+        en: "Test mobile early",
+        ar: "جرّب الموبايل بدري",
+      },
+      explanation: {
+        en: "Open phone sizes early and check taps, scroll, and spacing while changes are still cheap.",
+        ar: "افتح مقاس الموبايل بدري وشوف اللمس والسكرول والمسافات والتعديل لسه رخيص.",
+      },
     },
     why: {
-      en: "Better rhythm improves scannability.",
-      ar: "إيقاع أحسن بيحسن القراءة السريعة.",
+      en: "Most layout bugs are obvious the first time you try a phone width.",
+      ar: "أغلب مشاكل الديزاين بتبان من أول ما تجرب عرض الموبايل.",
     },
   },
   {
-    id: "css-limit-colors",
-    action: "DONT",
+    id: "a11y-keyboard",
+    category: "General",
+    dont: {
+      title: {
+        en: "Mouse-only “finished” UI",
+        ar: "واجهة “خلصت” بس بالماوس",
+      },
+      explanation: {
+        en: "If it only works with a mouse, it isn’t finished — lots of people navigate with a keyboard.",
+        ar: "لو بتشتغل بالماوس بس، دي مش خلصت — ناس كتير بتتنقل بالكيبورد.",
+      },
+    },
+    do: {
+      title: {
+        en: "Finish with keyboard checks",
+        ar: "خلّص بتجربة الكيبورد",
+      },
+      explanation: {
+        en: "Tab through the flow once. If focus disappears or loops weirdly, fix that before you ship.",
+        ar: "عدّي بـ Tab على الفلو مرة. لو الفوكس اختفى أو لف غريب، صلّح قبل الشيب.",
+      },
+    },
+    why: {
+      en: "Keyboard access is basic craft, not a luxury feature.",
+      ar: "الوصول بالكيبورد أساسيات صنعة، مش رفاهية.",
+    },
+  },
+  {
+    id: "reduced-motion",
     category: "CSS",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't use too many colors", ar: "ما تستخدمش ألوان كتير" },
-    explanation: {
-      en: "Pick a small palette and reuse it. Too many colors make UI feel noisy.",
-      ar: "اختار Palette صغيرة وعاود استخدمها. كتير ألوان بيخلي الواجهة مزعجة.",
+    dont: {
+      title: {
+        en: "Flashy motion for everyone",
+        ar: "حركة قوية على الكل",
+      },
+      explanation: {
+        en: "Cool animations can make some people dizzy or sick. Motion isn’t neutral for everyone.",
+        ar: "الأنيميشن الحلو ممكن يدوّخ ناس أو يضايقهم. الحركة مش محايدة للكل.",
+      },
+      code: `.hero { animation: spin 1s infinite; }`,
+    },
+    do: {
+      title: {
+        en: "Respect `prefers-reduced-motion`",
+        ar: "احترم `prefers-reduced-motion`",
+      },
+      explanation: {
+        en: "When someone asks for less motion, pause the decorative stuff. Keep the product usable.",
+        ar: "لما حد يطلب حركة أقل، وقف الزخرفة. خلّي المنتج قابل للاستخدام.",
+      },
+      code: `@media (prefers-reduced-motion: reduce) {\n  * { animation: none; }\n}`,
     },
     why: {
-      en: "Your UI stays focused on the important parts.",
-      ar: "الواجهة تركز على المهم.",
-    },
-  },
-  {
-    id: "javascript-meaningful-ids",
-    action: "DO",
-    category: "JavaScript",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Prefer clear IDs", ar: "خلي الـ IDs واضحة" },
-    explanation: {
-      en: "Use IDs that explain the role: `userId`, `postId`, `cartId`.",
-      ar: "استخدم IDs توضّح الدور: `userId`, `postId`, `cartId`.",
-    },
-    why: {
-      en: "It’s easier to debug and reason about.",
-      ar: "ده بيخلي الديباج أسهل.",
-    },
-  },
-  {
-    id: "react-no-index-key",
-    action: "DONT",
-    category: "React",
-    difficulty: DIFFICULTY_BEGINNER,
-    title: { en: "Don't use array index as key", ar: "ما تستخدمش array index كـ key" },
-    explanation: {
-      en: "Index keys break when items insert/remove or reorder.",
-      ar: "index keys بتبوظ لما العناصر تتضاف/تتحذف أو تتغير ترتيبها.",
-    },
-    code: `{items.map((item, i) => (\n  <Row key={i} />\n))}`,
-    why: {
-      en: "State can attach to the wrong item.",
-      ar: "الحالة ممكن تتعلق بعنصر غلط.",
+      en: "Respecting comfort is part of shipping like a professional.",
+      ar: "احترام راحة الناس جزء من إنك تشيب زي محترف.",
     },
   },
 ];
 
-const TIPS_FOR_LIBRARY = TIPS.slice(0, 30);
+const CATEGORIES: TipCategoryId[] = [
+  "HTML",
+  "CSS",
+  "JavaScript",
+  "React",
+  "Git",
+  "UI/UX",
+  "General",
+];
 
-const ACTION_FILTERS = [
-  { id: "all" as const, label: { en: "All", ar: "الكل" } },
-  { id: "do" as const, label: { en: "DO", ar: "افعل" } },
-  { id: "dont" as const, label: { en: "DON'T", ar: "ما تفعلش" } },
-] as const;
+function TipHalf({
+  side,
+  tone,
+  locale,
+}: {
+  side: TipSide;
+  tone: "do" | "dont";
+  locale: "en" | "ar";
+}) {
+  const isDo = tone === "do";
+  const shell = isDo
+    ? "border-emerald-400/30 bg-linear-to-br from-emerald-950/45 via-slate-950/70 to-slate-900/50"
+    : "border-rose-400/30 bg-linear-to-br from-rose-950/45 via-slate-950/70 to-slate-900/50";
+  const badge = isDo
+    ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-100"
+    : "border-rose-300/40 bg-rose-400/15 text-rose-100";
+  const bar = isDo ? "bg-emerald-400" : "bg-rose-400";
+
+  return (
+    <div className={`flex min-w-0 flex-1 flex-col overflow-hidden rounded-2xl border ${shell}`}>
+      <div className={`h-1 w-full ${bar}`} />
+      <div className="flex flex-1 flex-col p-3 sm:p-3.5">
+        <span
+          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${badge}`}
+        >
+          {isDo ? "DO IT" : "NOT THIS"}
+        </span>
+        <h3
+          className="mt-2.5 text-base font-black leading-snug text-white"
+          dir={locale === "ar" ? "rtl" : "ltr"}
+        >
+          <RichText text={pick(side.title, locale)} />
+        </h3>
+        <div className="mt-1.5 space-y-1">
+          <p className="text-sm leading-relaxed text-slate-200" dir="ltr">
+            <RichText text={side.explanation.en} />
+          </p>
+          <p className="text-sm leading-relaxed text-slate-300" dir="rtl">
+            <RichText text={side.explanation.ar} />
+          </p>
+        </div>
+        {side.code ? (
+          <pre
+            dir="ltr"
+            className="mt-2.5 max-h-24 overflow-auto rounded-xl border border-white/10 bg-black/40 p-2.5 font-mono text-[11px] leading-5 text-cyan-100"
+          >
+            {side.code}
+          </pre>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 export function FrontendTipsPanel() {
   const { locale } = useLanguage();
-  const [category, setCategory] = useState<
-    "all" | TipCategoryId
-  >("all");
-  const [actionFilter, setActionFilter] = useState<
-    "all" | "do" | "dont"
-  >("all");
+  const [category, setCategory] = useState<"all" | TipCategoryId>("all");
 
   const filtered = useMemo(() => {
-    return TIPS_FOR_LIBRARY.filter((tip) => {
-      if (category !== "all" && tip.category !== category) return false;
-      if (actionFilter === "do" && tip.action !== "DO") return false;
-      if (actionFilter === "dont" && tip.action !== "DONT") return false;
-      return true;
-    });
-  }, [actionFilter, category]);
+    return TIP_PAIRS.filter(
+      (pair) => category === "all" || pair.category === category,
+    );
+  }, [category]);
 
   return (
-    <section className="rounded-3xl border border-white/10 bg-slate-950/55 p-3 backdrop-blur-xl sm:p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="min-w-56">
-          <div className="flex items-center gap-2 text-sm font-semibold text-cyan-100">
-            <span aria-hidden className="text-base">
-              ✨
-            </span>
-            Frontend Tips
-          </div>
-          <p className="mt-1 text-xs text-slate-400">
+    <section className="overflow-hidden rounded-3xl border border-white/10 bg-linear-to-br from-slate-950 via-slate-900/90 to-cyan-950/40 p-3 shadow-[0_0_60px_-28px_rgba(34,211,238,0.35)] backdrop-blur-xl sm:p-5">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0 max-w-xl">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300/80">
+            Code Ninja Series
+          </p>
+          <h2 className="mt-1 text-xl font-black leading-tight text-white sm:text-2xl">
             {locale === "ar"
-              ? "كروت سريعة بشكل carousel — بسيطة، catchy، وسهلة التصوير."
-              : "Quick carousel cards — simple, catchy, and screenshot-ready."}
+              ? "ازاي تخلي الكود بتاعك نينجا"
+              : "How to make your code ninja"}
+          </h2>
+          <p
+            className="mt-1.5 text-sm text-slate-400"
+            dir={locale === "ar" ? "rtl" : "ltr"}
+          >
+            {locale === "ar"
+              ? "سنيور بيشرح لجونيور: متعملش كده → اعمل كده. إنجليزي + عربي يومي."
+              : "A senior explaining to a junior: not like that → do it like this."}
           </p>
         </div>
-
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-semibold text-slate-300">
-          {filtered.length}/{TIPS_FOR_LIBRARY.length}
+        <span className="inline-flex items-center rounded-full border border-cyan-300/25 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold text-cyan-100">
+          {filtered.length} pairs
         </span>
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
           className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
@@ -643,17 +987,7 @@ export function FrontendTipsPanel() {
         >
           {locale === "ar" ? "الكل" : "All"}
         </button>
-        {(
-          [
-            "HTML",
-            "CSS",
-            "JavaScript",
-            "React",
-            "Git",
-            "UI/UX",
-            "General Frontend",
-          ] as TipCategoryId[]
-        ).map((id) => (
+        {CATEGORIES.map((id) => (
           <button
             key={id}
             type="button"
@@ -669,100 +1003,40 @@ export function FrontendTipsPanel() {
         ))}
       </div>
 
-      <div className="mt-2 flex flex-wrap gap-2" role="tablist">
-        {ACTION_FILTERS.map((f) => {
-          const active =
-            actionFilter === f.id ||
-            (f.id === "all" && actionFilter === "all");
-          return (
-            <button
-              key={f.id}
-              type="button"
-              role="tab"
-              aria-selected={active}
-              className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
-                active
-                  ? f.id === "do"
-                    ? "border-emerald-300/50 bg-emerald-300/20 text-emerald-50"
-                    : f.id === "dont"
-                      ? "border-rose-300/50 bg-rose-300/20 text-rose-50"
-                      : "border-cyan-300/50 bg-cyan-300/20 text-cyan-50"
-                  : "border-white/10 bg-white/5 text-slate-300 hover:border-white/20 hover:bg-white/10"
-              }`}
-              onClick={() => {
-                if (f.id === "all") setActionFilter("all");
-                if (f.id === "do") setActionFilter("do");
-                if (f.id === "dont") setActionFilter("dont");
-              }}
-            >
-              {pick(f.label, locale)}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        {filtered.map((tip) => {
-          const categoryLabel = pick(CATEGORY_LABELS[tip.category], locale);
-          const isDo = tip.action === "DO";
-          const labelTone =
-            isDo
-              ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-100"
-              : "border-rose-400/30 bg-rose-400/10 text-rose-100";
-          const cardTone = isDo
-            ? "border-emerald-300/35 bg-linear-to-br from-emerald-950/40 via-slate-900/75 to-cyan-950/35 hover:border-emerald-300/55"
-            : "border-rose-300/35 bg-linear-to-br from-rose-950/40 via-slate-900/75 to-orange-950/35 hover:border-rose-300/55";
+      <div className="mt-4 grid gap-4">
+        {filtered.map((pair, index) => {
+          const categoryLabel = pick(CATEGORY_LABELS[pair.category], locale);
 
           return (
             <motion.article
-              key={tip.id}
-              whileHover={{ y: -3 }}
-              whileTap={{ scale: 0.99 }}
-              transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              className={`group flex min-w-0 flex-col overflow-hidden rounded-2xl border p-3 transition ${cardTone}`}
+              key={pair.id}
+              whileHover={{ y: -2 }}
+              transition={{ type: "spring", stiffness: 280, damping: 22 }}
+              className="mx-auto w-full max-w-sm rounded-3xl border border-white/10 bg-white/3 p-3 sm:p-4"
             >
-              <div className="flex items-start justify-between gap-3">
-                <span
-                  className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${labelTone}`}
-                >
-                  {tip.action === "DO" ? "DO" : "DON'T"}
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  {String(index + 1).padStart(2, "0")} · {categoryLabel}
                 </span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[10px] font-semibold text-slate-300">
-                  {categoryLabel}
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600">
+                  Not this → Do it
                 </span>
               </div>
 
-              <h3
-                className="mt-2 text-base font-bold leading-tight text-white"
-                dir={locale === "ar" ? "rtl" : "ltr"}
-              >
-                <RichText text={pick(tip.title, locale)} />
-              </h3>
-              <div className="mt-1 space-y-1">
-                <p className="text-sm leading-relaxed text-slate-100" dir="ltr">
-                  <RichText text={tip.explanation.en} />
-                </p>
-                <p className="text-sm leading-relaxed text-slate-200" dir="rtl">
-                  <RichText text={tip.explanation.ar} />
-                </p>
+              <div className="flex flex-col gap-2.5">
+                <TipHalf side={pair.dont} tone="dont" locale={locale} />
+                <TipHalf side={pair.do} tone="do" locale={locale} />
               </div>
 
-              {tip.code ? (
-                <pre
-                  dir="ltr"
-                  className="mt-2 max-h-28 overflow-auto rounded-xl border border-white/10 bg-slate-950/65 p-3 font-mono text-[11px] leading-5 text-cyan-100"
-                >
-                  {tip.code}
-                </pre>
-              ) : null}
-
-              <div className="mt-3 rounded-xl border border-white/10 bg-white/5 p-3">
-                <div className="text-sm font-semibold text-slate-100">💡 Why?</div>
+              <div className="mt-3 rounded-xl border border-white/8 bg-black/25 px-3 py-2.5">
+                <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200/90">
+                  Why?
+                </div>
                 <p className="mt-1 text-sm leading-relaxed text-slate-200" dir="ltr">
-                  <RichText text={tip.why.en} />
+                  <RichText text={pair.why.en} />
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-slate-200" dir="rtl">
-                  <RichText text={tip.why.ar} />
+                <p className="mt-0.5 text-sm leading-relaxed text-slate-300" dir="rtl">
+                  <RichText text={pair.why.ar} />
                 </p>
               </div>
             </motion.article>
@@ -772,4 +1046,3 @@ export function FrontendTipsPanel() {
     </section>
   );
 }
-
