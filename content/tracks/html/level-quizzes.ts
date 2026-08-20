@@ -176,61 +176,46 @@ const beginnerQuestions: LevelQuestion[] = [
     ),
   },
   {
-    id: "b-hard-spot-fake-list",
-    type: "click-element",
+    id: "b-hard-label-for-mismatch",
+    type: "mcq",
     difficulty: "hard",
     prompt: L(
-      "Two trees look like lists. Click the fake one.",
-      "شجرتين شكلهم قوائم. اضغط المزيفة.",
+      "You tap the word Email — the field does not focus. Why?",
+      "ضغطت على كلمة Email — الحقل ماخدش فوكس. ليه؟",
     ),
-    markup: `<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-family:ui-sans-serif,system-ui,sans-serif;color:#0f172a">
-  <div data-target="fake" data-label="A" style="text-align:start;border:2px dashed #94a3b8;border-radius:16px;padding:12px;background:#f8fafc;cursor:pointer">
-    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#64748b;margin-bottom:10px">A</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <span style="width:10px;height:10px;border-radius:99px;background:#94a3b8"></span>
-      <span style="font:600 13px ui-monospace,monospace">&lt;div&gt;</span>
-    </div>
-    <div style="margin-left:12px;padding-left:12px;border-left:2px solid #cbd5e1">
-      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
-        <span style="width:8px;height:8px;border-radius:99px;background:#cbd5e1"></span>
-        <span style="font:13px ui-monospace,monospace">&lt;div&gt;</span>
-        <span>• Milk</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
-        <span style="width:8px;height:8px;border-radius:99px;background:#cbd5e1"></span>
-        <span style="font:13px ui-monospace,monospace">&lt;div&gt;</span>
-        <span>• Eggs</span>
-      </div>
-    </div>
-  </div>
-  <div data-target="real" data-label="B" style="text-align:start;border:2px solid #22d3ee;border-radius:16px;padding:12px;background:#ecfeff;cursor:pointer">
-    <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#0e7490;margin-bottom:10px">B</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-      <span style="width:10px;height:10px;border-radius:99px;background:#22d3ee"></span>
-      <span style="font:600 13px ui-monospace,monospace">&lt;ul&gt;</span>
-    </div>
-    <div style="margin-left:12px;padding-left:12px;border-left:2px solid #67e8f9">
-      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
-        <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
-        <span style="font:13px ui-monospace,monospace">&lt;li&gt;</span>
-        <span>Milk</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
-        <span style="width:8px;height:8px;border-radius:99px;background:#34d399"></span>
-        <span style="font:13px ui-monospace,monospace">&lt;li&gt;</span>
-        <span>Eggs</span>
-      </div>
-    </div>
-  </div>
-</div>`,
-    correctTargetId: "fake",
+    options: [
+      O(
+        "a",
+        "`for=\"mail\"` does not match `id=\"email\"`",
+        "`for=\"mail\"` مش مطابق لـ `id=\"email\"`",
+      ),
+      O(
+        "b",
+        "`type=\"email\"` blocks label clicks",
+        "`type=\"email\"` بيمنع الضغط على الـ label",
+      ),
+      O(
+        "c",
+        "Labels never focus inputs — only Tab does",
+        "الـ label عمره ما بيركّز الـ input — الـ Tab بس",
+      ),
+      O(
+        "d",
+        "The label must wrap the input; `for` is ignored",
+        "الـ label لازم يلف على الـ input؛ `for` بيتتجاهل",
+      ),
+    ],
+    correctId: "a",
+    code: `<label for="mail">Email</label>
+<input id="email" type="email" />`,
+    language: "html",
     explanation: L(
-      "A is fake: `<div>` boxes with a typed • . B is a real list: `<ul>` with `<li>` inside.",
-      "A مزيفة: صناديق `<div>` وعلامة •. B قائمة حقيقية: `<ul>` وفيها `<li>`.",
+      "`for` on the label must match the input’s `id` exactly. Here `mail` ≠ `email`, so the browser never connects them. Fix either side so both say the same id.",
+      "`for` بتاع الـ label لازم يطابق `id` بتاع الـ input حرف بحرف. هنا `mail` ≠ `email`، فالمتصفح مش بيربطهم. صلّح ناحية واحدة عشان الاتنين يبقوا نفس الـ id.",
     ),
     hint: L(
-      "Grey `<div>` tree = fake. Cyan `<ul>` tree = real.",
-      "شجرة `<div>` الرمادي = مزيفة. شجرة `<ul>` السماوي = حقيقية.",
+      "Read `for` and `id` out loud. Same word?",
+      "اقرا `for` و `id` بصوت عالي. نفس الكلمة؟",
     ),
   },
   {
@@ -369,244 +354,390 @@ const beginnerQuestions: LevelQuestion[] = [
 ];
 
 // ─── Intermediate (capstone: details-summary) ────────────────────────────────
+// Lessons: forms-inputs · form-ux-attributes · tables · details-summary
 
 const intermediateQuestions: LevelQuestion[] = [
   {
-    id: "i-easy-mcq-input",
+    id: "i-easy-mcq-button-type",
     type: "mcq",
     difficulty: "easy",
     prompt: L(
-      "Which `type` gives built-in email validation?",
-      "أي `type` يوفّر تحققاً مدمجاً من البريد الإلكتروني؟",
+      "Inside a `<form>`, what happens if Preview has no `type`?",
+      "جوّه `<form>`، لو Preview من غير `type` بيحصل إيه؟",
     ),
     options: [
-      O("a", 'type="text"', 'type="text"'),
-      O("b", 'type="email"', 'type="email"'),
-      O("c", 'type="search"', 'type="search"'),
-      O("d", 'type="url"', 'type="url"'),
+      O(
+        "a",
+        "It does nothing until you add JavaScript",
+        "مش بيعمل حاجة لحد ما تضيف JavaScript",
+      ),
+      O(
+        "b",
+        "It defaults to `submit` and can send the form",
+        "بيبقى `submit` افتراضي وممكن يبعت الفورم",
+      ),
+      O(
+        "c",
+        "It defaults to `button` and never submits",
+        "بيبقى `button` افتراضي ومش بيبعت",
+      ),
+      O(
+        "d",
+        "It defaults to `reset` and clears the form",
+        "بيبقى `reset` افتراضي وبيفضي الفورم",
+      ),
     ],
     correctId: "b",
-    explanation: L(
-      "`type=\"email\"` hints the browser to validate format and can show an email keyboard on mobile.",
-      "`type=\"email\"` يوجّه المتصفح للتحقق من التنسيق وقد يعرض لوحة مفاتيح بريد على الجوال.",
-    ),
-    code: `<input type="email" name="contact" />`,
+    code: `<form action="/save" method="post">
+  <button>Preview</button>
+  <button type="submit">Save</button>
+</form>`,
     language: "html",
+    explanation: L(
+      "From Forms & Inputs: a bare `<button>` inside a form defaults to `type=\"submit\"`. Use `type=\"button\"` for Preview.",
+      "من درس Forms: الزرار من غير `type` جوّه الفورم بيبقى `submit`. استخدم `type=\"button\"` لـ Preview.",
+    ),
+    hint: L(
+      "What is the default `type` for `<button>` inside a form?",
+      "إيه الـ `type` الافتراضي لـ `<button>` جوّه فورم؟",
+    ),
   },
   {
-    id: "i-easy-click-summary",
+    id: "i-easy-click-legend",
     type: "click-element",
     difficulty: "easy",
     prompt: L(
-      "Click the element users activate to toggle a `<details>` panel.",
-      "انقر على العنصر الذي يُفعّله المستخدم لفتح وإغلاق لوحة `<details>`.",
+      "Click the caption that names this whole radio group.",
+      "اضغط على العنوان اللي بيسمّي مجموعة الـ radio كلها.",
     ),
-    markup: `<details data-target="details">
-  <summary data-target="summary">Shipping FAQ</summary>
-  <p data-target="panel">We ship in 3–5 days.</p>
-</details>`,
-    correctTargetId: "summary",
+    markup: `<form style="font:14px system-ui;color:#0f172a">
+  <fieldset data-target="fieldset" style="border:1px solid #94a3b8;border-radius:12px;padding:12px">
+    <legend data-target="legend">Shipping speed</legend>
+    <label data-target="lab1" style="display:block;margin:6px 0">
+      <input type="radio" name="speed" value="std" /> Standard
+    </label>
+    <label data-target="lab2" style="display:block;margin:6px 0">
+      <input type="radio" name="speed" value="exp" /> Express
+    </label>
+  </fieldset>
+</form>`,
+    correctTargetId: "legend",
     explanation: L(
-      "`<summary>` is the native disclosure control for `<details>` — no JavaScript required.",
-      "`<summary>` هو عنصر التحكم الأصلي لـ `<details>` — دون الحاجة إلى JavaScript.",
+      "`<legend>` names the `<fieldset>`. Screen readers announce it as the group label for the radios.",
+      "`<legend>` بيسمّي الـ `<fieldset>`. قارئات الشاشة بتقوله كاسم للمجموعة.",
     ),
-    demoHtml: `<details><summary>Shipping FAQ</summary><p>We ship in 3–5 days.</p></details>`,
+    hint: L(
+      "Not a single radio label — the group title.",
+      "مش label لراديو واحد — عنوان المجموعة.",
+    ),
+    demoHtml: `<fieldset><legend>Shipping speed</legend><label><input type="radio" name="s"> Standard</label></fieldset>`,
   },
   {
-    id: "i-med-fill-details",
-    type: "fill-code",
+    id: "i-med-mcq-inputmode",
+    type: "mcq",
     difficulty: "medium",
     prompt: L(
-      "Complete the wrapper element for a native disclosure widget.",
-      "أكمل عنصر الغلاف لأداة الإظهار/الإخفاء الأصلية.",
+      "`inputmode=\"email\"` vs `type=\"email\"` — what’s true?",
+      "`inputmode=\"email\"` و `type=\"email\"` — إيه الصح؟",
     ),
-    template: `{{open}}\n  <summary>More info</summary>\n  <p>Hidden content</p>\n</details>`,
-    blankId: "open",
-    correctAnswers: ["<details>", "<details>"],
+    options: [
+      O(
+        "a",
+        "`inputmode` validates email format on submit",
+        "`inputmode` بيتحقق من شكل الإيميل عند الإرسال",
+      ),
+      O(
+        "b",
+        "`type=\"email\"` validates; `inputmode` only hints the keyboard",
+        "`type=\"email\"` بيتحقق؛ `inputmode` بس بيلمّح للكيبورد",
+      ),
+      O(
+        "c",
+        "`autocomplete=\"email\"` alone validates and opens the keyboard",
+        "`autocomplete=\"email\"` لوحده بيتحقق وبيفتح الكيبورد",
+      ),
+      O(
+        "d",
+        "`inputmode` replaces `type` — you never need both",
+        "`inputmode` بيستبدل `type` — مش محتاج الاتنين",
+      ),
+    ],
+    correctId: "b",
+    code: `<!-- keyboard only — NO format check -->
+<input type="text" inputmode="email" name="contact" />
+
+<!-- validates (+ keyboard when supported) -->
+<input type="email" inputmode="email" name="contact" />`,
     language: "html",
     explanation: L(
-      "`<details>` + `<summary>` is the built-in expand/collapse pattern in HTML.",
-      "`<details>` + `<summary>` هو نمط التوسيع/الطي المدمج في HTML.",
+      "From Form UX: `inputmode` suggests a keyboard. It does not validate. `type=\"email\"` runs built-in format checks.",
+      "من درس Form UX: `inputmode` بيقترح كيبورد. مش بيتحقق. `type=\"email\"` بيعمل تحقق الشكل.",
     ),
-    hint: L("It is not a `<div>` or `<section>`.", "ليس `<div>` ولا `<section>`."),
+    hint: L(
+      "Which attribute actually checks the value?",
+      "مين اللي بيتحقق من القيمة فعلًا؟",
+    ),
   },
   {
-    id: "i-med-match-form",
+    id: "i-med-match-form-ux",
     type: "match-pairs",
     difficulty: "medium",
     prompt: L(
-      "Match each control to its best use.",
-      "طابق كل عنصر تحكم مع أفضل استخدام له.",
+      "Match each Form UX attribute to what it actually does.",
+      "وصّل كل attribute من Form UX باللي بيعمله فعلًا.",
     ),
     left: [
-      { id: "l1", label: L("<textarea>", "<textarea>") },
-      { id: "l2", label: L('<input type="checkbox">', '<input type="checkbox">') },
-      { id: "l3", label: L("<select>", "<select>") },
+      { id: "l1", label: L("inputmode", "inputmode") },
+      { id: "l2", label: L("autocomplete", "autocomplete") },
+      { id: "l3", label: L("pattern", "pattern") },
     ],
     right: [
-      { id: "r1", label: L("Multi-line message", "رسالة متعددة الأسطر") },
-      { id: "r2", label: L("Pick one from many options", "اختيار واحد من عدة خيارات") },
-      { id: "r3", label: L("Toggle an on/off setting", "تبديل إعداد تشغيل/إيقاف") },
+      { id: "r1", label: L("Helps the browser autofill known values", "بيساعد المتصفح يملأ قيم معروفة") },
+      { id: "r2", label: L("Checks the value against a regex on submit", "بيتحقق من القيمة بـ regex عند الإرسال") },
+      { id: "r3", label: L("Hints which mobile keyboard to show", "بيلمّح لأنهي كيبورد يبان على الموبايل") },
     ],
-    correctPairs: { l1: "r1", l2: "r3", l3: "r2" },
+    correctPairs: { l1: "r3", l2: "r1", l3: "r2" },
     explanation: L(
-      "Pick the native control whose semantics match the data you collect.",
-      "اختر عنصر التحكم الأصلي الذي تطابق دلالاته البيانات التي تجمعها.",
+      "`inputmode` ≠ validation. `autocomplete` ≠ keyboard. `pattern` is the format gate (with `type` / `required`).",
+      "`inputmode` مش validation. `autocomplete` مش كيبورد. `pattern` هو بوابة الشكل (مع `type` / `required`).",
+    ),
+    hint: L(
+      "Think: keyboard · autofill · regex.",
+      "فكّر: كيبورد · تعبئة تلقائية · regex.",
     ),
   },
   {
-    id: "i-med-arrange-form",
-    type: "arrange-steps",
+    id: "i-med-match-table-scope",
+    type: "match-pairs",
     difficulty: "medium",
     prompt: L(
-      "Order the steps to build an accessible labeled text field.",
-      "رتّب خطوات بناء حقل نصي مُسمّى بشكل مُتاح.",
+      "Connect each header to the `scope` it needs.",
+      "وصّل كل عنوان بالـ `scope` اللي محتاجه.",
     ),
-    items: [
-      { id: "s1", label: L('Add <label for="name">Name</label>', 'أضف <label for="name">Name</label>') },
-      { id: "s2", label: L('Add <input id="name" name="name" type="text">', 'أضف <input id="name" name="name" type="text">') },
-      { id: "s3", label: L("Wrap both in <form>", "غلّفهما في <form>") },
-      { id: "s4", label: L("Match label `for` with input `id`", "طابق `for` في label مع `id` في input") },
+    left: [
+      { id: "l1", label: L('<th>…</th> above the Price column', '<th>…</th> فوق عمود Price') },
+      { id: "l2", label: L('<th>Apples</th> starting a data row', '<th>Apples</th> في أول صف بيانات') },
+      { id: "l3", label: L('<th>…</th> above the Product column', '<th>…</th> فوق عمود Product') },
     ],
-    correctOrder: ["s3", "s1", "s2", "s4"],
-    explanation: L(
-      "Explicit `<label for>` + matching `id` gives the input an accessible name.",
-      "`<label for>` الصريح مع `id` مطابق يمنح الحقل اسماً مُتاحاً.",
-    ),
-  },
-  {
-    id: "i-med-spot-table",
-    type: "spot-bug",
-    difficulty: "medium",
-    prompt: L(
-      "Spot the cell tag used where a header cell belongs.",
-      "حدد وسم الخلية المستخدم مكان خلية عنوان.",
-    ),
-    code: `<table>
-  <thead>
-    <tr>
-      <td>Name</td>
-      <td>Score</td>
-    </tr>
-  </thead>
+    right: [
+      { id: "r1", label: L('scope="row"', 'scope="row"') },
+      { id: "r2", label: L('scope="col"', 'scope="col"') },
+      { id: "r3", label: L("no scope needed — use <td>", "من غير scope — استخدم <td>") },
+    ],
+    correctPairs: { l1: "r2", l2: "r1", l3: "r2" },
+    demoHtml: `<table>
+  <tr>
+    <th scope="col">Product</th>
+    <th scope="col">Price</th>
+  </tr>
+  <tr>
+    <th scope="row">Apples</th>
+    <td>12</td>
+  </tr>
 </table>`,
+    explanation: L(
+      "Column titles get `scope=\"col\"`. A header that labels its row (Apples) gets `scope=\"row\"`. Don’t turn row headers into plain `<td>`.",
+      "عناوين الأعمدة تاخد `scope=\"col\"`. العنوان اللي بيسمّي الصف (Apples) ياخد `scope=\"row\"`. متخلّيش عنوان الصف يبقى `<td>` عادي.",
+    ),
+    hint: L(
+      "Across the top = col. Down the side = row.",
+      "فوق الصف = col. على جنب الصف = row.",
+    ),
+  },
+  {
+    id: "i-med-fill-details-name",
+    type: "fill-code",
+    difficulty: "medium",
+    prompt: L(
+      "Complete the attribute that makes these FAQ panels exclusive (one open at a time).",
+      "كمّل الـ attribute اللي بيخلي لوحات الـ FAQ حصرية (واحدة مفتوحة في نفس الوقت).",
+    ),
+    template: `<details {{attr}}="faq">
+  <summary>Shipping</summary>
+  <p>3–5 days</p>
+</details>
+<details name="faq">
+  <summary>Returns</summary>
+  <p>30 days</p>
+</details>`,
+    blankId: "attr",
+    correctAnswers: ["name", 'name'],
     language: "html",
-    bugToken: "<td>",
     explanation: L(
-      "Header cells in `<thead>` should use `<th scope=\"col\">` — not `<td>`.",
-      "خلايا العناوين في `<thead>` يجب أن تستخدم `<th scope=\"col\">` — وليس `<td>`.",
+      "From details-summary: shared `name` groups disclosures so opening one can close the others (where supported).",
+      "من درس details: `name` المشترك بيجمّع اللوحات عشان فتح واحدة يقفل الباقي (حسب الدعم).",
+    ),
+    hint: L(
+      "Same idea as radio `name` grouping.",
+      "نفس فكرة تجميع الـ radio بـ `name`.",
     ),
   },
   {
-    id: "i-hard-before-details",
-    type: "before-after",
+    id: "i-hard-fill-otp-autocomplete",
+    type: "fill-code",
     difficulty: "hard",
     prompt: L(
-      "Which side shows a `<details>` element opened by default?",
-      "أي جانب يعرض عنصر `<details>` مفتوحاً افتراضياً؟",
+      "Complete the `autocomplete` value so phones can suggest the SMS OTP.",
+      "كمّل قيمة `autocomplete` عشان الموبايل يقترح كود الـ SMS OTP.",
     ),
-    beforeHtml: `<details><summary>Plan</summary><p>Basic</p></details>`,
-    afterHtml: `<details open><summary>Plan</summary><p>Basic</p></details>`,
-    options: [
-      O("a", "Left (before)", "اليسار (قبل)"),
-      O("b", "Right (after)", "اليمين (بعد)"),
+    template: `<label for="otp">One-time code</label>
+<input
+  id="otp"
+  name="otp"
+  type="text"
+  inputmode="numeric"
+  autocomplete="{{blank}}"
+  pattern="[0-9]{6}"
+  maxlength="6"
+  required
+/>`,
+    blankId: "blank",
+    correctAnswers: [
+      "one-time-code",
+      "onetimecode",
+      '"one-time-code"',
+      "'one-time-code'",
     ],
-    correctId: "b",
+    language: "html",
     explanation: L(
-      "The boolean `open` attribute starts the disclosure in the expanded state.",
-      "السمة المنطقية `open` تبدأ عنصر الإظهار في الحالة الموسّعة.",
+      "From Form UX: `autocomplete=\"one-time-code\"` is the standard token for OTP autofill. Pair it with `inputmode=\"numeric\"` + `pattern` — `inputmode` alone never validates.",
+      "من درس Form UX: `autocomplete=\"one-time-code\"` هو التوكن المعياري لتعبئة OTP. جمّعه مع `inputmode=\"numeric\"` و `pattern` — `inputmode` لوحده مش validation.",
+    ),
+    hint: L(
+      "Three words, hyphenated: one-?-code",
+      "تلات كلمات بـ hyphen: one-?-code",
     ),
   },
   {
-    id: "i-hard-dom-td",
-    type: "dom-tree",
+    id: "i-hard-match-details-behavior",
+    type: "match-pairs",
     difficulty: "hard",
     prompt: L(
-      "Select the data cell that holds “42”.",
-      "اختر خلية البيانات التي تحتوي «42».",
+      "Match each `<details>` markup to what the browser does.",
+      "وصّل كل markup لـ `<details>` باللي المتصفح هيعمله.",
     ),
-    tree: {
-      id: "table",
-      tag: "table",
-      children: [
-        {
-          id: "thead",
-          tag: "thead",
-          children: [
-            {
-              id: "hrow",
-              tag: "tr",
-              children: [
-                { id: "th1", tag: "th", label: L("Name", "الاسم") },
-                { id: "th2", tag: "th", label: L("Score", "الدرجة") },
-              ],
-            },
-          ],
-        },
-        {
-          id: "tbody",
-          tag: "tbody",
-          children: [
-            {
-              id: "drow",
-              tag: "tr",
-              children: [
-                { id: "td1", tag: "td", label: L("Sara", "سارة") },
-                { id: "td2", tag: "td", label: L("42", "42") },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    correctNodeId: "td2",
+    left: [
+      { id: "l1", label: L("<details open>…</details>", "<details open>…</details>") },
+      { id: "l2", label: L("<details>…</details>", "<details>…</details>") },
+      {
+        id: "l3",
+        label: L(
+          'Two panels share name="faq"',
+          'لوحتين شايرين name="faq"',
+        ),
+      },
+    ],
+    right: [
+      {
+        id: "r1",
+        label: L("Starts collapsed until the user opens it", "بتبدأ مقفولة لحد ما اليوزر يفتحها"),
+      },
+      {
+        id: "r2",
+        label: L(
+          "Exclusive group — opening one can close the other",
+          "مجموعة حصرية — فتح واحدة يقدر يقفل التانية",
+        ),
+      },
+      {
+        id: "r3",
+        label: L("Starts expanded with no JavaScript", "بتبدأ مفتوحة من غير JavaScript"),
+      },
+    ],
+    correctPairs: { l1: "r3", l2: "r1", l3: "r2" },
+    demoHtml: `<details open>
+  <summary>Returns</summary>
+  <p>You have 30 days.</p>
+</details>
+<details>
+  <summary>Shipping</summary>
+  <p>Arrives in 3–5 days.</p>
+</details>`,
     explanation: L(
-      "`<td>` carries body data; `<th>` labels columns or rows.",
-      "`<td>` يحمل بيانات الجسم؛ `<th>` يُسمّي الأعمدة أو الصفوف.",
+      "`open` expands on load. Plain `<details>` starts closed. Shared `name` makes an exclusive FAQ group (where supported) — all from the details-summary lesson.",
+      "`open` بتفتح من الأول. `<details>` العادية بتبدأ مقفولة. `name` المشترك بيعمل مجموعة FAQ حصرية (حسب الدعم) — كله من درس details-summary.",
+    ),
+    hint: L(
+      "`open` = starts big. Shared `name` = one-at-a-time.",
+      "`open` = تبدأ كبيرة. `name` مشترك = واحدة في نفس الوقت.",
     ),
   },
   {
-    id: "i-rw-a11y-label",
+    id: "i-rw-a11y-fieldset",
     type: "accessibility",
     difficulty: "real-world",
     prompt: L(
-      "Checkout shows a placeholder but no label. What helps screen-reader users most?",
-      "صفحة الدفع تعرض placeholder دون label. ما الذي يفيد مستخدمي قارئ الشاشة أكثر؟",
+      "Checkout has three payment radios with no group name. Best fix?",
+      "صفحة الدفع فيها 3 راديو للدفع من غير اسم للمجموعة. أحسن حل؟",
     ),
     scenario: L(
-      "`<input type=\"text\" placeholder=\"Promo code\">` sits alone with no `<label>`.",
-      "`<input type=\"text\" placeholder=\"Promo code\">` بمفرده دون `<label>`.",
+      "Three `<input type=\"radio\" name=\"pay\">` sit under a visual heading “Payment”, but there is no `<fieldset>` / `<legend>`.",
+      "تلاتة `<input type=\"radio\" name=\"pay\">` تحت عنوان شكلي “Payment”، من غير `<fieldset>` / `<legend>`.",
     ),
     options: [
-      O("a", "Rely on placeholder as the name", "الاعتماد على placeholder كاسم"),
-      O("b", "Add a visible <label for=\"promo\">Promo code</label>", "أضف <label for=\"promo\">Promo code</label> مرئياً"),
-      O("c", "Use autofocus only", "استخدم autofocus فقط"),
-      O("d", "Wrap input in <div role=\"textbox\">", "غلّف الحقل في <div role=\"textbox\">"),
+      O(
+        "a",
+        "Wrap them in `<fieldset>` with `<legend>Payment</legend>`",
+        "غلّفهم في `<fieldset>` مع `<legend>Payment</legend>`",
+      ),
+      O(
+        "b",
+        "Add `placeholder=\"Payment\"` on each radio",
+        "حط `placeholder=\"Payment\"` على كل راديو",
+      ),
+      O(
+        "c",
+        "Replace radios with three separate text inputs",
+        "بدّل الراديو بـ 3 حقول نص",
+      ),
+      O(
+        "d",
+        "Hide the radios and rely on the visual heading only",
+        "خبّي الراديو واعتمد على العنوان الشكلي بس",
+      ),
     ],
-    correctId: "b",
+    correctId: "a",
     explanation: L(
-      "Placeholders disappear on input and are weak names. A real `<label>` persists.",
-      "الـ placeholder يختفي عند الكتابة ولا يصلح اسماً قوياً. `<label>` حقيقي يبقى ظاهراً.",
+      "Related radios need a programmatically associated group name. `<fieldset>` + `<legend>` is the native pattern from Forms & Inputs.",
+      "الراديو المرتبط محتاج اسم مجموعة مرتبط برمجيًا. `<fieldset>` + `<legend>` هو النمط الأصلي من درس Forms.",
+    ),
+    hint: L(
+      "Think group caption — not placeholder on a radio.",
+      "فكّر في عنوان مجموعة — مش placeholder على راديو.",
     ),
   },
   {
-    id: "i-rw-timeline-submit",
-    type: "timeline",
+    id: "i-rw-arrange-table",
+    type: "arrange-steps",
     difficulty: "real-world",
     prompt: L(
-      "Order the native form submission flow.",
-      "رتّب تسلسل إرسال النموذج الأصلي.",
+      "Drag the pieces into a real data table — top to bottom.",
+      "اسحب القطع لجدول بيانات حقيقي — من فوق لتحت.",
     ),
     items: [
-      { id: "t1", label: L("User activates submit control", "المستخدم يُفعّل زر الإرسال") },
-      { id: "t2", label: L("Browser runs constraint validation", "المتصفح ينفّذ constraint validation") },
-      { id: "t3", label: L("Form data encodes per method/enctype", "بيانات النموذج تُرمّز حسب method/enctype") },
-      { id: "t4", label: L("Navigation or fetch to action URL", "تنقل أو fetch إلى action URL") },
+      {
+        id: "s4",
+        label: L("<tbody>…<td>Sara</td>…</tbody>", "<tbody>…<td>Sara</td>…</tbody>"),
+      },
+      { id: "s2", label: L("<caption>Scores</caption>", "<caption>Scores</caption>") },
+      { id: "s5", label: L("</table>", "</table>") },
+      {
+        id: "s3",
+        label: L(
+          '<thead>…<th scope="col">Name</th>…</thead>',
+          '<thead>…<th scope="col">Name</th>…</thead>',
+        ),
+      },
+      { id: "s1", label: L("<table>", "<table>") },
     ],
-    correctOrder: ["t1", "t2", "t3", "t4"],
+    correctOrder: ["s1", "s2", "s3", "s4", "s5"],
     explanation: L(
-      "Validation runs before the request is built — invalid fields block submit.",
-      "التحقق يعمل قبل بناء الطلب — الحقول غير الصالحة تمنع الإرسال.",
+      "Real data tables: open `<table>` → `<caption>` → `<thead>` with `scope=\"col\"` → `<tbody>` data → close. Div grids that only look like tables don’t belong here.",
+      "جدول بيانات حقيقي: افتح `<table>` → `<caption>` → `<thead>` مع `scope=\"col\"` → بيانات `<tbody>` → قفل. الـ div grids اللي شكلها جدول مش مكانها هنا.",
+    ),
+    hint: L(
+      "Caption comes right after `<table>` — before thead.",
+      "الـ caption بعد `<table>` على طول — قبل thead.",
     ),
   },
 ];

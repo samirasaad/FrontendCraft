@@ -180,6 +180,7 @@ export function useLevelQuizSession(
     correct,
     isLast,
     result,
+    scores,
     submit,
     tryAgain,
     revealHint,

@@ -168,9 +168,26 @@ export function wrapActivityPreviewHtml(code: string): string {
   </style></head><body>${code}</body></html>`;
 }
 
-export function ActivityOptionLetter({ children }: { children: ReactNode }) {
+export function ActivityOptionLetter({
+  children,
+  tone = "idle",
+}: {
+  children: ReactNode;
+  tone?: "idle" | "selected" | "correct" | "wrong";
+}) {
+  const shell =
+    tone === "selected"
+      ? "border-sky-300/60 bg-sky-400/20 text-sky-50 shadow-[0_0_12px_rgba(56,189,248,0.35)]"
+      : tone === "correct"
+        ? "border-emerald-400/55 bg-emerald-400/20 text-emerald-100"
+        : tone === "wrong"
+          ? "border-rose-400/55 bg-rose-400/20 text-rose-100"
+          : "border-white/15 bg-white/5 text-slate-200";
+
   return (
-    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/5 font-mono text-sm font-bold text-slate-200">
+    <span
+      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border font-mono text-sm font-bold transition ${shell}`}
+    >
       {children}
     </span>
   );

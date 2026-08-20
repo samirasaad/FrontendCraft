@@ -106,13 +106,13 @@ function ClickElement({
   answer,
   onChange,
   disabled,
-  revealed,
   feedback,
 }: LevelQuestionProps & { question: Extract<LevelQuestion, { type: "click-element" }> }) {
   const { locale } = useLanguage();
   const targets = parseTargets(question.markup);
   const selected = typeof answer === "string" ? answer : null;
   const safeId = selected && /^[A-Za-z][\w-]*$/.test(selected) ? selected : "";
+  const selectedLabel = targets.find((item) => item.id === selected)?.label;
 
     function handlePreviewClick(event: MouseEvent<HTMLDivElement>) {
     event.preventDefault();
@@ -126,46 +126,29 @@ function ClickElement({
     <div>
       <Prompt question={question} />
       <p className="mb-2 text-sm font-semibold text-slate-300">
-        {t("levelQuizPagePreview", locale)}
+        {t("levelQuizTapPreview", locale)}
       </p>
       <div
-        className="html-click-preview mb-4 overflow-hidden rounded-2xl border border-white/10 bg-white p-4 text-slate-900 shadow-inner [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-8 [&_ol]:ps-8 [&_ul]:my-2 [&_ol]:my-2 [&_p]:my-2 [&_nav]:mb-2 [&_[data-target]]:cursor-pointer [&_[data-target]]:rounded-sm [&_[data-target]]:outline [&_[data-target]]:outline-2 [&_[data-target]]:outline-dashed [&_[data-target]]:outline-slate-400 [&_[data-target]]:outline-offset-2"
+        className="html-click-preview mb-3 overflow-hidden rounded-2xl border border-white/10 bg-white p-4 text-slate-900 shadow-inner [&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ps-8 [&_ol]:ps-8 [&_ul]:my-2 [&_ol]:my-2 [&_p]:my-2 [&_nav]:mb-2 [&_[data-target]]:cursor-pointer [&_[data-target]]:rounded-sm [&_[data-target]]:outline [&_[data-target]]:outline-2 [&_[data-target]]:outline-dashed [&_[data-target]]:outline-slate-400 [&_[data-target]]:outline-offset-2"
         onClick={handlePreviewClick}
         dangerouslySetInnerHTML={{ __html: question.markup }}
       />
       {safeId ? (
-        <style>{`.html-click-preview [data-target="${safeId}"]{outline-color:#0891b2;background:#ecfeff}`}</style>
+        <style>{`.html-click-preview [data-target="${safeId}"]{outline-color:#38bdf8;outline-style:solid;background:#0c4a6e;color:#e0f2fe}`}</style>
       ) : null}
-      <p className="mb-2 text-sm font-semibold text-slate-300">
-        {t("levelQuizTapElement", locale)}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {targets.map((item) => {
-          const isSel = selected === item.id;
-          const isOk = revealed && item.id === question.correctTargetId;
-          const isBad = revealed && isSel && !isOk;
-          return (
-            <motion.button
-              key={item.id}
-              type="button"
-              disabled={disabled}
-              whileHover={disabled ? undefined : { scale: 1.03 }}
-              onClick={() => onChange(item.id)}
-              className={`rounded-xl border px-3 py-2 font-mono text-sm font-medium transition ${
-                isOk
-                  ? "border-emerald-400 bg-emerald-400/15 text-emerald-100 shadow-[0_0_20px_rgba(52,211,153,0.25)]"
-                  : isBad
-                    ? "border-rose-400 bg-rose-400/15 text-rose-100"
-                    : isSel
-                      ? "border-cyan-300 bg-cyan-400/10 text-cyan-100"
-                      : "border-white/12 bg-slate-950/50 text-slate-200"
-              }`}
-            >
-              {item.label}
-            </motion.button>
-          );
-        })}
-      </div>
+      {selectedLabel ? (
+        <p className="flex items-center gap-2 rounded-xl border border-sky-300/40 bg-sky-400/15 px-3 py-2.5 text-sm text-sky-50 shadow-[0_0_20px_rgba(56,189,248,0.18)]">
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-sky-300/25 text-sky-100">
+            ✓
+          </span>
+          <span>
+            <span className="font-semibold text-sky-200">
+              {t("levelQuizTapElement", locale)}:{" "}
+            </span>
+            <span className="font-mono">{selectedLabel}</span>
+          </span>
+        </p>
+      ) : null}
       {feedback === "wrong" ? <ShakeHint /> : null}
     </div>
   );
@@ -241,7 +224,11 @@ function CssDetective({
               disabled={disabled || !pid}
               onClick={() => pid && onChange(pid)}
               className={`block w-full px-4 py-1.5 text-start transition hover:bg-white/5 ${
-                isOk ? "bg-emerald-400/15 text-emerald-100" : isSel ? "bg-cyan-400/10 text-cyan-100" : "text-slate-300"
+                isOk
+                  ? "bg-emerald-400/15 text-emerald-100 ring-1 ring-inset ring-emerald-300/30"
+                  : isSel
+                    ? "bg-sky-400/15 text-sky-50 ring-1 ring-inset ring-sky-300/40"
+                    : "text-slate-300"
               }`}
             >
               {line}
@@ -281,7 +268,13 @@ function SpotBug({
                 disabled={disabled}
                 onClick={() => onChange(token)}
                 className={`rounded-lg px-1.5 py-0.5 transition ${
-                  isOk ? "bg-emerald-400/20 text-emerald-100" : isBad ? "bg-rose-400/20 text-rose-100" : isSel ? "bg-cyan-400/15 text-cyan-100" : "hover:bg-white/10 text-slate-300"
+                  isOk
+                    ? "bg-emerald-400/20 text-emerald-100 ring-1 ring-emerald-300/40"
+                    : isBad
+                      ? "bg-rose-400/20 text-rose-100 ring-1 ring-rose-300/35"
+                      : isSel
+                        ? "bg-sky-400/20 text-sky-50 ring-1 ring-sky-300/45"
+                        : "text-slate-300 hover:bg-white/10"
                 }`}
               >
                 {token}
@@ -319,10 +312,10 @@ function PredictVisual({
             onClick={() => onChange(opt.id)}
             className={`relative cursor-pointer overflow-hidden rounded-2xl border text-start transition ${
               revealed && opt.id === question.correctId
-                ? "border-emerald-400 ring-2 ring-emerald-300/40"
+                ? "border-emerald-400 ring-2 ring-emerald-300/40 shadow-[0_0_24px_rgba(52,211,153,0.2)]"
                 : selected === opt.id
-                  ? "border-cyan-300"
-                  : "border-white/12"
+                  ? "border-sky-300/80 ring-2 ring-sky-300/45 shadow-[0_0_24px_rgba(56,189,248,0.25)]"
+                  : "border-white/12 hover:border-sky-300/35"
             }`}
           >
             <iframe
@@ -469,20 +462,21 @@ function FillCode({
   onChange,
   disabled,
 }: LevelQuestionProps & { question: Extract<LevelQuestion, { type: "fill-code" }> }) {
+  const { locale } = useLanguage();
   const val = typeof answer === "string" ? answer : "";
   const parts = question.template.split(`{{${question.blankId}}}`);
   return (
     <div>
       <Prompt question={question} />
-      <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 font-mono text-sm text-slate-100">
+      <div className="rounded-2xl border border-sky-400/20 bg-slate-950/80 p-4 font-mono text-sm text-slate-100">
         {parts[0]}
         <motion.input
-          animate={{ boxShadow: val ? "0 0 12px rgba(34,211,238,0.3)" : "none" }}
+          animate={{ boxShadow: val ? "0 0 12px rgba(56,189,248,0.28)" : "none" }}
           disabled={disabled}
           value={val}
           onChange={(e) => onChange(e.target.value)}
-          className="mx-1 inline-block min-w-[5rem] rounded-lg border border-cyan-300/40 bg-cyan-400/10 px-2 py-1 text-center text-cyan-100 outline-none"
-          placeholder="..."
+          className="mx-1 inline-block min-w-20 rounded-lg border border-sky-300/35 bg-sky-400/10 px-2 py-1 text-center text-sky-100 outline-none focus:border-sky-300/60"
+          placeholder={t("levelQuizFillPlaceholder", locale)}
         />
         {parts[1] ?? ""}
       </div>
@@ -552,15 +546,19 @@ function MatchPairs({
   return (
     <div>
       <Prompt question={question} />
+      <p className="mb-3 text-sm text-slate-400">
+        {t("levelQuizPairSelectLeft", locale)}
+      </p>
       {question.demoHtml ? (
         <iframe
           title={t("levelQuizPagePreview", locale)}
           sandbox=""
-          srcDoc={question.demoHtml}
-          className="mb-4 h-28 w-full rounded-2xl border border-white/10 bg-white"
+          srcDoc={wrapQuizPreview(question.demoHtml)}
+          scrolling="no"
+          className="mb-4 h-[5.5rem] w-full overflow-hidden rounded-2xl border border-sky-400/20 bg-slate-950 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         />
       ) : null}
-      <div ref={wrapRef} className="relative grid items-center gap-8 sm:grid-cols-2">
+      <div ref={wrapRef} className="relative grid items-center gap-4 sm:gap-8 sm:grid-cols-2">
         <svg
           aria-hidden
           className="pointer-events-none absolute inset-0 hidden h-full w-full sm:block"
@@ -593,10 +591,10 @@ function MatchPairs({
                 }
                 className={`flex w-full items-center gap-2.5 rounded-full border px-3 py-2.5 text-start font-mono text-sm font-medium transition ${
                   active
-                    ? "border-cyan-300 bg-cyan-400/15 text-cyan-50 ring-2 ring-cyan-300/40"
+                    ? "border-sky-300 bg-sky-400/15 text-sky-50 ring-2 ring-sky-300/45 shadow-[0_0_18px_rgba(56,189,248,0.22)]"
                     : color
                       ? "text-white"
-                      : "border-white/12 bg-slate-950/55 text-cyan-100"
+                      : "border-white/12 bg-slate-950/55 text-sky-100 hover:border-sky-300/30"
                 }`}
                 style={
                   color
@@ -605,7 +603,7 @@ function MatchPairs({
                 }
               >
                 <span
-                  className="h-2.5 w-2.5 shrink-0 rounded-full bg-cyan-300"
+                  className="h-2.5 w-2.5 shrink-0 rounded-full bg-sky-300"
                   style={color ? { background: color } : undefined}
                 />
                 {loc(item.label, locale)}
@@ -647,8 +645,73 @@ function MatchPairs({
           })}
         </div>
       </div>
+
+      {Object.keys(pairs).length > 0 ? (
+        <ul className="mt-3 space-y-1.5 sm:hidden">
+          {Object.entries(pairs).map(([leftId, rightId], index) => {
+            const left = question.left.find((item) => item.id === leftId);
+            const right = question.right.find((item) => item.id === rightId);
+            if (!left || !right) return null;
+            const color = PAIR_COLORS[index % PAIR_COLORS.length];
+            const ok = !revealed || question.correctPairs[leftId] === rightId;
+            return (
+              <li
+                key={leftId}
+                className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm"
+                style={{
+                  borderColor: `${ok ? color : "#fb7185"}55`,
+                  background: `${ok ? color : "#fb7185"}14`,
+                }}
+              >
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ background: ok ? color : "#fb7185" }}
+                />
+                <span className="min-w-0 flex-1 font-mono text-slate-100">
+                  {loc(left.label, locale)}
+                </span>
+                <span className="text-slate-500">→</span>
+                <span className="min-w-0 flex-1 text-slate-200">
+                  {loc(right.label, locale)}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
     </div>
   );
+}
+
+function wrapQuizPreview(html: string) {
+  return `<!DOCTYPE html><html><head><meta charset="utf-8" />
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    padding: 10px 12px;
+    background: #0b1220;
+    color: #e2e8f0;
+    font: 13px/1.4 ui-sans-serif, system-ui, sans-serif;
+  }
+  details {
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 10px 12px;
+    background: #111827;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 650;
+    color: #f8fafc;
+  }
+  p { margin: 10px 0 0; color: #94a3b8; }
+  table { border-collapse: collapse; width: 100%; color: #e2e8f0; }
+  th, td { padding: 5px 8px; text-align: start; border-bottom: 1px solid #1e293b; }
+  th { color: #f8fafc; }
+  caption { text-align: start; font-weight: 700; margin-bottom: 6px; color: #7dd3fc; }
+</style></head><body>${html}</body></html>`;
 }
 
 function BeforeAfter({
@@ -663,12 +726,46 @@ function BeforeAfter({
   return (
     <div>
       <Prompt question={question} />
-      <div className="relative mb-4 h-36 overflow-hidden rounded-2xl border border-white/10">
-        <iframe title="before" sandbox="" srcDoc={question.beforeHtml} className="absolute inset-0 h-full w-full bg-white" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }} />
-        <iframe title="after" sandbox="" srcDoc={question.afterHtml} className="absolute inset-0 h-full w-full bg-white" style={{ clipPath: `inset(0 0 0 ${pos}%)` }} />
-        <input type="range" min={0} max={100} value={pos} onChange={(e) => setPos(Number(e.target.value))} className="absolute inset-x-4 bottom-2 z-10" aria-label="Compare" />
+      <div className="relative mb-4 h-40 overflow-hidden rounded-2xl border border-sky-400/20 bg-slate-950 shadow-[inset_0_0_0_1px_rgba(56,189,248,0.08)]">
+        <iframe
+          title="before"
+          sandbox=""
+          srcDoc={wrapQuizPreview(question.beforeHtml)}
+          scrolling="no"
+          className="absolute inset-0 h-full w-full overflow-hidden bg-slate-950 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}
+        />
+        <iframe
+          title="after"
+          sandbox=""
+          srcDoc={wrapQuizPreview(question.afterHtml)}
+          scrolling="no"
+          className="absolute inset-0 h-full w-full overflow-hidden bg-slate-950 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{ clipPath: `inset(0 0 0 ${pos}%)` }}
+        />
+        <div
+          className="pointer-events-none absolute inset-y-0 w-px -translate-x-1/2 bg-sky-300/80 shadow-[0_0_12px_rgba(56,189,248,0.55)]"
+          style={{ left: `${pos}%` }}
+        />
+        <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent px-3 pb-2.5 pt-8">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            {locale === "ar" ? "قبل" : "Before"}
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            value={pos}
+            onChange={(e) => setPos(Number(e.target.value))}
+            className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-slate-700 accent-sky-300 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-sky-300 [&::-webkit-slider-thumb]:shadow-[0_0_10px_rgba(56,189,248,0.55)]"
+            aria-label="Compare"
+          />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+            {locale === "ar" ? "بعد" : "After"}
+          </span>
+        </div>
       </div>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid gap-2">
         {question.options.map((opt, i) => (
           <LessonActivityOptionCard
             key={opt.id}
@@ -745,9 +842,9 @@ function DomTree({
           onClick={() => onChange(node.id)}
           className={`mb-2 flex w-full max-w-md items-center gap-2.5 rounded-full border px-3 py-2 text-start shadow-[0_0_18px_rgba(15,23,42,0.35)] ${
             isOk
-              ? "border-emerald-400 bg-emerald-400/15 text-emerald-100"
+              ? "border-emerald-400 bg-emerald-400/15 text-emerald-100 ring-2 ring-emerald-300/30"
               : isSel
-                ? "border-cyan-300 bg-cyan-400/15 text-cyan-50"
+                ? "border-sky-300 bg-sky-400/15 text-sky-50 ring-2 ring-sky-300/45 shadow-[0_0_20px_rgba(56,189,248,0.22)]"
                 : NODE_SHELL[kind]
           }`}
         >
@@ -811,12 +908,12 @@ function Responsive({
               setWidth(bp.width);
               onChange(bp.id);
             }}
-            className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+            className={`rounded-full border px-3 py-1 text-xs font-semibold transition ${
               revealed && bp.id === question.correctBreakpointId
-                ? "border-emerald-400 text-emerald-100"
+                ? "border-emerald-400 text-emerald-100 ring-1 ring-emerald-300/30"
                 : selected === bp.id
-                  ? "border-cyan-300 text-cyan-100"
-                  : "border-white/12 text-slate-400"
+                  ? "border-sky-300 bg-sky-400/15 text-sky-50 ring-1 ring-sky-300/40"
+                  : "border-white/12 text-slate-400 hover:border-sky-300/30"
             }`}
           >
             {loc(bp.label, locale)}
@@ -854,7 +951,7 @@ function Mcq({
       ) : question.code ? (
         <LessonActivityCodeSnippet code={question.code} language={question.language ?? "html"} />
       ) : null}
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+      <div className="mt-3 grid gap-2">
         {opts.map((opt, i) => (
           <LessonActivityOptionCard
             key={opt.id}
@@ -879,6 +976,7 @@ function ConsoleQ({
   onChange,
   disabled,
 }: LevelQuestionProps & { question: Extract<LevelQuestion, { type: "console" }> }) {
+  const { locale } = useLanguage();
   const val = typeof answer === "string" ? answer : "";
   return (
     <div>
@@ -891,7 +989,7 @@ function ConsoleQ({
           value={val}
           onChange={(e) => onChange(e.target.value)}
           className="w-[80%] bg-transparent text-emerald-100 outline-none"
-          placeholder="type answer..."
+          placeholder={t("levelQuizConsolePlaceholder", locale)}
           dir="ltr"
         />
       </div>

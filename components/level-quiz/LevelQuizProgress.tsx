@@ -20,7 +20,7 @@ export function LevelQuizProgress({
       aria-valuemax={total}
     >
       <motion.div
-        className="absolute inset-y-0 start-0 rounded-full bg-gradient-to-r from-emerald-400 via-cyan-300 to-violet-400 shadow-[0_0_16px_rgba(34,211,238,0.45)]"
+      className="absolute inset-y-0 start-0 rounded-full bg-sky-300 shadow-[0_0_12px_rgba(56,189,248,0.35)]"
         initial={{ width: 0 }}
         animate={{ width: `${pct}%` }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}

@@ -37,7 +37,7 @@ function getServerSnapshot() {
   return true;
 }
 
-type ToneKind = "click" | "success";
+type ToneKind = "click" | "success" | "victory";
 
 let audioCtx: AudioContext | null = null;
 
@@ -59,10 +59,10 @@ function playTone(kind: ToneKind) {
   void ctx.resume();
 
   const now = ctx.currentTime;
-  const gain = ctx.createGain();
-  gain.connect(ctx.destination);
 
   if (kind === "click") {
+    const gain = ctx.createGain();
+    gain.connect(ctx.destination);
     const osc = ctx.createOscillator();
     osc.type = "sine";
     osc.frequency.setValueAtTime(880, now);
@@ -76,22 +76,65 @@ function playTone(kind: ToneKind) {
     return;
   }
 
-  // Soft two-note success ping
-  const notes = [523.25, 783.99];
-  notes.forEach((freq, i) => {
+  if (kind === "success") {
+    // Correct answer — bright two-step “ding-ding”
+    const notes = [
+      { freq: 587.33, at: 0, dur: 0.14 }, // D5
+      { freq: 880.0, at: 0.1, dur: 0.2 }, // A5
+    ];
+    notes.forEach(({ freq, at, dur }) => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      const t0 = now + at;
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(freq, t0);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(g);
+      g.connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.02);
+    });
+    return;
+  }
+
+  // Victory — short major arpeggio + sparkle for level clear
+  const chord = [
+    { freq: 523.25, at: 0, dur: 0.28 }, // C5
+    { freq: 659.25, at: 0.1, dur: 0.28 }, // E5
+    { freq: 783.99, at: 0.2, dur: 0.34 }, // G5
+    { freq: 1046.5, at: 0.34, dur: 0.42 }, // C6
+  ];
+  chord.forEach(({ freq, at, dur }) => {
     const osc = ctx.createOscillator();
     const g = ctx.createGain();
-    const t0 = now + i * 0.08;
+    const t0 = now + at;
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, t0);
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(0.06, t0 + 0.02);
-    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.22);
+    g.gain.exponentialRampToValueAtTime(0.075, t0 + 0.025);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     osc.connect(g);
     g.connect(ctx.destination);
     osc.start(t0);
-    osc.stop(t0 + 0.24);
+    osc.stop(t0 + dur + 0.03);
   });
+
+  // Soft sparkle overtone on the last note
+  const sparkle = ctx.createOscillator();
+  const sg = ctx.createGain();
+  const st = now + 0.38;
+  sparkle.type = "triangle";
+  sparkle.frequency.setValueAtTime(1568, st);
+  sparkle.frequency.exponentialRampToValueAtTime(2093, st + 0.18);
+  sg.gain.setValueAtTime(0.0001, st);
+  sg.gain.exponentialRampToValueAtTime(0.035, st + 0.02);
+  sg.gain.exponentialRampToValueAtTime(0.0001, st + 0.28);
+  sparkle.connect(sg);
+  sg.connect(ctx.destination);
+  sparkle.start(st);
+  sparkle.stop(st + 0.3);
 }
 
 interface SoundContextValue {
@@ -99,7 +142,10 @@ interface SoundContextValue {
   setEnabled: (value: boolean) => void;
   toggle: () => void;
   playClick: () => void;
+  /** Correct answer / small win */
   playSuccess: () => void;
+  /** Level cleared / strong quiz finish */
+  playVictory: () => void;
 }
 
 const SoundContext = createContext<SoundContextValue | null>(null);
@@ -130,9 +176,21 @@ export function SoundProvider({ children }: { children: ReactNode }) {
     playTone("success");
   }, []);
 
+  const playVictory = useCallback(() => {
+    if (!readEnabled()) return;
+    playTone("victory");
+  }, []);
+
   const value = useMemo(
-    () => ({ enabled, setEnabled, toggle, playClick, playSuccess }),
-    [enabled, setEnabled, toggle, playClick, playSuccess],
+    () => ({
+      enabled,
+      setEnabled,
+      toggle,
+      playClick,
+      playSuccess,
+      playVictory,
+    }),
+    [enabled, setEnabled, toggle, playClick, playSuccess, playVictory],
   );
 
   return (

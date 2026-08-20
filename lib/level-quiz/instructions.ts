@@ -5,8 +5,8 @@ import type { LocalizedString } from "@/lib/types";
 const INSTRUCTIONS: Record<LevelQuestionType, LocalizedString> = {
   mcq: L("Choose one answer, then press Submit.", "اختر إجابة واحدة، ثم اضغط إرسال."),
   "click-element": L(
-    "Click the right part on the mini page. Dashed boxes are clickable.",
-    "اضغط على الجزء الصح في الصفحة الصغيرة. الصناديق المتقطعة ينفع تضغطها.",
+    "Tap the matching part on the mini page. Dashed outlines are clickable.",
+    "اضغط الجزء المطلوب في الصفحة الصغيرة. الخطوط المتقطعة ينفع تضغطها.",
   ),
   "build-layout": L(
     "Drag the blocks up or down to put them in the right order.",
