@@ -908,9 +908,10 @@ function TipHalf({
       <div className={`h-1 w-full ${bar}`} />
       <div className="flex flex-1 flex-col p-3 sm:p-3.5">
         <span
-          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.14em] ${badge}`}
+          className={`inline-flex w-fit items-center rounded-full border px-2.5 py-1 text-[11px] font-black tracking-wide ${badge}`}
+          dir="rtl"
         >
-          {isDo ? "DO IT" : "NOT THIS"}
+          {isDo ? "كود نينجا" : "كود عادي"}
         </span>
         <h3
           className="mt-2.5 text-base font-black leading-snug text-white"
@@ -966,8 +967,8 @@ export function FrontendTipsPanel() {
             dir={locale === "ar" ? "rtl" : "ltr"}
           >
             {locale === "ar"
-              ? "سنيور بيشرح لجونيور: متعملش كده → اعمل كده. إنجليزي + عربي يومي."
-              : "A senior explaining to a junior: not like that → do it like this."}
+              ? "سنيور بيشرح لجونيور: كود عادي ← كود نينجا. إنجليزي + عربي يومي."
+              : "A senior explaining to a junior: ordinary code → ninja code."}
           </p>
         </div>
         <span className="inline-flex items-center rounded-full border border-cyan-300/25 bg-cyan-400/10 px-3 py-1 text-[11px] font-semibold text-cyan-100">
@@ -1018,8 +1019,8 @@ export function FrontendTipsPanel() {
                 <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                   {String(index + 1).padStart(2, "0")} · {categoryLabel}
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-600">
-                  Not this → Do it
+                <span className="text-[10px] font-semibold tracking-wider text-slate-600" dir="rtl">
+                  كود عادي ← كود نينجا
                 </span>
               </div>
 
